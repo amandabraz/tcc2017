@@ -14,8 +14,9 @@ import {
   View
 } from 'react-native';
 
-//importando o input que criei
+//importando o que foi criado
 import MTextInput from "../../components/mTextInput/MTextInput.js";
+import MButton from "../../components/mButton/MButton.js";
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
@@ -35,6 +36,11 @@ export default class Login extends Component {
               <MTextInput
               exampleText={'123456'}
               secureTextEntry={true}
+              />
+              <MButton
+              title={'Entrar'}
+              textOnClick={'Bem vindo!'}
+              accessibilityLabel={"Botão de login"}
               />
             </View>
         </Image>
@@ -57,7 +63,8 @@ const styles = StyleSheet.create({
   background: { //tornando a imagem do tamanho da tela
     width,
     height,
-    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     resizeMode: 'cover',
   },
   centralView: {

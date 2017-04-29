@@ -13,14 +13,6 @@ export default class MTextInput extends Component {
 
  render() {
    return (
-      //  <TextInput
-      //    style={styles.input}
-      //    onChangeText={(text) => this.setState({text})}
-      //    value={this.state.text}
-      //    underlineColorAndroid={'transparent'}
-      //    keyboardType = {typeInput}
-      //    secureTextEntry = {isPassword}
-      //  />
       <TextInput
         style={styles.input}
         onChangeText={(text) => this.setState({text})}
@@ -34,9 +26,6 @@ export default class MTextInput extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   input:{
     width: 300,
     height: 60,
