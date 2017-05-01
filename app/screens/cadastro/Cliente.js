@@ -14,9 +14,10 @@ import {
   Alert
 } from 'react-native';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
+import NavigationBar from 'react-native-navbar';
 
 //TODO ALINE: Redirecionar para tela inicial de Cliente
-const botaoConfirmar = () => { Alert.alert('Botão Confirmar foi pressionado!'); };
+const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
 
 export default class Cliente extends Component {
   constructor(props) {
@@ -26,7 +27,10 @@ export default class Cliente extends Component {
 
   render() {
     return (
-      <View style={{padding: 10}}>
+      <View style={styles.container}>
+      <NavigationBar
+        title={titleConfig}
+      />
         <TextInput
           style={{height: 40, textAlign: 'center'}}
           placeholder="Insira aqui tags dietéticas"
@@ -35,28 +39,47 @@ export default class Cliente extends Component {
         <Text style={{padding: 10, fontSize:42}}>
           {this.state.text.split(' ').map((word) => word).join(' ')}
         </Text>
-        <Button onPress={botaoConfirmar} title="Confirmar" color="#841584" />
+        <Button onPress={botaoFinalizar} title="Finalizar" color="#00BFFF" />
       </View>
     );
   }
 }
 
+
+const titleConfig = {
+  title: 'Cadastro Cliente',
+  color: '#95c9db',
+  fontSize: 40,
+  fontFamily: 'Roboto',
+};
+
+//CSS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  title: {
+    fontFamily: 'Roboto',
+    color: '#95c9db',
+    fontWeight: 'bold',
+    fontSize: 40,
+    backgroundColor: 'rgba(0, 121, 163, 0.7)',
+  },
+  centralView: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'rgba(100, 108, 122, 0.7)',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  input: {
+    borderColor: 'black',
+    borderWidth: 1,
+    height: 37,
+    width: 250,
   },
 });
 
