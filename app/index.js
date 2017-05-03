@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, DatePickerAndroid } from 'react-native';
+import NavigationBar from 'react-native-navbar';
+import DatePicker from 'react-native-datepicker'
 
 
 class cadastro extends Component {
   constructor(props) {
    super(props);
+
+   this.state = {
+    date: '',
+  };
  }
 
  handleFinalizarPress = () => {
@@ -13,23 +19,30 @@ class cadastro extends Component {
 
   render() {
     return (
-      <View style= {{flex: 3, backgroundColor: 'powderblue'}}>
-      <ScrollView>
-        <Text style={styles.texto}>Faça seu Cadastro!</Text>
-
-     <View style= {{margin: 5}}>
+      <View style= {{flex: 3, backgroundColor: '#ffffff'}}>
+      <NavigationBar
+       title={titleConfig}
+       tintColor="#f5f5f5"/>
+        <ScrollView>
+   <View style={styles.container}>
         <TextInput
           style={styles.input}
           onChangeText={(text) => this.setState({text})}
           placeholder="Nome Completo"
           placeholderTextColor = "#ffb6c1"
         />
-
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => this.setState({text})}
-          placeholder="Data de nascimento"
-          placeholderTextColor = "#ffb6c1"
+        <DatePicker
+        style={{width: 368,
+        height: 46}}
+        date={this.state.date}
+        mode="date"
+        placeholder="Data de Nascimento"
+        format="DD-MM-YYYY"
+        minDate="01-01-1930"
+        maxDate="01-01-2016"
+        confirmBtnText="OK"
+        cancelBtnText="Cancelar"
+        onDateChange={(date) => {this.setState({date: date});}}
         />
 
         <TextInput
@@ -55,18 +68,18 @@ class cadastro extends Component {
           secureTextEntry={true}
         />
 
-         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        </View>
+
+         <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5}}>
          <Button
-         style={styles.botao}
-         title="        Quero Vender         "
+         title ="        Quero Vender         "
          color="#ffa07a"
          onPress={this.handleFinalizarPress}/>
+
           <Button
-          style={styles.botao}
-          title="      Quero Comprar      "
+          title="       Quero Comprar      "
           color="#87cefa"
           onPress={this.handleFinalizarPress}/>
-          </View>
      </View>
      </ScrollView>
        </View>
@@ -74,7 +87,19 @@ class cadastro extends Component {
   }
 }
 
+const titleConfig = {
+  title: 'Faça seu Cadastro',
+  tintColor: '#f08080',
+  fontFamily: 'Roboto',
+};
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  },
   texto: {
     color: '#f08080',
     fontWeight: 'bold',
@@ -82,18 +107,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     textAlign: 'center'
   },
-    botao: {
-      //borderRadius: 700,
-      //fontSize: 50,
-      fontFamily: 'Roboto',
-    },
 
     input:{
-      width: 380,
+      width: 378,
       height: 65,
       borderColor: "#778899",
       borderWidth: 0.15,
-      margin: 10,
+      margin: 5,
       fontFamily: 'Roboto',
       color: '#f08080',
       fontSize: 20,
