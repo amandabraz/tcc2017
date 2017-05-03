@@ -12,7 +12,7 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        diasArray: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
+        diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal", "Pagseguro"]
     }
   }
   handleFinalizarPress = () => {
@@ -78,7 +78,7 @@ class Vendedor extends Component {
             returnKeyType="next"
           />
           <ListItem
-            title="Dias de funcionamento"
+            title="Meios de pagamento aceitos"
             hideChevron
           />
           <View style={styles.container}>
@@ -87,19 +87,11 @@ class Vendedor extends Component {
               </ScrollView>
           </View>
           <ListItem
-            title="Horário de funcionamento"
+            title="Tags para seus produtos"
             hideChevron
           />
-          // hora
           <TextInput
             style={styles.singleLine}
-            keyboardType="phone-pad"
-            returnKeyType="next"
-          />
-          //minuto
-          <TextInput
-            style={styles.singleLine}
-            keyboardType="phone-pad"
             returnKeyType="next"
           />
         </List>
