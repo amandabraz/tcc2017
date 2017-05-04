@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, DatePickerAndroid } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert} from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker'
 
+
+const onButtonPress = () => { Alert.alert('Bem vindo Vendedor'); };
+const onButtonPressComprar = () => { Alert.alert('Bem vindo '); };
 
 class cadastro extends Component {
   constructor(props) {
@@ -12,10 +15,6 @@ class cadastro extends Component {
     date: '',
   };
  }
-
- handleFinalizarPress = () => {
-    this.props.navigation.navigate('Finalizar');
-};
 
   render() {
     return (
@@ -31,17 +30,34 @@ class cadastro extends Component {
           placeholder="Nome Completo"
           placeholderTextColor = "#ffb6c1"
         />
+
         <DatePicker
-        style={{width: 368,
-        height: 46}}
+        style={{width: 378,
+        height: 48}}
         date={this.state.date}
         mode="date"
         placeholder="Data de Nascimento"
         format="DD-MM-YYYY"
-        minDate="01-01-1930"
-        maxDate="01-01-2016"
-        confirmBtnText="OK"
-        cancelBtnText="Cancelar"
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+         dateIcon: {
+           position: 'absolute',
+           left: 0,
+           top: 4,
+           marginLeft: 0
+         },
+         placeholderText: {
+           color: '#ffb6c1',
+           fontFamily: 'Roboto',
+           fontSize: 20
+         },
+         dateText: {
+           color: '#f08080',
+           fontFamily: 'Roboto',
+           fontSize: 20
+         }
+       }}
         onDateChange={(date) => {this.setState({date: date});}}
         />
 
@@ -74,12 +90,12 @@ class cadastro extends Component {
          <Button
          title ="        Quero Vender         "
          color="#ffa07a"
-         onPress={this.handleFinalizarPress}/>
+         onPress={onButtonPress}/>
 
           <Button
           title="       Quero Comprar      "
           color="#87cefa"
-          onPress={this.handleFinalizarPress}/>
+          onPress={onButtonPressComprar}/>
      </View>
      </ScrollView>
        </View>
@@ -102,7 +118,6 @@ const styles = StyleSheet.create({
   },
   texto: {
     color: '#f08080',
-    fontWeight: 'bold',
     fontSize: 30,
     fontFamily: 'Roboto',
     textAlign: 'center'
