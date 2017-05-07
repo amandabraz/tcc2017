@@ -1,5 +1,5 @@
 
-4/**
+/**
   Interface de Login para o usuário.
 */
 
@@ -48,6 +48,11 @@ export default class Login extends Component {
               textOnClick={'Tela de Cadastro'}
               accessibilityLabel={"Botão de Cadastro"}
               color={'#50a1e0'}
+              />
+              <MButton
+              title={'Cadastre-se!'}
+              textOnClick={'Cadastrado!'}
+              accessibilityLabel={"Botão de cadastro"}
               />
             </View>
         </Image>
