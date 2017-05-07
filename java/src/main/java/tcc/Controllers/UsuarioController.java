@@ -28,11 +28,14 @@ public class UsuarioController {
     public String cadastraUsuario(@RequestParam(value="nome") String nome,
                                    @RequestParam(value="perfil") char perfil,
                                    @RequestParam(value="email") String email,
-                                   @RequestParam(value="dataNasc") Date dataNasc) {
+                                   @RequestParam(value="dataNasc") Date dataNasc,
+                                   @RequestParam(value="senha") String senha) {
+        // TODO: Mudar, não usar mais @RequestParam depois de confirmarmos que tudo está funcionando de acordo com o esperado.
+        // Se não me engano, usaremos @PathVariable pra esconder as informações do usuário e não expor no url
         Usuario novoUsuario = null;
         try {
-            novoUsuario = new Usuario(false, perfil, nome, email, dataNasc,
-                    false, false);
+            novoUsuario = new Usuario(senha, false, perfil, nome, email, dataNasc,
+                    false, false, false);
             // Setando deletado como false pois está sendo inserido no banco neste momento
             // Setando localizacao e notificacao como false pois usuário ainda não foi solicitado essas preferências
             usuarioDao.save(novoUsuario);

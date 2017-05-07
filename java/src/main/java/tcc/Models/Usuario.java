@@ -40,9 +40,13 @@ public class Usuario {
     @Column(name = "NOTIFICACAO", nullable = false)
     private boolean notificacao;
 
+    @Column(name = "BLOQUEADO", nullable = false)
+    private boolean bloqueado;
+
     /**
      * Construtor com todos os dados para retorno do banco
      * @param id
+     * @param senha
      * @param deletado
      * @param perfil
      * @param nome
@@ -50,10 +54,12 @@ public class Usuario {
      * @param dataNasc
      * @param localizacao
      * @param notificacao
+     * @param bloqueado
      */
-    public Usuario(Long id, boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   boolean localizacao, boolean notificacao) {
+    public Usuario(Long id, String senha, boolean deletado, char perfil, String nome, String email, Date dataNasc,
+                   boolean localizacao, boolean notificacao, boolean bloqueado) {
         this.id = id;
+        this.senha = senha;
         this.deletado = deletado;
         this.perfil = perfil;
         this.nome = nome;
@@ -61,10 +67,12 @@ public class Usuario {
         this.dataNasc = dataNasc;
         this.localizacao = localizacao;
         this.notificacao = notificacao;
+        this.bloqueado = bloqueado;
     }
 
     /**
      * Construtor sem id para inserção em banco (id é auto gerado)
+     * @param senha
      * @param deletado
      * @param perfil
      * @param nome
@@ -72,9 +80,11 @@ public class Usuario {
      * @param dataNasc
      * @param localizacao
      * @param notificacao
+     * @param bloqueado
      */
-    public Usuario(boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   boolean localizacao, boolean notificacao) {
+    public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
+                   boolean localizacao, boolean notificacao, boolean bloqueado) {
+        this.senha = senha;
         this.deletado = deletado;
         this.perfil = perfil;
         this.nome = nome;
@@ -82,6 +92,7 @@ public class Usuario {
         this.dataNasc = dataNasc;
         this.localizacao = localizacao;
         this.notificacao = notificacao;
+        this.bloqueado = bloqueado;
     }
 
     public Long getId() {
@@ -148,10 +159,27 @@ public class Usuario {
         this.notificacao = notificacao;
     }
 
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public boolean isBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(boolean bloqueado) {
+        this.bloqueado = bloqueado;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
                 "id=" + id +
+                ", senha=" + senha +
                 ", deletado=" + deletado +
                 ", perfil=" + perfil +
                 ", nome='" + nome + '\'' +
@@ -159,6 +187,7 @@ public class Usuario {
                 ", dataNasc=" + dataNasc +
                 ", localizacao=" + localizacao +
                 ", notificacao=" + notificacao +
+                ", bloqueado=" + bloqueado +
                 '}';
     }
 }
