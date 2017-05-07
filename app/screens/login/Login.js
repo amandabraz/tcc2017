@@ -42,6 +42,11 @@ export default class Login extends Component {
               textOnClick={'Bem vindo!'}
               accessibilityLabel={"Botão de login"}
               />
+              <MButton
+              title={'Cadastre-se!'}
+              textOnClick={'Cadastrado!'}
+              accessibilityLabel={"Botão de cadastro"}
+              />
             </View>
         </Image>
       </View>
