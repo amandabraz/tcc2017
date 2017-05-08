@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
+import Tags from 'react-native-tags';
 
 //TODO ALINE: Redirecionar para tela inicial de Cliente
 const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
@@ -30,16 +31,18 @@ export default class Cliente extends Component {
       <View style={styles.container}>
       <NavigationBar
         title={titleConfig}
+        tintColor="#95c9db"
       />
         <TextInput
           style={{height: 40, textAlign: 'center'}}
+          placeholderTextColor= "#dc143c"
           placeholder="Insira aqui tags dietéticas"
           onChangeText={(text) => this.setState({text})}
         />
         <Text style={{padding: 10, fontSize:42}}>
           {this.state.text.split(' ').map((word) => word).join(' ')}
         </Text>
-        <Button onPress={botaoFinalizar} title="Finalizar" color="#00BFFF" />
+        <Button onPress={botaoFinalizar} title="Finalizar" color="#dc143c" />
       </View>
     );
   }
@@ -48,8 +51,7 @@ export default class Cliente extends Component {
 
 const titleConfig = {
   title: 'Cadastro Cliente',
-  color: '#95c9db',
-  fontSize: 40,
+  tintColor: "#dc143c",
   fontFamily: 'Roboto',
 };
 
