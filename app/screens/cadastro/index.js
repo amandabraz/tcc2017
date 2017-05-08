@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert} from 'react-native';
 import NavigationBar from 'react-native-navbar';
-import DatePicker from 'react-native-datepicker'
+import DatePicker from 'react-native-datepicker';
 
 
 const onButtonPress = () => { Alert.alert('Bem vindo Vendedor'); };
