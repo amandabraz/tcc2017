@@ -13,15 +13,17 @@ import {
   View
 } from 'react-native';
 
+import App from './app/screens/cadastro_produto/CadastroProduto';
+
 //IMPORTANDO SCREEN DE LOGIN
-import Login from "./app/screens/login/Login.js";
+//import Login from "./app/screens/login/Login.js";
 
 //MAIN
 export default class tcc2017 extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Login />
+      //  <Login />
       </View>
     );
   }
@@ -34,4 +36,4 @@ const styles = StyleSheet.create({
   }
 }); //coloquei isso pra que o style do css seja de acordo com a tela
 
-AppRegistry.registerComponent('tcc2017', () => tcc2017);
+AppRegistry.registerComponent('tcc2017', () => App);
