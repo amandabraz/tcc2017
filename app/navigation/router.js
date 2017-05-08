@@ -38,15 +38,15 @@ export const Tabs = TabNavigator({
   //     },
   //   },
   // },
-  Vendedor: {
-    screen: Vendedor,
-    navigationOptions: {
-      tabBar: {
-        label: 'Vendedor',
-        icon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
-      },
-    },
-  },
+  // Vendedor: {
+  //   screen: Vendedor,
+  //   navigationOptions: {
+  //     tabBar: {
+  //       label: 'Vendedor',
+  //       icon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
+  //     },
+  //   },
+  // },
   Vendedor2: {
     screen: Vendedor,
     navigationOptions: {

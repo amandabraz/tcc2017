@@ -12,7 +12,7 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal", "Pagseguro"]
+        diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"]
     }
   }
   handleFinalizarPress = () => {
@@ -135,7 +135,7 @@ var styles = StyleSheet.create({
   item: {
       flexDirection: 'row',
   },
-  line: {
+    line: {
       flex: 1,
       height: 0.3,
       backgroundColor: 'darkgray',
