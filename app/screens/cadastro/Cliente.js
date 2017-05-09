@@ -9,7 +9,8 @@ import {
   Text,
   TextInput,
   View,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
@@ -34,7 +35,8 @@ export default class TagInputExample extends Component {
       keyboardType: 'default',
       placeholder: 'Insira aqui tags dietéticas',
       autoFocus: true,
-      placeholderTextColor: '#dc143c'
+      placeholderTextColor: '#dc143c',
+      height:300
     };
 
     return (
@@ -43,18 +45,17 @@ export default class TagInputExample extends Component {
           title={titleConfig}
           tintColor="#95c9db"
         />
-        <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
-        <Text>Insira aqui tags dietéticas: </Text>
+        <View style={{ flexDirection: 'column', flex: 1}}>
           <TagInput
             value={this.state.tags}
             onChange={this.onChangeTags}
             tagColor="pink"
             tagTextColor="white"
             inputProps={inputProps}
-            numberOfLines={2}
+            numberOfLines={15}
           />
+          <Button onPress={botaoFinalizar} title="Finalizar" color="#dc143c" />
         </View>
-        <Button onPress={botaoFinalizar} title="Finalizar" color="#dc143c" />
       </View>
     );
   }
@@ -66,10 +67,20 @@ const titleConfig = {
   fontFamily: 'Roboto',
 };
 
+
 //CSS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  button: {
+    justifyContent: 'center',
+    height: 50,
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: "#50a1e0",
+    alignSelf: 'stretch',
   },
   title: {
     fontFamily: 'Roboto',
@@ -93,6 +104,39 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 37,
     width: 250,
+  },
+  textInputContainer: {
+    flex: 1,
+    width: 100,
+    height: 32,
+    margin: 4,
+    borderRadius: 16,
+    backgroundColor: '#ccc',
+  },
+
+  textInput: {
+    margin: 0,
+    padding: 0,
+    paddingLeft: 12,
+    paddingRight: 12,
+    flex: 1,
+    height: 32,
+    fontSize: 13,
+    color: 'rgba(0, 0, 0, 0.87)',
+  },
+
+  tag: {
+    justifyContent: 'center',
+    backgroundColor: '#e0e0e0',
+    borderRadius: 16,
+    paddingLeft: 12,
+    paddingRight: 12,
+    height: 32,
+    margin: 4,
+  },
+  tagLabel: {
+    fontSize: 13,
+    color: 'rgba(0, 0, 0, 0.87)',
   },
 });
 
