@@ -1,7 +1,5 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ * author: Aline Bender
  */
 
 import React, { Component } from 'react';
@@ -15,39 +13,52 @@ import {
 } from 'react-native';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
-import Tags from 'react-native-tags';
+import TagInput from 'react-native-tag-input';
 
 //TODO ALINE: Redirecionar para tela inicial de Cliente
 const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
 
-export default class Cliente extends Component {
-  constructor(props) {
-    super (props);
-    this.state = {text: ''};
-  }
+export default class TagInputExample extends Component {
+  state = {
+    tags: [],
+  };
+
+  onChangeTags = (tags) => {
+    this.setState({
+      tags,
+    });
+  };
 
   render() {
+    const inputProps = {
+      keyboardType: 'default',
+      placeholder: 'Insira aqui tags dietéticas',
+      autoFocus: true,
+      placeholderTextColor: '#dc143c'
+    };
+
     return (
       <View style={styles.container}>
-      <NavigationBar
-        title={titleConfig}
-        tintColor="#95c9db"
-      />
-        <TextInput
-          style={{height: 40, textAlign: 'center'}}
-          placeholderTextColor= "#dc143c"
-          placeholder="Insira aqui tags dietéticas"
-          onChangeText={(text) => this.setState({text})}
+        <NavigationBar
+          title={titleConfig}
+          tintColor="#95c9db"
         />
-        <Text style={{padding: 10, fontSize:42}}>
-          {this.state.text.split(' ').map((word) => word).join(' ')}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', height: 40}}>
+        <Text>Insira aqui tags dietéticas: </Text>
+          <TagInput
+            value={this.state.tags}
+            onChange={this.onChangeTags}
+            tagColor="pink"
+            tagTextColor="white"
+            inputProps={inputProps}
+            numberOfLines={2}
+          />
+        </View>
         <Button onPress={botaoFinalizar} title="Finalizar" color="#dc143c" />
       </View>
     );
   }
 }
-
 
 const titleConfig = {
   title: 'Cadastro Cliente',
