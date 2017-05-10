@@ -31,7 +31,8 @@ public class UsuarioController {
                                    @RequestParam(value="dataNasc") Date dataNasc,
                                    @RequestParam(value="senha") String senha) {
         // TODO: Mudar, não usar mais @RequestParam depois de confirmarmos que tudo está funcionando de acordo com o esperado.
-        // Se não me engano, usaremos @PathVariable pra esconder as informações do usuário e não expor no url
+        // Se não me engano, usaremos @PathVariable pra esconder as informações do usuário e não expor no url,
+        // Usar PUT e não GET.
         Usuario novoUsuario = null;
         try {
             novoUsuario = new Usuario(senha, false, perfil, nome, email, dataNasc,
