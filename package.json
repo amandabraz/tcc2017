@@ -9,7 +9,9 @@
   "dependencies": {
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.4",
+    "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-camera-roll-picker": "^1.1.9",
+    "react-native-image-crop-picker": "^0.13.0",
     "react-native-image-picker": "^0.26.3",
     "react-navigation": "^1.0.0-beta.7"
   },

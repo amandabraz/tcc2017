@@ -17,6 +17,11 @@ import {
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
 import CameraRollPicker from 'react-native-camera-roll-picker';
+import Camera from 'react-native-camera';
+import ImagePicker from 'react-native-image-crop-picker';
+
+
+
 
 //dimensão da janela
 //const { width, height } = Dimensions.get("window");
@@ -30,6 +35,20 @@ export default class CadastroProduto extends Component {
   this.state = {
    date: '',
  };
+}
+pickMultiple(){
+  ImagePicker.openPicker({
+  multiple: true
+}).then(images => {
+  console.log(images);
+});
+}
+
+abrircamera(){
+  ImagePicker.openCamera({
+}).then(image => {
+  console.log(image);
+});
 }
   render() {
     return (
@@ -107,14 +126,24 @@ export default class CadastroProduto extends Component {
           secureTextEntry={true}
         />
 
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => this.setState({text})}
-          placeholder="Foto"
-          placeholderTextColor = "#ffb6c1"
-        />
-        <CameraRollPicker
-      callback={this.getSelectedImages} />
+        <Text style={styles.foto}>Foto do Produto</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5}}>
+        <Button
+         title ="Abrir Galeria"
+         color="#87cefa"
+         onPress={() => this.pickMultiple(true)}/>
+
+         <Text>      </Text>
+
+        <Button
+           title ="Abrir Camera"
+           color="#87cefa"
+           onPress={() => this.abrircamera(true)}/>
+
+        </View>
+
+      //  <CameraRollPicker
+        //  callback={this.getSelectedImages} />
 
         <TextInput
           style={styles.input}
@@ -155,6 +184,13 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
 
+  foto: {
+    color: '#f08080',
+    fontSize: 20,
+    fontFamily: 'Roboto',
+    textAlign: 'center'
+  },
+
     input:{
       width: 378,
       height: 65,
@@ -166,4 +202,5 @@ const styles = StyleSheet.create({
       fontSize: 20,
       textAlign: 'center',
     },
+
 });
