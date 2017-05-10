@@ -52,7 +52,7 @@ export default class ModalTester extends Component {
       </Text>
         </View>
         <TouchableOpacity onPress={this._showModal}>
-          <Text>Tela onde ficara edicao</Text>
+          <Text></Text>
         </TouchableOpacity>
         <Modal isVisible={this.state.isModalVisible}>
           <View style={{ flex: 1 }}>
@@ -67,7 +67,7 @@ export default class ModalTester extends Component {
 
   //CSS
   const titleConfig = {
-    title: 'Cadastro Cliente',
+    title: 'Perfil Cliente',
     tintColor: "#dc143c",
     fontFamily: 'Roboto',
   };
@@ -79,6 +79,7 @@ export default class ModalTester extends Component {
   },
   baseText: {
     fontFamily: 'Cochin',
+    textAlign: 'center',
 
   },
   titleText: {
