@@ -32,8 +32,7 @@ public class VendedorController {
     @RequestMapping("/vendedor")
     public String cadastraVendedor(@RequestParam(value="usarioId") Long usuarioId,
                                    @RequestParam(value="nomeFantasia") String nomeFantasia,
-                                   @RequestParam(value="cpf") String cpf,
-                                   @RequestParam(value=)) {
+                                   @RequestParam(value="cpf") String cpf) {
         // TODO: Mudar, não usar mais @RequestParam depois de confirmarmos que tudo está funcionando de acordo com o esperado.
         // Se não me engano, usaremos @PathVariable pra esconder as informações do usuário e não expor no url,
         // Usar PUT e não GET.
