@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Sae } from 'react-native-textinput-effects';
 
 export default class ModalTester extends Component {
   constructor(props) {
@@ -33,9 +31,13 @@ export default class ModalTester extends Component {
           tintColor="#95c9db"
         />
         <View style={styles.container}>
+        <Image
+          style={{width: 200, height: 200, borderRadius: 100}}
+          source={require('./img/cicero.jpg')}
+        />
         <Text style={styles.baseText}>
         <Text style={styles.titleText} onPress={this.onPressTitle}>
-          {this.state.nomeText}{'\n'}{'\n'}{'\n'}
+          {this.state.nomeText}{'\n'}{'\n'}
         </Text>
         <Text numberOfLines={5}>
           {this.state.dataNascimentoText}{'\n'}{'\n'}
@@ -78,14 +80,17 @@ export default class ModalTester extends Component {
       alignItems: 'center',
   },
   baseText: {
-    fontFamily: 'Cochin',
+    fontFamily: 'Roboto',
     textAlign: 'center',
-
+    color: '#dc143c',
+    fontSize: 20,
   },
   titleText: {
-    fontSize: 20,
+    fontSize: 40,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#dc143c',
+    fontFamily: 'Roboto',
   },
 });
 
