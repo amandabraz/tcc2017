@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //IMPORTANDO SCREEN DE LOGIN
-import Login from "./app/screens/login/Login.js";
+import Login from "./app/screens/perfilVendedor/PerfilVendedor.js";
 
 //MAIN
 export default class tcc2017 extends Component {
