@@ -96,6 +96,10 @@ public class Vendedor {
         return pagamentosAceitos;
     }
 
+    public void setPagamentosAceitos(List<Pagamento> pagamentosAceitos) {
+        this.pagamentosAceitos = pagamentosAceitos;
+    }
+
     @Override
     public String toString() {
         return "Vendedor{" +

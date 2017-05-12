@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tcc.DAOs.PagamentoDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.DAOs.VendedorDAO;
+import tcc.Models.Pagamento;
 import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by amanda on 04/05/2017.
@@ -22,6 +25,8 @@ public class VendedorController {
     private VendedorDAO vendedorDAO;
     @Autowired
     private UsuarioDAO usuarioDAO;
+    @Autowired
+    private PagamentoDAO pagamentoDAO;
 
 
     /**
@@ -46,5 +51,23 @@ public class VendedorController {
             return "Error creating the user: " + ex.toString();
         }
         return "Vendedor criado com sucesso! (" + novoVendedor.toString() + ")";
+    }
+
+    //TODO: testar essa chamada, mas antes preencher a tabela pagamento com opçoes validas
+    @RequestMapping("/pagamento")
+    public String cadastraMeiosPagamento(@RequestParam(value="vendedorId") Long vendedorId,
+                                         @RequestParam(value="meiosPagamento") List<String> meiosPagamento) {
+        List<Pagamento> meiosAceitos = null;
+        for (String meioPagamento : meiosPagamento) {
+            Pagamento novoPagamento = pagamentoDAO.findByMeioPagamento(meioPagamento);
+            meiosAceitos.add(novoPagamento);
+        }
+        Vendedor vendedor = vendedorDAO.findOne(vendedorId);
+        vendedor.setPagamentosAceitos(meiosAceitos);
+
+        vendedor = vendedorDAO.save(vendedor);
+
+        return "Meio de pagamento para o vendedor " + vendedorId +
+                "criado com sucesso! (" + vendedor.toString() + ")";
     }
 }
