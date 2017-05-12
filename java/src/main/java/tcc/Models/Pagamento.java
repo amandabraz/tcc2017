@@ -16,16 +16,11 @@ public class Pagamento {
     @Column(name = "ID_PAGAMENTO")
     private Long id;
 
-    @OneToMany
-    @JoinColumn(name = "FK_VENDEDOR")
-    private Vendedor vendedor;
-
     @Column(name = "MEIO_PAGAMENTO")
     @Enumerated(EnumType.STRING)
     private MeioPagamento meioPagamento;
 
-    public Pagamento(Vendedor vendedor, MeioPagamento meioPagamento) {
-        this.vendedor = vendedor;
+    public Pagamento(MeioPagamento meioPagamento) {
         this.meioPagamento = meioPagamento;
     }
 
@@ -35,14 +30,6 @@ public class Pagamento {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Vendedor getVendedor() {
-        return vendedor;
-    }
-
-    public void setVendedor(Vendedor vendedor) {
-        this.vendedor = vendedor;
     }
 
     public MeioPagamento getMeioPagamento() {

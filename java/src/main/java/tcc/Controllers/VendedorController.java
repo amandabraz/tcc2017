@@ -30,7 +30,7 @@ public class VendedorController {
      * @return
      */
     @RequestMapping("/vendedor")
-    public String cadastraVendedor(@RequestParam(value="usarioId") Long usuarioId,
+    public String cadastraVendedor(@RequestParam(value="usuarioId") Long usuarioId,
                                    @RequestParam(value="nomeFantasia") String nomeFantasia,
                                    @RequestParam(value="cpf") String cpf) {
         // TODO: Mudar, não usar mais @RequestParam depois de confirmarmos que tudo está funcionando de acordo com o esperado.

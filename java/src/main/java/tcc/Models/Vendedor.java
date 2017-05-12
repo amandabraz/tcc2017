@@ -1,6 +1,7 @@
 package tcc.Models;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by amanda on 10/05/2017.
@@ -30,6 +31,12 @@ public class Vendedor {
     @Transient
     //@Column(name = "VISUALIZA_ESTATISTICAS", nullable = false)
     private boolean visualizaEstatisticas;
+
+    @OneToMany
+    @JoinTable(name = "PAGAMENTOS_ACEITOS",
+            joinColumns = { @JoinColumn(name = "ID_VENDEDOR") },
+            inverseJoinColumns = { @JoinColumn(name = "ID_PAGAMENTO") })
+    private List<Pagamento> pagamentosAceitos;
 
     public Vendedor(Usuario usuario, String nomeFantasia, String cpf) {
         this.usuario = usuario;
@@ -85,6 +92,10 @@ public class Vendedor {
         this.usuario = usuario;
     }
 
+    public List<Pagamento> getPagamentosAceitos() {
+        return pagamentosAceitos;
+    }
+
     @Override
     public String toString() {
         return "Vendedor{" +
@@ -94,6 +105,7 @@ public class Vendedor {
                 ", cpf='" + cpf + '\'' +
                 ", fkRestricaoDietetica=" + fkRestricaoDietetica +
                 ", visualizaEstatisticas=" + visualizaEstatisticas +
+                ", pagamentosAceitos=" + pagamentosAceitos +
                 '}';
     }
 }
