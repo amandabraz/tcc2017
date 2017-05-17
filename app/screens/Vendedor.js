@@ -12,11 +12,16 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"]
+        diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
+    }
+    this.vendedor = {
+      cpf: "123",
+      nomeLoja: ""
     }
   }
   handleFinalizarPress = () => {
-    this.props.navigation.navigate('Finalizar');
+    console.log(this.vendedor);
+    //this.props.navigation.navigate('Finalizar');
   };
   onClick(data) {
     data.checked = !data.checked;
@@ -68,6 +73,9 @@ class Vendedor extends Component {
             style={styles.singleLine}
             keyboardType="phone-pad"
             returnKeyType="next"
+            onChangeText={(cpf_input) => this.setState({
+                cpf: cpf_input
+            })}
           />
           <ListItem
             title="Nome da loja"
@@ -76,6 +84,9 @@ class Vendedor extends Component {
           <TextInput
             style={styles.singleLine}
             returnKeyType="next"
+            onChangeText={(nomeLoja_input) => this.setState({
+                nomeLoja: nomeLoja_input
+            })}
           />
           <ListItem
             title="Meios de pagamento aceitos"

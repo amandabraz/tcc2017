@@ -11,6 +11,7 @@ import { Icon } from 'react-native-elements';
 // import Settings from '../screens/Settings';
 // import UserDetail from '../screens/UserDetail';
 import Vendedor from '../screens/Vendedor';
+import Login from '../screens/login/Login';
 
 // export const FeedStack = StackNavigator({
 //   Feed: {
@@ -79,12 +80,12 @@ export const Tabs = TabNavigator({
 
 // TODO: Creio que aqui colocamos uma logica pra dizer: se usuario está logado, carregar dashboard, senão, carregar tela de login
 export const Root = StackNavigator({
-  Tabs: {
-    screen: Tabs,
+  Login: {
+    screen: Login,
   },
-  // Settings: {
-  //   screen: SettingsStack,
-  // },
+  Vendedor: {
+    screen: Vendedor,
+  },
 }, {
   mode: 'modal',
   headerMode: 'none',
