@@ -13,14 +13,31 @@ class Vendedor extends Component {
     super(props);
     this.state = {
         diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
-    }
-    this.vendedor = {
-      cpf: "123",
-      nomeLoja: ""
+        cpf: '',
+        nomeLoja: ''
     }
   }
   handleFinalizarPress = () => {
-    console.log(this.vendedor);
+    const {
+      state: {
+        cpf, nomeLoja
+      }
+    } = this;
+    vendedor = {
+      'usuarioId': 1,
+      'nomeLoja': nomeLoja,
+      'cpf': cpf
+    }
+
+    let response = fetch('http://localhost:8080/vendedor', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(vendedor)
+    });
+
     //this.props.navigation.navigate('Finalizar');
   };
   onClick(data) {
@@ -73,9 +90,8 @@ class Vendedor extends Component {
             style={styles.singleLine}
             keyboardType="phone-pad"
             returnKeyType="next"
-            onChangeText={(cpf_input) => this.setState({
-                cpf: cpf_input
-            })}
+            onChangeText={(cpf) => this.setState({cpf})}
+            value={this.state.cpf}
           />
           <ListItem
             title="Nome da loja"
@@ -84,9 +100,8 @@ class Vendedor extends Component {
           <TextInput
             style={styles.singleLine}
             returnKeyType="next"
-            onChangeText={(nomeLoja_input) => this.setState({
-                nomeLoja: nomeLoja_input
-            })}
+            onChangeText={(nomeLoja) => this.setState({nomeLoja})}
+            value={this.state.nomeLoja}
           />
           <ListItem
             title="Meios de pagamento aceitos"

@@ -38,6 +38,16 @@ public class Vendedor {
             inverseJoinColumns = { @JoinColumn(name = "ID_PAGAMENTO") })
     private List<Pagamento> pagamentosAceitos;
 
+    public Vendedor() {
+        this.id = id;
+        this.usuario = usuario;
+        this.nomeFantasia = nomeFantasia;
+        this.cpf = cpf;
+        //this.fkRestricaoDietetica = fkRestricaoDietetica;
+        //this.visualizaEstatisticas = visualizaEstatisticas;
+        this.pagamentosAceitos = pagamentosAceitos;
+    }
+
     public Vendedor(Usuario usuario, String nomeFantasia, String cpf) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
