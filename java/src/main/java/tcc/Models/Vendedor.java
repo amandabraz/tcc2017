@@ -15,8 +15,8 @@ public class Vendedor {
     @Column(name = "ID_VENDEDOR")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "FK_USUARIO")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
     @Column(name = "NOME_FANTASIA", nullable = true, length = 100)

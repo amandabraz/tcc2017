@@ -60,6 +60,14 @@ public class Usuario {
     }
 
     /**
+     * Este construtor serve para classes que tem usuario como FK
+     * @param id
+     */
+    public Usuario(Long id) {
+        super();
+        this.id = id;
+    }
+    /**
      * Construtor sem id para inserção em banco (id é auto gerado)
      * @param senha
      * @param deletado

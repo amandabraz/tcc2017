@@ -1,9 +1,9 @@
 package tcc.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import tcc.DAOs.PagamentoDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.DAOs.VendedorDAO;
@@ -35,22 +35,18 @@ public class VendedorController {
      * @return
      */
     @RequestMapping("/vendedor")
-    public String cadastraVendedor(@RequestParam(value="usuarioId") Long usuarioId,
-                                   @RequestParam(value="nomeFantasia") String nomeFantasia,
-                                   @RequestParam(value="cpf") String cpf) {
+    public ResponseEntity<Vendedor> cadastraVendedor(@RequestBody Vendedor vendedor) {
         // TODO: Mudar, não usar mais @RequestParam depois de confirmarmos que tudo está funcionando de acordo com o esperado.
         // Se não me engano, usaremos @PathVariable pra esconder as informações do usuário e não expor no url,
-        // Usar PUT e não GET.
         Vendedor novoVendedor = null;
         try {
-            Usuario usuario = usuarioDAO.findOne(usuarioId);
-            novoVendedor = new Vendedor(usuario, nomeFantasia, cpf);
-
-            novoVendedor = vendedorDAO.save(novoVendedor);
+            novoVendedor = vendedorDAO.save(vendedor);
         } catch (Exception ex) {
-            return "Error creating the user: " + ex.toString();
+//            return "Error creating the user: " + ex.toString();
+            return new ResponseEntity<Vendedor>(novoVendedor, HttpStatus.BAD_REQUEST);
         }
-        return "Vendedor criado com sucesso! (" + novoVendedor.toString() + ")";
+//        return "Vendedor criado com sucesso! (" + novoVendedor.toString() + ")";
+        return new ResponseEntity<Vendedor>(novoVendedor, HttpStatus.OK);
     }
 
     //TODO: testar essa chamada, mas antes preencher a tabela pagamento com opçoes validas
