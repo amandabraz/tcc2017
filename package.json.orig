@@ -10,7 +10,9 @@
     "categoreact": "^1.1.1",
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.4",
+<<<<<<< HEAD
     "react-native-navbar": "^1.7.1",
+=======
     "react-native-check-box": "^1.0.4",
     "react-native-checkbox": "^1.1.0",
     "react-native-elements": "^0.11.2",
@@ -19,6 +21,7 @@
     "react-native-tags": "^0.2.0",
     "react-native-vector-icons": "^4.1.1",
     "react-native-datepicker": "^1.4.7",
+>>>>>>> 823e9fa0f29720bf446a3e4c52df1e4d1c1ca73b
     "react-navigation": "^1.0.0-beta.7"
   },
   "devDependencies": {
