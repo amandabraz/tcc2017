@@ -1,8 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import { AppRegistry } from 'react-native';
+import App from './app/index';
 
 //IMPORTANDO BIBLIOTECAS BÁSICAS
 import React, { Component } from 'react';
@@ -14,14 +11,14 @@ import {
 } from 'react-native';
 
 //IMPORTANDO SCREEN DE LOGIN
-import Login from "./app/screens/cadastro/CadastroCliente.js";
+import Cliente from "./app/screens/cadastro/Cliente.js";
 
 //MAIN
 export default class tcc2017 extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Login />
+        <Cliente />
       </View>
     );
   }
