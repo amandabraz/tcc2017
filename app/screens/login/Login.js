@@ -11,7 +11,8 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  View
+  View,
+  Button
 } from 'react-native';
 
 //importando o que foi criado
@@ -23,6 +24,9 @@ const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
+  cadastrar = () => {
+    this.props.navigation.navigate('Cadastro');
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -43,9 +47,9 @@ export default class Login extends Component {
               accessibilityLabel={"Botão de login"}
               color={'#50a1e0'}
               />
-              <MButton
+              <Button
               title={'Cadastre-se!'}
-              textOnClick={'Cadastrado!'}
+              onPress={this.cadastrar}
               accessibilityLabel={"Botão de cadastro"}
               />
             </View>
