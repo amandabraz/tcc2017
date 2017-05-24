@@ -15,20 +15,22 @@ class Vendedor extends Component {
     this.state = {
         diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
         cpf: '',
-        nomeLoja: ''
+        nomeLoja: '',
+        meiosPagamento: []
     }
   }
   handleFinalizarPress = () => {
     const {
       state: {
-        cpf, nomeLoja
+        cpf, nomeLoja, meiosPagamento
       }
     } = this;
     // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
     vendedor = {
       "usuario": 1,
       "nomeFantasia": nomeLoja,
-      "cpf": cpf
+      "cpf": cpf,
+      "meiosPagamento": meiosPagamento
     }
     // TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
      fetch('http://10.0.2.2:8080/vendedor', {
@@ -54,6 +56,9 @@ class Vendedor extends Component {
   };
   onClick(data) {
     data.checked = !data.checked;
+    this.setState({
+      meiosPagamento,
+    });
   }
   renderView() {
     var len = this.state.diasArray.length;
