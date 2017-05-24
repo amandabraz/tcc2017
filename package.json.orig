@@ -13,15 +13,18 @@
 <<<<<<< HEAD
     "react-native-navbar": "^1.7.1",
 =======
+    "react-native-datepicker": "^1.4.7",
+    "react-native-image-crop-picker": "^0.13.0",
+    "react-native-image-picker": "^0.26.3",
+    "react-native-navbar": "^1.7.1",
+    "react-native-textinput-effects": "^0.3.1",
+    "react-native-vector-icons": "^4.1.1",
+>>>>>>> 8a4bf2118998e8c0892c36f6cd017070a0f98564
     "react-native-check-box": "^1.0.4",
     "react-native-checkbox": "^1.1.0",
     "react-native-elements": "^0.11.2",
-    "react-native-navbar": "^1.7.1",
     "react-native-tag-input": "0.0.14",
     "react-native-tags": "^0.2.0",
-    "react-native-vector-icons": "^4.1.1",
-    "react-native-datepicker": "^1.4.7",
->>>>>>> 823e9fa0f29720bf446a3e4c52df1e4d1c1ca73b
     "react-navigation": "^1.0.0-beta.7"
   },
   "devDependencies": {
