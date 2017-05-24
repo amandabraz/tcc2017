@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "categoreact": "^1.1.1",
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.4",
     "react-native-datepicker": "^1.4.7",
@@ -15,6 +16,11 @@
     "react-native-navbar": "^1.7.1",
     "react-native-textinput-effects": "^0.3.1",
     "react-native-vector-icons": "^4.1.1",
+    "react-native-check-box": "^1.0.4",
+    "react-native-checkbox": "^1.1.0",
+    "react-native-elements": "^0.11.2",
+    "react-native-tag-input": "0.0.14",
+    "react-native-tags": "^0.2.0",
     "react-navigation": "^1.0.0-beta.7"
   },
   "devDependencies": {
