@@ -1,12 +1,13 @@
 /**
 * Campos da tela de cadastro específico de Vendedor:
-* Horário e Dias de Funcionamento, CPF, Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
+* CPF, Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
 */
 import React, { Component } from 'react';
 import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid } from 'react-native';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
-import CheckBox from 'react-native-check-box'
-//import { me } from '../config/data';
+import CheckBox from 'react-native-check-box';
+import { Kohana } from 'react-native-textinput-effects';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 
 class Vendedor extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class Vendedor extends Component {
       "nomeFantasia": nomeLoja,
       "cpf": cpf
     }
-    // TODO: restante dos paramentos. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
+    // TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
      fetch('http://10.0.2.2:8080/vendedor', {
         method: 'POST',
         headers: {
@@ -93,26 +94,30 @@ class Vendedor extends Component {
     return (
       <ScrollView>
         <List>
-          <ListItem
-            title="CPF"
-            hideChevron
-          />
-          <TextInput
-            style={styles.singleLine}
-            keyboardType="phone-pad"
-            returnKeyType="next"
+          <Kohana
+            style={{ height: 45 }}
+            label={'CPF'}
+            iconClass={MaterialsIcon}
+            iconName={'account-box'}
+            iconColor={'#658091'}
+            labelStyle={{ color: '#402B2E', fontSize: 20, fontFamily: 'Roboto' }}
+            inputStyle={{ color: '#B27A81', fontSize: 20, fontFamily: 'Roboto' }}
             onChangeText={(cpf) => this.setState({cpf})}
             value={this.state.cpf}
-          />
-          <ListItem
-            title="Nome da loja"
-            hideChevron
-          />
-          <TextInput
-            style={styles.singleLine}
+            keyboardType="phone-pad"
             returnKeyType="next"
+          />
+          <Kohana
+            style={{ height: 45 }}
+            label={'Nome da sua loja'}
+            iconClass={MaterialsIcon}
+            iconName={'store'}
+            iconColor={'#658091'}
+            labelStyle={{ color: '#402B2E', fontSize: 20, fontFamily: 'Roboto' }}
+            inputStyle={{ color: '#B27A81', fontSize: 20, fontFamily: 'Roboto' }}
             onChangeText={(nomeLoja) => this.setState({nomeLoja})}
             value={this.state.nomeLoja}
+            returnKeyType="next"
           />
           <ListItem
             title="Meios de pagamento aceitos"

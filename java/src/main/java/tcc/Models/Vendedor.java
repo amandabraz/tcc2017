@@ -15,7 +15,7 @@ public class Vendedor {
     @Column(name = "ID_VENDEDOR")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
