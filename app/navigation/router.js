@@ -11,7 +11,7 @@ import Login from '../screens/login/Login';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import Cliente from '../screens/cadastro/Cliente';
-import PerfilCliente from '../screens/perfil/Cliente';
+import PerfilCliente from '../screens/perfil/PerfilCliente';
 
 
 // export const FeedStack = StackNavigator({
@@ -62,7 +62,7 @@ export const Tabs = TabNavigator({
 
 
 // TODO: Creio que aqui colocamos uma logica pra dizer: se usuario está logado, carregar dashboard, senão, carregar tela de login
- // TODO: verificar se manteremos tudo aqui ou não... 
+ // TODO: verificar se manteremos tudo aqui ou não...
 export const Root = StackNavigator({
   Login: {
     screen: Login,

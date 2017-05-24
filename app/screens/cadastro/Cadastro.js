@@ -11,7 +11,7 @@ const onButtonPress = () => {
   this.props.navigation.navigate('Vendedor');
  };
 const onButtonPressComprar = () => {
-  this.props.navigation.navigate('CadastroCliente');
+  this.props.navigation.navigate('Cliente');
  };
 
 
@@ -183,4 +183,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default cadastro;
+export default Cadastro;
