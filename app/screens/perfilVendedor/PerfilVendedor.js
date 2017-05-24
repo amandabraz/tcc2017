@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image } from 'react-native';
+import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, Button, Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class ModalTester extends Component {
+const onButtonPress = () => { Alert.alert('Dados Alterados'); };
+
+export default class PerfilVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nomeText: "Shirley",
       dataNascimentoText: '23/03/1984',
       emailText: 'shirley.silva@gmail.com',
-      perfilText: 'Perfil Vendedor',
       CPFText: '136.598.438-90',
       tagsText: '#Doce #Brigadeiro #Chocolate',
       nomeFantasia: "Docinhos :)"
@@ -57,9 +59,6 @@ export default class ModalTester extends Component {
           {this.state.emailText}{'\n'}{'\n'}
         </Text>
         <Text numberOfLines={5}>
-          {this.state.perfilText}{'\n'}{'\n'}
-        </Text>
-        <Text numberOfLines={5}>
           {this.state.CPFText}{'\n'}{'\n'}
         </Text>
         <Text numberOfLines={5}>
@@ -69,12 +68,18 @@ export default class ModalTester extends Component {
 
         </View>
         <TouchableOpacity onPress={this._showModal}>
-          <Text></Text>
+        <Icon name="pencil"
+              color={'#dc143c'}
+              size={25}/>
+          <Text style={styles.editarText}> Editar Perfil </Text>
+
         </TouchableOpacity>
         <Modal isVisible={this.state.isModalVisible}>
           <View style={{ flex: 1 }}>
-            <Text>Edicao de cadastro!</Text>
+            <Text style={{ fontFamily: 'Roboto', fontSize: 18, color: '#87cefa' }}>Edição de cadastro</Text>
           </View>
+          <Button title =" Salvar"
+             color="#87cefa" onPress={onButtonPress}/>
         </Modal>
         </Image>
       </View>
@@ -104,6 +109,12 @@ export default class ModalTester extends Component {
 
   },
 
+editarText: {
+    fontFamily: 'Roboto',
+    fontSize: 18,
+    color: '#dc143c'
+
+  },
   backgroundImage: {
        flex: 1,
        width: null,
