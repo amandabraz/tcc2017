@@ -3,7 +3,7 @@ import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image } from 're
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 
-export default class ModalTester extends Component {
+export default class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {

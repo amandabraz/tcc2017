@@ -25,7 +25,7 @@ const { width, height } = Dimensions.get("window");
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
   cadastrar = () => {
-    this.props.navigation.navigate('Vendedor');
+    this.props.navigation.navigate('Cadastro');
   };
   render() {
     return (

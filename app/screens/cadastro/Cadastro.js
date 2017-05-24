@@ -6,8 +6,13 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 import ImagePicker from 'react-native-image-crop-picker';
 
-const onButtonPress = () => { Alert.alert('Bem vindo Vendedor'); };
-const onButtonPressComprar = () => { Alert.alert('Bem vindo '); };
+// TODO: pegar os dados preenchidos pelo usuário, salvar no banco de dados e passar somente o id do usuário para a próxima dela na navegação:
+const onButtonPress = () => {
+  this.props.navigation.navigate('Vendedor');
+ };
+const onButtonPressComprar = () => {
+  this.props.navigation.navigate('CadastroCliente');
+ };
 
 
 class Cadastro extends Component {
