@@ -6,13 +6,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 import ImagePicker from 'react-native-image-crop-picker';
 
-// TODO: pegar os dados preenchidos pelo usuário, salvar no banco de dados e passar somente o id do usuário para a próxima dela na navegação:
-const onButtonPress = () => {
-  this.props.navigation.navigate('Vendedor');
- };
-const onButtonPressComprar = () => {
-  this.props.navigation.navigate('Cliente');
- };
+
 
 
 class Cadastro extends Component {
@@ -28,6 +22,13 @@ class Cadastro extends Component {
   };
  }
 
+ // TODO: pegar os dados preenchidos pelo usuário, salvar no banco de dados e passar somente o id do usuário para a próxima dela na navegação:
+  onButtonPress = () => {
+   this.props.navigation.navigate('Vendedor');
+  };
+  onButtonPressComprar = () => {
+   this.props.navigation.navigate('Cliente');
+  };
   selecionarPerfil(){
    ImagePicker.openPicker({
      width: 200,
@@ -130,11 +131,11 @@ class Cadastro extends Component {
 
       <Button title ="        Quero Vender         "
               color="#ffa07a"
-              onPress={onButtonPress}/>
+              onPress={this.onButtonPress}/>
 
       <Button title="       Quero Comprar      "
               color="#87cefa"
-              onPress={onButtonPressComprar}/>
+              onPress={this.onButtonPressComprar}/>
 
       </View>
       </ScrollView>
