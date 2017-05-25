@@ -8,6 +8,7 @@ import { Tile, List, ListItem, Button } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 import { Kohana } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import NavigationBar from 'react-native-navbar';
 
 class Vendedor extends Component {
   constructor(props) {
@@ -19,6 +20,15 @@ class Vendedor extends Component {
         meiosPagamento: []
     }
   }
+
+// Config navbar
+  const titleConfig = {
+    title: 'Cadastro do Vendedor',
+    tintColor: "#dc143c",
+    fontFamily: 'Roboto',
+  };
+
+
   handleFinalizarPress = () => {
     const {
       state: {
@@ -97,6 +107,10 @@ class Vendedor extends Component {
 
   render() {
     return (
+      <NavigationBar
+        title={titleConfig}
+        tintColor="#95c9db"
+      />
       <ScrollView>
         <List>
           <Kohana
