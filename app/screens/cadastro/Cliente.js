@@ -19,7 +19,7 @@ import TagInput from 'react-native-tag-input';
 //TODO ALINE: Redirecionar para tela inicial de Cliente
 const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
 
-export default class TagInputExample extends Component {
+export default class Cliente extends Component {
   state = {
     tags: [],
   };

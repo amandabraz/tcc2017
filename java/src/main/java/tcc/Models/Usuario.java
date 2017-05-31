@@ -16,7 +16,7 @@ public class Usuario {
     @Column(name = "ID_USUARIO")
     private Long id;
 
-    @Column(name = "SENHA", unique = true)
+    @Column(name = "SENHA")
     private String senha;
 
     @Column(name = "DELETADO", nullable = false)
@@ -45,19 +45,8 @@ public class Usuario {
 
     /**
      * Construtor com todos os dados para retorno do banco
-     * @param id
-     * @param senha
-     * @param deletado
-     * @param perfil
-     * @param nome
-     * @param email
-     * @param dataNasc
-     * @param localizacao
-     * @param notificacao
-     * @param bloqueado
      */
-    public Usuario(Long id, String senha, boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   boolean localizacao, boolean notificacao, boolean bloqueado) {
+    public Usuario() {
         this.id = id;
         this.senha = senha;
         this.deletado = deletado;
@@ -70,6 +59,14 @@ public class Usuario {
         this.bloqueado = bloqueado;
     }
 
+    /**
+     * Este construtor serve para classes que tem usuario como FK
+     * @param id
+     */
+    public Usuario(Long id) {
+        super();
+        this.id = id;
+    }
     /**
      * Construtor sem id para inserção em banco (id é auto gerado)
      * @param senha
