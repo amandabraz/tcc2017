@@ -12,7 +12,8 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  View
+  View,
+  Button
 } from 'react-native';
 
 //dimensão da janela
@@ -20,9 +21,9 @@ const { width, height } = Dimensions.get('window');
 
 //Exporto essa classe pra que na minha 'Main'
 export default class Login extends Component {
-
-  //construtor da classe
-  constructor(props){
+  cadastrar = () => {
+    this.props.navigation.navigate('Cadastro');
+  };
     super(props);
     this.state = {
       login: '',
@@ -81,12 +82,12 @@ export default class Login extends Component {
                   <Text style={styles.login_buttonFont}>{'Entrar'}</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.login_button}
-                onPress={this.onButtonPress}
-                accessibilityLabel={'Botão de cadastro'}>
-                  <Text style={styles.login_buttonFont}>{'Cadastre-se!'}</Text>
-              </TouchableOpacity>
+              <Button
+              title={'Cadastre-se!'}
+              onPress={this.cadastrar}
+              accessibilityLabel={"Botão de cadastro"}
+              />
+
 
             </View>
         </Image>
