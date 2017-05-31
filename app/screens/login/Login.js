@@ -50,11 +50,11 @@ export default class Login extends Component {
   //construindo a classe
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.login_container}>
         <Image source={require('./img/cupcakes.jpg')} style={styles.background}>
-            <View style={styles.centralView}>
+            <View style={styles.login_centralView}>
 
-              <Text style={styles.title}>Bem-Vindo(a)!</Text>
+              <Text style={styles.login_title}>Bem-Vindo(a)!</Text>
 
               <TextInput
                 style={styles.input}
@@ -66,7 +66,7 @@ export default class Login extends Component {
               />
 
               <TextInput
-                style={styles.input}
+                style={styles.login_input}
                 onChangeText={(text) => this.setState({text})}
                 value={'12345'}
                 underlineColorAndroid={'#e2b1a3'}
@@ -75,17 +75,17 @@ export default class Login extends Component {
               />
 
               <TouchableOpacity
-                style={styles.button}
+                style={styles.login_button}
                 onPress={this.onButtonPress}
                 accessibilityLabel={'Botão de login'}>
-                  <Text style={styles.buttonFont}>{'Entrar'}</Text>
+                  <Text style={styles.login_buttonFont}>{'Entrar'}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.button}
+                style={styles.login_button}
                 onPress={this.onButtonPress}
                 accessibilityLabel={'Botão de cadastro'}>
-                  <Text style={styles.buttonFont}>{'Cadastre-se!'}</Text>
+                  <Text style={styles.login_buttonFont}>{'Cadastre-se!'}</Text>
               </TouchableOpacity>
 
             </View>
@@ -97,23 +97,23 @@ export default class Login extends Component {
 
 //css
 const styles = StyleSheet.create({
-  container: {
+  login_container: {
     flex: 1,
   },
-  title: {
+  login_title: {
     fontFamily: 'Roboto',
     color: '#95c9db',
     fontWeight: 'bold',
     fontSize: 40,
   },
-  background: { //tornando a imagem do tamanho da tela
+  login_background: { //tornando a imagem do tamanho da tela
     width,
     height,
     justifyContent: 'center',
     alignItems: 'center',
     resizeMode: 'cover',
   },
-  centralView: {
+  login_centralView: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(100, 108, 122, 0.7)',
   },
-  input:{
+  login_input:{
     width: 300,
     height: 60,
     borderColor: 'gray',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
   },
-  button: {
+  login_button: {
     justifyContent: 'center',
     height: 50,
     marginTop: 20,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#50a1e0',
     alignSelf: 'stretch',
   },
-  buttonFont: {
+  login_buttonFont: {
     fontWeight: 'bold',
     fontSize: 25,
     color:'white',
