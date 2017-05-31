@@ -18,7 +18,7 @@ class Cadastro extends Component {
     nome: '',
     email: '',
     senha:'',
-    image: null,
+    image: require('./img/cameraa.jpg'),
   };
  }
 
@@ -56,8 +56,7 @@ class Cadastro extends Component {
       <Text>{'\n'}</Text>
       <TouchableOpacity onPress={this.selecionarPerfil.bind(this)}>
       <Image style={{width: 200, height: 200, borderRadius: 100}}
-             source={require('./img/cameraa.jpg')}/>
-      <Image style={{borderRadius: 100}} source={this.setState.image} />
+             source={this.state.image}/>
       </TouchableOpacity>
 
       <Kohana style={{ backgroundColor: 'transparent' }}
