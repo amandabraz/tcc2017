@@ -1,6 +1,7 @@
 import React from 'react';
-import { TabNavigator, StackNavigator } from 'react-navigation';
+import { TabNavigator, StackNavigator, TabView } from 'react-navigation';
 import { Icon } from 'react-native-elements';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 
 
 //Coisas comentadas vieram do exemplo que utilizei,
@@ -12,6 +13,8 @@ import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import Cliente from '../screens/cadastro/Cliente';
 import PerfilCliente from '../screens/perfil/PerfilCliente';
+import PerfilVendedor from '../screens/perfilVendedor/PerfilVendedor';
+
 
 
 // export const FeedStack = StackNavigator({
@@ -29,8 +32,10 @@ import PerfilCliente from '../screens/perfil/PerfilCliente';
 //   },
 // });
 
-//TODO: definir menu em grupo
-export const Tabs = TabNavigator({
+/**
+MENU SOMENTE PARA VENDEDORES
+**/
+export const TabsVendedor = TabNavigator({
   // Feed: {
   //   screen: FeedStack,
   //   navigationOptions: {
@@ -40,15 +45,45 @@ export const Tabs = TabNavigator({
   //     },
   //   },
   // },
-  Vendedor2: {
-    screen: Vendedor,
+  PerfilVendedor: {
+    screen: PerfilVendedor,
     navigationOptions: {
       tabBar: {
-        label: 'Vendedor2',
-        icon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
+        icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
       },
     },
   },
+  Loja: {
+    screen: Cliente,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
+      },
+    },
+  },
+  Configuração: {
+    screen: Login,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
+      },
+    },
+  }
+},{
+  tabBarComponent: TabView.TabBarBottom,
+  tabBarPosition: 'bottom',
+  swipeEnabled: false,
+  animationEnabled: false,
+  backBehavior: 'none',
+  tabBarOptions: {
+    activeTintColor: '#2f4f4f',
+    labelStyle: {
+      fontSize: 12,
+    },
+    style: {
+      backgroundColor: '#e9967a',
+    },
+  }
 });
 
 // export const SettingsStack = StackNavigator({
