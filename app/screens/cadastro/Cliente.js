@@ -17,18 +17,25 @@ import NavigationBar from 'react-native-navbar';
 import TagInput from 'react-native-tag-input';
 
 //TODO ALINE: Redirecionar para tela inicial de Cliente
-const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
+//const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
 
 export default class Cliente extends Component {
-  state = {
-    tags: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      tags: [],
+    };
+  }
 
   onChangeTags = (tags) => {
     this.setState({
       tags,
     });
   };
+
+  botaoFinalizar = () => {
+    this.props.navigation.navigate('TabsCliente');
+  }
 
   render() {
     const inputProps = {
@@ -54,7 +61,7 @@ export default class Cliente extends Component {
             inputProps={inputProps}
             numberOfLines={15}
           />
-          <Button onPress={botaoFinalizar} title="Finalizar" color="#dc143c" />
+          <Button onPress={this.botaoFinalizar} title="Finalizar" color="#dc143c" />
         </View>
       </View>
     );

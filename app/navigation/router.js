@@ -37,6 +37,69 @@ import HomeCliente from '../screens/home/HomeCliente';
 /**
 MENU SOMENTE PARA VENDEDORES
 **/
+export const TabsCliente = TabNavigator({
+  Favoritos: {
+    screen: HomeCliente,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
+      },
+    },
+  },
+  Ranking: {
+    screen: HomeCliente,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
+      },
+    },
+  },
+  Home: {
+    screen: HomeCliente,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
+      },
+    },
+  },
+  Perfil: {
+    screen: PerfilCliente,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
+      },
+    },
+  },
+  Configuração: {
+    screen: HomeCliente,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
+      },
+    },
+  }
+},{
+  tabBarComponent: TabView.TabBarBottom,
+  tabBarPosition: 'bottom',
+  swipeEnabled: false,
+  animationEnabled: false,
+  backBehavior: 'none',
+  tabBarOptions: {
+    showLabel: false,
+    activeTintColor: '#8fbc8f',
+    inactiveTintColor: '#fff',
+    labelStyle: {
+      fontSize: 12,
+    },
+    style: {
+      backgroundColor: '#2f4f4f',
+    },
+  }
+});
+
+/**
+MENU SOMENTE PARA VENDEDORES
+**/
 export const TabsVendedor = TabNavigator({
   Loja: {
     screen: HomeVendedor,
@@ -97,15 +160,6 @@ export const TabsVendedor = TabNavigator({
   }
 });
 
-// export const SettingsStack = StackNavigator({
-//   Settings: {
-//     screen: Settings,
-//     navigationOptions: {
-//       title: 'Settings',
-//     },
-//   },
-// });
-
 
 // TODO: Creio que aqui colocamos uma logica pra dizer: se usuario está logado, carregar dashboard, senão, carregar tela de login
  // TODO: verificar se manteremos tudo aqui ou não...
@@ -124,6 +178,9 @@ export const Root = StackNavigator({
   },
   TabsVendedor: {
     screen: TabsVendedor
+  },
+  TabsCliente: {
+    screen: TabsCliente
   }
 }, {
   mode: 'card',
