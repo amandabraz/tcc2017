@@ -45,14 +45,14 @@ class Cadastro extends Component {
     return (
       <View style= {{flex: 3}}>
       <Image source={require('./img/cake1.jpg')}
-             style={styles.backgroundImage}>
+             style={styles.cliente_backgroundImage}>
 
       <NavigationBar title={titleConfig}
                      tintColor="#f5f5f5"/>
 
       <ScrollView>
 
-      <View style={styles.container}>
+      <View style={styles.cliente_container}>
       <Text>{'\n'}</Text>
       <TouchableOpacity onPress={this.selecionarPerfil.bind(this)}>
       <Image style={{width: 200, height: 200, borderRadius: 100}}
@@ -152,26 +152,26 @@ const titleConfig = {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  cliente_container: {
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center'
   },
 
-  texto: {
+  cliente_texto: {
     color: '#f08080',
     fontSize: 30,
     fontFamily: 'Roboto',
     textAlign: 'center'
   },
 
-  backgroundImage: {
+  cliente_backgroundImage: {
       flex: 1,
       width: null,
       height: null,
   },
 
-    input:{
+    cliente_input:{
       width: 378,
       height: 65,
       borderColor: "#778899",
