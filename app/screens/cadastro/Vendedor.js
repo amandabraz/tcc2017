@@ -26,40 +26,43 @@ class Vendedor extends Component {
   }
 
   handleFinalizarPress = () => {
-    const {
-      state: {
-        cpf, nomeLoja, meiosPagamento
-      }
-    } = this;
-    // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
-    vendedor = {
-      "usuario": 1,
-      "nomeFantasia": nomeLoja,
-      "cpf": cpf,
-      "meiosPagamento": meiosPagamento,
-      "tags": tags
-    }
+    this.props.navigation.navigate('TabsVendedor');
+
+    // const {
+    //   state: {
+    //     cpf, nomeLoja, meiosPagamento, tags
+    //   }
+    // } = this;
+    // // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
+    // vendedor = {
+    //   "usuario": 1,
+    //   "nomeFantasia": nomeLoja,
+    //   "cpf": cpf,
+    //   "meiosPagamento": meiosPagamento,
+    //   "tags": tags
+    // }
+
     //Alert.alert("Vendedor", JSON.stringify(vendedor));
     // TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
-     fetch('http://10.0.2.2:8080/vendedor', {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(vendedor)
-      })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            // TODO: acertar a navegação para a próxima tela, a ser criada
-            //this.props.navigation.navigate('Finalizar');
-          })
-          .catch((error) => {
-            // TODO: melhorar erro? combinar padrão de erro no app!
-            Alert.alert("error Response", JSON.stringify(error));
-            console.error(error);
-          });
+    //  fetch('http://10.0.2.2:8080/vendedor', {
+    //     method: 'POST',
+    //     headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(vendedor)
+    //   })
+    //       .then((response) => response.json())
+    //       .then((responseJson) => {
+    //         ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+    //         // TODO: acertar a navegação para a próxima tela, a ser criada
+    //         this.props.navigation.navigate('TabsVendedor');
+    //       })
+    //       .catch((error) => {
+    //         // TODO: melhorar erro? combinar padrão de erro no app!
+    //         Alert.alert("error Response", JSON.stringify(error));
+    //         console.error(error);
+    //       });
 
   };
   onClick(data) {

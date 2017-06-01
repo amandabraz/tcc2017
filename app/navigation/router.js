@@ -111,9 +111,9 @@ export const Root = StackNavigator({
   Cliente: {
     screen: Cliente,
   },
-  PerfilCliente: {
-    screen: PerfilCliente,
-  },
+  TabsVendedor: {
+    screen: TabsVendedor
+  }
 }, {
   mode: 'modal',
   headerMode: 'none',
