@@ -10,21 +10,21 @@ import {
 
 export default MyPresentationalComponent = (props) => {
    return (
-      <View style = {styles.cliente_container}>
+      <View style = {styles.container}>
          <TextInput
-            style = {styles.cliente_input}
+            style = {styles.input}
             placeholder = 'Email'
             autoCapitalize = 'none'
             onChangeText = {props.updateEmail}
          />
          <TextInput
-            style = {styles.cliente_input}
+            style = {styles.input}
             placeholder = 'Password'
             autoCapitalize = 'none'
             onChangeText = {props.updatePassword}
          />
          <TouchableHighlight
-            style = {styles.cliente_submit}
+            style = {styles.submit}
             onPress = { () => props.login(props.email, props.password)}>
             <Text>
                Submit
@@ -35,19 +35,19 @@ export default MyPresentationalComponent = (props) => {
 }
 
 const styles = StyleSheet.create ({
-   cliente_container: {
+   container: {
       flex: 1,
       alignItems: 'center',
       justifyContent:'center',
       paddingTop: 23
    },
-   cliente_input: {
+   input: {
       margin: 15,
       height: 40,
       borderColor: 'grey',
       borderWidth: 1
    },
-   cliente_submit: {
+   submit: {
       backgroundColor: 'silver',
       padding: 1
    }

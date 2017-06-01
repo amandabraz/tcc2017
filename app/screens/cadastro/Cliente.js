@@ -40,7 +40,7 @@ export default class Cliente extends Component {
     };
 
     return (
-      <View style={styles.cliente_container}>
+      <View style={styles.container}>
         <NavigationBar
           title={titleConfig}
           tintColor="#95c9db"
@@ -70,10 +70,10 @@ const titleConfig = {
 
 //CSS
 const styles = StyleSheet.create({
-  cliente_container: {
+  container: {
     flex: 1,
   },
-  cliente_button: {
+  button: {
     justifyContent: 'center',
     height: 50,
     marginTop: 20,
@@ -82,14 +82,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#50a1e0",
     alignSelf: 'stretch',
   },
-  cliente_title: {
+  title: {
     fontFamily: 'Roboto',
     color: '#95c9db',
     fontWeight: 'bold',
     fontSize: 40,
     backgroundColor: 'rgba(0, 121, 163, 0.7)',
   },
-  cliente_centralView: {
+  centralView: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(100, 108, 122, 0.7)',
   },
-  cliente_input: {
+  input: {
     borderColor: 'black',
     borderWidth: 1,
     height: 37,
     width: 250,
   },
-  cliente_textInputContainer: {
+  textInputContainer: {
     flex: 1,
     width: 100,
     height: 32,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
   },
 
-  cliente_textInput: {
+  textInput: {
     margin: 0,
     padding: 0,
     paddingLeft: 12,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.87)',
   },
 
-  cliente_tag: {
+  tag: {
     justifyContent: 'center',
     backgroundColor: '#e0e0e0',
     borderRadius: 16,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     height: 32,
     margin: 4,
   },
-  cliente_tagLabel: {
+  tagLabel: {
     fontSize: 13,
     color: 'rgba(0, 0, 0, 0.87)',
   },
