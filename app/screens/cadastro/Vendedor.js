@@ -3,7 +3,7 @@
 * CPF, Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
 */
 import React, { Component } from 'react';
-import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid, Text } from 'react-native';
+import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid, Text, Dimensions } from 'react-native';
 import { Tile, Button } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 import { Kohana } from 'react-native-textinput-effects';
@@ -11,6 +11,7 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import NavigationBar from 'react-native-navbar';
 import TagInput from 'react-native-tag-input';
 
+const { width, height } = Dimensions.get("window");
 
 class Vendedor extends Component {
   constructor(props) {
@@ -105,7 +106,7 @@ class Vendedor extends Component {
   render() {
     const inputProps = {
       keyboardType: 'default',
-      placeholder: 'Tags para identificar seus produtos',
+      placeholder: 'ex: vegetariano, doce, salgado',
       placeholderTextColor: '#402B2E'
     };
 
@@ -142,7 +143,7 @@ class Vendedor extends Component {
                 value={this.state.nomeLoja}
                 returnKeyType="next"
               />
-              <Text style={{ padding: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
                   Meios de pagamento aceitos
               </Text>
               <View style={styles.container}>
@@ -150,8 +151,10 @@ class Vendedor extends Component {
                       {this.renderView()}
                   </ScrollView>
               </View>
-
-              <View style={{ flexDirection: 'column', flex: 1, height: 150 }}>
+              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                Tags para seus produtos
+              </Text>
+              <View style={{ flexDirection: 'column', flex: 1, height: 130, padding: 10 }}>
                 <TagInput
                   value={this.state.tags}
                   onChange={(tags) => this.setState({tags,})}
