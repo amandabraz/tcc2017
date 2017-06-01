@@ -54,3 +54,8 @@ fastlane/screenshots
 
 #Eclipse files
 .metadata/
+android/.metadata/
+android/RemoteSystemsTempFiles/
+
+
+*.orig
