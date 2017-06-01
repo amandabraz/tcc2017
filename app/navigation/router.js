@@ -2,6 +2,7 @@ import React from 'react';
 import { TabNavigator, StackNavigator, TabView } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 
 //Coisas comentadas vieram do exemplo que utilizei,
@@ -14,7 +15,8 @@ import Vendedor from '../screens/cadastro/Vendedor';
 import Cliente from '../screens/cadastro/Cliente';
 import PerfilCliente from '../screens/perfil/PerfilCliente';
 import PerfilVendedor from '../screens/perfilVendedor/PerfilVendedor';
-
+import HomeVendedor from '../screens/home/HomeVendedor';
+import HomeCliente from '../screens/home/HomeCliente';
 
 
 // export const FeedStack = StackNavigator({
@@ -36,16 +38,31 @@ import PerfilVendedor from '../screens/perfilVendedor/PerfilVendedor';
 MENU SOMENTE PARA VENDEDORES
 **/
 export const TabsVendedor = TabNavigator({
-  // Feed: {
-  //   screen: FeedStack,
-  //   navigationOptions: {
-  //     tabBar: {
-  //       label: 'Feed',
-  //       icon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />
-  //     },
-  //   },
-  // },
-  PerfilVendedor: {
+  Loja: {
+    screen: HomeVendedor,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
+      },
+    },
+  },
+  Estatísticas: {
+    screen: HomeVendedor,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
+      },
+    },
+  },
+  Home: {
+    screen: HomeVendedor,
+    navigationOptions: {
+      tabBar: {
+        icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
+      },
+    },
+  },
+  Perfil: {
     screen: PerfilVendedor,
     navigationOptions: {
       tabBar: {
@@ -53,16 +70,8 @@ export const TabsVendedor = TabNavigator({
       },
     },
   },
-  Loja: {
-    screen: Cliente,
-    navigationOptions: {
-      tabBar: {
-        icon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
-      },
-    },
-  },
   Configuração: {
-    screen: Login,
+    screen: HomeVendedor,
     navigationOptions: {
       tabBar: {
         icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
@@ -76,12 +85,14 @@ export const TabsVendedor = TabNavigator({
   animationEnabled: false,
   backBehavior: 'none',
   tabBarOptions: {
-    activeTintColor: '#2f4f4f',
+    showLabel: false,
+    activeTintColor: '#8fbc8f',
+    inactiveTintColor: '#fff',
     labelStyle: {
       fontSize: 12,
     },
     style: {
-      backgroundColor: '#e9967a',
+      backgroundColor: '#2f4f4f',
     },
   }
 });
@@ -115,6 +126,6 @@ export const Root = StackNavigator({
     screen: TabsVendedor
   }
 }, {
-  mode: 'modal',
+  mode: 'card',
   headerMode: 'none',
 });
