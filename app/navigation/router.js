@@ -35,7 +35,7 @@ import HomeCliente from '../screens/home/HomeCliente';
 // });
 
 /**
-MENU SOMENTE PARA VENDEDORES
+MENU SOMENTE PARA CLIENTE
 **/
 export const TabsCliente = TabNavigator({
   Favoritos: {
@@ -155,7 +155,7 @@ export const TabsVendedor = TabNavigator({
       fontSize: 12,
     },
     style: {
-      backgroundColor: '#2f4f4f',
+      backgroundColor: '#4682b4',
     },
   }
 });
