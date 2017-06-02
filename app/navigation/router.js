@@ -10,7 +10,7 @@ import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import Cliente from '../screens/cadastro/Cliente';
 import PerfilCliente from '../screens/perfil/PerfilCliente';
-import PerfilVendedor from '../screens/perfilVendedor/PerfilVendedor';
+import PerfilVendedor from '../screens/perfil/PerfilVendedor';
 import HomeVendedor from '../screens/home/HomeVendedor';
 import HomeCliente from '../screens/home/HomeCliente';
 import ProdutosFavoritos from '../screens/produto/ProdutosFavoritos';
@@ -97,8 +97,8 @@ export const TabsVendedor = TabNavigator({
         },
       },
     },
-    Estatísticas: {
-      screen: HomeVendedor,
+    Estatisticas: {
+      screen: Estatisticas,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
