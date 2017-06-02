@@ -129,7 +129,8 @@ class Cadastro extends Component {
                   date={this.state.date}
                   mode="date"
                   placeholder="Data de Nascimento"
-                  format="DD-MM-YYYY"
+                  format="YYYY-MM-DD"
+                  maxDate="2002-01-01"
                   confirmBtnText="Confirm"
                   cancelBtnText="Cancel"
                   customStyles={{
