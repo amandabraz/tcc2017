@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert, Image, TouchableOpacity, ToastAndroid } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -19,15 +19,72 @@ class Cadastro extends Component {
     email: '',
     senha:'',
     image: require('./img/cameraa.jpg'),
-  };
+  }
  }
 
- // TODO: pegar os dados preenchidos pelo usuário, salvar no banco de dados e passar somente o id do usuário para a próxima dela na navegação:
-  onButtonPress = () => {
-   this.props.navigation.navigate('Vendedor');
+  onButtonVendedor = () => {
+    const {
+      state: {
+        date, nome, email, senha
+      }
+    } = this;
+    usuario = {
+      "dataNasc": date,
+      "nome": nome,
+      "email": email,
+      "senha": senha,
+      "perfil": 'V'
+    }
+       fetch('http://10.0.2.2:8080/usuario', {
+        method: 'POST',
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usuario)
+      })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+            this.props.navigation.navigate('Vendedor');
+
+          })
+          .catch((error) => {
+            Alert.alert("error Response", JSON.stringify(error));
+            console.error(error);
+          });
   };
-  onButtonPressComprar = () => {
-   this.props.navigation.navigate('Cliente');
+  onButtonCliente = () => {
+    const {
+      state: {
+        date, nome, email, senha
+      }
+    } = this;
+    usuario = {
+      "dataNasc": date,
+      "nome": nome,
+      "email": email,
+      "senha": senha,
+      "perfil": 'C'
+    }
+       fetch('http://10.0.2.2:8080/usuario', {
+        method: 'POST',
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usuario)
+      })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+               this.props.navigation.navigate('Cliente');
+
+          })
+          .catch((error) => {
+            Alert.alert("error Response", JSON.stringify(error));
+            console.error(error);
+          });
   };
   selecionarPerfil(){
    ImagePicker.openPicker({
@@ -68,7 +125,7 @@ class Cadastro extends Component {
               labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
               inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
 
-      <DatePicker style={{width: 378, height: 48}}
+      <DatePicker style={{width: 390, height: 48}}
                   date={this.state.date}
                   mode="date"
                   placeholder="Data de Nascimento"
@@ -80,7 +137,7 @@ class Cadastro extends Component {
                       position: 'absolute',
                       left: 0,
                       top: 4,
-                      marginLeft: 0
+                      marginLeft: 5
                     },
                     placeholderText: {
                       color: '#f5f5f5',
@@ -130,11 +187,11 @@ class Cadastro extends Component {
 
       <Button title ="        Quero Vender         "
               color="#ffa07a"
-              onPress={this.onButtonPress}/>
+              onPress={this.onButtonVendedor}/>
 
       <Button title="       Quero Comprar      "
               color="#87cefa"
-              onPress={this.onButtonPressComprar}/>
+              onPress={this.onButtonCliente}/>
 
       </View>
       </ScrollView>
