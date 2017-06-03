@@ -19,7 +19,6 @@ import {
 
 //importando o que foi criado
 import MTextInput from "../../components/mTextInput/MTextInput.js";
-import MButton from "../../components/mButton/MButton.js";
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
