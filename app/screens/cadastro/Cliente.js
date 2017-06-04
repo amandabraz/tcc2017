@@ -10,7 +10,9 @@ import {
   TextInput,
   View,
   Alert,
-  Dimensions
+  Dimensions,
+  ToastAndroid,
+  ScrollView
 } from 'react-native';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
@@ -19,13 +21,47 @@ import TagInput from 'react-native-tag-input';
 //TODO ALINE: Redirecionar para tela inicial de Cliente
 //const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
 
-export default class Cliente extends Component {
+const {width, height} = Dimensions.get("window");
+
+class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tags: [],
     };
   }
+
+  handleFinalizarPress = () => {
+    const {
+      state: {
+        tags
+      }
+    } = this;
+
+    cliente = {
+      "usuario": 1,
+      "tags": tags,
+    }
+
+    fetch('http://10.0.2.2:8080/cliente', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cliente)
+    })
+      .then((response) => response.json())
+      .then((reponseJson) => {
+        ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        this.props.navigation.navigate('TabsCliente');
+      })
+      .catch((error) => {
+        Alert.alert("error Response", JSON.stringify(error));
+        console.error(error);
+      });
+};
+
 
   onChangeTags = (tags) => {
     this.setState({
@@ -55,12 +91,13 @@ export default class Cliente extends Component {
         <View style={{ flexDirection: 'column', flex: 1}}>
           <TagInput
             value={this.state.tags}
-            onChange={this.onChangeTags}
+            onChange={(tags) => this.setState({tags,})}
             tagColor="pink"
             tagTextColor="white"
             inputProps={inputProps}
             numberOfLines={15}
           />
+          //TODO Aline: redirecionar para handleFinalizarPress quando o banco estiver oka
           <Button onPress={this.botaoFinalizar} title="Finalizar" color="#dc143c" />
         </View>
       </View>
@@ -147,4 +184,6 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('tcc2017', () => tcc2017);
+Cliente.defaultProps = { ...Cliente };
+
+export default Cliente;

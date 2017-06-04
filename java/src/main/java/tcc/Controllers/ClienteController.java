@@ -8,7 +8,9 @@ import tcc.DAOs.ClienteDAO;
 import tcc.DAOs.TagDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.Models.Cliente;
+import tcc.Models.Pagamento;
 import tcc.Models.Tag;
+import tcc.Models.Vendedor;
 
 import java.util.Date;
 import java.util.List;
@@ -32,7 +34,7 @@ public class ClienteController {
      * @return
      */
     @RequestMapping("/cliente")
-    public ResponseEntity<Cliente> cadastraVendedor(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> cadastraCliente(@RequestBody Cliente cliente) {
         Cliente novoCliente = null;
         try {
             novoCliente = clienteDAO.save(cliente);
@@ -45,4 +47,27 @@ public class ClienteController {
 
     //TODO: Ta dando ruim adicionar tag pq da conflito de int para string
 
+    @RequestMapping("/tag")
+    public String cadastraTag(@RequestParam(value="clienteId") Long clienteId,
+                                         @RequestParam(value="tags") List<String> tags) {
+        List<Tag> tagInseridas = null;
+        for (String tag : tags) {
+            Tag novaTag = tagDAO.findByTags(stag);
+            tags.add(novaTag);
+        }
+        Cliente cliente = clienteDAO.findOne(clienteId);
+        cliente.setTags(tags);
+
+        cliente = clienteDAO.save(cliente);
+
+        return "Tag para o cliente " + clienteId +
+                "criado com sucesso! (" + cliente.toString() + ")";
+    }
+
 }
+
+
+
+
+
+
