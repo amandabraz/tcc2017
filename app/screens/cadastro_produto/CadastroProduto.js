@@ -113,7 +113,7 @@ return (
             label={'Nome'}
             iconClass={FontAwesomeIcon}
             onChangeText={(nome) => this.setState({nome: nome})}
-            iconName={'spoon'}
+            iconName={'cutlery'}
             iconColor={'#8B636C'}
             labelStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
             inputStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
@@ -138,7 +138,7 @@ return (
             dropdownTextStyle={{color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center'}}
             dropdownStyle={{width: 390, height: 78}}
             />
-            
+
     <DatePicker
         style={{width: 390,
         height: 48, borderColor: '#EEE9E9',  borderWidth: 0.5 }}
