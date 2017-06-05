@@ -20,6 +20,11 @@ public class Pagamento {
     @Enumerated(EnumType.STRING)
     private MeioPagamento meioPagamento;
 
+    public Pagamento(Long id) {
+        super();
+        this.id = id;
+    }
+
     public Pagamento(MeioPagamento meioPagamento) {
         this.meioPagamento = meioPagamento;
     }
