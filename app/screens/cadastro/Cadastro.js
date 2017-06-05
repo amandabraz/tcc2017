@@ -156,6 +156,7 @@ class Cadastro extends Component {
       <Kohana style={{ backgroundColor: 'transparent' }}
               label={'Email'}
               iconClass={FontAwesomeIcon}
+              keyboardType={'email-address'}
               onChangeText={(email) => this.setState({email: email})}
               iconName={'envelope'}
               iconColor={'#f5f5f5'}
