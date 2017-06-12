@@ -158,7 +158,7 @@ class Cadastro extends Component {
               iconClass={FontAwesomeIcon}
               keyboardType={'email-address'}
               onChangeText={(email) => this.setState({email: email})}
-              iconName={'envelope'}
+              iconName={'at'}
               iconColor={'#f5f5f5'}
               labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
               inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
@@ -183,7 +183,7 @@ class Cadastro extends Component {
               secureTextEntry={true}/>
 
       </View>
-      <Text>{'\n'}{'\n'}{'\n'}</Text>
+      <Text>{'\n'}{'\n'}</Text>
 
       <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5}}>
 
@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 3,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 15
   },
 
   texto: {
