@@ -18,8 +18,10 @@ import BuscaProduto from '../screens/produto/BuscaProduto';
 import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
 import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
+import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
+
 
 
 /**
@@ -93,12 +95,24 @@ export const TabsCliente = TabNavigator({
     }
   });
 
+  export const GerenciaVendedor = StackNavigator({
+      GerenciaProduto: {
+          screen: GerenciaProduto,
+        },
+      CadastroProduto: {
+          screen: CadastroProduto,
+          navigationOptions: {
+            title: 'Novo Produto'
+          },
+        }
+    });
+
 /**
 MENU SOMENTE PARA VENDEDORES
 **/
 export const TabsVendedor = TabNavigator({
     Loja: {
-      screen: GerenciaProduto,
+      screen: GerenciaVendedor,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
