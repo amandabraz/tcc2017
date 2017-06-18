@@ -6,8 +6,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 // TELAS CRIADAS (TODAS DEVEM ESTAR LISTADAS)
 import Login from '../screens/login/Login';
-import Cadastro from '../screens/cadastro/Cadastro';
-import Vendedor from '../screens/cadastro/Vendedor';
 import Cliente from '../screens/cadastro/Cliente';
 import PerfilCliente from '../screens/perfil/PerfilCliente';
 import PerfilVendedor from '../screens/perfil/PerfilVendedor';
@@ -21,12 +19,23 @@ import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
 import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
+import Cadastro from '../screens/cadastro/Cadastro';
+import Vendedor from '../screens/cadastro/Vendedor';
+
 
 
 /**
 MENU SOMENTE PARA CLIENTE
 **/
 export const TabsCliente = TabNavigator({
+    Busca: {
+      screen: BuscaProduto,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
+        },
+      },
+    },
     Favoritos: {
       screen: ProdutosFavoritos,
       navigationOptions: {
