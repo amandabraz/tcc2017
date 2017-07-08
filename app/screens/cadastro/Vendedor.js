@@ -26,6 +26,8 @@ class Vendedor extends Component {
   }
 
   handleFinalizarPress = () => {
+    this.props.navigation.navigate('TabsVendedor');
+
     const {
       state: {
         cpf, nomeLoja
