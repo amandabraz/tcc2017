@@ -93,12 +93,6 @@ render() {
 
 return (
     <View style= {{flex: 3}}>
-    <Image source={require('./img/fundo5.jpeg')}
-            style={styles.backgroundImage}>
-    <NavigationBar
-       title={titleConfig}
-       tintColor="#f5f5f5"/>
-
     <ScrollView>
 
     <View style={styles.container}>
@@ -125,7 +119,7 @@ return (
             iconClass={FontAwesomeIcon}
             onChangeText={(preco) => this.setState({preco: preco})}
             keyboardType={'numeric'}
-            iconName={'money'}
+            iconName={'dollar'}
             iconColor={'#8B636C'}
             labelStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
             inputStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
@@ -175,13 +169,12 @@ return (
                   iconClass={FontAwesomeIcon}
                   onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                   keyboardType={'numeric'}
-                  iconName={'shopping-basket'}
+                  iconName={'shopping-cart'}
                   iconColor={'#8B636C'}
                   labelStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
                   inputStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
 
-      <View style={{ width: 378, height: 86, alignItems: 'center'}}>
-      <Text>      </Text>
+      <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
 
         <TagInput
           value={this.state.ingredientes}
@@ -194,7 +187,7 @@ return (
 
         </View>
 
-        <View style={{ width: 378, height: 86, alignItems: 'center'}}>
+      <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
        <TagInput
           value={this.state.tags}
           onChange={this.onChangeTags}
@@ -213,7 +206,6 @@ return (
 
          </View>
      </ScrollView>
-     </Image>
        </View>
 
     );
@@ -231,13 +223,15 @@ const styles = StyleSheet.create({
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 15
   },
 
   texto: {
     color: '#8B636C',
     fontSize: 30,
     fontFamily: 'Roboto',
-    textAlign: 'center'
+    textAlign: 'center',
+    backgroundColor: '#ffffff',
   },
 
   foto: {
