@@ -15,6 +15,8 @@ class Cadastro extends Component {
 
    this.state = {
     date: '',
+    cpf: '',
+    celular: '',
     nome: '',
     email: '',
     senha:'',
@@ -32,6 +34,8 @@ class Cadastro extends Component {
       "dataNasc": date,
       "nome": nome,
       "email": email,
+      "cpf": cpf,
+      "telefone": celular,
       "senha": senha,
       "perfil": 'V'
     }
@@ -64,6 +68,8 @@ class Cadastro extends Component {
       "dataNasc": date,
       "nome": nome,
       "email": email,
+      "cpf": cpf,
+      "telefone": celular,
       "senha": senha,
       "perfil": 'C'
     }
@@ -125,7 +131,28 @@ class Cadastro extends Component {
               labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
               inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
 
-      <DatePicker style={{width: 390, height: 48}}
+
+      <Kohana style={{ backgroundColor: 'transparent' }}
+              label={'CPF'}
+              iconClass={FontAwesomeIcon}
+              onChangeText={(cpf) => this.setState({cpf: cpf})}
+              iconName={'info'}
+              iconColor={'#f5f5f5'}
+              keyboardType={'numeric'}
+              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
+              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
+
+      <Kohana style={{ backgroundColor: 'transparent' }}
+              label={'Celular'}
+              iconClass={FontAwesomeIcon}
+              onChangeText={(celular) => this.setState({celular: celular})}
+              iconName={'mobile'}
+              keyboardType={'phone-pad'}
+              iconColor={'#f5f5f5'}
+              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
+              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
+
+      <DatePicker style={{width: 375, height: 48}}
                   date={this.state.date}
                   mode="date"
                   placeholder="Data de Nascimento"
@@ -183,7 +210,7 @@ class Cadastro extends Component {
               secureTextEntry={true}/>
 
       </View>
-      <Text>{'\n'}{'\n'}</Text>
+      <Text>{'\n'}</Text>
 
       <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5}}>
 
