@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert, Image, TouchableOpacity, ToastAndroid } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert, Image, TouchableOpacity, ToastAndroid, ToastAndroid } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 import ImagePicker from 'react-native-image-crop-picker';
-
-
-
 
 class Cadastro extends Component {
   constructor(props) {
@@ -22,6 +19,40 @@ class Cadastro extends Component {
   }
  }
 
+  validaEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
+  validaCampos = (usuario) => {
+    var camposVazios = "";
+    //validar nome
+    if (!usuario.nome) {
+      camposVazios.append("nome");
+    }
+    //validar data de Nascimento
+    if (!usuario.dataNasc) {
+      if (camposVazios) {
+        camposVazios.append(", data de nascimento");
+      } else {
+        camposVazios.append("data de nascimento");
+      }
+    }
+    //validar senha
+    if (!usuario.senha) {
+      if (camposVazios) {
+        camposVazios.append(", senha");
+      } else {
+        camposVazios.append("senha");
+      }
+    }
+    //TODO: validar ddd/telefone
+    //TODO: validar cpf
+    if (camposVazios) {
+      ToastAndroid.showWithGravity('Preencha ' + camposVazios, ToastAndroid.LONG, ToastAndroid.CENTER);
+    }
+  }
+
   onButtonVendedor = () => {
     const {
       state: {
@@ -35,7 +66,9 @@ class Cadastro extends Component {
       "senha": senha,
       "perfil": 'V'
     }
-       fetch('http://10.0.2.2:8080/usuario', {
+    validaCampos(usuario);
+
+    fetch('http://10.0.2.2:8080/usuario', {
         method: 'POST',
         headers: {
         'Accept': 'application/json',
@@ -67,6 +100,7 @@ class Cadastro extends Component {
       "senha": senha,
       "perfil": 'C'
     }
+    validaCampos(usuario);
        fetch('http://10.0.2.2:8080/usuario', {
         method: 'POST',
         headers: {
@@ -157,7 +191,11 @@ class Cadastro extends Component {
               label={'Email'}
               iconClass={FontAwesomeIcon}
               keyboardType={'email-address'}
-              onChangeText={(email) => this.setState({email: email})}
+              onChangeText={if (validaEmail) {
+                (email) => this.setState({email: email})
+              } else {
+                this.style.{{ backgroundColor: 'red' }}
+              }}
               iconName={'at'}
               iconColor={'#f5f5f5'}
               labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
