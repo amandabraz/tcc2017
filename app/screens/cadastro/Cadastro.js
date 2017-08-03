@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert, Image, TouchableOpacity, ToastAndroid, ToastAndroid } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert, Image, TouchableOpacity, ToastAndroid } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -18,6 +18,7 @@ class Cadastro extends Component {
     email: '',
     senha:'',
     image: require('./img/cameraa.jpg'),
+    backgroundColorEmail: "transparent",
   }
  }
 
@@ -30,35 +31,37 @@ class Cadastro extends Component {
     var camposVazios = "";
     //validar nome
     if (!usuario.nome) {
-      camposVazios.append("nome");
+      camposVazios += "nome";
     }
     //validar data de Nascimento
     if (!usuario.dataNasc) {
       if (camposVazios) {
-        camposVazios.append(", data de nascimento");
+        camposVazios  += ", data de nascimento";
       } else {
-        camposVazios.append("data de nascimento");
+        camposVazios += "data de nascimento";
       }
     }
     //validar senha
     if (!usuario.senha) {
       if (camposVazios) {
-        camposVazios.append(", senha");
+        camposVazios += ", senha";
       } else {
-        camposVazios.append("senha");
+        camposVazios += "senha";
       }
     }
     //TODO: validar ddd/telefone
     //TODO: validar cpf
     if (camposVazios) {
       ToastAndroid.showWithGravity('Preencha ' + camposVazios, ToastAndroid.LONG, ToastAndroid.CENTER);
+      return false;
     }
+    return true;
   }
 
   onButtonVendedor = () => {
     const {
       state: {
-        date, nome, email, senha
+        date, nome, email, cpf, celular, senha
       }
     } = this;
     usuario = {
@@ -70,31 +73,33 @@ class Cadastro extends Component {
       "senha": senha,
       "perfil": 'V'
     }
-    validaCampos(usuario);
+    let continuar = this.validaCampos(usuario);
 
-    fetch('http://10.0.2.2:8080/usuario', {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(usuario)
-      })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            this.props.navigation.navigate('Vendedor');
+    if (continuar) {
+      fetch('http://10.0.2.2:8080/usuario', {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(usuario)
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              this.props.navigation.navigate('Vendedor');
 
-          })
-          .catch((error) => {
-            Alert.alert("error Response", JSON.stringify(error));
-            console.error(error);
-          });
+            })
+            .catch((error) => {
+              Alert.alert("error Response", JSON.stringify(error));
+              console.error(error);
+            });
+    }
   };
   onButtonCliente = () => {
     const {
       state: {
-        date, nome, email, senha
+        date, nome, cpf, celular, email, senha
       }
     } = this;
     usuario = {
@@ -106,25 +111,28 @@ class Cadastro extends Component {
       "senha": senha,
       "perfil": 'C'
     }
-    validaCampos(usuario);
-       fetch('http://10.0.2.2:8080/usuario', {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(usuario)
-      })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-               this.props.navigation.navigate('Cliente');
+    let continuar = this.validaCampos(usuario);
 
-          })
-          .catch((error) => {
-            Alert.alert("error Response", JSON.stringify(error));
-            console.error(error);
-          });
+    if (continuar) {
+      fetch('http://10.0.2.2:8080/usuario', {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(usuario)
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                 this.props.navigation.navigate('Cliente');
+
+            })
+            .catch((error) => {
+              Alert.alert("error Response", JSON.stringify(error));
+              console.error(error);
+            });
+    }
   };
   selecionarPerfil(){
    ImagePicker.openPicker({
@@ -214,15 +222,15 @@ class Cadastro extends Component {
                   }}
                   onDateChange={(date) => {this.setState({date: date});}}/>
 
-      <Kohana style={{ backgroundColor: 'transparent' }}
+      <Kohana style={{ backgroundColor: this.state.backgroundColorEmail }}
               label={'Email'}
               iconClass={FontAwesomeIcon}
               keyboardType={'email-address'}
-              onChangeText={if (validaEmail) {
+              onChangeText={(email) => {if (this.validaEmail) {
                 (email) => this.setState({email: email})
               } else {
-                this.style.{{ backgroundColor: 'red' }}
-              }}
+                this.setState({backgroundColorEmail: "red"});
+              }}}
               iconName={'at'}
               iconColor={'#f5f5f5'}
               labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
