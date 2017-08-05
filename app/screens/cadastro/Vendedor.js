@@ -18,17 +18,15 @@ class Vendedor extends Component {
     super(props);
     this.state = {
         diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
-        cpf: '',
         nomeLoja: '',
-        meiosPagamento: [],
-        tags: []
+        meiosPagamento: []
     }
   }
 
   handleFinalizarPress = () => {
     const {
       state: {
-        cpf, nomeLoja
+        nomeLoja
         //, meiosPagamento, tags
       }
     } = this;
@@ -36,9 +34,7 @@ class Vendedor extends Component {
     vendedor = {
       "usuario": 1,
       "nomeFantasia": nomeLoja,
-      "cpf": cpf,
-      //"meiosPagamento": meiosPagamento,
-      //"tags": tags
+      //"meiosPagamento": meiosPagamento
     }
 
     //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
@@ -121,19 +117,6 @@ class Vendedor extends Component {
           <ScrollView style={{ backgroundColor: '#fff' }}>
               <Kohana
                 style={{ height: 45 }}
-                label={'CPF'}
-                iconClass={MaterialsIcon}
-                iconName={'account-box'}
-                iconColor={'#658091'}
-                labelStyle={{ color: '#402B2E', fontSize: 20, fontFamily: 'Roboto' }}
-                inputStyle={{ color: '#B27A81', fontSize: 20, fontFamily: 'Roboto' }}
-                onChangeText={(cpf) => this.setState({cpf})}
-                value={this.state.cpf}
-                keyboardType="phone-pad"
-                returnKeyType="next"
-              />
-              <Kohana
-                style={{ height: 45 }}
                 label={'Nome da sua loja'}
                 iconClass={MaterialsIcon}
                 iconName={'store'}
@@ -156,14 +139,6 @@ class Vendedor extends Component {
                 Tags para seus produtos
               </Text>
               <View style={{ flexDirection: 'column', flex: 1, height: 130, padding: 10 }}>
-                <TagInput
-                  value={this.state.tags}
-                  onChange={(tags) => this.setState({tags,})}
-                  tagColor="aquamarine"
-                  tagTextColor="darkblue"
-                  inputProps={inputProps}
-                  numberOfLines={15}
-                />
               </View>
             <Button
               title="Finalizar"
