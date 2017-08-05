@@ -13,8 +13,6 @@ export default class PerfilVendedor extends Component {
       nomeText: "Shirley",
       dataNascimentoText: '23/03/1984',
       emailText: 'shirley.silva@gmail.com',
-      CPFText: '136.598.438-90',
-      tagsText: '#Doce #Brigadeiro #Chocolate',
       nomeFantasia: "Docinhos :)"
     };
   }
@@ -57,12 +55,6 @@ export default class PerfilVendedor extends Component {
         </Text>
         <Text numberOfLines={5}>
           {this.state.emailText}{'\n'}{'\n'}
-        </Text>
-        <Text numberOfLines={5}>
-          {this.state.CPFText}{'\n'}{'\n'}
-        </Text>
-        <Text numberOfLines={5}>
-          {this.state.tagsText}{'\n'}{'\n'}
         </Text>
       </Text>
 
