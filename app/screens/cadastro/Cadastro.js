@@ -23,8 +23,8 @@ class Cadastro extends Component {
  }
 
   validaEmail = (email) => {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
+    var re = /\S+@\S+\.\S+/;
+   return re.test(email);
   }
 
   validaCampos = (usuario) => {
@@ -49,8 +49,27 @@ class Cadastro extends Component {
         camposVazios += "senha";
       }
     }
-    //TODO: validar ddd/telefone
-    //TODO: validar cpf
+    if (!usuario.ddd) {
+      if (camposVazios) {
+        camposVazios += ", ddd";
+      } else {
+        camposVazios += "ddd";
+      }
+    }
+    if (!usuario.telefone) {
+      if (camposVazios) {
+        camposVazios += ", celular";
+      } else {
+        camposVazios += "celular";
+      }
+    }
+    if (!usuario.cpf) {
+      if (camposVazios) {
+        camposVazios += ", cpf";
+      } else {
+        camposVazios += "cpf";
+      }
+    }
     if (camposVazios) {
       ToastAndroid.showWithGravity('Preencha ' + camposVazios, ToastAndroid.LONG, ToastAndroid.CENTER);
       return false;
@@ -69,7 +88,8 @@ class Cadastro extends Component {
       "nome": nome,
       "email": email,
       "cpf": cpf,
-      "telefone": celular,
+      "ddd": celular.substr(0,1),
+      "telefone": celular.substr(2,10),
       "senha": senha,
       "perfil": 'V'
     }
@@ -107,7 +127,8 @@ class Cadastro extends Component {
       "nome": nome,
       "email": email,
       "cpf": cpf,
-      "telefone": celular,
+      "ddd": celular.substr(0,1),
+      "telefone": celular.substr(2,10),
       "senha": senha,
       "perfil": 'C'
     }
@@ -226,10 +247,11 @@ class Cadastro extends Component {
               label={'Email'}
               iconClass={FontAwesomeIcon}
               keyboardType={'email-address'}
-              onChangeText={(email) => {if (this.validaEmail) {
-                (email) => this.setState({email: email})
+              onChangeText={(email) => {if (this.validaEmail(email)) {
+                this.setState({email: email});
+                this.setState({backgroundColorEmail: 'transparent'});
               } else {
-                this.setState({backgroundColorEmail: "red"});
+                this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
               }}}
               iconName={'at'}
               iconColor={'#f5f5f5'}
