@@ -89,7 +89,7 @@ export default class BuscaProduto extends Component {
               </View>
               <View style={styles.results}>
                 <View style={styles.oneResult}>
-                  <Image source={require('./img/paçoca.jpg')} style={styles.imageResultSearch} justifyContent='flex-start'/>
+                  <Image source={require('./img/pacoca.jpg')} style={styles.imageResultSearch} justifyContent='flex-start'/>
                   <Text  style={styles.oneResultfont} justifyContent='center'>Paçocas do Vieira</Text>
                   <Icon
                   name='arrow-forward'
