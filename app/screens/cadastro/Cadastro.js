@@ -235,6 +235,7 @@ class Cadastro extends Component {
 
       <Kohana style={{ backgroundColor: this.state.backgroundColorCpf }}
               label={'CPF'}
+              maxLength={11}
               iconClass={FontAwesomeIcon}
               onChangeText={(cpf) => {
                 if (this.validaCPF(cpf)) {
@@ -252,6 +253,7 @@ class Cadastro extends Component {
 
       <Kohana style={{ backgroundColor: 'transparent' }}
               label={'Celular'}
+              maxLength={11}
               iconClass={FontAwesomeIcon}
               onChangeText={(celular) => this.setState({celular: celular})}
               iconName={'mobile'}
@@ -305,6 +307,7 @@ class Cadastro extends Component {
 
       <Kohana style={{ backgroundColor: 'transparent' }}
               label={'Senha'}
+              maxLength={10}
               iconClass={FontAwesomeIcon}
               iconName={'lock'}
               onChangeText={(senha) => this.setState({senha: senha})}
@@ -315,6 +318,7 @@ class Cadastro extends Component {
 
       <Kohana style={{ backgroundColor: 'transparent', borderColor: '#778899', borderWidth: 0.15 }}
               label={'Confirmação de Senha'}
+              maxLength={10}
               iconClass={FontAwesomeIcon}
               iconName={'lock'}
               iconColor={'#f5f5f5'}
