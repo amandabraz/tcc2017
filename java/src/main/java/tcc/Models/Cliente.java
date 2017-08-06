@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
@@ -26,14 +26,14 @@ public class Cliente {
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name="CLIENTE_TAG", joinColumns =
             {@JoinColumn(name="ID_CLIENTE")}, inverseJoinColumns =
             {@JoinColumn(name="ID_TAG")}
         )
     private List<Tag> tags;
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name="CLIENTE_RESTRICAO", joinColumns =
             {@JoinColumn(name="ID_CLIENTE")}, inverseJoinColumns =
             {@JoinColumn(name="ID_RESTRICAO")}
