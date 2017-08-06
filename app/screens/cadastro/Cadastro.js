@@ -155,6 +155,11 @@ class Cadastro extends Component {
       } else {
         camposVazios += "celular";
       }
+    } else {
+      if (usuario.telefone.length < 8) {
+        ToastAndroid.showWithGravity('Telefone inválido: insira DDD e número do celular', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
     }
     if (camposVazios) {
       ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + camposVazios + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
