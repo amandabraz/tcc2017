@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Button, TextInput, ScrollView, Alert, Image, TouchableOpacity, ToastAndroid } from 'react-native';
+import { AppRegistry,
+         StyleSheet,
+         Text,
+         View,
+         Button,
+         TextInput,
+         ScrollView,
+         Alert,
+         Image,
+         TouchableHighlight,
+         TouchableOpacity,
+         ToastAndroid } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-picker';
 
 class Cadastro extends Component {
   constructor(props) {
@@ -103,13 +114,13 @@ class Cadastro extends Component {
     }
     if (!usuario.cpf) {
       if (camposVazios) {
-        camposVazios += ", cpf";
+        camposVazios += ", CPF";
       } else {
-        camposVazios += "cpf";
+        camposVazios += "CPF";
       }
     }
     if (camposVazios) {
-      ToastAndroid.showWithGravity('Preencha ' + camposVazios, ToastAndroid.LONG, ToastAndroid.CENTER);
+      ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + camposVazios + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
       return false;
     }
     return true;
@@ -193,16 +204,29 @@ class Cadastro extends Component {
             });
     }
   };
-  selecionarPerfil(){
-   ImagePicker.openPicker({
-     width: 200,
-     height: 200,
-     cropping: true}).then(image => {
-      console.log('received image', image);
-      this.setState({
-        image: {uri: image.path, width: image.width, height: image.height}
-});
-     });
+  selecionarPerfil() {
+    var options = {
+      title: 'Selecione sua foto',
+      takePhotoButtonTitle: 'Tirar uma foto',
+      chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+      cancelButtonTitle: 'Cancelar',
+      storageOptions: {
+        skipBackup: false,
+        path: 'images'
+      }
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+        //do nothing
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        let source = { uri: response.uri };
+        this.setState({
+          image: {uri: response.uri, width: 200, height: 200, changed: true}
+        });
+      }
+    });
   }
 
  render() {
@@ -219,8 +243,8 @@ class Cadastro extends Component {
       <View style={styles.container}>
       <Text>{'\n'}</Text>
       <TouchableOpacity onPress={this.selecionarPerfil.bind(this)}>
-      <Image style={{width: 200, height: 200, borderRadius: 100}}
-             source={this.state.image}/>
+        <Image style={{width: 200, height: 200, borderRadius: 100}}
+               source={this.state.image}/>
       </TouchableOpacity>
 
       <Kohana style={{ backgroundColor: 'transparent' }}
@@ -294,7 +318,8 @@ class Cadastro extends Component {
               label={'Email'}
               iconClass={FontAwesomeIcon}
               keyboardType={'email-address'}
-              onChangeText={(email) => {if (this.validaEmail(email)) {
+              onChangeText={(email) => {
+                if (this.validaEmail(email)) {
                 this.setState({email: email});
                 this.setState({backgroundColorEmail: 'transparent'});
               } else {
