@@ -28,9 +28,11 @@ class Cadastro extends Component {
     nome: '',
     email: '',
     senha:'',
+    confirmaSenha: '',
     image: require('./img/cameraa.jpg'),
     backgroundColorEmail: "transparent",
     backgroundColorCpf: "transparent",
+    backgroundColorSenha: "transparent",
   }
  }
 
@@ -78,9 +80,34 @@ class Cadastro extends Component {
 
   validaCampos = (usuario) => {
     var camposVazios = "";
+    //validar Email
+    if (!usuario.email) {
+      camposVazios += "e-mail";
+    } else {
+      if (!validaEmail(usuario.email)) {
+        ToastAndroid.showWithGravity('E-mail inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+    }
+    if (!usuario.cpf) {
+      if (camposVazios) {
+        camposVazios += ", CPF";
+      } else {
+        camposVazios += "CPF";
+      }
+    } else {
+      if (!validaCPF(usuario.cpf)) {
+        ToastAndroid.showWithGravity('CPF inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+    }
     //validar nome
     if (!usuario.nome) {
-      camposVazios += "nome";
+      if (camposVazios) {
+        camposVazios  += ", nome";
+      } else {
+        camposVazios += "nome";
+      }
     }
     //validar data de Nascimento
     if (!usuario.dataNasc) {
@@ -97,6 +124,23 @@ class Cadastro extends Component {
       } else {
         camposVazios += "senha";
       }
+    } else {
+      if (usuario.senha.length < 6) {
+        this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
+        ToastAndroid.showWithGravity('Sua senha deve ter mais que 6 caracteres', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      } else {
+        this.setState({backgroundColorSenha: 'transparent'});
+      }
+
+      // validar com o Confirma Senha
+      if (usuario.senha != this.state.confirmaSenha) {
+        this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
+        ToastAndroid.showWithGravity('Senha e confirmação de senha não conferem!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      } else {
+        this.setState({backgroundColorSenha: 'transparent'});
+      }
     }
     if (!usuario.ddd) {
       if (camposVazios) {
@@ -110,13 +154,6 @@ class Cadastro extends Component {
         camposVazios += ", celular";
       } else {
         camposVazios += "celular";
-      }
-    }
-    if (!usuario.cpf) {
-      if (camposVazios) {
-        camposVazios += ", CPF";
-      } else {
-        camposVazios += "CPF";
       }
     }
     if (camposVazios) {
@@ -330,7 +367,7 @@ class Cadastro extends Component {
               labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
               inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
 
-      <Kohana style={{ backgroundColor: 'transparent' }}
+      <Kohana style={{ backgroundColor: this.state.backgroundColorSenha }}
               label={'Senha'}
               maxLength={10}
               iconClass={FontAwesomeIcon}
@@ -341,11 +378,12 @@ class Cadastro extends Component {
               inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
               secureTextEntry={true}/>
 
-      <Kohana style={{ backgroundColor: 'transparent', borderColor: '#778899', borderWidth: 0.15 }}
+      <Kohana style={{ backgroundColor: this.state.backgroundColorSenha, borderColor: '#778899', borderWidth: 0.15 }}
               label={'Confirmação de Senha'}
               maxLength={10}
               iconClass={FontAwesomeIcon}
               iconName={'lock'}
+              onChangeText={(confirmaSenha) => this.setState({confirmaSenha: confirmaSenha})}
               iconColor={'#f5f5f5'}
               labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
               inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
