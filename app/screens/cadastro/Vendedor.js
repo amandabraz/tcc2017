@@ -1,6 +1,6 @@
 /**
 * Campos da tela de cadastro específico de Vendedor:
-* CPF, Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
+* Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
 */
 import React, { Component } from 'react';
 import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid, Text, Dimensions } from 'react-native';
@@ -9,7 +9,6 @@ import CheckBox from 'react-native-check-box';
 import { Kohana } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import NavigationBar from 'react-native-navbar';
-import TagInput from 'react-native-tag-input';
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,7 +26,7 @@ class Vendedor extends Component {
     const {
       state: {
         nomeLoja
-        //, meiosPagamento, tags
+        //, meiosPagamento
       }
     } = this;
     // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
@@ -135,9 +134,6 @@ class Vendedor extends Component {
                       {this.renderView()}
                   </ScrollView>
               </View>
-              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
-                Tags para seus produtos
-              </Text>
               <View style={{ flexDirection: 'column', flex: 1, height: 130, padding: 10 }}>
               </View>
             <Button
