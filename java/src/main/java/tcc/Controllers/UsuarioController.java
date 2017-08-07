@@ -26,7 +26,7 @@ public class UsuarioController {
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
      *
-     * @param nome
+     * @param usuario
      * @return
      */
     @RequestMapping("/usuario")
@@ -35,10 +35,8 @@ public class UsuarioController {
         try {
             novoUsuario = usuarioDao.save(usuario);
         } catch (Exception ex) {
-//            return "Error creating the user: " + ex.toString();
             return new ResponseEntity<Usuario>(novoUsuario, HttpStatus.BAD_REQUEST);
         }
-//        return "Vendedor criado com sucesso! (" + novoVendedor.toString() + ")";
         return new ResponseEntity<Usuario>(novoUsuario, HttpStatus.OK);
     }
 
