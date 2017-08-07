@@ -13,9 +13,14 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
+  TouchableHighlight,
   TouchableOpacity,
   View
 } from 'react-native';
+import NavigationBar from 'react-native-navbar';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Kohana } from 'react-native-textinput-effects';
 
 //importando o que foi criado
 import MTextInput from "../../components/mTextInput/MTextInput.js";
@@ -26,6 +31,42 @@ const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
+  constructor(props) {
+   super(props);
+
+   this.state = {
+     email: '',
+     senha:'',
+     backgroundColorEmail: "transparent",
+     backgroundColorSenha: "transparent",
+   }
+  }
+
+  validaCampos = (login) => {
+    var camposVazios = "";
+    //validar Email
+    if (!login.email) {
+      camposVazios += "Email";
+      this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
+    }
+    //validar senha
+    if (!login.senha) {
+      if (camposVazios) {
+        camposVazios += ", senha";
+        this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
+      } else {
+        camposVazios += "senha";
+        this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
+      }
+    }
+    if (camposVazios) {
+      ToastAndroid.showWithGravity('Campos com preenchimento obrigatório.' + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+      return false;
+    }
+    this.setState({backgroundColorEmail: 'transparent'});
+    this.setState({backgroundColorSenha: 'transparent'});
+    return true;
+  }
 
   cadastrar = () => {
     this.props.navigation.navigate('Cadastro');
