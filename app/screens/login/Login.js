@@ -5,29 +5,40 @@
 
 import React, { Component } from 'react';
 import {
+  Alert,
   AppRegistry,
-  TextInput,
-  Text,
+  Button,
+  Dimensions,
   Image,
   StyleSheet,
-  Dimensions,
-  View,
-  Button
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 //importando o que foi criado
 import MTextInput from "../../components/mTextInput/MTextInput.js";
-import MButton from "../../components/mButton/MButton.js";
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
+
   cadastrar = () => {
     this.props.navigation.navigate('Cadastro');
   };
+
+  //evento no click do botão
+  eventLogin = () => {
+     Alert.alert('Bem-vindo!');
+  };
+
+  //render
   render() {
+
+    //retorno
     return (
       <View style={styles.container}>
         <Image source={require('./img/cupcakes.jpg')} style={styles.background}>
@@ -41,12 +52,14 @@ export default class Login extends Component {
               exampleText={'123456'}
               secureTextEntry={true}
               />
-              <MButton
-              title={'Entrar'}
-              textOnClick={'Bem vindo!'}
-              accessibilityLabel={"Botão de login"}
-              color={'#50a1e0'}
-              />
+
+              <TouchableOpacity
+              style={styles.button}
+              onPress={this.eventLogin}
+              accessibilityLabel={'Botão de login'}>
+                  <Text style={styles.font}>{'Entrar'}</Text>
+              </TouchableOpacity>
+
               <Button
               title={'Cadastre-se!'}
               onPress={this.cadastrar}
@@ -92,5 +105,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 37,
     width: 250,
+  },
+  button: {
+    justifyContent: 'center',
+    height: 50,
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: "#50a1e0",
+    alignSelf: 'stretch',
+  },
+  font: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    color:'white',
+    alignSelf: 'center',
   },
 });

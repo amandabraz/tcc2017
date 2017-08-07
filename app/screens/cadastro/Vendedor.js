@@ -72,7 +72,6 @@ class Vendedor extends Component {
               console.error(error);
             });
     }
-
   };
   onClick(meiosPagamento) {
     meiosPagamento.checked = !meiosPagamento.checked;
