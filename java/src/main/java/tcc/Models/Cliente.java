@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
@@ -26,32 +26,40 @@ public class Cliente {
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="CLIENTE_TAG", joinColumns =
             {@JoinColumn(name="ID_CLIENTE")}, inverseJoinColumns =
             {@JoinColumn(name="ID_TAG")}
         )
     private List<Tag> tags;
     
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="CLIENTE_RESTRICAO", joinColumns =
             {@JoinColumn(name="ID_CLIENTE")}, inverseJoinColumns =
-            {@JoinColumn(name="ID_RESTRICAO")}
-    )
-    private List<RestricaoDietetica> restricaoDieteticas;
+            {@JoinColumn(name="ID_RESTRICAO")})
+    private List<RestricaoDietetica> restricoesDieteticas;
 
     public Cliente() {
         this.id = id;
         this.usuario = usuario;
         this.tags = tags;
-        this.restricaoDieteticas = restricaoDieteticas;
+        this.restricoesDieteticas = restricoesDieteticas;
     }
 
-    public Cliente(Long id, Usuario usuario, List<Tag> tags, List<RestricaoDietetica> restricaoDieteticas) {
-        this.id = id;
+    public Cliente(Usuario usuario, List<Tag> tags, List<RestricaoDietetica> restricaoDieteticas) {
         this.usuario = usuario;
         this.tags = tags;
-        this.restricaoDieteticas = restricaoDieteticas;
+        this.restricoesDieteticas = restricoesDieteticas;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", usuario=" + usuario +
+                ", tags=" + tags +
+                ", Restrições Dieteticas=" + restricoesDieteticas +
+                '}';
     }
 
     public void setId(Long id) {
@@ -78,11 +86,11 @@ public class Cliente {
         this.tags = tags;
     }
 
-    public List<RestricaoDietetica> getRestricaoDieteticas() {
-        return restricaoDieteticas;
+    public List<RestricaoDietetica> getRestricoesDieteticas() {
+        return restricoesDieteticas;
     }
 
-    public void setRestricaoDieteticas(List<RestricaoDietetica> restricaoDieteticas) {
-        this.restricaoDieteticas = restricaoDieteticas;
+    public void setRestricoesDieteticas(List<RestricaoDietetica> restricoesDieteticas) {
+        this.restricoesDieteticas = restricoesDieteticas;
     }
 }
