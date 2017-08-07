@@ -16,63 +16,78 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
+        pagamentosArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
         nomeLoja: '',
         meiosPagamento: []
     }
   }
 
+ pagamentoEscolhido = () => {
+     if (this.state.meiosPagamento.length > 0) {
+       return true;
+     }
+     else {
+       ToastAndroid.showWithGravity('Escolha ao menos um meio de pagamento', ToastAndroid.LONG, ToastAndroid.CENTER);
+       return false;
+     }
+
+ }
+
+
   handleFinalizarPress = () => {
-    const {
-      state: {
-        nomeLoja
-        //, meiosPagamento
+    var pagamento = this.pagamentoEscolhido();
+
+    if (pagamento) {
+      const {
+        state: {
+          nomeLoja,
+          meiosPagamento
+        }
+      } = this;
+      // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
+      vendedor = {
+        "usuario": 1,
+        "nomeFantasia": nomeLoja,
+        "meiosPagamento": meiosPagamento
       }
-    } = this;
-    // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
-    vendedor = {
-      "usuario": 1,
-      "nomeFantasia": nomeLoja,
-      //"meiosPagamento": meiosPagamento
+
+      //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
+       fetch('http://10.0.2.2:8080/vendedor', {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(vendedor)
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              // TODO: acertar a navegação para a próxima tela, a ser criada
+              this.props.navigation.navigate('TabsVendedor');
+            })
+            .catch((error) => {
+              // TODO: melhorar erro? combinar padrão de erro no app!
+              Alert.alert("error Response", JSON.stringify(error));
+              console.error(error);
+            });
     }
-
-    //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
-     fetch('http://10.0.2.2:8080/vendedor', {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(vendedor)
-      })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            // TODO: acertar a navegação para a próxima tela, a ser criada
-            this.props.navigation.navigate('TabsVendedor');
-          })
-          .catch((error) => {
-            // TODO: melhorar erro? combinar padrão de erro no app!
-            Alert.alert("error Response", JSON.stringify(error));
-            console.error(error);
-          });
-
   };
-  onClick(data) {
-    data.checked = !data.checked;
+  onClick(meiosPagamento) {
+    meiosPagamento.checked = !meiosPagamento.checked;
     this.setState({
       meiosPagamento,
     });
   }
   renderView() {
-    var len = this.state.diasArray.length;
+    var len = this.state.pagamentosArray.length;
     var views = [];
     for (var i = 0, l = len - 2; i < l; i += 2) {
         views.push(
             <View key={i}>
                 <View style={styles.item}>
-                    {this.renderCheckBox(this.state.diasArray[i])}
-                    {this.renderCheckBox(this.state.diasArray[i + 1])}
+                    {this.renderCheckBox(this.state.pagamentosArray[i])}
+                    {this.renderCheckBox(this.state.pagamentosArray[i + 1])}
                 </View>
                 <View style={styles.line}/>
             </View>
@@ -81,8 +96,8 @@ class Vendedor extends Component {
     views.push(
         <View key={len - 1}>
             <View style={styles.item}>
-                {len % 2 === 0 ? this.renderCheckBox(this.state.diasArray[len - 2]) : null}
-                {this.renderCheckBox(this.state.diasArray[len - 1])}
+                {len % 2 === 0 ? this.renderCheckBox(this.state.pagamentosArray[len - 2]) : null}
+                {this.renderCheckBox(this.state.pagamentosArray[len - 1])}
             </View>
         </View>
     )
@@ -122,6 +137,7 @@ class Vendedor extends Component {
                 iconColor={'#658091'}
                 labelStyle={{ color: '#402B2E', fontSize: 20, fontFamily: 'Roboto' }}
                 inputStyle={{ color: '#B27A81', fontSize: 20, fontFamily: 'Roboto' }}
+                maxLength={30}
                 onChangeText={(nomeLoja) => this.setState({nomeLoja})}
                 value={this.state.nomeLoja}
                 returnKeyType="next"
