@@ -83,7 +83,28 @@ export default class Login extends Component {
       "email": email,
       "senha": senha,
     }
-    let logar = this.validaCampos(login);
+
+    let continuar = this.validaCampos(login);
+
+    if (continuar) {
+      fetch('http://10.0.2.2:8080/login', {
+        method: 'POST',
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+        body: JSON.stringify(login)
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+        ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        this.props.navigation.navigate('Cliente');
+      })
+        .catch((error) => {
+        Alert.alert("error Response", JSON.stringify(error));
+        console.error(error);
+      });
+    }
 
      Alert.alert('Bem-vindo!');
   };
@@ -98,8 +119,19 @@ export default class Login extends Component {
             <View style={styles.centralView}>
               <Text style={styles.title}>Bem-Vindo(a)!</Text>
               <MTextInput
-              exampleText={'seu_email@provedorbacana.com'}
-              keyboardType={'email-address'}
+                style={{ backgroundColor: this.state.backgroundColorEmail }}
+                onChangeText = {
+                  (email) => {
+                    if (this.validaEmail(email)) {
+                      this.setState({email: email});
+                      this.setState({backgroundColorEmail: 'transparent'});
+                    } else {
+                      this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
+                    }
+                  }
+                }
+                label={'seu_email@provedorbacana.com'}
+                keyboardType={'email-address'}
               />
               <MTextInput
               exampleText={'123456'}
@@ -153,11 +185,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(100, 108, 122, 0.7)',
   },
-  input: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 37,
-    width: 250,
+  input:{
+    width: 300,
+    height: 60,
+    borderColor: 'gray',
+    fontFamily: 'Roboto',
+    color: '#e2b1a3',
+    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center',
   },
   button: {
     justifyContent: 'center',
