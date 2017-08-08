@@ -122,7 +122,7 @@ export default class Login extends Component {
       <View style={styles.container}>
         <Image source={require('./img/cupcakes.jpg')} style={styles.background}>
             <View style={styles.centralView}>
-              <Text style={styles.title}>Bem-Vindo(a)!</Text>
+              <Text style={styles.title}>Bem-Vindo(a)!{'\n'}{'\n'}</Text>
 
               <TextInput
                 style={styles.input}
@@ -170,8 +170,8 @@ export default class Login extends Component {
               <TouchableOpacity
               style={styles.buttonEsqueceuSenha}
               onPress={this.esqueceuSenha}
-              accessibilityLabel={'Botão de cadastro'}>
-                  <Text style={styles.font}>{'Cadastre-se!'}</Text>
+              accessibilityLabel={'Esqueceu sua senha'}>
+                  <Text style={styles.fontEsqueciSenha}>{'\n'}{'Esqueci minha senha'}</Text>
               </TouchableOpacity>
 
             </View>
@@ -185,7 +185,7 @@ export default class Login extends Component {
 //css
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 3,
   },
   title: {
     fontFamily: 'Roboto',
@@ -242,5 +242,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color:'white',
     alignSelf: 'center',
+  },
+  fontEsqueciSenha: {
+    width: 300,
+    height: 60,
+    borderColor: 'gray',
+    fontFamily: 'Roboto',
+    color: 'white',
+    fontSize: 13,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
   },
 });
