@@ -10,6 +10,7 @@ import {
   Button,
   Dimensions,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -18,7 +19,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 
@@ -39,6 +39,11 @@ export default class Login extends Component {
      backgroundColorEmail: "transparent",
      backgroundColorSenha: "transparent",
    }
+  }
+
+  esqueceuSenha = () => {
+    Alert.alert("Programar envio por email..");
+    //TODO: Colocar envio de recuperacao de senha por email
   }
 
   validaCampos = (login) => {
@@ -110,13 +115,15 @@ export default class Login extends Component {
 
   //render
   render() {
-
     //retorno
     return (
+
+      <ScrollView>
       <View style={styles.container}>
         <Image source={require('./img/cupcakes.jpg')} style={styles.background}>
             <View style={styles.centralView}>
               <Text style={styles.title}>Bem-Vindo(a)!</Text>
+
               <Kohana style={{ backgroundColor: this.state.backgroundColorEmail }}
               label={'Email'}
               maxLength={50}
@@ -155,9 +162,18 @@ export default class Login extends Component {
               accessibilityLabel={'Botão de cadastro'}>
                   <Text style={styles.font}>{'Cadastre-se!'}</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity
+              style={styles.buttonEsqueceuSenha}
+              onPress={this.esqueceuSenha}
+              accessibilityLabel={'Botão de cadastro'}>
+                  <Text style={styles.font}>{'Cadastre-se!'}</Text>
+              </TouchableOpacity>
+
             </View>
         </Image>
       </View>
+      </ScrollView>
     );
   }
 }
@@ -189,6 +205,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(100, 108, 122, 0.7)',
+  },
+  buttonEsqueceuSenha: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    height: 50,
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10,
   },
   input:{
     width: 300,
