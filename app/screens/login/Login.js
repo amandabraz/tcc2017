@@ -90,6 +90,9 @@ export default class Login extends Component {
 
     let continuar = this.validaCampos(login);
 
+    //https://auth0.com/blog/adding-authentication-to-react-native-using-jwt/
+    //Link de exemplo, item Signing up Users and Acquiring a JWT
+
     if (continuar) {
       fetch('http://10.0.2.2:8080/login', {
         method: 'POST',
