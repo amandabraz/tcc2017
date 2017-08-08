@@ -23,7 +23,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 
 //importando o que foi criado
-import MTextInput from "../../components/mTextInput/MTextInput.js";
 import MButton from "../../components/mButton/MButton.js";
 
 //dimensão da janela
@@ -118,25 +117,30 @@ export default class Login extends Component {
         <Image source={require('./img/cupcakes.jpg')} style={styles.background}>
             <View style={styles.centralView}>
               <Text style={styles.title}>Bem-Vindo(a)!</Text>
-              <MTextInput
-                style={{ backgroundColor: this.state.backgroundColorEmail }}
-                onChangeText = {
-                  (email) => {
-                    if (this.validaEmail(email)) {
-                      this.setState({email: email});
-                      this.setState({backgroundColorEmail: 'transparent'});
-                    } else {
-                      this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
-                    }
-                  }
-                }
-                label={'seu_email@provedorbacana.com'}
-                keyboardType={'email-address'}
-              />
-              <MTextInput
-              exampleText={'123456'}
-              secureTextEntry={true}
-              />
+              <Kohana style={{ backgroundColor: this.state.backgroundColorEmail }}
+              label={'Email'}
+              maxLength={50}
+              iconClass={FontAwesomeIcon}
+              keyboardType={'email-address'}
+              onChangeText={(email) => {
+                this.setState({email: email});
+                this.setState({backgroundColorEmail: 'transparent'});
+              }}
+              iconName={'at'}
+              iconColor={'#e2b1a3'}
+              labelStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}
+              inputStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}/>
+
+              <Kohana style={{ backgroundColor: this.state.backgroundColorSenha }}
+              label={'Senha'}
+              maxLength={10}
+              iconClass={FontAwesomeIcon}
+              iconName={'lock'}
+              onChangeText={(senha) => this.setState({senha: senha})}
+              iconColor={'#e2b1a3'}
+              labelStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}
+              inputStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}
+              secureTextEntry={true}/>
 
               <TouchableOpacity
               style={styles.button}
@@ -145,11 +149,12 @@ export default class Login extends Component {
                   <Text style={styles.font}>{'Entrar'}</Text>
               </TouchableOpacity>
 
-              <Button
-              title={'Cadastre-se!'}
+              <TouchableOpacity
+              style={styles.button}
               onPress={this.cadastrar}
-              accessibilityLabel={"Botão de cadastro"}
-              />
+              accessibilityLabel={'Botão de cadastro'}>
+                  <Text style={styles.font}>{'Cadastre-se!'}</Text>
+              </TouchableOpacity>
             </View>
         </Image>
       </View>
