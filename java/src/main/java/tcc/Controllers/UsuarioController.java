@@ -30,15 +30,33 @@ public class UsuarioController {
      * @return
      */
     @RequestMapping("/usuario")
-    public ResponseEntity<Usuario> cadastraUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity cadastraUsuario(@RequestBody Usuario usuario) {
         Usuario novoUsuario = null;
         try {
+            validaUsuario(usuario);
             novoUsuario = usuarioDao.save(usuario);
         } catch (Exception ex) {
-            return new ResponseEntity<Usuario>(novoUsuario, HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(ex.getMessage());
         }
         return new ResponseEntity<Usuario>(novoUsuario, HttpStatus.OK);
     }
 
+    private void validaUsuario(Usuario usuario) throws Exception {
+        Usuario usuarioBuscado = usuarioDao.findByEmail(usuario.getEmail());
+        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
+            throw new Exception("E-mail já cadastrado!");
+        }
+        usuarioBuscado = usuarioDao.findByCpf(usuario.getCpf());
+        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
+            throw new Exception("CPF já cadastrado!");
+        }
+        usuarioBuscado = usuarioDao.findByDddAndTelefone(usuario.getDdd(), usuario.getTelefone());
+        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
+            throw new Exception("Celular já cadastrado!");
+        }
     }
+
+}
 

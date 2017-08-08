@@ -84,7 +84,7 @@ class Cadastro extends Component {
     if (!usuario.email) {
       camposVazios += "e-mail";
     } else {
-      if (!validaEmail(usuario.email)) {
+      if (!this.validaEmail(usuario.email)) {
         ToastAndroid.showWithGravity('E-mail inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
         return false;
       }
@@ -96,7 +96,7 @@ class Cadastro extends Component {
         camposVazios += "CPF";
       }
     } else {
-      if (!validaCPF(usuario.cpf)) {
+      if (!this.validaCPF(usuario.cpf)) {
         ToastAndroid.showWithGravity('CPF inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
         return false;
       }

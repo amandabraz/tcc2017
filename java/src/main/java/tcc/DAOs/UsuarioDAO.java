@@ -9,5 +9,9 @@ import java.util.List;
  * Created by amanda on 05/05/2017.
  */
 public interface UsuarioDAO extends CrudRepository<Usuario, Long> {
-    List<Usuario> findByEmail(String email);
+    Usuario findByEmail(String email);
+
+    Usuario findByCpf(String cpf);
+
+    Usuario findByDddAndTelefone(int ddd, String telefone);
 }
