@@ -60,7 +60,7 @@ export default class Login extends Component {
       }
     }
     if (camposVazios) {
-      ToastAndroid.showWithGravity('Campos com preenchimento obrigatório.' + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+      ToastAndroid.showWithGravity('Campos com preenchimento obrigatório.' , ToastAndroid.LONG, ToastAndroid.CENTER);
       return false;
     }
     this.setState({backgroundColorEmail: 'transparent'});
@@ -74,6 +74,17 @@ export default class Login extends Component {
 
   //evento no click do botão
   eventLogin = () => {
+    const {
+      state: {
+        email, senha
+      }
+    } = this;
+    login = {
+      "email": email,
+      "senha": senha,
+    }
+    let logar = this.validaCampos(login);
+
      Alert.alert('Bem-vindo!');
   };
 
