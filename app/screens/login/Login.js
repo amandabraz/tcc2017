@@ -50,21 +50,21 @@ export default class Login extends Component {
     var camposVazios = "";
     //validar Email
     if (!login.email) {
-      camposVazios += "Email";
+      camposVazios += " Email ";
       this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
     }
     //validar senha
     if (!login.senha) {
       if (camposVazios) {
-        camposVazios += ", senha";
+        camposVazios += "e Senha ";
         this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
       } else {
-        camposVazios += "senha";
+        camposVazios += " Senha ";
         this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
       }
     }
     if (camposVazios) {
-      ToastAndroid.showWithGravity('Campos com preenchimento obrigatório.' , ToastAndroid.LONG, ToastAndroid.CENTER);
+      ToastAndroid.showWithGravity('Campo (s) ' + camposVazios + 'com preenchimento obrigatório.' , ToastAndroid.LONG, ToastAndroid.CENTER);
       return false;
     }
     this.setState({backgroundColorEmail: 'transparent'});
@@ -124,30 +124,34 @@ export default class Login extends Component {
             <View style={styles.centralView}>
               <Text style={styles.title}>Bem-Vindo(a)!</Text>
 
-              <Kohana style={{ backgroundColor: this.state.backgroundColorEmail }}
-              label={'Email'}
-              maxLength={50}
-              iconClass={FontAwesomeIcon}
-              keyboardType={'email-address'}
-              onChangeText={(email) => {
-                this.setState({email: email});
-                this.setState({backgroundColorEmail: 'transparent'});
-              }}
-              iconName={'at'}
-              iconColor={'#e2b1a3'}
-              labelStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}
-              inputStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}/>
+              <TextInput
+                style={styles.input}
+                onChangeText = {
+                  (email) => {
+                    this.setState({email: email});
+                    this.setState({backgroundColorEmail: 'transparent'});
+                  }
+                }
+                underlineColorAndroid={'#e2b1a3'}
+                maxLength={40}
+                placeholder = "seu_email@provedorbacana.com"
+                placeholderTextColor = "#e2b1a3"
+                keyboardType={'email-address'}
+              />
 
-              <Kohana style={{ backgroundColor: this.state.backgroundColorSenha }}
-              label={'Senha'}
-              maxLength={10}
-              iconClass={FontAwesomeIcon}
-              iconName={'lock'}
-              onChangeText={(senha) => this.setState({senha: senha})}
-              iconColor={'#e2b1a3'}
-              labelStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}
-              inputStyle={{ color: '#e2b1a3', fontSize: 18, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center', width: 300, height: 60, borderColor: 'gray' }}
-              secureTextEntry={true}/>
+              <TextInput
+                style={styles.input}
+                onChangeText = {
+                  (senha) => this.setState({
+                    senha: senha
+                  })
+                }
+                underlineColorAndroid={'#e2b1a3'}
+                maxLength={10}
+                secureTextEntry={true}
+                placeholder = "Senha"
+                placeholderTextColor = "#e2b1a3"
+              />
 
               <TouchableOpacity
               style={styles.button}
