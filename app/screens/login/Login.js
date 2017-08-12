@@ -22,9 +22,6 @@ import {
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 
-//importando o que foi criado
-import MButton from "../../components/mButton/MButton.js";
-
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
 
@@ -62,8 +59,6 @@ export default class Login extends Component {
       ToastAndroid.showWithGravity('Campo (s) ' + camposVazios + 'com preenchimento obrigatório.' , ToastAndroid.LONG, ToastAndroid.CENTER);
       return false;
     }
-    this.setState({backgroundColorEmail: 'transparent'});
-    this.setState({backgroundColorSenha: 'transparent'});
     return true;
   }
 
