@@ -52,11 +52,11 @@ public class ClienteController {
                                          @RequestParam(value="tags") List<String> tags) {
         List<Tag> tagInseridas = null;
         for (String tag : tags) {
-            Tag novaTag = tagDAO.findByTags(tag);
-            tags.add(novaTag);
+          //  Tag novaTag = tagDAO.findByTags(tag);
+          //  tags.add(novaTag);
         }
         Cliente cliente = clienteDAO.findOne(clienteId);
-        cliente.setTags(tags);
+        //cliente.setTags(tags);
 
         cliente = clienteDAO.save(cliente);
 

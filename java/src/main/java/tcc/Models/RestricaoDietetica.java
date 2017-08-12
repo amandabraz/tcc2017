@@ -24,6 +24,10 @@ public class RestricaoDietetica {
         this.descricao = descricao;
     }
 
+    public RestricaoDietetica() {
+        super();
+    }
+
     public Long getId() {
         return id;
     }
@@ -38,5 +42,13 @@ public class RestricaoDietetica {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    @Override
+    public String toString() {
+        return "RestricaoDietetica{" +
+                "id=" + id +
+                ", descricao='" + descricao + '\'' +
+                '}';
     }
 }

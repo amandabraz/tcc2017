@@ -9,5 +9,5 @@ import java.util.List;
  * Created by aline on 22/05/17.
  */
 public interface TagDAO extends CrudRepository<Tag, Long> {
-    List<Tag> findByTags(String tag);
+    List<Tag> findByDescricao(String descricao);
 }
