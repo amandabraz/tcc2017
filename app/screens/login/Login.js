@@ -36,8 +36,6 @@ export default class Login extends Component {
    this.state = {
      email: '',
      senha:'',
-     backgroundColorEmail: "transparent",
-     backgroundColorSenha: "transparent",
    }
   }
 
@@ -51,16 +49,13 @@ export default class Login extends Component {
     //validar Email
     if (!login.email) {
       camposVazios += " Email ";
-      this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
     }
     //validar senha
     if (!login.senha) {
       if (camposVazios) {
         camposVazios += "e Senha ";
-        this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
       } else {
         camposVazios += " Senha ";
-        this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
       }
     }
     if (camposVazios) {
@@ -132,7 +127,6 @@ export default class Login extends Component {
                 onChangeText = {
                   (email) => {
                     this.setState({email: email});
-                    this.setState({backgroundColorEmail: 'transparent'});
                   }
                 }
                 underlineColorAndroid={'#e2b1a3'}
