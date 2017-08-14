@@ -27,20 +27,7 @@ class Cliente extends Component {
     }
   }
 
-  dietaEscolhida = () => {
-     if (this.state.restricoesDieteticas.length > 0) {
-       return true;
-     }
-     else {
-       ToastAndroid.showWithGravity('Escolha ao menos uma Dieta', ToastAndroid.LONG, ToastAndroid.CENTER);
-       return false;
-     }
-
-}
-
 handleFinalizarPress = () => {
-  var dieta = this.dietaEscolhida();
-
   if (dieta) {
     const {
       state: {
