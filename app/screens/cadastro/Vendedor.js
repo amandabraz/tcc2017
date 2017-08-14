@@ -16,10 +16,23 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        pagamentosArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
+        pagamentosArray: [],
         nomeLoja: '',
         meiosPagamento: []
     }
+    this.preencherPagamentosArray();
+  }
+
+  preencherPagamentosArray() {
+    fetch('http://10.0.2.2:8080/pagamento')
+      .then((response) => response.json())
+        .then((responseJson) => {
+          var pagamentosBuscados = [];
+          for (i in responseJson) {
+              pagamentosBuscados.push(responseJson[i]);
+          }
+          this.setState({pagamentosArray: pagamentosBuscados});
+        });
   }
 
  pagamentoEscolhido = () => {
@@ -73,45 +86,29 @@ class Vendedor extends Component {
             });
     }
   };
-  onClick(meiosPagamento) {
-    meiosPagamento.checked = !meiosPagamento.checked;
+  onClick(meioPagamento) {
+    meioPagamento.checked = !meioPagamento.checked;
     this.setState({
-      meiosPagamento,
+      meioPagamento,
     });
   }
-  renderView() {
-    var len = this.state.pagamentosArray.length;
-    var views = [];
-    for (var i = 0, l = len - 2; i < l; i += 2) {
-        views.push(
-            <View key={i}>
-                <View style={styles.item}>
-                    {this.renderCheckBox(this.state.pagamentosArray[i])}
-                    {this.renderCheckBox(this.state.pagamentosArray[i + 1])}
-                </View>
-                <View style={styles.line}/>
-            </View>
-        )
-    }
-    views.push(
-        <View key={len - 1}>
-            <View style={styles.item}>
-                {len % 2 === 0 ? this.renderCheckBox(this.state.pagamentosArray[len - 2]) : null}
-                {this.renderCheckBox(this.state.pagamentosArray[len - 1])}
-            </View>
-        </View>
-    )
-    return views;
-  }
 
-  renderCheckBox(data) {
-      return (
+  mostrarCheckboxesPagamento() {
+    var views = [];
+    for(i in this.state.pagamentosArray) {
+      var meioPagamento = this.state.pagamentosArray[i];
+      views.push (
+        <View key={i} style={styles.item}>
           <CheckBox
-              style={{flex: 1, padding: 10}}
-              onClick={()=>this.onClick(data)}
-              isChecked={data.checked}
-              leftText={data}
-          />);
+            style={{flex: 1, padding: 10}}
+            onClick={()=>this.onClick(meioPagamento)}
+            isChecked={meioPagamento.checked}
+            leftText={meioPagamento.meioPagamento}
+            />
+        </View>
+      );
+    }
+    return views;
   }
 
   render() {
@@ -147,7 +144,7 @@ class Vendedor extends Component {
               </Text>
               <View style={styles.container}>
                   <ScrollView>
-                      {this.renderView()}
+                      {this.mostrarCheckboxesPagamento()}
                   </ScrollView>
               </View>
               <View style={{ flexDirection: 'column', flex: 1, height: 130, padding: 10 }}>
