@@ -5,13 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.UsuarioDAO;
+import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
-import tcc.Models.Vendedor;
-
-import java.util.Date;
 
 /**
  * Created by amanda on 04/05/2017.
@@ -29,33 +27,38 @@ public class UsuarioController {
      * @param usuario
      * @return
      */
-    @RequestMapping("/usuario")
+    @RequestMapping(value = "/usuario", method = RequestMethod.POST)
     public ResponseEntity cadastraUsuario(@RequestBody Usuario usuario) {
         Usuario novoUsuario = null;
         try {
-            validaUsuario(usuario);
+            CustomError temErro = validaUsuario(usuario);
+            if (temErro != null) {
+                System.out.println(temErro.toString());
+                return new ResponseEntity(temErro, HttpStatus.CONFLICT);
+            }
             novoUsuario = usuarioDao.save(usuario);
         } catch (Exception ex) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(ex.getMessage());
+                    .body(ex);
         }
-        return new ResponseEntity<Usuario>(novoUsuario, HttpStatus.OK);
+        return new ResponseEntity<>(novoUsuario, HttpStatus.OK);
     }
 
-    private void validaUsuario(Usuario usuario) throws Exception {
+    private CustomError validaUsuario(Usuario usuario) {
         Usuario usuarioBuscado = usuarioDao.findByEmail(usuario.getEmail());
         if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            throw new Exception("E-mail já cadastrado!");
+            return new CustomError("E-mail já cadastrado!");
         }
         usuarioBuscado = usuarioDao.findByCpf(usuario.getCpf());
         if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            throw new Exception("CPF já cadastrado!");
+            return new CustomError("CPF já cadastrado!");
         }
         usuarioBuscado = usuarioDao.findByDddAndTelefone(usuario.getDdd(), usuario.getTelefone());
         if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            throw new Exception("Celular já cadastrado!");
+            return new CustomError("Celular já cadastrado!");
         }
+        return null;
     }
 
 }
