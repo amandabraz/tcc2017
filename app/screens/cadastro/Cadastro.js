@@ -84,7 +84,7 @@ class Cadastro extends Component {
     if (!usuario.email) {
       camposVazios += "e-mail";
     } else {
-      if (!validaEmail(usuario.email)) {
+      if (!this.validaEmail(usuario.email)) {
         ToastAndroid.showWithGravity('E-mail inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
         return false;
       }
@@ -96,7 +96,7 @@ class Cadastro extends Component {
         camposVazios += "CPF";
       }
     } else {
-      if (!validaCPF(usuario.cpf)) {
+      if (!this.validaCPF(usuario.cpf)) {
         ToastAndroid.showWithGravity('CPF inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
         return false;
       }
@@ -195,14 +195,16 @@ class Cadastro extends Component {
           },
           body: JSON.stringify(usuario)
         })
-            .then((response) => response.json())
+          .then((response) => response.json())
             .then((responseJson) => {
-              ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-              this.props.navigation.navigate('Vendedor');
-
+              if (responseJson.errorMessage) {
+                Alert.alert(responseJson.errorMessage);
+              } else {
+                ToastAndroid.showWithGravity('Cadastro de Vendedor iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                this.props.navigation.navigate('Vendedor');
+              }
             })
             .catch((error) => {
-              Alert.alert("error Response", JSON.stringify(error));
               console.error(error);
             });
     }
@@ -236,12 +238,14 @@ class Cadastro extends Component {
         })
             .then((response) => response.json())
             .then((responseJson) => {
-              ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                 this.props.navigation.navigate('Cliente');
-
+              if (responseJson.errorMessage) {
+                Alert.alert(responseJson.errorMessage);
+              } else {
+                ToastAndroid.showWithGravity('Cadastro de Cliente iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                this.props.navigation.navigate('Cliente');
+              }
             })
             .catch((error) => {
-              Alert.alert("error Response", JSON.stringify(error));
               console.error(error);
             });
     }
