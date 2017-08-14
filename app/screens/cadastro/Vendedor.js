@@ -16,10 +16,16 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        pagamentosArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
+        pagamentosArray: [],
         nomeLoja: '',
         meiosPagamento: []
     }
+  }
+
+  componentWillMount() {
+    fetch('http://10.0.2.2:8080/pagamento').then(function(response) => {
+      Alert.alert(response);
+    })
   }
 
  pagamentoEscolhido = () => {

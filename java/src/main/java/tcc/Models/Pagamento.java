@@ -1,7 +1,5 @@
 package tcc.Models;
 
-import tcc.Enums.MeioPagamento;
-
 import javax.persistence.*;
 
 /**
@@ -17,15 +15,14 @@ public class Pagamento {
     private Long id;
 
     @Column(name = "MEIO_PAGAMENTO")
-    @Enumerated(EnumType.STRING)
-    private MeioPagamento meioPagamento;
+    private String meioPagamento;
 
-    public Pagamento(Long id) {
-        super();
+    public Pagamento() {
         this.id = id;
+        this.meioPagamento = meioPagamento;
     }
 
-    public Pagamento(MeioPagamento meioPagamento) {
+    public Pagamento(String meioPagamento) {
         this.meioPagamento = meioPagamento;
     }
 
@@ -37,11 +34,19 @@ public class Pagamento {
         this.id = id;
     }
 
-    public MeioPagamento getMeioPagamento() {
+    public String getMeioPagamento() {
         return meioPagamento;
     }
 
-    public void setMeioPagamento(MeioPagamento meioPagamento) {
+    public void setMeioPagamento(String meioPagamento) {
         this.meioPagamento = meioPagamento;
+    }
+
+    @Override
+    public String toString() {
+        return "Pagamento{" +
+                "id=" + id +
+                ", meioPagamento='" + meioPagamento + '\'' +
+                '}';
     }
 }

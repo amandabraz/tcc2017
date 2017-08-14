@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface PagamentoDAO extends CrudRepository<Pagamento, Long> {
     Pagamento findByMeioPagamento(String meioPagamento);
+    List<Pagamento> findAll();
 }
