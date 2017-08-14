@@ -22,17 +22,7 @@ public class Vendedor {
     @Column(name = "NOME_FANTASIA", nullable = true, length = 100)
     private String nomeFantasia;
 
-    @Column(name = "CPF", nullable = false, length = 11, unique = true)
-    private String cpf;
-
-    @Transient
-    private Long fkRestricaoDietetica;
-
-    @Transient
-    //@Column(name = "VISUALIZA_ESTATISTICAS", nullable = false)
-    private boolean visualizaEstatisticas;
-
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "PAGAMENTOS_ACEITOS",
             joinColumns = { @JoinColumn(name = "ID_VENDEDOR") },
             inverseJoinColumns = { @JoinColumn(name = "ID_PAGAMENTO") })
@@ -42,16 +32,12 @@ public class Vendedor {
         this.id = id;
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
-        this.cpf = cpf;
-        //this.fkRestricaoDietetica = fkRestricaoDietetica;
-        //this.visualizaEstatisticas = visualizaEstatisticas;
         this.pagamentosAceitos = pagamentosAceitos;
     }
 
-    public Vendedor(Usuario usuario, String nomeFantasia, String cpf) {
+    public Vendedor(Usuario usuario, String nomeFantasia) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
-        this.cpf = cpf;
     }
 
     public Long getId() {
@@ -68,30 +54,6 @@ public class Vendedor {
 
     public void setNomeFantasia(String nomeFantasia) {
         this.nomeFantasia = nomeFantasia;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public Long getFkRestricaoDietetica() {
-        return fkRestricaoDietetica;
-    }
-
-    public void setFkRestricaoDietetica(Long fkRestricaoDietetica) {
-        this.fkRestricaoDietetica = fkRestricaoDietetica;
-    }
-
-    public boolean isVisualizaEstatisticas() {
-        return visualizaEstatisticas;
-    }
-
-    public void setVisualizaEstatisticas(boolean visualizaEstatisticas) {
-        this.visualizaEstatisticas = visualizaEstatisticas;
     }
 
     public Usuario getUsuario() {
@@ -116,9 +78,6 @@ public class Vendedor {
                 "id=" + id +
                 ", usuario=" + usuario +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", fkRestricaoDietetica=" + fkRestricaoDietetica +
-                ", visualizaEstatisticas=" + visualizaEstatisticas +
                 ", pagamentosAceitos=" + pagamentosAceitos +
                 '}';
     }
