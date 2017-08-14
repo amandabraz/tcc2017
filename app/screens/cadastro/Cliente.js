@@ -1,7 +1,3 @@
-/**
- * author: Aline Bender
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -17,9 +13,7 @@ import {
 import { Tile, List, ListItem, Button } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 import TagInput from 'react-native-tag-input';
-
-//TODO ALINE: Redirecionar para tela inicial de Cliente
-//const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
+import CheckBox from 'react-native-check-box';
 
 const {width, height} = Dimensions.get("window");
 
@@ -27,41 +21,101 @@ class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tags: [],
-    };
+        dietasArray: ["Nenhuma", "Low Carb", "Vegetariana", "Vegana", "Frugívora", "Paleolítica", "Mediterrânea", "Detox", "Celíaca", "Outras…" ],
+        restricoesDieteticas: [],
+        tags: []
+    }
   }
 
-  handleFinalizarPress = () => {
+  dietaEscolhida = () => {
+     if (this.state.restricoesDieteticas.length > 0) {
+       return true;
+     }
+     else {
+       ToastAndroid.showWithGravity('Escolha ao menos uma Dieta', ToastAndroid.LONG, ToastAndroid.CENTER);
+       return false;
+     }
+
+}
+
+handleFinalizarPress = () => {
+  var dieta = this.dietaEscolhida();
+
+  if (dieta) {
     const {
       state: {
-        tags
-      }
-    } = this;
-
-    cliente = {
-      "usuario": 1,
-      "tags": tags,
+        tags,
+        restricoesDieteticas
     }
+  } = this;
 
-    fetch('http://10.0.2.2:8080/cliente', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(cliente)
+  cliente = {
+    "usuario": 1,
+    "tags": tags,
+    "restricoesDieteticas": restricoesDieteticas
+  }
+
+  fetch('http://10.0.2.2:8080/cliente', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(cliente)
+  })
+    .then((response) => response.json())
+    .then((reponseJson) => {
+      ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
+      this.props.navigation.navigate('TabsCliente');
     })
-      .then((response) => response.json())
-      .then((reponseJson) => {
-        ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-        this.props.navigation.navigate('TabsCliente');
-      })
-      .catch((error) => {
-        Alert.alert("error Response", JSON.stringify(error));
-        console.error(error);
-      });
+    .catch((error) => {
+      Alert.alert("error Response", JSON.stringify(error));
+      console.error(error);
+    });
+}
 };
 
+onClick(restricoesDieteticas) {
+  restricoesDieteticas.checked = !restricoesDieteticas.checked;
+  this.setState({
+    restricoesDieteticas,
+  });
+}
+renderView() {
+  var len = this.state.dietasArray.length;
+  var views = [];
+  for (var i = 0, l = len - 2; i < l; i += 2) {
+      views.push(
+          <View key={i}>
+              <View style={styles.item}>
+                  {this.renderCheckBox(this.state.dietasArray[i])}
+                  {this.renderCheckBox(this.state.dietasArray[i + 1])}
+              </View>
+              <View style={styles.line}/>
+          </View>
+      )
+  }
+
+  views.push(
+      <View key={len - 1}>
+          <View style={styles.item}>
+              {len % 2 === 0 ? this.renderCheckBox(this.state.dietasArray[len - 2]) : null}
+              {this.renderCheckBox(this.state.dietasArray[len - 1])}
+          </View>
+      </View>
+  )
+  return views;
+}
+
+renderCheckBox(data) {
+    return (
+        <CheckBox
+            style={{flex: 1, padding: 10}}
+            onClick={()=>this.onClick(data)}
+            isChecked={data.checked}
+            leftText={data}
+        />);
+}
 
   onChangeTags = (tags) => {
     this.setState({
@@ -76,19 +130,32 @@ class Cliente extends Component {
   render() {
     const inputProps = {
       keyboardType: 'default',
-      placeholder: 'Insira aqui tags dietéticas',
-      autoFocus: true,
+      placeholder: 'ex: brigadeiro, doce, paçoca',
       placeholderTextColor: '#dc143c',
       height:300
     };
 
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         <NavigationBar
           title={titleConfig}
           tintColor="#95c9db"
         />
-        <View style={{ flexDirection: 'column', flex: 1}}>
+        <View style={styles.container}>
+
+              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                  Selecione sua dieta:
+              </Text>
+              <View style={styles.container}>
+                  <ScrollView>
+                      {this.renderView()}
+                  </ScrollView>
+              </View>
+              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                Adicione suas tags:
+              </Text>
+          <View style={{ flexDirection: 'column', flex: 1}}>
+
           <TagInput
             value={this.state.tags}
             onChange={(tags) => this.setState({tags,})}
@@ -97,7 +164,7 @@ class Cliente extends Component {
             inputProps={inputProps}
             numberOfLines={15}
           />
-          //TODO Aline: redirecionar para handleFinalizarPress quando o banco estiver oka
+          </View>
           <Button onPress={this.botaoFinalizar} title="Finalizar" color="#dc143c" />
         </View>
       </View>
@@ -111,78 +178,33 @@ const titleConfig = {
   fontFamily: 'Roboto',
 };
 
-
-//CSS
 const styles = StyleSheet.create({
+  multiline: {
+    height: 60,
+    fontSize: 16,
+    padding: 4,
+    marginBottom: 10,
+  },
+  singleLine: {
+    fontSize: 16,
+    padding: 4,
+    height: 45,
+  },
   container: {
-    flex: 1,
+      flex: 1,
+      justifyContent: 'space-between',
+      backgroundColor: '#fff',
+      padding: 15
   },
-  button: {
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: "#50a1e0",
-    alignSelf: 'stretch',
+  item: {
+      flexDirection: 'row',
   },
-  title: {
-    fontFamily: 'Roboto',
-    color: '#95c9db',
-    fontWeight: 'bold',
-    fontSize: 40,
-    backgroundColor: 'rgba(0, 121, 163, 0.7)',
+    line: {
+      flex: 1,
+      height: 0.3,
+      backgroundColor: 'darkgray',
   },
-  centralView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(100, 108, 122, 0.7)',
-  },
-  input: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 37,
-    width: 250,
-  },
-  textInputContainer: {
-    flex: 1,
-    width: 100,
-    height: 32,
-    margin: 4,
-    borderRadius: 16,
-    backgroundColor: '#ccc',
-  },
-
-  textInput: {
-    margin: 0,
-    padding: 0,
-    paddingLeft: 12,
-    paddingRight: 12,
-    flex: 1,
-    height: 32,
-    fontSize: 13,
-    color: 'rgba(0, 0, 0, 0.87)',
-  },
-
-  tag: {
-    justifyContent: 'center',
-    backgroundColor: '#e0e0e0',
-    borderRadius: 16,
-    paddingLeft: 12,
-    paddingRight: 12,
-    height: 32,
-    margin: 4,
-  },
-  tagLabel: {
-    fontSize: 13,
-    color: 'rgba(0, 0, 0, 0.87)',
-  },
-});
+  });
 
 Cliente.defaultProps = { ...Cliente };
 
