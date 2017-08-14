@@ -18,7 +18,7 @@ class Vendedor extends Component {
     this.state = {
         pagamentosArray: [],
         nomeLoja: '',
-        meiosPagamento: []
+        pagamentosAceitos: []
     }
     this.preencherPagamentosArray();
   }
@@ -36,7 +36,7 @@ class Vendedor extends Component {
   }
 
  pagamentoEscolhido = () => {
-     if (this.state.meiosPagamento.length > 0) {
+     if (this.state.pagamentosAceitos.length > 0) {
        return true;
      }
      else {
@@ -54,14 +54,14 @@ class Vendedor extends Component {
       const {
         state: {
           nomeLoja,
-          meiosPagamento
+          pagamentosAceitos
         }
       } = this;
       // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
       vendedor = {
-        "usuario": 1,
+        "usuario": 14,
         "nomeFantasia": nomeLoja,
-        "meiosPagamento": meiosPagamento
+        "pagamentosAceitos": pagamentosAceitos
       }
 
       //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
@@ -75,28 +75,30 @@ class Vendedor extends Component {
         })
             .then((response) => response.json())
             .then((responseJson) => {
-              ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-              // TODO: acertar a navegação para a próxima tela, a ser criada
-              this.props.navigation.navigate('TabsVendedor');
+              if (!responseJson.errorMessage) {
+                ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                this.props.navigation.navigate('TabsVendedor');
+              } else {
+                Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
+              }
             })
             .catch((error) => {
-              // TODO: melhorar erro? combinar padrão de erro no app!
-              Alert.alert("error Response", JSON.stringify(error));
               console.error(error);
             });
     }
   };
   onClick(meioPagamento) {
     meioPagamento.checked = !meioPagamento.checked;
-    this.setState({
-      meioPagamento,
-    });
+    var meiosAceitos = this.state.pagamentosAceitos;
+    meiosAceitos.push(meioPagamento);
+    this.setState({ pagamentosAceitos: meiosAceitos });
+    Alert.alert(JSON.stringify(meioPagamento));
   }
 
   mostrarCheckboxesPagamento() {
     var views = [];
     for(i in this.state.pagamentosArray) {
-      var meioPagamento = this.state.pagamentosArray[i];
+      let meioPagamento = this.state.pagamentosArray[i];
       views.push (
         <View key={i} style={styles.item}>
           <CheckBox
