@@ -15,9 +15,6 @@ import tcc.Models.Vendedor;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by aline on 17/05/17.
- */
 @RestController
 public class ClienteController {
 
@@ -46,6 +43,8 @@ public class ClienteController {
     }
 
     //TODO: Ta dando ruim adicionar tag pq da conflito de int para string
+
+
 
     @RequestMapping("/tag")
     public String cadastraTag(@RequestParam(value="clienteId") Long clienteId,
