@@ -1,6 +1,12 @@
 package tcc.Models;
 
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Classe/Tabela que indica MEIOS DE PAGAMENTO que o vendedor aceita
