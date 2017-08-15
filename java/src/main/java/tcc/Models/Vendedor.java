@@ -22,9 +22,6 @@ public class Vendedor {
     @Column(name = "NOME_FANTASIA", nullable = true, length = 100)
     private String nomeFantasia;
 
-    @Column(name = "CPF", nullable = false, length = 11, unique = true)
-    private String cpf;
-
     @Transient
     private Long fkRestricaoDietetica;
 
@@ -42,7 +39,6 @@ public class Vendedor {
         this.id = id;
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
-        this.cpf = cpf;
         //this.fkRestricaoDietetica = fkRestricaoDietetica;
         //this.visualizaEstatisticas = visualizaEstatisticas;
         this.pagamentosAceitos = pagamentosAceitos;
@@ -51,7 +47,6 @@ public class Vendedor {
     public Vendedor(Usuario usuario, String nomeFantasia, String cpf) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
-        this.cpf = cpf;
     }
 
     public Long getId() {
@@ -68,14 +63,6 @@ public class Vendedor {
 
     public void setNomeFantasia(String nomeFantasia) {
         this.nomeFantasia = nomeFantasia;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public Long getFkRestricaoDietetica() {
@@ -116,7 +103,6 @@ public class Vendedor {
                 "id=" + id +
                 ", usuario=" + usuario +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", cpf='" + cpf + '\'' +
                 ", fkRestricaoDietetica=" + fkRestricaoDietetica +
                 ", visualizaEstatisticas=" + visualizaEstatisticas +
                 ", pagamentosAceitos=" + pagamentosAceitos +
