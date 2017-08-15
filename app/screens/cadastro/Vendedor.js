@@ -16,6 +16,7 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        userId: this.props.navigation.state.params.userId,
         pagamentosArray: [],
         nomeLoja: '',
         pagamentosAceitos: []
@@ -53,13 +54,14 @@ class Vendedor extends Component {
     if (pagamento) {
       const {
         state: {
+          userId,
           nomeLoja,
           pagamentosAceitos
         }
       } = this;
       // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
       vendedor = {
-        "usuario": 14,
+        "usuario": userId,
         "nomeFantasia": nomeLoja,
         "pagamentosAceitos": pagamentosAceitos
       }
@@ -92,7 +94,6 @@ class Vendedor extends Component {
     var meiosAceitos = this.state.pagamentosAceitos;
     meiosAceitos.push(meioPagamento);
     this.setState({ pagamentosAceitos: meiosAceitos });
-    Alert.alert(JSON.stringify(meioPagamento));
   }
 
   mostrarCheckboxesPagamento() {

@@ -36,6 +36,7 @@ public class VendedorController {
         try {
             novoVendedor = vendedorDAO.save(vendedor);
         } catch (Exception ex) {
+            System.out.println(ex.fillInStackTrace());
             return new ResponseEntity<>(new CustomError("Erro ao salvar Vendedor"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Vendedor>(novoVendedor, HttpStatus.OK);

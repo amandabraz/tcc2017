@@ -2,6 +2,7 @@ package tcc.Models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by amanda on 04/05/2017.
@@ -34,8 +35,8 @@ public class Usuario {
     @Column(name = "DATA_NASC", nullable = false)
     private Date dataNasc;
 
-    @Column(name = "CPF", nullable = false, length = 11, unique = true)
-    private String cpf;
+    @Column(name = "CPF", columnDefinition = "varchar(11)  NOT NULL UNIQUE", insertable = true, updatable = false)
+    private String cpf = "00000000000";
 
     @Column(name = "ddd", nullable = false, length = 2)
     private int ddd;
@@ -78,36 +79,6 @@ public class Usuario {
     public Usuario(Long id) {
         super();
         this.id = id;
-    }
-
-    /**
-     * @param senha
-     * @param deletado
-     * @param perfil
-     * @param nome
-     * @param email
-     * @param dataNasc
-     * @param cpf
-     * @param ddd
-     * @param telefone
-     * @param localizacao
-     * @param notificacao
-     * @param bloqueado
-     */
-    public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   String cpf, int ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
-        this.senha = senha;
-        this.deletado = deletado;
-        this.perfil = perfil;
-        this.nome = nome;
-        this.email = email;
-        this.dataNasc = dataNasc;
-        this.cpf = cpf;
-        this.ddd = ddd;
-        this.telefone = telefone;
-        this.localizacao = localizacao;
-        this.notificacao = notificacao;
-        this.bloqueado = bloqueado;
     }
 
     public Long getId() {
@@ -231,5 +202,31 @@ public class Usuario {
                 ", notificacao=" + notificacao +
                 ", bloqueado=" + bloqueado +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return deletado == usuario.deletado &&
+                perfil == usuario.perfil &&
+                ddd == usuario.ddd &&
+                localizacao == usuario.localizacao &&
+                notificacao == usuario.notificacao &&
+                bloqueado == usuario.bloqueado &&
+                Objects.equals(id, usuario.id) &&
+                Objects.equals(senha, usuario.senha) &&
+                Objects.equals(nome, usuario.nome) &&
+                Objects.equals(email, usuario.email) &&
+                Objects.equals(dataNasc, usuario.dataNasc) &&
+                Objects.equals(cpf, usuario.cpf) &&
+                Objects.equals(telefone, usuario.telefone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc,
+                cpf, ddd, telefone, localizacao, notificacao, bloqueado);
     }
 }
