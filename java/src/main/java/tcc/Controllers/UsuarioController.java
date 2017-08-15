@@ -1,13 +1,15 @@
 package tcc.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.UsuarioDAO;
+import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
-
-import java.util.Date;
 
 /**
  * Created by amanda on 04/05/2017.
@@ -21,28 +23,43 @@ public class UsuarioController {
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
-     * @param nome
+     *
+     * @param usuario
      * @return
      */
-    @RequestMapping("/usuario")
-    public String cadastraUsuario(@RequestParam(value="nome") String nome,
-                                   @RequestParam(value="perfil") char perfil,
-                                   @RequestParam(value="email") String email,
-                                   @RequestParam(value="dataNasc") Date dataNasc,
-                                   @RequestParam(value="senha") String senha) {
-        // TODO: Mudar, não usar mais @RequestParam depois de confirmarmos que tudo está funcionando de acordo com o esperado.
-        // Se não me engano, usaremos @PathVariable pra esconder as informações do usuário e não expor no url,
-        // Usar PUT e não GET.
+    @RequestMapping(value = "/usuario", method = RequestMethod.POST)
+    public ResponseEntity cadastraUsuario(@RequestBody Usuario usuario) {
         Usuario novoUsuario = null;
         try {
-            novoUsuario = new Usuario(senha, false, perfil, nome, email, dataNasc,
-                    false, false, false);
-            // Setando deletado como false pois está sendo inserido no banco neste momento
-            // Setando localizacao e notificacao como false pois usuário ainda não foi solicitado essas preferências
-            usuarioDao.save(novoUsuario);
+            CustomError temErro = validaUsuario(usuario);
+            if (temErro != null) {
+                System.out.println(temErro.toString());
+                return new ResponseEntity(temErro, HttpStatus.CONFLICT);
+            }
+            novoUsuario = usuarioDao.save(usuario);
         } catch (Exception ex) {
-            return "Error creating the user: " + ex.toString();
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(ex);
         }
-        return "Usuario criado com sucesso! (" + novoUsuario.toString() + ")";
+        return new ResponseEntity<>(novoUsuario, HttpStatus.OK);
     }
+
+    private CustomError validaUsuario(Usuario usuario) {
+        Usuario usuarioBuscado = usuarioDao.findByEmail(usuario.getEmail());
+        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
+            return new CustomError("E-mail já cadastrado!");
+        }
+        usuarioBuscado = usuarioDao.findByCpf(usuario.getCpf());
+        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
+            return new CustomError("CPF já cadastrado!");
+        }
+        usuarioBuscado = usuarioDao.findByDddAndTelefone(usuario.getDdd(), usuario.getTelefone());
+        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
+            return new CustomError("Celular já cadastrado!");
+        }
+        return null;
+    }
+
 }
+
