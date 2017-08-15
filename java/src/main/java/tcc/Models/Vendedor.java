@@ -1,6 +1,16 @@
 package tcc.Models;
 
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -22,14 +32,7 @@ public class Vendedor {
     @Column(name = "NOME_FANTASIA", nullable = true, length = 100)
     private String nomeFantasia;
 
-    @Transient
-    private Long fkRestricaoDietetica;
-
-    @Transient
-    //@Column(name = "VISUALIZA_ESTATISTICAS", nullable = false)
-    private boolean visualizaEstatisticas;
-
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "PAGAMENTOS_ACEITOS",
             joinColumns = { @JoinColumn(name = "ID_VENDEDOR") },
             inverseJoinColumns = { @JoinColumn(name = "ID_PAGAMENTO") })
@@ -39,12 +42,10 @@ public class Vendedor {
         this.id = id;
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
-        //this.fkRestricaoDietetica = fkRestricaoDietetica;
-        //this.visualizaEstatisticas = visualizaEstatisticas;
         this.pagamentosAceitos = pagamentosAceitos;
     }
 
-    public Vendedor(Usuario usuario, String nomeFantasia, String cpf) {
+    public Vendedor(Usuario usuario, String nomeFantasia) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
     }
@@ -63,22 +64,6 @@ public class Vendedor {
 
     public void setNomeFantasia(String nomeFantasia) {
         this.nomeFantasia = nomeFantasia;
-    }
-
-    public Long getFkRestricaoDietetica() {
-        return fkRestricaoDietetica;
-    }
-
-    public void setFkRestricaoDietetica(Long fkRestricaoDietetica) {
-        this.fkRestricaoDietetica = fkRestricaoDietetica;
-    }
-
-    public boolean isVisualizaEstatisticas() {
-        return visualizaEstatisticas;
-    }
-
-    public void setVisualizaEstatisticas(boolean visualizaEstatisticas) {
-        this.visualizaEstatisticas = visualizaEstatisticas;
     }
 
     public Usuario getUsuario() {
@@ -103,8 +88,6 @@ public class Vendedor {
                 "id=" + id +
                 ", usuario=" + usuario +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", fkRestricaoDietetica=" + fkRestricaoDietetica +
-                ", visualizaEstatisticas=" + visualizaEstatisticas +
                 ", pagamentosAceitos=" + pagamentosAceitos +
                 '}';
     }
