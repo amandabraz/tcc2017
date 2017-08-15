@@ -9,6 +9,7 @@ import tcc.DAOs.TagDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.Models.Cliente;
 import tcc.Models.Tag;
+import tcc.Services.TagService;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class ClienteController {
     @Autowired
     private TagDAO tagDAO;
 
+    @Autowired
+    TagService tagService;
+
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
      * @param
@@ -31,40 +35,20 @@ public class ClienteController {
     public ResponseEntity<Cliente> cadastraCliente(@RequestBody Cliente cliente) {
         Cliente novoCliente = null;
         try {
+            List<Tag> tagsResolvidas = null;
+            Tag tagResolvida = null;
+            for (Tag t: cliente.getTags()) {
+                tagResolvida = tagService.verificarTag(t.getDescricao());
+                tagsResolvidas.add(tagResolvida);
+            }
+
+            cliente.setTags(tagsResolvidas);
             novoCliente = clienteDAO.save(cliente);
         } catch (Exception ex) {
-//            return "Error creating the user: " + ex.toString();
             return new ResponseEntity<Cliente>(novoCliente, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Cliente>(novoCliente, HttpStatus.OK);
     }
-
-    @RequestMapping("/tag")
-    public String cadastraTag(@RequestParam(value="clienteId") Long clienteId,
-                              @RequestParam(value="tags") List<String> tags) {
-
-        Cliente cliente = clienteDAO.findOne(clienteId);
-        for (String tag : tags) {
-            TagController tagController = new TagController();
-
-            if(tagController.verificarTag(tag)!=null){
-
-                clienteDAO.save(cliente);
-            }
-
-            else{
-                tagController.cadastraTag(tag);
-
-                List<Tag> tagInseridas = null; // don't know :(
-                cliente.setTags(tagInseridas);
-                clienteDAO.save(cliente);
-            }
-        }
-
-        return "Tag para o cliente " + clienteId +
-                "criado com sucesso! (" + cliente.toString() + ")";
-    }
-
 }
 
 

@@ -62,6 +62,10 @@ public class Cliente {
                 '}';
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -70,16 +74,12 @@ public class Cliente {
         return usuario;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public List getTags() {
-        return tags;
-    }
-
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
     }
 
     public void setTags(List<Tag> tags) {

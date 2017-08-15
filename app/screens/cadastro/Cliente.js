@@ -21,6 +21,7 @@ class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        userId: this.props.navigation.state.params.userId,
         dietasArray: [],
         restricoesDieteticas: [],
         tags: []
@@ -43,13 +44,14 @@ class Cliente extends Component {
 handleFinalizarPress = () => {
     const {
       state: {
+        userId,
         tags,
         restricoesDieteticas
     }
   } = this;
 
   cliente = {
-    "usuario": 1,
+    "usuario": userId,
     "tags": tags,
     "restricoesDieteticas": restricoesDieteticas
   }
@@ -98,10 +100,10 @@ mostrarCheckboxesDieta() {
   return views;
 }
 
-  onChangeTags = (tags) => {
-    this.setState({
-      tags,
-    });
+  onChangeTags(tag) {
+    var tagsAntigas = this.state.tags;
+    tagsAntigas.push({descricao: tag});
+    this.setState({tags: tagsAntigas});
   };
 
   botaoFinalizar = () => {
@@ -139,7 +141,7 @@ mostrarCheckboxesDieta() {
 
           <TagInput
             value={this.state.tags}
-            onChange={(tags) => this.setState({tags,})}
+            onChange={this.onChangeTags(tag)}
             tagColor="pink"
             tagTextColor="white"
             inputProps={inputProps}
