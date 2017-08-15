@@ -15,9 +15,6 @@ import tcc.Models.Vendedor;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by aline on 17/05/17.
- */
 @RestController
 public class ClienteController {
 
@@ -47,16 +44,18 @@ public class ClienteController {
 
     //TODO: Ta dando ruim adicionar tag pq da conflito de int para string
 
+
+
     @RequestMapping("/tag")
     public String cadastraTag(@RequestParam(value="clienteId") Long clienteId,
                                          @RequestParam(value="tags") List<String> tags) {
         List<Tag> tagInseridas = null;
         for (String tag : tags) {
-            Tag novaTag = tagDAO.findByTags(tag);
-            tags.add(novaTag);
+          //  Tag novaTag = tagDAO.findByTags(tag);
+          //  tags.add(novaTag);
         }
         Cliente cliente = clienteDAO.findOne(clienteId);
-        cliente.setTags(tags);
+        //cliente.setTags(tags);
 
         cliente = clienteDAO.save(cliente);
 

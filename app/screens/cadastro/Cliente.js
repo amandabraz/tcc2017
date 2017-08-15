@@ -21,13 +21,39 @@ class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        dietasArray: ["Nenhuma", "Low Carb", "Vegetariana", "Vegana", "Frugívora", "Paleolítica", "Mediterrânea", "Detox", "Celíaca", "Outras…" ],
+        dietasArray: [],
         restricoesDieteticas: [],
         tags: []
     }
+    this.preencherDietasArray();
   }
 
+  preencherDietasArray() {
+    fetch('http://10.0.3.2:8080/restricaodietetica')
+      .then((response) => response.json())
+        .then((responseJson) => {
+          var dietasBuscadas = [];
+            for (i in responseJson) {
+              dietasBuscadas.push(responseJson[i]);
+            }
+        this.setState({dietasArray: dietasBuscadas});
+        });
+  }
+
+  dietaEscolhida = () => {
+     if (this.state.restricoesDieteticas.length > 0) {
+       return false;
+     }
+     else {
+       ToastAndroid.showWithGravity('Escolha ao menos uma dieta', ToastAndroid.LONG, ToastAndroid.CENTER);
+       return false;
+     }
+   }
+
+//"Nenhuma", "Low Carb", "Vegetariana", "Vegana", "Frugívora", "Paleolítica", "Mediterrânea", "Detox", "Celíaca", "Outras…"
 handleFinalizarPress = () => {
+  var dieta = this.dietaEscolhida();
+
   if (dieta) {
     const {
       state: {
@@ -62,46 +88,29 @@ handleFinalizarPress = () => {
 }
 };
 
-onClick(restricoesDieteticas) {
-  restricoesDieteticas.checked = !restricoesDieteticas.checked;
+onClick(descricao) {
+  descricao.checked = !descricao.checked;
   this.setState({
-    restricoesDieteticas,
+    descricao,
   });
 }
-renderView() {
-  var len = this.state.dietasArray.length;
+
+mostrarCheckboxesDieta() {
   var views = [];
-  for (var i = 0, l = len - 2; i < l; i += 2) {
-      views.push(
-          <View key={i}>
-              <View style={styles.item}>
-                  {this.renderCheckBox(this.state.dietasArray[i])}
-                  {this.renderCheckBox(this.state.dietasArray[i + 1])}
-              </View>
-              <View style={styles.line}/>
-          </View>
-      )
-  }
-
-  views.push(
-      <View key={len - 1}>
-          <View style={styles.item}>
-              {len % 2 === 0 ? this.renderCheckBox(this.state.dietasArray[len - 2]) : null}
-              {this.renderCheckBox(this.state.dietasArray[len - 1])}
-          </View>
-      </View>
-  )
-  return views;
-}
-
-renderCheckBox(data) {
-    return (
+  for(i in this.state.dietasArray) {
+    var descricao = this.state.dietasArray[i];
+    views.push (
+      <View key={i} style={styles.item}>
         <CheckBox
-            style={{flex: 1, padding: 10}}
-            onClick={()=>this.onClick(data)}
-            isChecked={data.checked}
-            leftText={data}
-        />);
+          style={{flex: 1, padding: 10}}
+          onClick={()=>this.onClick(descricao)}
+          isChecked={descricao.checked}
+          leftText={descricao.descricao}
+          />
+      </View>
+    );
+  }
+  return views;
 }
 
   onChangeTags = (tags) => {
@@ -135,7 +144,7 @@ renderCheckBox(data) {
               </Text>
               <View style={styles.container}>
                   <ScrollView>
-                      {this.renderView()}
+                      {this.mostrarCheckboxesDieta()}
                   </ScrollView>
               </View>
               <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
