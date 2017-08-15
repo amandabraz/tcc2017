@@ -40,21 +40,7 @@ class Cliente extends Component {
         });
   }
 
-  dietaEscolhida = () => {
-     if (this.state.restricoesDieteticas.length > 0) {
-       return false;
-     }
-     else {
-       ToastAndroid.showWithGravity('Escolha ao menos uma dieta', ToastAndroid.LONG, ToastAndroid.CENTER);
-       return false;
-     }
-   }
-
-//"Nenhuma", "Low Carb", "Vegetariana", "Vegana", "Frugívora", "Paleolítica", "Mediterrânea", "Detox", "Celíaca", "Outras…"
 handleFinalizarPress = () => {
-  var dieta = this.dietaEscolhida();
-
-  if (dieta) {
     const {
       state: {
         tags,
@@ -85,14 +71,13 @@ handleFinalizarPress = () => {
       Alert.alert("error Response", JSON.stringify(error));
       console.error(error);
     });
-}
 };
 
 onClick(descricao) {
   descricao.checked = !descricao.checked;
-  this.setState({
-    descricao,
-  });
+  var restricoes = this.state.restricoesDieteticas;
+  restricoes.push(descricao);
+  this.setState({restricoesDieteticas: restricoes});
 }
 
 mostrarCheckboxesDieta() {
