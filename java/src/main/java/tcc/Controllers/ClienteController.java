@@ -12,9 +12,6 @@ import tcc.Models.Tag;
 
 import java.util.List;
 
-/**
- * Created by aline on 17/05/17.
- */
 @RestController
 public class ClienteController {
 
