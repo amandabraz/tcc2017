@@ -8,11 +8,8 @@ import tcc.DAOs.ClienteDAO;
 import tcc.DAOs.TagDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.Models.Cliente;
-import tcc.Models.Pagamento;
 import tcc.Models.Tag;
-import tcc.Models.Vendedor;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,20 +42,27 @@ public class ClienteController {
         return new ResponseEntity<Cliente>(novoCliente, HttpStatus.OK);
     }
 
-    //TODO: Ta dando ruim adicionar tag pq da conflito de int para string
-
     @RequestMapping("/tag")
     public String cadastraTag(@RequestParam(value="clienteId") Long clienteId,
-                                         @RequestParam(value="tags") List<String> tags) {
-        List<Tag> tagInseridas = null;
-        for (String tag : tags) {
-            Tag novaTag = tagDAO.findByTags(tag);
-            tags.add(novaTag);
-        }
-        Cliente cliente = clienteDAO.findOne(clienteId);
-        cliente.setTags(tags);
+                              @RequestParam(value="tags") List<String> tags) {
 
-        cliente = clienteDAO.save(cliente);
+        Cliente cliente = clienteDAO.findOne(clienteId);
+        for (String tag : tags) {
+            TagController tagController = new TagController();
+
+            if(tagController.verificarTag(tag)!=null){
+
+                clienteDAO.save(cliente);
+            }
+
+            else{
+                tagController.cadastraTag(tag);
+
+                List<Tag> tagInseridas = null; // don't know :(
+                cliente.setTags(tagInseridas);
+                clienteDAO.save(cliente);
+            }
+        }
 
         return "Tag para o cliente " + clienteId +
                 "criado com sucesso! (" + cliente.toString() + ")";
