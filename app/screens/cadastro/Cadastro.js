@@ -201,7 +201,7 @@ class Cadastro extends Component {
                 Alert.alert(responseJson.errorMessage);
               } else {
                 ToastAndroid.showWithGravity('Cadastro de Vendedor iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('Vendedor');
+                this.props.navigation.navigate('Vendedor', {userId: responseJson.id});
               }
             })
             .catch((error) => {
@@ -242,7 +242,7 @@ class Cadastro extends Component {
                 Alert.alert(responseJson.errorMessage);
               } else {
                 ToastAndroid.showWithGravity('Cadastro de Cliente iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('Cliente');
+                this.props.navigation.navigate('Cliente', {userId: responseJson.id});
               }
             })
             .catch((error) => {

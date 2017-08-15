@@ -1,8 +1,10 @@
 package tcc.Models;
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,8 +27,8 @@ public class Vendedor {
     @Column(name = "ID_VENDEDOR")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "FK_USUARIO", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID_USUARIO", nullable = false)
     private Usuario usuario;
 
     @Column(name = "NOME_FANTASIA", nullable = true, length = 100)
