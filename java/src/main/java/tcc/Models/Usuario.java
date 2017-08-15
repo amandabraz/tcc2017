@@ -1,11 +1,14 @@
 package tcc.Models;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
-
-/**
- * Created by amanda on 04/05/2017.
- */
 
 @Entity
 @Table(name = "USUARIO")
@@ -31,6 +34,7 @@ public class Usuario {
     @Column(name = "EMAIL", nullable = false, length = 256, unique = true)
     private String email;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATA_NASC", nullable = false)
     private Date dataNasc;
 
@@ -231,5 +235,39 @@ public class Usuario {
                 ", notificacao=" + notificacao +
                 ", bloqueado=" + bloqueado +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Usuario)) return false;
+
+        Usuario usuario = (Usuario) o;
+
+        if (isDeletado() != usuario.isDeletado()) return false;
+        if (getPerfil() != usuario.getPerfil()) return false;
+        if (isLocalizacao() != usuario.isLocalizacao()) return false;
+        if (isNotificacao() != usuario.isNotificacao()) return false;
+        if (isBloqueado() != usuario.isBloqueado()) return false;
+        if (getId() != null ? !getId().equals(usuario.getId()) : usuario.getId() != null) return false;
+        if (getSenha() != null ? !getSenha().equals(usuario.getSenha()) : usuario.getSenha() != null) return false;
+        if (getNome() != null ? !getNome().equals(usuario.getNome()) : usuario.getNome() != null) return false;
+        if (getEmail() != null ? !getEmail().equals(usuario.getEmail()) : usuario.getEmail() != null) return false;
+        return getDataNasc() != null ? getDataNasc().equals(usuario.getDataNasc()) : usuario.getDataNasc() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getSenha() != null ? getSenha().hashCode() : 0);
+        result = 31 * result + (isDeletado() ? 1 : 0);
+        result = 31 * result + (int) getPerfil();
+        result = 31 * result + (getNome() != null ? getNome().hashCode() : 0);
+        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (getDataNasc() != null ? getDataNasc().hashCode() : 0);
+        result = 31 * result + (isLocalizacao() ? 1 : 0);
+        result = 31 * result + (isNotificacao() ? 1 : 0);
+        result = 31 * result + (isBloqueado() ? 1 : 0);
+        return result;
     }
 }
