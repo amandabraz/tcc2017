@@ -1,12 +1,15 @@
 package tcc.Models;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.Objects;
-
-/**
- * Created by amanda on 04/05/2017.
- */
 
 @Entity
 @Table(name = "USUARIO")
@@ -32,6 +35,7 @@ public class Usuario {
     @Column(name = "EMAIL", nullable = false, length = 256, unique = true)
     private String email;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATA_NASC", nullable = false)
     private Date dataNasc;
 
@@ -79,6 +83,37 @@ public class Usuario {
     public Usuario(Long id) {
         super();
         this.id = id;
+    }
+
+
+    /**
+     * @param senha
+     * @param deletado
+     * @param perfil
+     * @param nome
+     * @param email
+     * @param dataNasc
+     * @param cpf
+     * @param ddd
+     * @param telefone
+     * @param localizacao
+     * @param notificacao
+     * @param bloqueado
+     */
+    public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
+                   String cpf, int ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
+        this.senha = senha;
+        this.deletado = deletado;
+        this.perfil = perfil;
+        this.nome = nome;
+        this.email = email;
+        this.dataNasc = dataNasc;
+        this.cpf = cpf;
+        this.ddd = ddd;
+        this.telefone = telefone;
+        this.localizacao = localizacao;
+        this.notificacao = notificacao;
+        this.bloqueado = bloqueado;
     }
 
     public Long getId() {
