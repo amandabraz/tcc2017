@@ -12,7 +12,7 @@ import java.util.List;
 public interface UsuarioDAO extends CrudRepository<Usuario, Long> {
 
 //    @Query("select u from Usuario u where u.email = :email")
-    Usuario findUsuarioByEmailUser(@Param("email") String email);
+    Usuario findUsuarioByEmail(@Param("email") String email);
 
     Iterable<Usuario> findUsuarioByNome(@Param("nome") String nome);
 

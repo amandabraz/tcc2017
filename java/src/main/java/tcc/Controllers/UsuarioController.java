@@ -64,7 +64,7 @@ public class UsuarioController {
     public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email){
         Character type;
         try{
-            Usuario usuarioBd = usuarioDao.findUsuarioByEmailUser(email);
+            Usuario usuarioBd = usuarioDao.findUsuarioByEmail(email);
             return new ResponseEntity<Character>(Character.valueOf(usuarioBd.getPerfil()), HttpStatus.OK);
         }catch(NullPointerException | IndexOutOfBoundsException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado!");
