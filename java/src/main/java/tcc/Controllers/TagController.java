@@ -1,33 +1,39 @@
 package tcc.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.TagDAO;
+import tcc.ErrorHandling.CustomError;
 import tcc.Models.Tag;
+import tcc.Services.TagService;
 
+import java.util.List;
+
+/**
+ * Created by amanda on 15/08/2017.
+ */
 @RestController
 public class TagController {
 
     @Autowired
-    private TagDAO tagDAO;
+    TagDAO tagDAO;
+    @Autowired
+    TagService tagService;
 
-    public Tag verificarTag(String tags) {
-        {
-            if(tagDAO.findByDescricao(tags)!=null){
-                Tag tag1 = null;
-                tag1.getId();
+    @RequestMapping(value="/tag", method = RequestMethod.POST)
+    public Tag cadastraTags(@RequestBody Tag tag) {
+        Tag tagResolvida = null;
+        try {
+                tagResolvida = tagService.verificarTag(tag);
 
-                return tag1;
-            }
-            return null;
+        } catch (Exception ex) {
+            //return new ResponseEntity(new CustomError("Erro ao salvar Cliente"), HttpStatus.BAD_REQUEST);
         }
-    }
-
-    public Tag cadastraTag(String tags){
-        Tag tag = new Tag(tags);
-        tagDAO.save(tag);
-
-        tag.getId();
-        return tag;
+        return tagResolvida;
     }
 }

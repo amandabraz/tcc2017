@@ -35,6 +35,11 @@ public class Tag {
         this.descricao = descricao;
     }
 
+    public Tag() {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
     public Tag(Long id, String descricao) {
         this.id = id;
         this.descricao = descricao;
