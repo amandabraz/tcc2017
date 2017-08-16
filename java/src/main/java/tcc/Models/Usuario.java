@@ -32,7 +32,7 @@ public class Usuario {
     private String nome;
 
     @Column(name = "EMAIL", nullable = false, length = 256, unique = true)
-    private String email;
+    private String emailUser;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATA_NASC", nullable = false)
@@ -65,7 +65,7 @@ public class Usuario {
         this.deletado = deletado;
         this.perfil = perfil;
         this.nome = nome;
-        this.email = email;
+        this.emailUser = emailUser;
         this.dataNasc = dataNasc;
         this.cpf = cpf;
         this.ddd = ddd;
@@ -89,7 +89,7 @@ public class Usuario {
      * @param deletado
      * @param perfil
      * @param nome
-     * @param email
+     * @param emailUser
      * @param dataNasc
      * @param cpf
      * @param ddd
@@ -98,13 +98,13 @@ public class Usuario {
      * @param notificacao
      * @param bloqueado
      */
-    public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
+    public Usuario(String senha,  boolean deletado, char perfil, String nome, String emailUser, Date dataNasc,
                    String cpf, int ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
         this.senha = senha;
         this.deletado = deletado;
         this.perfil = perfil;
         this.nome = nome;
-        this.email = email;
+        this.emailUser = emailUser;
         this.dataNasc = dataNasc;
         this.cpf = cpf;
         this.ddd = ddd;
@@ -146,12 +146,12 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailUser() {
+        return emailUser;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailUser(String emailUser) {
+        this.emailUser = emailUser;
     }
 
     public Date getDataNasc() {
@@ -226,7 +226,7 @@ public class Usuario {
                 ", deletado=" + deletado +
                 ", perfil=" + perfil +
                 ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
+                ", emailUser='" + emailUser + '\'' +
                 ", dataNasc=" + dataNasc +
                 ", cpf='" + cpf + '\'' +
                 ", ddd='" + ddd + '\'' +
@@ -252,7 +252,7 @@ public class Usuario {
         if (getId() != null ? !getId().equals(usuario.getId()) : usuario.getId() != null) return false;
         if (getSenha() != null ? !getSenha().equals(usuario.getSenha()) : usuario.getSenha() != null) return false;
         if (getNome() != null ? !getNome().equals(usuario.getNome()) : usuario.getNome() != null) return false;
-        if (getEmail() != null ? !getEmail().equals(usuario.getEmail()) : usuario.getEmail() != null) return false;
+        if (getEmailUser() != null ? !getEmailUser().equals(usuario.getEmailUser()) : usuario.getEmailUser() != null) return false;
         return getDataNasc() != null ? getDataNasc().equals(usuario.getDataNasc()) : usuario.getDataNasc() == null;
     }
 
@@ -263,7 +263,7 @@ public class Usuario {
         result = 31 * result + (isDeletado() ? 1 : 0);
         result = 31 * result + (int) getPerfil();
         result = 31 * result + (getNome() != null ? getNome().hashCode() : 0);
-        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (getEmailUser() != null ? getEmailUser().hashCode() : 0);
         result = 31 * result + (getDataNasc() != null ? getDataNasc().hashCode() : 0);
         result = 31 * result + (isLocalizacao() ? 1 : 0);
         result = 31 * result + (isNotificacao() ? 1 : 0);

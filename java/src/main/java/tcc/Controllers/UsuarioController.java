@@ -23,6 +23,7 @@ import java.util.List;
  */
 
 @RestController
+@RequestMapping(value = "/usuarios")
 public class UsuarioController {
 
     @Autowired
@@ -31,7 +32,7 @@ public class UsuarioController {
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
      */
-    @RequestMapping(value = "/usuario", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Usuario> cadastraUsuario(@RequestBody Usuario usuario) {
         Usuario novoUsuario = null;
         try {
@@ -48,7 +49,7 @@ public class UsuarioController {
      * Retorna todos os usuários salvos no banco.
      * @return todos os usuários salvos no banco.
      */
-    @RequestMapping(value = "/usuario", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Iterable<Usuario>> buscaUsuarios() {
         return new ResponseEntity<Iterable<Usuario>>(usuarioDao.findAll(), HttpStatus.OK);
     }
@@ -59,21 +60,54 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/email={email}", method = RequestMethod.GET)
+    @RequestMapping(value = "/email/{email:.+}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity buscaPerfilUsuario(@PathVariable("email") String email){
+    public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email){
         Character type;
-        List<Usuario> usuarios;
         try{
-//            usuarios = usuarioDao.findByEmail(email);
-            Usuario usuarioBd = usuarioDao.findUserByEmail(email);//usuarios.get(0);
-            if(usuarioBd.getEmail().equals(email)){
-                return new ResponseEntity<Character>(Character.valueOf(usuarioBd.getPerfil()), HttpStatus.OK);
-            }
+            Usuario usuarioBd = usuarioDao.findUsuarioByEmailUser(email);
+            return new ResponseEntity<Character>(Character.valueOf(usuarioBd.getPerfil()), HttpStatus.OK);
         }catch(NullPointerException | IndexOutOfBoundsException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado!");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na busca do e-mail! Tente novamente");
+    }
+
+    /**
+     * Retorna Usuário de acordo com o id dele.
+     * @param id id do Usuário a ser buscado.
+     * @return Character usuarioBd se o usuário for encontrado de acordo com o id.
+     *          Erro    se o id não estiver cadastrado.
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity buscaUsuario(@PathVariable("id") Long id){
+        Character type;
+        try{
+            Usuario usuarioBd = usuarioDao.findUsuarioById(id);
+            if(usuarioBd.getId().equals(id)){
+                return new ResponseEntity<Usuario>((usuarioBd), HttpStatus.OK);
+            }
+        }catch(NullPointerException | IndexOutOfBoundsException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na busca do Usuário! Tente novamente");
+    }
+
+    /**
+     * Retorna lista de Usuários dado determinado nome.
+     * @param nome nome do(s) Usuário(s) a ser(em) buscado(s).
+     * @return Character usuarioBd se um ou mais Usuários forem encontrados de acordo com o nome.
+     *          Erro    se o nome não estiver cadastrado.
+     */
+    @RequestMapping(value = "/nome/{nome}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity buscaPerfilUsuarioPorNome(@PathVariable("nome") String nome){
+        Character type;
+        try{
+            return new ResponseEntity<Iterable<Usuario>>(usuarioDao.findUsuarioByNome(nome), HttpStatus.OK);
+        }catch(NullPointerException | IndexOutOfBoundsException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
+        }
     }
 
 }
