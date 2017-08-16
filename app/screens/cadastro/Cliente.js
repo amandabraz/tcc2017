@@ -21,16 +21,15 @@ class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        userId: this.props.navigation.state.params.userId,
         dietasArray: [],
         restricoesDieteticas: [],
         tags: []
     }
     this.preencherDietasArray();
-  }
+  };
 
   preencherDietasArray() {
-    fetch('http://10.0.3.2:8080/restricaodietetica')
+    fetch('http://10.0.2.2:8080/restricaodietetica')
       .then((response) => response.json())
         .then((responseJson) => {
           var dietasBuscadas = [];
@@ -39,76 +38,92 @@ class Cliente extends Component {
             }
         this.setState({dietasArray: dietasBuscadas});
         });
-  }
-
-handleFinalizarPress = () => {
-    const {
-      state: {
-        userId,
-        tags,
-        restricoesDieteticas
-    }
-  } = this;
-
-  cliente = {
-    "usuario": userId,
-    "tags": tags,
-    "restricoesDieteticas": restricoesDieteticas
-  }
-
-  fetch('http://10.0.2.2:8080/cliente', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(cliente)
-  })
-    .then((response) => response.json())
-    .then((reponseJson) => {
-      ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-      this.props.navigation.navigate('TabsCliente');
-    })
-    .catch((error) => {
-      Alert.alert("error Response", JSON.stringify(error));
-      console.error(error);
-    });
-};
-
-onClick(descricao) {
-  descricao.checked = !descricao.checked;
-  var restricoes = this.state.restricoesDieteticas;
-  restricoes.push(descricao);
-  this.setState({restricoesDieteticas: restricoes});
-}
-
-mostrarCheckboxesDieta() {
-  var views = [];
-  for(i in this.state.dietasArray) {
-    var descricao = this.state.dietasArray[i];
-    views.push (
-      <View key={i} style={styles.item}>
-        <CheckBox
-          style={{flex: 1, padding: 10}}
-          onClick={()=>this.onClick(descricao)}
-          isChecked={descricao.checked}
-          leftText={descricao.descricao}
-          />
-      </View>
-    );
-  }
-  return views;
-}
-
-  onChangeTags(tag) {
-    var tagsAntigas = this.state.tags;
-    tagsAntigas.push({descricao: tag});
-    this.setState({tags: tagsAntigas});
   };
 
-  botaoFinalizar = () => {
-    this.props.navigation.navigate('TabsCliente');
+  salvarTags(tags) {
+    var tagsOrganizadas = [];
+    for(i in tags) {
+    fetch('http://10.0.2.2:8080/tag', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(tags[i])
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+          tagsOrganizadas.push(responseJson);
+
+      });
+    }
+    Alert.alert(JSON.stringify(tagsOrganizadas[0]));
+    return tagsOrganizadas;
   }
+
+  handleFinalizarPress = () => {
+      const {
+        state: {
+          tags,
+          restricoesDieteticas
+      }
+    } = this;
+
+    var tagsSalvas = this.salvarTags(tags);
+    Alert.alert(JSON.stringify(tagsSalvas[0]));
+    return;
+    cliente = {
+      "usuario": 1,
+      "tags": tagsSalvas,
+      "restricoesDieteticas": restricoesDieteticas
+    }
+      fetch('http://10.0.2.2:8080/cliente', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cliente)
+      })
+        .then((response) => response.json())
+        .then((reponseJson) => {
+          if (!responseJson.errorMessage) {
+            ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+            this.props.navigation.navigate('TabsCliente');
+          } else {
+            Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
+          }
+        })
+        .catch((error) => {
+          Alert.alert("error Response", JSON.stringify(error));
+          console.error(error);
+        });
+  };
+
+  onClick(descricao) {
+    descricao.checked = !descricao.checked;
+    var restricoes = this.state.restricoesDieteticas;
+    restricoes.push(descricao);
+    this.setState({restricoesDieteticas: restricoes});
+  };
+
+  mostrarCheckboxesDieta() {
+    var views = [];
+    for(i in this.state.dietasArray) {
+      var descricao = this.state.dietasArray[i];
+      views.push (
+        <View key={i} style={styles.item}>
+          <CheckBox
+            style={{flex: 1, padding: 10}}
+            onClick={()=>this.onClick(descricao)}
+            isChecked={descricao.checked}
+            leftText={descricao.descricao}
+            />
+        </View>
+      );
+    }
+    return views;
+  };
 
   render() {
     const inputProps = {
@@ -141,14 +156,14 @@ mostrarCheckboxesDieta() {
 
           <TagInput
             value={this.state.tags}
-            onChange={this.onChangeTags(tag)}
+            onChange={(tags) => this.setState({tags,})}
             tagColor="pink"
             tagTextColor="white"
             inputProps={inputProps}
             numberOfLines={15}
           />
           </View>
-          <Button onPress={this.botaoFinalizar} title="Finalizar" color="#dc143c" />
+          <Button onPress={this.handleFinalizarPress} title="Finalizar" color="#dc143c" />
         </View>
       </View>
     );

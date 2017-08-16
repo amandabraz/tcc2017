@@ -11,9 +11,9 @@ public class TagService {
     @Autowired
     private TagDAO tagDAO;
 
-    public Tag verificarTag(String tag) {
+    public Tag verificarTag(Tag tag) {
         {
-            Tag tagEncontrada = tagDAO.findByDescricao(tag);
+            Tag tagEncontrada = tagDAO.findByDescricao(tag.getDescricao());
 
             if (tagEncontrada != null) {
                 return tagEncontrada;
@@ -24,9 +24,9 @@ public class TagService {
         }
     }
 
-    public Tag cadastraTag(String tag){
+    public Tag cadastraTag(Tag tag){
 
-        Tag tagCadastrada = tagDAO.save(new Tag(tag));
+        Tag tagCadastrada = tagDAO.save(tag);
 
         return tagCadastrada;
     }
