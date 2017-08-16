@@ -23,7 +23,6 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping(value = "/usuarios")
 public class UsuarioController {
 
     @Autowired
@@ -32,7 +31,7 @@ public class UsuarioController {
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/usuario", method = RequestMethod.POST)
     public ResponseEntity<Usuario> cadastraUsuario(@RequestBody Usuario usuario) {
         Usuario novoUsuario = null;
         try {
@@ -49,7 +48,7 @@ public class UsuarioController {
      * Retorna todos os usuários salvos no banco.
      * @return todos os usuários salvos no banco.
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/usuario", method = RequestMethod.GET)
     public ResponseEntity<Iterable<Usuario>> buscaUsuarios() {
         return new ResponseEntity<Iterable<Usuario>>(usuarioDao.findAll(), HttpStatus.OK);
     }
@@ -60,7 +59,7 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/email/{email:.+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/usuario/email/{email:.+}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email){
         Character type;
@@ -78,7 +77,7 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o id.
      *          Erro    se o id não estiver cadastrado.
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaUsuario(@PathVariable("id") Long id){
         Character type;
@@ -99,7 +98,7 @@ public class UsuarioController {
      * @return Character usuarioBd se um ou mais Usuários forem encontrados de acordo com o nome.
      *          Erro    se o nome não estiver cadastrado.
      */
-    @RequestMapping(value = "/nome/{nome}", method = RequestMethod.GET)
+    @RequestMapping(value = "/usuario/nome/{nome}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaPerfilUsuarioPorNome(@PathVariable("nome") String nome){
         Character type;
