@@ -18,5 +18,9 @@ public interface UsuarioDAO extends CrudRepository<Usuario, Long> {
 
     Usuario findUsuarioById(@Param("id") Long id);
 
+    Usuario findByEmail(String email);
+
+    Usuario findByCpf(String cpf);
+
     Usuario findByDddAndTelefone(int ddd, String telefone);
 }
