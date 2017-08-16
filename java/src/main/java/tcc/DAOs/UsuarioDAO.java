@@ -1,13 +1,22 @@
 package tcc.DAOs;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import tcc.Models.Usuario;
 
 import java.util.List;
 
-/**
- * Created by amanda on 05/05/2017.
- */
+@Repository
 public interface UsuarioDAO extends CrudRepository<Usuario, Long> {
-    List<Usuario> findByEmail(String email);
+
+//    @Query("select u from Usuario u where u.email = :email")
+    Usuario findUsuarioByEmailUser(@Param("email") String email);
+
+    Iterable<Usuario> findUsuarioByNome(@Param("nome") String nome);
+
+    Usuario findUsuarioById(@Param("id") Long id);
+
+    Usuario findByDddAndTelefone(int ddd, String telefone);
 }
