@@ -12,8 +12,6 @@ import tcc.ErrorHandling.CustomError;
 import tcc.Models.Tag;
 import tcc.Services.TagService;
 
-import java.util.List;
-
 /**
  * Created by amanda on 15/08/2017.
  */
@@ -21,19 +19,17 @@ import java.util.List;
 public class TagController {
 
     @Autowired
-    TagDAO tagDAO;
-    @Autowired
     TagService tagService;
 
     @RequestMapping(value="/tag", method = RequestMethod.POST)
-    public Tag cadastraTags(@RequestBody Tag tag) {
+    public ResponseEntity cadastraTags(@RequestBody Tag tag) {
         Tag tagResolvida = null;
         try {
                 tagResolvida = tagService.verificarTag(tag);
 
         } catch (Exception ex) {
-            //return new ResponseEntity(new CustomError("Erro ao salvar Cliente"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new CustomError("Erro ao salvar Tag"), HttpStatus.BAD_REQUEST);
         }
-        return tagResolvida;
+        return new ResponseEntity<Tag>(tagResolvida, HttpStatus.OK);
     }
 }

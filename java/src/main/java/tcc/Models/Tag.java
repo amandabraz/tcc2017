@@ -1,5 +1,7 @@
 package tcc.Models;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+@BatchSize(size = 50)
 @Table(name= "TAG")
 public class Tag {
 

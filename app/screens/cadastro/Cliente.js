@@ -21,6 +21,7 @@ class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        userId: this.props.navigation.state.params.userId,
         dietasArray: [],
         restricoesDieteticas: [],
         tags: []
@@ -36,68 +37,80 @@ class Cliente extends Component {
             for (i in responseJson) {
               dietasBuscadas.push(responseJson[i]);
             }
-        this.setState({dietasArray: dietasBuscadas});
+            this.setState({dietasArray: dietasBuscadas});
         });
   };
 
   salvarTags(tags) {
-    var tagsOrganizadas = [];
-    for(i in tags) {
-    fetch('http://10.0.2.2:8080/tag', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(tags[i])
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-          tagsOrganizadas.push(responseJson);
-
-      });
-    }
-    Alert.alert(JSON.stringify(tagsOrganizadas[0]));
-    return tagsOrganizadas;
-  }
-
-  handleFinalizarPress = () => {
-      const {
-        state: {
-          tags,
-          restricoesDieteticas
-      }
-    } = this;
-
-    var tagsSalvas = this.salvarTags(tags);
-    Alert.alert(JSON.stringify(tagsSalvas[0]));
-    return;
-    cliente = {
-      "usuario": 1,
-      "tags": tagsSalvas,
-      "restricoesDieteticas": restricoesDieteticas
-    }
-      fetch('http://10.0.2.2:8080/cliente', {
+    var tagSalva;
+    var listaTags = [];
+    for (i in tags) {
+      tagSalva = fetch('http://10.0.2.2:8080/tag', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(cliente)
+        body: JSON.stringify(tags[i])
       })
         .then((response) => response.json())
-        .then((reponseJson) => {
-          if (!responseJson.errorMessage) {
-            ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            this.props.navigation.navigate('TabsCliente');
-          } else {
-            Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
+        .then((responseJson) => {
+          if (responseJson.errorMessage) {
+              ToastAndroid.showWithGravity('Tente novamente!' + "\n" + 'Erro ao cadastrar tags.', ToastAndroid.LONG, ToastAndroid.CENTER);
+              return null;
           }
-        })
-        .catch((error) => {
-          Alert.alert("error Response", JSON.stringify(error));
-          console.error(error);
+          return responseJson;
         });
+        if (tagSalva) {
+          listaTags.push(tagSalva);
+        } else {
+          break;
+          return false;
+        }
+    }
+    this.setState({tags: listaTags});
+    return true;
+  }
+
+  handleFinalizarPress = () => {
+    let continuar = this.salvarTags(this.state.tags);
+
+    if (continuar) {
+      const {
+        state: {
+          userId,
+          tags,
+          restricoesDieteticas
+        }
+      } = this;
+
+      cliente = {
+        "usuario": userId,
+        "tags": tags,
+        "restricoesDieteticas": restricoesDieteticas
+      }
+        fetch('http://10.0.2.2:8080/cliente', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(cliente)
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            if (!responseJson.errorMessage) {
+              ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              this.props.navigation.navigate('TabsCliente', {userId: responseJson.id});
+            } else {
+              Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
+            }
+          })
+          .catch((error) => {
+            Alert.alert("error Response", JSON.stringify(error));
+            console.error(error);
+          });
+      }
   };
 
   onClick(descricao) {
