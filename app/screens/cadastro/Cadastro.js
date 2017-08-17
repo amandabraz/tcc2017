@@ -79,93 +79,80 @@ class Cadastro extends Component {
   }
 
   validaCampos = (usuario) => {
-    var camposVazios = "";
-    //validar Email
-    if (!usuario.email) {
-      camposVazios += "e-mail";
-    } else {
-      if (!this.validaEmail(usuario.email)) {
-        ToastAndroid.showWithGravity('E-mail inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
-        return false;
-      }
-    }
-    if (!usuario.cpf) {
-      if (camposVazios) {
-        camposVazios += ", CPF";
-      } else {
-        camposVazios += "CPF";
-      }
-    } else {
-      if (!this.validaCPF(usuario.cpf)) {
-        ToastAndroid.showWithGravity('CPF inválido!', ToastAndroid.LONG, ToastAndroid.CENTER);
-        return false;
-      }
-    }
+    let camposVazios = [];
+    let erros = [];
     //validar nome
     if (!usuario.nome) {
-      if (camposVazios) {
-        camposVazios  += ", nome";
-      } else {
-        camposVazios += "nome";
+        camposVazios.push("nome");
+    }
+    //validar cpf
+    if (!usuario.cpf) {
+      camposVazios.push("CPF");
+    } else {
+      if (!this.validaCPF(usuario.cpf)) {
+        erros.push("CPF inválido");
+      }
+    }
+    //validar Email
+    if (!usuario.email) {
+      camposVazios.push("e-mail");
+    } else {
+      if (!this.validaEmail(usuario.email)) {
+        erros.push("E-mail inválido")
+      }
+    }
+    // validar ddd e telefone
+    if (!usuario.ddd) {
+      camposVazios.push("ddd");
+    }
+    if (!usuario.telefone) {
+      camposVazios.push("celular");
+    } else {
+      if (usuario.telefone.length < 8) {
+        erros.push("Telefone inválido: insira DDD e celular");
       }
     }
     //validar data de Nascimento
     if (!usuario.dataNasc) {
-      if (camposVazios) {
-        camposVazios  += ", data de nascimento";
-      } else {
-        camposVazios += "data de nascimento";
-      }
+      camposVazios.push("data de nascimento");
     }
     //validar senha
     if (!usuario.senha) {
-      if (camposVazios) {
-        camposVazios += ", senha";
-      } else {
-        camposVazios += "senha";
-      }
+      camposVazios.push("senha");
     } else {
       if (usuario.senha.length < 6) {
+        erros.push("Sua senha deve ter mais que 6 caracteres");
         this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
-        ToastAndroid.showWithGravity('Sua senha deve ter mais que 6 caracteres', ToastAndroid.LONG, ToastAndroid.CENTER);
-        return false;
       } else {
         this.setState({backgroundColorSenha: 'transparent'});
       }
 
       // validar com o Confirma Senha
       if (usuario.senha != this.state.confirmaSenha) {
+        erros.push("Senha e confirmação de senha não conferem");
         this.setState({backgroundColorSenha: 'rgba(255, 0, 0, 0.3);'});
-        ToastAndroid.showWithGravity('Senha e confirmação de senha não conferem!', ToastAndroid.LONG, ToastAndroid.CENTER);
-        return false;
       } else {
         this.setState({backgroundColorSenha: 'transparent'});
       }
     }
-    if (!usuario.ddd) {
-      if (camposVazios) {
-        camposVazios += ", ddd";
-      } else {
-        camposVazios += "ddd";
-      }
+
+    if (camposVazios.length) {
+      ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+      return false;
     }
-    if (!usuario.telefone) {
-      if (camposVazios) {
-        camposVazios += ", celular";
-      } else {
-        camposVazios += "celular";
-      }
-    } else {
-      if (usuario.telefone.length < 8) {
-        ToastAndroid.showWithGravity('Telefone inválido: insira DDD e número do celular', ToastAndroid.LONG, ToastAndroid.CENTER);
-        return false;
-      }
-    }
-    if (camposVazios) {
-      ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + camposVazios + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    if (erros.length) {
+      ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
       return false;
     }
     return true;
+  }
+
+  quebraEmLinhas(lista) {
+    var listaQuebrada = "";
+    for(item in lista) {
+      listaQuebrada += lista[item] + "\n";
+    }
+    return listaQuebrada.trim();
   }
 
   onButtonVendedor = () => {
