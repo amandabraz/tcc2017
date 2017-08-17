@@ -328,6 +328,7 @@ class Cadastro extends Component {
                   confirmBtnText="Confirm"
                   cancelBtnText="Cancel"
                   customStyles={{
+                    dateInput: { borderWidth: 0 },
                     dateIcon: {
                       position: 'absolute',
                       left: 0,
@@ -374,7 +375,7 @@ class Cadastro extends Component {
               inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
               secureTextEntry={true}/>
 
-      <Kohana style={{ backgroundColor: this.state.backgroundColorSenha, borderColor: '#778899', borderWidth: 0.15 }}
+      <Kohana style={{ backgroundColor: this.state.backgroundColorSenha }}
               label={'Confirmação de Senha'}
               maxLength={10}
               iconClass={FontAwesomeIcon}
