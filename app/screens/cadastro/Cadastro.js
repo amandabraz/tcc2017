@@ -179,7 +179,7 @@ class Cadastro extends Component {
       "nome": nome,
       "email": email,
       "cpf": cpf,
-      "ddd": celular.substr(0,1),
+      "ddd": celular.substr(0,2),
       "telefone": celular.substr(2,10),
       "senha": senha,
       "perfil": 'V'
@@ -220,7 +220,7 @@ class Cadastro extends Component {
       "nome": nome,
       "email": email,
       "cpf": cpf,
-      "ddd": celular.substr(0,1),
+      "ddd": celular.substr(0,2),
       "telefone": celular.substr(2,10),
       "senha": senha,
       "perfil": 'C'

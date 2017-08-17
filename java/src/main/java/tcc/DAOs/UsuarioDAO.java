@@ -22,5 +22,5 @@ public interface UsuarioDAO extends CrudRepository<Usuario, Long> {
 
     Usuario findByCpf(String cpf);
 
-    Usuario findByDddAndTelefone(int ddd, String telefone);
+    Usuario findByDddAndTelefone(String ddd, String telefone);
 }
