@@ -308,8 +308,8 @@ class Cadastro extends Component {
               maxLength={11}
               iconClass={FontAwesomeIcon}
               onChangeText={(cpf) => {
+                this.setState({cpf: cpf});
                 if (this.validaCPF(cpf)) {
-                  this.setState({cpf: cpf});
                   this.setState({backgroundColorCpf: 'transparent'});
                 } else {
                   this.setState({backgroundColorCpf: 'rgba(255, 0, 0, 0.3);'});
@@ -365,8 +365,8 @@ class Cadastro extends Component {
               iconClass={FontAwesomeIcon}
               keyboardType={'email-address'}
               onChangeText={(email) => {
-                if (this.validaEmail(email)) {
                 this.setState({email: email});
+                if (this.validaEmail(email)) {
                 this.setState({backgroundColorEmail: 'transparent'});
               } else {
                 this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
