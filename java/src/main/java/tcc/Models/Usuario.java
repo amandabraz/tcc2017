@@ -43,7 +43,7 @@ public class Usuario {
     private String cpf = "00000000000";
 
     @Column(name = "ddd", nullable = false, length = 2)
-    private int ddd;
+    private String ddd;
 
     @Column(name = "TELEFONE", nullable = false, length = 9)
     private String telefone;
@@ -101,7 +101,7 @@ public class Usuario {
      * @param bloqueado
      */
     public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   String cpf, int ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
+                   String cpf, String ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
         this.senha = senha;
         this.deletado = deletado;
         this.perfil = perfil;
@@ -172,11 +172,11 @@ public class Usuario {
         this.cpf = cpf;
     }
 
-    public int getDdd() {
+    public String getDdd() {
         return ddd;
     }
 
-    public void setDdd(int ddd) {
+    public void setDdd(String ddd) {
         this.ddd = ddd;
     }
 
@@ -246,7 +246,6 @@ public class Usuario {
         Usuario usuario = (Usuario) o;
         return deletado == usuario.deletado &&
                 perfil == usuario.perfil &&
-                ddd == usuario.ddd &&
                 localizacao == usuario.localizacao &&
                 notificacao == usuario.notificacao &&
                 bloqueado == usuario.bloqueado &&
@@ -256,12 +255,12 @@ public class Usuario {
                 Objects.equals(email, usuario.email) &&
                 Objects.equals(dataNasc, usuario.dataNasc) &&
                 Objects.equals(cpf, usuario.cpf) &&
+                Objects.equals(ddd, usuario.ddd) &&
                 Objects.equals(telefone, usuario.telefone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc,
-                cpf, ddd, telefone, localizacao, notificacao, bloqueado);
+        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, localizacao, notificacao, bloqueado);
     }
 }
