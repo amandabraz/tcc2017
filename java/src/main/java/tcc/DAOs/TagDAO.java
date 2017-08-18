@@ -3,8 +3,6 @@ package tcc.DAOs;
 import org.springframework.data.repository.CrudRepository;
 import tcc.Models.Tag;
 
-import java.util.List;
-
 /**
  * Created by aline on 22/05/17.
  */

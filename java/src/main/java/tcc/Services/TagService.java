@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import tcc.DAOs.TagDAO;
 import tcc.Models.Tag;
 
+import javax.transaction.Transactional;
+
 @Service
 public class TagService {
 
@@ -12,22 +14,23 @@ public class TagService {
     private TagDAO tagDAO;
 
     public Tag verificarTag(Tag tag) {
-        {
+        try {
             Tag tagEncontrada = tagDAO.findByDescricao(tag.getDescricao());
-
-            if (tagEncontrada != null) {
-                return tagEncontrada;
-
-            } else {
-                return cadastraTag(tag);
-            }
+            if (tagEncontrada != null) return tagEncontrada;
+            return cadastraTag(tag);
+        } catch(Exception e) {
+            throw e;
         }
     }
 
-    public Tag cadastraTag(Tag tag){
-
-        Tag tagCadastrada = tagDAO.save(tag);
-
+    @Transactional
+    public Tag cadastraTag(Tag tag) {
+        Tag tagCadastrada;
+        try {
+            tagCadastrada = tagDAO.save(tag);
+        } catch (Exception e) {
+            throw e;
+        }
         return tagCadastrada;
     }
 }

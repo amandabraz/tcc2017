@@ -22,8 +22,6 @@ import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 
-
-
 /**
 MENU SOMENTE PARA CLIENTE
 **/
@@ -105,6 +103,9 @@ export const TabsCliente = TabNavigator({
             title: 'Novo Produto'
           },
         }
+    }, {
+      mode: 'card',
+      headerMode: 'none',
     });
 
 /**
