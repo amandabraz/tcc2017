@@ -49,6 +49,7 @@ class Vendedor extends Component {
 
 
   handleFinalizarPress = () => {
+
     var pagamento = this.pagamentoEscolhido();
 
     if (pagamento) {
