@@ -41,76 +41,42 @@ class Cliente extends Component {
         });
   };
 
-  salvarTags(tags) {
-    var tagSalva;
-    var listaTags = [];
-    for (i in tags) {
-      tagSalva = fetch('http://10.0.2.2:8080/tag', {
+
+
+  handleFinalizarPress = () => {
+    const {
+      state: {
+        userId,
+        tags,
+        restricoesDieteticas
+      }
+    } = this;
+
+    cliente = {
+      "usuario": userId,
+      "tags": tags,
+      "restricoesDieteticas": restricoesDieteticas
+    }
+      fetch('http://10.0.2.2:8080/cliente', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(tags[i])
+        body: JSON.stringify(cliente)
       })
         .then((response) => response.json())
         .then((responseJson) => {
-          if (responseJson.errorMessage) {
-              ToastAndroid.showWithGravity('Tente novamente!' + "\n" + 'Erro ao cadastrar tags.', ToastAndroid.LONG, ToastAndroid.CENTER);
-              return null;
+          if (!responseJson.errorMessage) {
+            ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+            this.props.navigation.navigate('TabsCliente', {userId: this.state.userId});
+          } else {
+            Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
           }
-          return responseJson;
-        });
-        if (tagSalva) {
-          listaTags.push(tagSalva);
-        } else {
-          break;
-          return false;
-        }
-    }
-    this.setState({tags: listaTags});
-    return true;
-  }
-
-  handleFinalizarPress = () => {
-    let continuar = this.salvarTags(this.state.tags);
-
-    if (continuar) {
-      const {
-        state: {
-          userId,
-          tags,
-          restricoesDieteticas
-        }
-      } = this;
-
-      cliente = {
-        "usuario": userId,
-        "tags": tags,
-        "restricoesDieteticas": restricoesDieteticas
-      }
-        fetch('http://10.0.2.2:8080/cliente', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(cliente)
         })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            if (!responseJson.errorMessage) {
-              ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-              this.props.navigation.navigate('TabsCliente', {userId: responseJson.id});
-            } else {
-              Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
-            }
-          })
-          .catch((error) => {
-            Alert.alert("error Response", JSON.stringify(error));
-            console.error(error);
-          });
-      }
+        .catch((error) => {
+          console.error(error);
+        });
   };
 
   onClick(descricao) {
