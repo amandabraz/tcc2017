@@ -1,11 +1,15 @@
 package tcc.Models;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
-
-/**
- * Created by amanda on 04/05/2017.
- */
+import java.util.Objects;
 
 @Entity
 @Table(name = "USUARIO")
@@ -31,8 +35,18 @@ public class Usuario {
     @Column(name = "EMAIL", nullable = false, length = 256, unique = true)
     private String email;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATA_NASC", nullable = false)
     private Date dataNasc;
+
+    @Column(name = "CPF", columnDefinition = "varchar(11)  NOT NULL UNIQUE", insertable = true, updatable = false)
+    private String cpf = "00000000000";
+
+    @Column(name = "ddd", nullable = false, length = 2)
+    private String ddd;
+
+    @Column(name = "TELEFONE", nullable = false, length = 9)
+    private String telefone;
 
     @Column(name = "LOCALIZACAO", nullable = false)
     private boolean localizacao;
@@ -54,6 +68,9 @@ public class Usuario {
         this.nome = nome;
         this.email = email;
         this.dataNasc = dataNasc;
+        this.cpf = cpf;
+        this.ddd = ddd;
+        this.telefone = telefone;
         this.localizacao = localizacao;
         this.notificacao = notificacao;
         this.bloqueado = bloqueado;
@@ -67,26 +84,33 @@ public class Usuario {
         super();
         this.id = id;
     }
+
+
     /**
-     * Construtor sem id para inserção em banco (id é auto gerado)
      * @param senha
      * @param deletado
      * @param perfil
      * @param nome
      * @param email
      * @param dataNasc
+     * @param cpf
+     * @param ddd
+     * @param telefone
      * @param localizacao
      * @param notificacao
      * @param bloqueado
      */
     public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   boolean localizacao, boolean notificacao, boolean bloqueado) {
+                   String cpf, String ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
         this.senha = senha;
         this.deletado = deletado;
         this.perfil = perfil;
         this.nome = nome;
         this.email = email;
         this.dataNasc = dataNasc;
+        this.cpf = cpf;
+        this.ddd = ddd;
+        this.telefone = telefone;
         this.localizacao = localizacao;
         this.notificacao = notificacao;
         this.bloqueado = bloqueado;
@@ -140,6 +164,30 @@ public class Usuario {
         this.dataNasc = dataNasc;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getDdd() {
+        return ddd;
+    }
+
+    public void setDdd(String ddd) {
+        this.ddd = ddd;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     public boolean isLocalizacao() {
         return localizacao;
     }
@@ -176,15 +224,43 @@ public class Usuario {
     public String toString() {
         return "Usuario{" +
                 "id=" + id +
-                ", senha=" + senha +
+                ", senha='" + senha + '\'' +
                 ", deletado=" + deletado +
                 ", perfil=" + perfil +
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", dataNasc=" + dataNasc +
+                ", cpf='" + cpf + '\'' +
+                ", ddd='" + ddd + '\'' +
+                ", telefone='" + telefone + '\'' +
                 ", localizacao=" + localizacao +
                 ", notificacao=" + notificacao +
                 ", bloqueado=" + bloqueado +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return deletado == usuario.deletado &&
+                perfil == usuario.perfil &&
+                localizacao == usuario.localizacao &&
+                notificacao == usuario.notificacao &&
+                bloqueado == usuario.bloqueado &&
+                Objects.equals(id, usuario.id) &&
+                Objects.equals(senha, usuario.senha) &&
+                Objects.equals(nome, usuario.nome) &&
+                Objects.equals(email, usuario.email) &&
+                Objects.equals(dataNasc, usuario.dataNasc) &&
+                Objects.equals(cpf, usuario.cpf) &&
+                Objects.equals(ddd, usuario.ddd) &&
+                Objects.equals(telefone, usuario.telefone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, localizacao, notificacao, bloqueado);
     }
 }

@@ -1,151 +1,175 @@
 /**
 * Campos da tela de cadastro específico de Vendedor:
-* CPF, Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
+* Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
 */
 import React, { Component } from 'react';
-import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid } from 'react-native';
-import { Tile, List, ListItem, Button } from 'react-native-elements';
+import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid, Text, Dimensions } from 'react-native';
+import { Tile, Button } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 import { Kohana } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import NavigationBar from 'react-native-navbar';
+
+const { width, height } = Dimensions.get("window");
 
 class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        diasArray: ["Dinheiro", "Cartão de crédito", "Transferência", "Paypal"],
-        cpf: '',
-        nomeLoja: ''
+        userId: this.props.navigation.state.params.userId,
+        pagamentosArray: [],
+        nomeLoja: '',
+        pagamentosAceitos: []
     }
+    this.preencherPagamentosArray();
   }
-  handleFinalizarPress = () => {
-    const {
-      state: {
-        cpf, nomeLoja
-      }
-    } = this;
-    // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
-    vendedor = {
-      "usuario": 1,
-      "nomeFantasia": nomeLoja,
-      "cpf": cpf
-    }
-    // TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
-     fetch('http://10.0.2.2:8080/vendedor', {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(vendedor)
-      })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            // TODO: acertar a navegação para a próxima tela, a ser criada
-            //this.props.navigation.navigate('Finalizar');
-          })
-          .catch((error) => {
-            // TODO: melhorar erro? combinar padrão de erro no app!
-            Alert.alert("error Response", JSON.stringify(error));
-            console.error(error);
-          });
 
-  };
-  onClick(data) {
-    data.checked = !data.checked;
+  preencherPagamentosArray() {
+    fetch('http://10.0.2.2:8080/pagamento')
+      .then((response) => response.json())
+        .then((responseJson) => {
+          var pagamentosBuscados = [];
+          for (i in responseJson) {
+              pagamentosBuscados.push(responseJson[i]);
+          }
+          this.setState({pagamentosArray: pagamentosBuscados});
+        });
   }
-  renderView() {
-    var len = this.state.diasArray.length;
-    var views = [];
-    for (var i = 0, l = len - 2; i < l; i += 2) {
-        views.push(
-            <View key={i}>
-                <View style={styles.item}>
-                    {this.renderCheckBox(this.state.diasArray[i])}
-                    {this.renderCheckBox(this.state.diasArray[i + 1])}
-                </View>
-                <View style={styles.line}/>
-            </View>
-        )
+
+ pagamentoEscolhido = () => {
+     if (this.state.pagamentosAceitos.length > 0) {
+       return true;
+     }
+     else {
+       ToastAndroid.showWithGravity('Escolha ao menos um meio de pagamento', ToastAndroid.LONG, ToastAndroid.CENTER);
+       return false;
+     }
+
+ }
+
+
+  handleFinalizarPress = () => {
+    var pagamento = this.pagamentoEscolhido();
+
+    if (pagamento) {
+      const {
+        state: {
+          userId,
+          nomeLoja,
+          pagamentosAceitos
+        }
+      } = this;
+      // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
+      vendedor = {
+        "usuario": userId,
+        "nomeFantasia": nomeLoja,
+        "pagamentosAceitos": pagamentosAceitos
+      }
+
+      //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
+       fetch('http://10.0.2.2:8080/vendedor', {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(vendedor)
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              if (!responseJson.errorMessage) {
+                ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                this.props.navigation.navigate('TabsVendedor');
+              } else {
+                Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
     }
-    views.push(
-        <View key={len - 1}>
-            <View style={styles.item}>
-                {len % 2 === 0 ? this.renderCheckBox(this.state.diasArray[len - 2]) : null}
-                {this.renderCheckBox(this.state.diasArray[len - 1])}
-            </View>
+  };
+  onClick(meioPagamento) {
+    meioPagamento.checked = !meioPagamento.checked;
+    var meiosAceitos = this.state.pagamentosAceitos;
+    meiosAceitos.push(meioPagamento);
+    this.setState({ pagamentosAceitos: meiosAceitos });
+  }
+
+  mostrarCheckboxesPagamento() {
+    var views = [];
+    for(i in this.state.pagamentosArray) {
+      let meioPagamento = this.state.pagamentosArray[i];
+      views.push (
+        <View key={i} style={styles.item}>
+          <CheckBox
+            style={{flex: 1, padding: 10}}
+            onClick={()=>this.onClick(meioPagamento)}
+            isChecked={meioPagamento.checked}
+            leftText={meioPagamento.meioPagamento}
+            />
         </View>
-    )
+      );
+    }
     return views;
   }
 
-  renderCheckBox(data) {
-      return (
-          <CheckBox
-              style={{flex: 1, padding: 10}}
-              onClick={()=>this.onClick(data)}
-              isChecked={data.checked}
-              leftText={data}
-          />);
-  }
-
   render() {
+    const inputProps = {
+      keyboardType: 'default',
+      placeholder: 'ex: vegetariano, doce, salgado',
+      placeholderTextColor: '#402B2E'
+    };
+
     return (
-      <ScrollView>
-        <List>
-          <Kohana
-            style={{ height: 45 }}
-            label={'CPF'}
-            iconClass={MaterialsIcon}
-            iconName={'account-box'}
-            iconColor={'#658091'}
-            labelStyle={{ color: '#402B2E', fontSize: 20, fontFamily: 'Roboto' }}
-            inputStyle={{ color: '#B27A81', fontSize: 20, fontFamily: 'Roboto' }}
-            onChangeText={(cpf) => this.setState({cpf})}
-            value={this.state.cpf}
-            keyboardType="phone-pad"
-            returnKeyType="next"
+      <View style={{flex: 1}}>
+          <NavigationBar
+            title={titleConfig}
+            tintColor="aquamarine"
           />
-          <Kohana
-            style={{ height: 45 }}
-            label={'Nome da sua loja'}
-            iconClass={MaterialsIcon}
-            iconName={'store'}
-            iconColor={'#658091'}
-            labelStyle={{ color: '#402B2E', fontSize: 20, fontFamily: 'Roboto' }}
-            inputStyle={{ color: '#B27A81', fontSize: 20, fontFamily: 'Roboto' }}
-            onChangeText={(nomeLoja) => this.setState({nomeLoja})}
-            value={this.state.nomeLoja}
-            returnKeyType="next"
-          />
-          <ListItem
-            title="Meios de pagamento aceitos"
-            hideChevron
-          />
-          <View style={styles.container}>
-              <ScrollView>
-                  {this.renderView()}
-              </ScrollView>
-          </View>
-          <ListItem
-            title="Tags para seus produtos"
-            hideChevron
-          />
-          <TextInput
-            style={styles.singleLine}
-            returnKeyType="next"
-          />
-        </List>
-        <Button
-          title="Finalizar"
-          buttonStyle={{ marginBottom: 20 }}
-          onPress={this.handleFinalizarPress}
-        />
-      </ScrollView>
+        <View style={styles.container}>
+          <ScrollView style={{ backgroundColor: '#fff' }}>
+              <Kohana
+                style={{ height: 45 }}
+                label={'Nome da sua loja'}
+                iconClass={MaterialsIcon}
+                iconName={'store'}
+                iconColor={'#658091'}
+                labelStyle={{ color: '#402B2E', fontSize: 20, fontFamily: 'Roboto' }}
+                inputStyle={{ color: '#B27A81', fontSize: 20, fontFamily: 'Roboto' }}
+                maxLength={30}
+                onChangeText={(nomeLoja) => this.setState({nomeLoja})}
+                value={this.state.nomeLoja}
+                returnKeyType="next"
+              />
+              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                  Meios de pagamento aceitos
+              </Text>
+              <View style={styles.container}>
+                  <ScrollView>
+                      {this.mostrarCheckboxesPagamento()}
+                  </ScrollView>
+              </View>
+              <View style={{ flexDirection: 'column', flex: 1, height: 130, padding: 10 }}>
+              </View>
+            <Button
+              title="Finalizar"
+              buttonStyle={{ padding: 16, marginBottom: 3 }}
+              onPress={this.handleFinalizarPress}
+            />
+          </ScrollView>
+        </View>
+      </View>
     );
   }
 }
+
+const titleConfig = {
+  title: 'Cadastro do Vendedor',
+  tintColor: "darkblue",
+  fontFamily: 'Roboto',
+};
+
 var styles = StyleSheet.create({
   multiline: {
     height: 60,
@@ -153,26 +177,16 @@ var styles = StyleSheet.create({
     padding: 4,
     marginBottom: 10,
   },
-  eventLabel: {
-    margin: 3,
-    fontSize: 12,
-  },
   singleLine: {
     fontSize: 16,
     padding: 4,
     height: 45,
   },
-  singleLineWithHeightTextInput: {
-    height: 30,
-  },
-  hashtag: {
-    color: 'blue',
-    fontWeight: 'bold',
-  },
   container: {
       flex: 1,
-      backgroundColor: '#f3f2f2',
-      marginTop:30
+      justifyContent: 'space-between',
+      backgroundColor: '#fff',
+      padding: 15
   },
   item: {
       flexDirection: 'row',
