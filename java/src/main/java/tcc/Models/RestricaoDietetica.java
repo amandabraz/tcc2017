@@ -8,16 +8,25 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name= "TAG")
-public class Tag {
+@Table(name= "RESTRICAO_DIETETICA")
+public class RestricaoDietetica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_TAG")
+    @Column(name = "ID_RESTRICAO")
     private Long id;
 
     @Column(name = "DESCRICAO", unique = true)
     private String descricao;
+
+    public RestricaoDietetica(Long id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
+    public RestricaoDietetica() {
+        super();
+    }
 
     public Long getId() {
         return id;
@@ -35,17 +44,11 @@ public class Tag {
         this.descricao = descricao;
     }
 
-    public Tag() {
-        this.id = id;
-        this.descricao = descricao;
-    }
-
-    public Tag(Long id, String descricao) {
-        this.id = id;
-        this.descricao = descricao;
-    }
-
-    public Tag(String descricao) {
-        this.descricao = descricao;
+    @Override
+    public String toString() {
+        return "RestricaoDietetica{" +
+                "id=" + id +
+                ", descricao='" + descricao + '\'' +
+                '}';
     }
 }
