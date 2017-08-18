@@ -1,5 +1,6 @@
 package tcc.Models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name= "CLIENTE")
@@ -26,14 +28,14 @@ public class Cliente {
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JoinTable(name="CLIENTE_TAG", joinColumns =
-            {@JoinColumn(name="ID_CLIENTE")}, inverseJoinColumns =
-            {@JoinColumn(name="ID_TAG")}
+            {@JoinColumn(name="ID_CLIENTE", referencedColumnName = "ID_CLIENTE")}, inverseJoinColumns =
+            {@JoinColumn(name="ID_TAG", referencedColumnName = "ID_TAG")}
         )
-    private List<Tag> tags;
+    private Set<Tag> tags;
     
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
     @JoinTable(name="CLIENTE_RESTRICAO", joinColumns =
             {@JoinColumn(name="ID_CLIENTE")}, inverseJoinColumns =
             {@JoinColumn(name="ID_RESTRICAO")})
@@ -46,7 +48,7 @@ public class Cliente {
         this.restricoesDieteticas = restricoesDieteticas;
     }
 
-    public Cliente(Usuario usuario, List<Tag> tags, List<RestricaoDietetica> restricaoDieteticas) {
+    public Cliente(Usuario usuario, Set<Tag> tags, List<RestricaoDietetica> restricaoDieteticas) {
         this.usuario = usuario;
         this.tags = tags;
         this.restricoesDieteticas = restricoesDieteticas;
@@ -78,11 +80,11 @@ public class Cliente {
         this.usuario = usuario;
     }
 
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 
