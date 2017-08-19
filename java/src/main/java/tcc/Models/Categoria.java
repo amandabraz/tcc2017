@@ -33,6 +33,10 @@ public class Categoria {
         this.nome = nome;
     }
 
+    public Categoria(String nome) {
+        this.nome = nome;
+    }
+
     public long getId() {
         return id;
     }
