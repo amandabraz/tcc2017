@@ -6,11 +6,6 @@ import {
   View,
   ListView
 } from 'react-native';
-<<<<<<< HEAD
-import { Tile, Button } from 'react-native-elements';
-
-=======
->>>>>>> 30f9cede49e329e50468dad5c4fa9fbc2bac3223
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 
@@ -21,21 +16,14 @@ class GerenciaProduto extends Component {
     super();
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-<<<<<<< HEAD
-      dataSource: ds.cloneWithRows([]),
-=======
       dataSource: ds.cloneWithRows(['row 1', 'row 2']),
->>>>>>> 30f9cede49e329e50468dad5c4fa9fbc2bac3223
     };
   }
 
 // ListView carregando os itens do banco
 // se nenhum item: msg dizendo nada aqui! cadastre seu primeiro produto
-<<<<<<< HEAD
 //  se algum item: exibir x (para deletar, com confirmação), nome produto, + qtd - , lapis pra editar
-=======
-//  se algum item: exibir nome produto, + qtd - , lapis pra editar
->>>>>>> 30f9cede49e329e50468dad5c4fa9fbc2bac3223
+
 
   adicionarProduto = () => {
     this.props.navigation.navigate('CadastroProduto');
@@ -48,7 +36,6 @@ class GerenciaProduto extends Component {
       fontFamily: 'Roboto',
     };
 
-<<<<<<< HEAD
     // _refreshData: function() {
     //   fetch(ENDPOINT)
     //     .then((response) => response.json())
@@ -58,8 +45,7 @@ class GerenciaProduto extends Component {
     //     });
     //   });
     // },
-=======
->>>>>>> 30f9cede49e329e50468dad5c4fa9fbc2bac3223
+
     return(
 
         <View style={{flex: 1}}>
@@ -68,28 +54,17 @@ class GerenciaProduto extends Component {
             tintColor="darkblue"
           />
           <View style={styles.container}>
-<<<<<<< HEAD
             <Text>Blablabla</Text>
             <ListView
               dataSource={this.state.dataSource}
               renderRow={(data) => <RowProduto {...data} />}
             />
-=======
-          <Text>Blablabla</Text>
-        
->>>>>>> 30f9cede49e329e50468dad5c4fa9fbc2bac3223
+
           </View>
           <ActionButton
             buttonColor="rgba(231,76,60,1)"
             onPress={this.adicionarProduto}
           />
-<<<<<<< HEAD
-          <Button
-            onPress={() => this.props.navigation.navigate('CadastroProduto')}
-            title="Go to notifications"
-          />
-=======
->>>>>>> 30f9cede49e329e50468dad5c4fa9fbc2bac3223
         </View>
     );
   }
@@ -122,21 +97,16 @@ const styleProduto = StyleSheet.create({
     borderRadius: 20,
   },
 });
-<<<<<<< HEAD
 
-const RowProduto = (data) => {
-  return (
-    <View style={styleProduto.container}>
-      <Text style={styleProduto.text}>
-        {data}
-      </Text>
-    </View>
-  )
-};
-
-GerenciaProduto.defaultProps = { ...GerenciaProduto };
-=======
->>>>>>> 30f9cede49e329e50468dad5c4fa9fbc2bac3223
+// const RowProduto = (data) => {
+//   return (
+//     <View style={styleProduto.container}>
+//       <Text style={styleProduto.text}>
+//         {data}
+//       </Text>
+//     </View>
+//   )
+// };
 
 const RowProduto = (props) => (
   <View style={styleProduto.container}>
