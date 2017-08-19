@@ -5,10 +5,6 @@ import org.springframework.stereotype.Service;
 import tcc.DAOs.RestricaoDieteticaDAO;
 import tcc.Models.RestricaoDietetica;
 
-/**
- * Created by amanda on 18/08/2017.
- */
-
 @Service
 public class RestricaoDieteticaService {
 
@@ -18,6 +14,17 @@ public class RestricaoDieteticaService {
     public RestricaoDietetica buscaRestricaoDietetica(Long id) {
         try {
             return restricaoDieteticaDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public RestricaoDietetica cadastraRestricaoDietetica(RestricaoDietetica restricaoDietetica) {
+        try {
+            if (restricaoDieteticaDAO.findByDescricao(restricaoDietetica.getDescricao()) != null) {
+                return null;
+            }
+            return restricaoDieteticaDAO.save(restricaoDietetica);
         } catch (Exception e) {
             throw e;
         }
