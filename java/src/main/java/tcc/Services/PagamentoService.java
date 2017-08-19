@@ -13,6 +13,9 @@ public class PagamentoService {
 
     public Pagamento cadastraMeioPagamento(Pagamento pagamento) {
         try {
+            if (pagamentoDAO.findByMeioPagamento(pagamento.getMeioPagamento()) != null) {
+                return null;
+            }
             return pagamentoDAO.save(pagamento);
         } catch (Exception e) {
             throw e;

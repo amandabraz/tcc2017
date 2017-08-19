@@ -13,19 +13,14 @@ import javax.persistence.*;
 
 public class Categoria {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.AUTO
-    )
-    @Column(
-            name = "ID_CATEGORIA"
-    )
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_CATEGORIA")
     private long id;
 
-    @Column(
-            name = "NOME",
+    @Column(name = "NOME",
             nullable = false,
-            length = 100
-    )
+            length = 100,
+            unique = true)
     private String nome;
 
     public Categoria(long id, String nome) {
@@ -33,6 +28,9 @@ public class Categoria {
         this.nome = nome;
     }
 
+    public Categoria() {
+        super();
+    }
     public Categoria(String nome) {
         this.nome = nome;
     }

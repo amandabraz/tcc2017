@@ -12,6 +12,9 @@ public class CategoriaService {
 
     public Categoria cadastraCategoria(Categoria categoria) {
         try {
+            if (categoriaDAO.findByNome(categoria.getNome()) != null) {
+                return null;
+            }
             return categoriaDAO.save(categoria);
         } catch (Exception e) {
             throw e;

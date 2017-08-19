@@ -13,8 +13,10 @@ public class RestricaoDieteticaService {
 
     public RestricaoDietetica cadastraRestricaoDietetica(RestricaoDietetica restricaoDietetica) {
         try {
+            if (restricaoDieteticaDAO.findByDescricao(restricaoDietetica.getDescricao()) != null) {
+                return null;
+            }
             return restricaoDieteticaDAO.save(restricaoDietetica);
-
         } catch (Exception e) {
             throw e;
         }
