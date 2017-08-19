@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
+import tcc.Services.UsuarioService;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,11 +22,15 @@ import java.util.List;
  * Created by amanda on 04/05/2017.
  */
 
+@RequestMapping(value = "/usuario")
 @RestController
 public class UsuarioController {
 
     @Autowired
     private UsuarioDAO usuarioDao;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
@@ -32,7 +38,7 @@ public class UsuarioController {
      * @param usuario
      * @return
      */
-    @RequestMapping(value = "/usuario", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity cadastraUsuario(@RequestBody Usuario usuario) {
 
         Usuario novoUsuario = null;
@@ -55,7 +61,7 @@ public class UsuarioController {
      * Retorna todos os usuários salvos no banco.
      * @return todos os usuários salvos no banco.
      */
-    @RequestMapping(value = "/usuario", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Iterable<Usuario>> buscaUsuarios() {
         return new ResponseEntity<Iterable<Usuario>>(usuarioDao.findAll(), HttpStatus.OK);
     }
@@ -66,7 +72,7 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/email/{email:.+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/email/{email:.+}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email){
         Character type;
@@ -88,15 +94,14 @@ public class UsuarioController {
     @ResponseBody
     public ResponseEntity buscaUsuario(@PathVariable("id") Long id){
         Character type;
-        try{
+        try {
             Usuario usuarioBd = usuarioDao.findUsuarioById(id);
-            if(usuarioBd.getId().equals(id)){
-                return new ResponseEntity<Usuario>((usuarioBd), HttpStatus.OK);
-            }
-        }catch(NullPointerException | IndexOutOfBoundsException e){
+            return new ResponseEntity<Usuario>((usuarioBd), HttpStatus.OK);
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na busca do Usuário! Tente novamente");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na busca do Usuário! Tente novamente");
     }
 
     /**
@@ -105,7 +110,7 @@ public class UsuarioController {
      * @return Character usuarioBd se um ou mais Usuários forem encontrados de acordo com o nome.
      *          Erro    se o nome não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/nome/{nome}", method = RequestMethod.GET)
+    @RequestMapping(value = "/nome/{nome}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaPerfilUsuarioPorNome(@PathVariable("nome") String nome){
         Character type;

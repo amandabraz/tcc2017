@@ -26,4 +26,12 @@ public class ClienteService {
         }
         return clienteResolvido;
     }
+
+    public Cliente buscaCliente(Long id) {
+        try {
+            return clienteDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

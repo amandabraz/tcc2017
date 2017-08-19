@@ -33,4 +33,12 @@ public class TagService {
         }
         return tagCadastrada;
     }
+
+    public Tag buscaTag(Long id) {
+        try {
+            return tagDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

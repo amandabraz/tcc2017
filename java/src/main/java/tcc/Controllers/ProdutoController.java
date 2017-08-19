@@ -13,6 +13,6 @@ import java.util.List;
 public class ProdutoController {
 
     public List<Produto> buscaProdutosVendedor() {
-
+        return null;
     }
  }
