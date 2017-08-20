@@ -2,10 +2,9 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tcc.DAOs.ClienteDAO;
 import tcc.Models.Cliente;
-
-import javax.transaction.Transactional;
 
 /**
  * Created by amanda on 17/08/2017.
