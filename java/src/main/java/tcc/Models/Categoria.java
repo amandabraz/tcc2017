@@ -7,53 +7,47 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(
-        name = "CATEGORIA"
-)
-
+@Table(name = "CATEGORIA")
 public class Categoria {
+
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.AUTO
-    )
-    @Column(
-            name = "ID_CATEGORIA"
-    )
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_CATEGORIA")
+    private Long id;
 
-    @Column(
-            name = "NOME",
-            nullable = false,
-            length = 100
-    )
-    private String nome;
+    @Column(name = "DESCRICAO", unique = true)
+    private String descricao;
 
-    public Categoria(long id, String nome) {
+    public Categoria(Long id, String descricao) {
         this.id = id;
-        this.nome = nome;
+        this.descricao = descricao;
     }
 
-    public long getId() {
+    public Categoria() {
+        super();
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     @Override
     public String toString() {
         return "Categoria{" +
                 "id=" + id +
-                ", nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
                 '}';
     }
 }
