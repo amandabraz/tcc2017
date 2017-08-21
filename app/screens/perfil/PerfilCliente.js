@@ -6,7 +6,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 
-
 export default class PerfilCliente extends Component {
   constructor(props) {
     super(props);
@@ -16,9 +15,13 @@ export default class PerfilCliente extends Component {
       emailText: 'cicinho@mail.com',
       tagsText: 'Arroz Feijão eBatata',
       CPFText: '35101042854',
-      celularText: '19997868781'
+      celularText: '19997868781',
+      confText: '  Configuração'
     };
   }
+
+  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
+
   render () {
     return (
         <Image style={styles.headerBackground}
@@ -31,15 +34,17 @@ export default class PerfilCliente extends Component {
           </View>
           </View>
 
+        <TouchableOpacity onPress={this.openConfiguracao}>
           <View style={[styles.bar, styles.barItem]}>
           <Icon name="settings" size={25} color={'#fff'}/>
           <Text style={styles.barText}>
-            &nbsp Configuração
+            {this.state.confText}
           </Text>
 
           </View>
+        </TouchableOpacity>
 
-          <ScrollView>
+        <ScrollView>
           <Fumi
             style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
             label={'Nome'}
@@ -157,7 +162,7 @@ export default class PerfilCliente extends Component {
   baseText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
-    fontSize: 20,
+    fontSize: 25,
   },
   barText: {
     fontFamily: 'Roboto',

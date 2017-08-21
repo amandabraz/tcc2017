@@ -65,14 +65,6 @@ export const TabsCliente = TabNavigator({
           icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
         },
       },
-    },
-    Configuração: {
-      screen: ConfiguracaoCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
-        },
-      },
     }
   },{
     tabBarComponent: TabView.TabBarBottom,
@@ -192,6 +184,9 @@ export const Root = StackNavigator({
   },
   TabsCliente: {
     screen: TabsCliente
+  },
+  ConfiguracaoCliente: {
+    screen: ConfiguracaoCliente
   }
 }, {
   mode: 'card',
