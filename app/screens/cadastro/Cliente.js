@@ -84,7 +84,6 @@ class Cliente extends Component {
     var restricoes = this.state.restricoesDieteticas;
     restricoes.push(descricao);
     this.setState({restricoesDieteticas: restricoes});
-    Alert.alert(JSON.stringify(restricoes));
   };
 
   mostrarCheckboxesDieta() {
