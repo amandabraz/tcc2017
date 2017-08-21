@@ -66,13 +66,13 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/email/{email:.+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/usuario/email/{email:.+}/{senha}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email){
+    public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email, @PathVariable("senha") String senha){
         Character type;
         try{
-            Usuario usuarioBd = usuarioDao.findUsuarioByEmail(email);
-            return new ResponseEntity<Character>(Character.valueOf(usuarioBd.getPerfil()), HttpStatus.OK);
+            Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(email, senha);
+            return new ResponseEntity<Usuario>(usuarioBd, HttpStatus.OK);
         }catch(NullPointerException | IndexOutOfBoundsException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado!");
         }

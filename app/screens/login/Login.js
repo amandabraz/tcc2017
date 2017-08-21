@@ -81,30 +81,35 @@ export default class Login extends Component {
 
     let continuar = this.validaCampos(login);
 
+    var nextScreen = null;
+
     //https://auth0.com/blog/adding-authentication-to-react-native-using-jwt/
     //Link de exemplo, item Signing up Users and Acquiring a JWT
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/login', {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-        body: JSON.stringify(login)
+      fetch('http://10.0.2.2:8080/usuario/'+login.email+'/'+login.senha, {
+        method: 'GET'
       })
         .then((response) => response.json())
         .then((responseJson) => {
-        ToastAndroid.showWithGravity('Success!!', ToastAndroid.LONG, ToastAndroid.CENTER);
-        this.props.navigation.navigate('Cliente');
+          Alert.alert(JSON.stringify(responseJson));
+        // nextScreen = responseJson;
+        // ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
       })
         .catch((error) => {
-        Alert.alert("error Response", JSON.stringify(error));
+        // Alert.alert("error Response", JSON.stringify(error));
         console.error(error);
       });
     }
-
-     Alert.alert('Bem-vindo!');
+    // if(nextScreen!=null){
+    //   Alert.alert(nextScreen);
+    //   if(nextScreen!="C"){
+    //     this.props.navigation.navigate('Vendedor');
+    //   }else{
+    //     this.props.navigation.navigate('Cliente');
+    //   }
+    // }
+  //  Alert.alert('Bem-vindo!');
   };
 
   //render
