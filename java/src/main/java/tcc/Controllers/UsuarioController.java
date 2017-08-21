@@ -7,16 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
 import tcc.Services.UsuarioService;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by amanda on 04/05/2017.
@@ -43,7 +39,7 @@ public class UsuarioController {
 
         Usuario novoUsuario = null;
         try {
-            CustomError temErro = validaUsuario(usuario);
+            CustomError temErro = usuarioService.validaUsuario(usuario);
             if (temErro != null) {
                 System.out.println(temErro.toString());
                 return new ResponseEntity(temErro, HttpStatus.CONFLICT);
@@ -119,23 +115,6 @@ public class UsuarioController {
         }catch(NullPointerException | IndexOutOfBoundsException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
         }
-    }
-
-
-    private CustomError validaUsuario(Usuario usuario) {
-        Usuario usuarioBuscado = usuarioDao.findByEmail(usuario.getEmail());
-        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            return new CustomError("E-mail já cadastrado!");
-        }
-        usuarioBuscado = usuarioDao.findByCpf(usuario.getCpf());
-        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            return new CustomError("CPF já cadastrado!");
-        }
-        usuarioBuscado = usuarioDao.findByDddAndTelefone(usuario.getDdd(), usuario.getTelefone());
-        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            return new CustomError("Celular já cadastrado!");
-        }
-        return null;
     }
 }
 

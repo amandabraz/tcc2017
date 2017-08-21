@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tcc.DAOs.ClienteDAO;
 import tcc.Models.Cliente;
+import tcc.Models.Usuario;
 
 /**
  * Created by amanda on 17/08/2017.
@@ -29,6 +30,14 @@ public class ClienteService {
     public Cliente buscaCliente(Long id) {
         try {
             return clienteDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Cliente buscaClientePorUsuario(Usuario usuario) {
+        try {
+           return clienteDAO.findByUsuario(usuario);
         } catch (Exception e) {
             throw e;
         }
