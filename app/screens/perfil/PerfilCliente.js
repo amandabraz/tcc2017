@@ -5,6 +5,7 @@ import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
+import CheckBox from 'react-native-check-box';
 
 export default class PerfilCliente extends Component {
   constructor(props) {
@@ -16,9 +17,40 @@ export default class PerfilCliente extends Component {
       tagsText: 'Arroz Feijão eBatata',
       CPFText: '35101042854',
       celularText: '19997868781',
-      confText: '  Configuração'
+      confText: '  Configuração',
+      dietasArray: [],
     };
+    this.preencherDietasArray();
   }
+
+  preencherDietasArray() {
+    fetch('http://10.0.2.2:8080/restricaodietetica')
+      .then((response) => response.json())
+        .then((responseJson) => {
+          var dietasBuscadas = [];
+            for (i in responseJson) {
+              dietasBuscadas.push(responseJson[i]);
+            }
+            this.setState({dietasArray: dietasBuscadas});
+        });
+  };
+
+  mostrarCheckboxesDieta() {
+    var views = [];
+    for(i in this.state.dietasArray) {
+      var descricao = this.state.dietasArray[i];
+      views.push (
+        <View key={i} style={styles.item}>
+          <CheckBox
+            style={{flex: 1, padding: 10}}
+            isChecked={descricao.checked}
+            leftText={descricao.descricao}
+            />
+        </View>
+      );
+    }
+    return views;
+  };
 
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
 
@@ -105,6 +137,10 @@ export default class PerfilCliente extends Component {
               value={this.state.tagsText}
               editable={false}
               inputStyle={styles.baseText}/>
+
+          <ScrollView>
+                {this.mostrarCheckboxesDieta()}
+          </ScrollView>
 
       </ScrollView>
       </Image>
