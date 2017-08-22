@@ -24,6 +24,10 @@ public class RestricaoDietetica {
         this.descricao = descricao;
     }
 
+    public RestricaoDietetica(String descricao) {
+        this.descricao = descricao;
+    }
+
     public RestricaoDietetica() {
         super();
     }
