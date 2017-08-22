@@ -89,7 +89,7 @@ class Cliente extends Component {
   mostrarCheckboxesDieta() {
     var views = [];
     for(i in this.state.dietasArray) {
-      var descricao = this.state.dietasArray[i];
+      let descricao = this.state.dietasArray[i];
       views.push (
         <View key={i} style={styles.item}>
           <CheckBox
