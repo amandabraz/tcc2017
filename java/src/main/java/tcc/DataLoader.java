@@ -25,21 +25,23 @@ public class DataLoader implements ApplicationRunner {
 
     public void run(ApplicationArguments args) {
 
+        // Para adicionar dado a tabela, só copiar uma linha e mudar o conteúdo
+        
         pagamentoService.cadastraMeioPagamento(new Pagamento("Dinheiro"));
         pagamentoService.cadastraMeioPagamento(new Pagamento("Débito"));
 
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Vegetariano"));
-        restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Vegan"));
+        restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Vegano"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Sem glúten"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Sem lactose"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Low carb"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Frugívora"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Paleolítica"));
-        restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Mediterranea"));
+        restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Mediterrânea"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Diet"));
 
         categoriaService.cadastraCategoria(new Categoria("Doce"));
         categoriaService.cadastraCategoria(new Categoria("Salgado"));
-
+        categoriaService.cadastraCategoria(new Categoria("Bebida"));
     }
 }
