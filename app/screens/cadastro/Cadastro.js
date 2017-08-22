@@ -36,6 +36,13 @@ class Cadastro extends Component {
   }
  }
 
+ uploadWidget() {
+       cloudinary.openUploadWidget({ cloud_name: 'amoracloudname', upload_preset: 'presetnameamora', tags:['user']},
+           function(error, result) {
+               console.log(result);
+           });
+   }
+
   validaEmail = (email) => {
     var re = /\S+@\S+\.\S+/;
    return re.test(email);
@@ -405,7 +412,7 @@ class Cadastro extends Component {
 
       <Button title ="        Quero Vender         "
               color="#ffa07a"
-              onPress={this.onButtonVendedor}/>
+              onPress={this.uploadWidget.bind(this)}/>
 
       <Button title="       Quero Comprar      "
               color="#87cefa"
