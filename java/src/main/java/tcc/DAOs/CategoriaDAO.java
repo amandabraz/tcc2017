@@ -11,4 +11,5 @@ import java.util.List;
 public interface CategoriaDAO extends CrudRepository <Categoria, Long> {
     List<Categoria> findById(Long id);
     List<Categoria> findAll();
+    Categoria findByNome(String nome);
 }
