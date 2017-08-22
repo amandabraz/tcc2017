@@ -1,29 +1,30 @@
 package tcc.Models;
 
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by larissa on 24/05/17.
  */
 
 @Entity
-@Table(name = "INGREDIENTE")
+@Table(
+        name = "INGREDIENTE"
+)
 public class Ingrediente {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_INGREDIENTE")
+    @GeneratedValue(
+            strategy = GenerationType.AUTO
+    )
+    @Column(
+            name = "ID_INGREDIENTE"
+    )
     private long id;
 
-    @Column(name = "ITEM",
+    @Column(
+            name = "ITEM",
             nullable = false,
-            length = 100)
+            length = 100
+    )
     private String item;
 
     public Ingrediente(long id, String item) {
