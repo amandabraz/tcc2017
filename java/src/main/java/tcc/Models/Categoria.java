@@ -23,6 +23,10 @@ public class Categoria {
             unique = true)
     private String nome;
 
+    public Categoria() {
+        super();
+    }
+
     public Categoria(long id, String nome) {
         this.id = id;
         this.nome = nome;
