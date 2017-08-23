@@ -11,19 +11,25 @@ export default class PerfilCliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: 14,
+      userId: 20,
       nomeText: '',
       dataNascimentoText: '',
       emailText: '',
-      tagsText: '',
-      restricoesDieteticasText: '',
+      tagsText: "nenhuma tag inserida",
+      tagEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
+      restricoesDieteticasText: "nenhuma restrição escolhida",
+      restricaoEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
       CPFText: '',
       celularText: '',
-      confText: '  Configuração',
-      dietasArray: [],
+      confText: '  Configuração'
     };
     this.buscaDadosCliente();
-    this.preencherDietasArray();
   }
 
   buscaDadosCliente() {
@@ -38,32 +44,26 @@ export default class PerfilCliente extends Component {
           this.setState({emailText: responseJson.usuario.email});
           this.setState({CPFText: responseJson.usuario.cpf});
           this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
-          var tags = "";
-          for(i in responseJson.tags) {
-            tags += "#" + responseJson.tags[i].descricao + "  ";
+          if (responseJson.tags.length > 0) {
+            this.setState({tagEstilo: styles.baseText})
+            var tags = "";
+            for(i in responseJson.tags) {
+              tags += "#" + responseJson.tags[i].descricao + "  ";
+            }
+            tags = tags.slice(0, -3);
+            this.setState({tagsText: tags});
           }
-          tags = tags.slice(0, -3);
-          this.setState({tagsText: tags});
-          var restricoes = "";
-          for(i in responseJson.restricoesDieteticas) {
-            restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
+          if (responseJson.restricoesDieteticas.length > 0) {
+            this.setState({restricaoEstilo: styles.baseText})
+            var restricoes = "";
+            for(i in responseJson.restricoesDieteticas) {
+              restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
+            }
+            restricoes = restricoes.slice(0, -3);
+            this.setState({restricoesDieteticasText: restricoes});
           }
-          restricoes = restricoes.slice(0, -3);
-          this.setState({restricoesDieteticasText: restricoes});
         }
       });
-  };
-
-  preencherDietasArray() {
-    fetch('http://10.0.2.2:8080/restricaodietetica')
-      .then((response) => response.json())
-        .then((responseJson) => {
-          var dietasBuscadas = [];
-            for (i in responseJson) {
-              dietasBuscadas.push(responseJson[i]);
-            }
-            this.setState({dietasArray: dietasBuscadas});
-        });
   };
 
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
@@ -150,16 +150,16 @@ export default class PerfilCliente extends Component {
               iconColor={'darkslategrey'}
               value={this.state.tagsText}
               editable={false}
-              inputStyle={styles.baseText}/>
+              inputStyle={this.state.tagEstilo}/>
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
               label={'Restrições dietéticas'}
               iconClass={FontAwesomeIcon}
-              iconName={'hashtag'}
+              iconName={'asterisk'}
               iconColor={'darkslategrey'}
               value={this.state.restricoesDieteticasText}
               editable={false}
-              inputStyle={styles.baseText}/>
+              inputStyle={this.state.restricaoEstilo}/>
       </ScrollView>
       </Image>
     );
@@ -216,7 +216,7 @@ export default class PerfilCliente extends Component {
   baseText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
-    fontSize: 25,
+    fontSize: 20,
   },
   barText: {
     fontFamily: 'Roboto',
