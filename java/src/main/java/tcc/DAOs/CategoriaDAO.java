@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * Created by larissa on 24/05/17.
  */
+
 public interface CategoriaDAO extends CrudRepository <Categoria, Long> {
-    List<Categoria> findById(Long id);
     List<Categoria> findAll();
-    Categoria findByNome(String nome);
+    Categoria findByDescricao(String descricao);
 }
