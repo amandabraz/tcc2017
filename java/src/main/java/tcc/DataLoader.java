@@ -40,6 +40,7 @@ public class DataLoader implements ApplicationRunner {
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Mediterrânea"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Diet"));
 
+
         categoriaService.cadastraCategoria(new Categoria("Doce"));
         categoriaService.cadastraCategoria(new Categoria("Salgado"));
         categoriaService.cadastraCategoria(new Categoria("Bebida"));
