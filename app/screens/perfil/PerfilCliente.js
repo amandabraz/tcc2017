@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image } from 'react-native';
+import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Fumi } from 'react-native-textinput-effects';
+import { Icon } from 'react-native-elements';
+import CheckBox from 'react-native-check-box';
 
 export default class PerfilCliente extends Component {
   constructor(props) {
@@ -10,58 +14,136 @@ export default class PerfilCliente extends Component {
       nomeText: "Cícero",
       dataNascimentoText: '19/05/1990',
       emailText: 'cicinho@mail.com',
-      perfilText: 'Perfil Cliente',
-      tagsText: '#Arroz #Feijão #eBatata'
+      tagsText: 'Arroz Feijão eBatata',
+      CPFText: '35101042854',
+      celularText: '19997868781',
+      confText: '  Configuração',
+      dietasArray: [],
     };
+    this.preencherDietasArray();
   }
 
-  state = {
-    isModalVisible: false
-  }
+  preencherDietasArray() {
+    fetch('http://10.0.2.2:8080/restricaodietetica')
+      .then((response) => response.json())
+        .then((responseJson) => {
+          var dietasBuscadas = [];
+            for (i in responseJson) {
+              dietasBuscadas.push(responseJson[i]);
+            }
+            this.setState({dietasArray: dietasBuscadas});
+        });
+  };
 
-  _showModal = () => this.setState({ isModalVisible: true })
+  mostrarCheckboxesDieta() {
+    var views = [];
+    for(i in this.state.dietasArray) {
+      var descricao = this.state.dietasArray[i];
+      views.push (
+        <View key={i} style={styles.item}>
+          <CheckBox
+            style={{flex: 1, padding: 10}}
+            isChecked={descricao.checked}
+            leftText={descricao.descricao}
+            />
+        </View>
+      );
+    }
+    return views;
+  };
 
-  _hideModal = () => this.setState({ isModalVisible: false })
+  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
 
   render () {
     return (
-      <View style={{flex:1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="#95c9db"
-        />
-        <View style={styles.container}>
-        <Image
-          style={{width: 200, height: 200, borderRadius: 100}}
-          source={require('./img/cicero.jpg')}
-        />
-        <Text style={styles.baseText}>
-        <Text style={styles.titleText} onPress={this.onPressTitle}>
-          {this.state.nomeText}{'\n'}{'\n'}
-        </Text>
-        <Text numberOfLines={5}>
-          {this.state.dataNascimentoText}{'\n'}{'\n'}
-        </Text>
-        <Text numberOfLines={5}>
-          {this.state.emailText}{'\n'}{'\n'}
-        </Text>
-        <Text numberOfLines={5}>
-          {this.state.perfilText}{'\n'}{'\n'}
-        </Text>
-        <Text numberOfLines={5}>
-          {this.state.tagsText}{'\n'}{'\n'}
-        </Text>
-      </Text>
-        </View>
-        <TouchableOpacity onPress={this._showModal}>
-          <Text></Text>
-        </TouchableOpacity>
-        <Modal isVisible={this.state.isModalVisible}>
-          <View style={{ flex: 1 }}>
-            <Text>Edicao de cadastro!</Text>
+        <Image style={styles.headerBackground}
+               source={require('./img/fundo2.png')}>
+        <View style={styles.header}>
+          <View style={styles.profilepicWrap}>
+          <Image
+            style={styles.profilepic}
+            source={require('./img/cicero.jpg')}/>
           </View>
-        </Modal>
-      </View>
+          </View>
+
+        <TouchableOpacity onPress={this.openConfiguracao}>
+          <View style={[styles.bar, styles.barItem]}>
+          <Icon name="settings" size={25} color={'#fff'}/>
+          <Text style={styles.barText}>
+            {this.state.confText}
+          </Text>
+
+          </View>
+        </TouchableOpacity>
+
+        <ScrollView>
+          <Fumi
+            style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+            label={'Nome'}
+            iconClass={FontAwesomeIcon}
+            iconSize={20}
+            iconName={'user'}
+            iconColor={'darkslategrey'}
+            value={this.state.nomeText}
+            editable={false}
+            inputStyle={styles.titleText}/>
+
+          <Fumi
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              label={'CPF'}
+              iconClass={FontAwesomeIcon}
+              iconName={'info'}
+              iconColor={'darkslategrey'}
+              value={this.state.CPFText}
+              editable={false}
+              inputStyle={styles.baseText}/>
+
+          <Fumi
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              label={'Celular'}
+              iconClass={FontAwesomeIcon}
+              iconName={'mobile'}
+              iconColor={'darkslategrey'}
+              value={this.state.celularText}
+              editable={false}
+              inputStyle={styles.baseText}/>
+
+          <Fumi
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              label={'Data de Nascimento'}
+              iconClass={FontAwesomeIcon}
+              iconName={'calendar'}
+              iconColor={'darkslategrey'}
+              value={this.state.dataNascimentoText}
+              editable={false}
+              inputStyle={styles.baseText}/>
+
+          <Fumi
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              label={'Email'}
+              iconClass={FontAwesomeIcon}
+              iconName={'at'}
+              iconColor={'darkslategrey'}
+              value={this.state.emailText}
+              editable={false}
+              inputStyle={styles.baseText}/>
+
+          <Fumi
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              label={'Tags'}
+              iconClass={FontAwesomeIcon}
+              iconName={'hashtag'}
+              iconColor={'darkslategrey'}
+              value={this.state.tagsText}
+              editable={false}
+              inputStyle={styles.baseText}/>
+
+          <ScrollView>
+                {this.mostrarCheckboxesDieta()}
+          </ScrollView>
+
+      </ScrollView>
+      </Image>
     );
   }
 }
@@ -79,17 +161,55 @@ export default class PerfilCliente extends Component {
       justifyContent: 'center',
       alignItems: 'center',
   },
+  headerBackground: {
+    flex: 1,
+    width: null,
+    alignSelf: 'stretch',
+  },
+  header:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  profilepicWrap:{
+    width: 180,
+    height: 180,
+    borderRadius: 100,
+    borderColor: 'rgba(0,0,0,0.4)',
+  },
+  profilepic:{
+    flex: 1,
+    width: null,
+    alignSelf: 'stretch',
+    borderRadius: 100,
+    borderWidth: 4
+  },
+  bar:{
+    borderTopColor: '#fff',
+    borderTopWidth: 4,
+    backgroundColor: 'darkslategrey',
+    flexDirection: 'row'
+  },
+  barItem:{
+    padding: 18,
+    alignItems: 'center'
+  },
   baseText: {
     fontFamily: 'Roboto',
+    color: 'darkslategrey',
+    fontSize: 25,
+  },
+  barText: {
+    fontFamily: 'Roboto',
     textAlign: 'center',
-    color: '#dc143c',
-    fontSize: 20,
+    color: '#fff',
+    fontSize: 18,
   },
   titleText: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#dc143c',
+    color: 'darkslategrey',
     fontFamily: 'Roboto',
   },
 });
