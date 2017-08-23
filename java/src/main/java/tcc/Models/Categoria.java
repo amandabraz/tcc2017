@@ -19,23 +19,17 @@ public class Categoria {
     @Column(name = "DESCRICAO", unique = true)
     private String descricao;
 
-    public Categoria(Long id, String descricao) {
-
     public Categoria() {
         super();
     }
 
-    public Categoria(long id, String nome) {
+    public Categoria(long id, String descricao) {
         this.id = id;
         this.descricao = descricao;
     }
 
     public Categoria(String descricao) {
-            this.descricao = descricao;
-        }
-
-    public Categoria() {
-        super();
+        this.descricao = descricao;
     }
 
     public Long getId() {
