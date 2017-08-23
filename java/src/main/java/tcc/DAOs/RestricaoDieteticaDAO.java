@@ -5,6 +5,7 @@ import tcc.Models.RestricaoDietetica;
 
 import java.util.List;
 
-public interface RestricaoDieteticaDAO extends CrudRepository<RestricaoDietetica,Long> {
+public interface RestricaoDieteticaDAO extends CrudRepository<RestricaoDietetica, Long> {
     List<RestricaoDietetica> findAll();
+    RestricaoDietetica findByDescricao(String descricao);
 }

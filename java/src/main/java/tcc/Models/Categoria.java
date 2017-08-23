@@ -13,12 +13,14 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_CATEGORIA")
+
     private Long id;
 
-    @Column(name = "DESCRICAO", unique = true)
+    @Column(name = "DESCRICAO", nullable = false, length = 100, unique = true)
     private String descricao;
 
     public Categoria(Long id, String descricao) {
+
         this.id = id;
         this.descricao = descricao;
     }
