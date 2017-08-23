@@ -55,6 +55,12 @@ public class Produto {
     )
     private Set<Tag> tags;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+    @JoinTable(name="PRODUTO_CATEGORIA", joinColumns =
+            {@JoinColumn(name="ID_PRODUTO")}, inverseJoinColumns =
+            {@JoinColumn(name="ID_CATEGORIA")})
+    private List<Categoria> categorias;
+
     public Produto() {
         this.id = id;
         this.nome = nome;
@@ -65,9 +71,10 @@ public class Produto {
         this.vendedor = vendedor;
         this.restricoesDieteticas = restricoesDieteticas;
         this.tags = tags;
+        this.categorias = categorias;
     }
 
-    public Produto(String nome, Date dataPreparacao, int quantidade, float preco, boolean deletado, Vendedor vendedor, List<RestricaoDietetica> restricoesDieteticas, Set<Tag> tags) {
+    public Produto(String nome, Date dataPreparacao, int quantidade, float preco, boolean deletado, Vendedor vendedor, List<RestricaoDietetica> restricoesDieteticas, Set<Tag> tags, List<Categoria> categorias) {
         this.nome = nome;
         this.dataPreparacao = dataPreparacao;
         this.quantidade = quantidade;
@@ -76,6 +83,7 @@ public class Produto {
         this.vendedor = vendedor;
         this.restricoesDieteticas = restricoesDieteticas;
         this.tags = tags;
+        this.categorias = categorias;
     }
 
     public long getId() {
@@ -142,6 +150,14 @@ public class Produto {
         this.tags = tags;
     }
 
+    public List<Categoria> getCategorias() {
+        return categorias;
+    }
+
+    public void setCategorias(List<Categoria> categorias) {
+        this.categorias = categorias;
+    }
+
     public List<RestricaoDietetica> getRestricoesDieteticas() {
         return restricoesDieteticas;
     }
@@ -162,6 +178,7 @@ public class Produto {
                 ", vendedor=" + vendedor +
                 ", restricoesDieteticas=" + restricoesDieteticas +
                 ", tags=" + tags +
+                ", categorias=" + categorias +
                 '}';
     }
 }
