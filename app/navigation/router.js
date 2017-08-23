@@ -25,6 +25,18 @@ import Vendedor from '../screens/cadastro/Vendedor';
 /**
 MENU SOMENTE PARA CLIENTE
 **/
+export const GerenciaCliente = StackNavigator({
+  PerfilCliente: {
+    screen: PerfilCliente
+  },
+  ConfiguracaoCliente: {
+    screen: ConfiguracaoCliente
+  }
+ }, {
+  mode: 'card',
+  headerMode: 'none',
+});
+
 export const TabsCliente = TabNavigator({
     Busca: {
       screen: BuscaProduto,
@@ -42,14 +54,6 @@ export const TabsCliente = TabNavigator({
         },
       },
     },
-    Ranking: {
-      screen: RankingProdutos,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-        },
-      },
-    },
     Home: {
       screen: HomeCliente,
       navigationOptions: {
@@ -58,8 +62,16 @@ export const TabsCliente = TabNavigator({
         },
       },
     },
-    Perfil: {
-      screen: PerfilCliente,
+    Ranking: {
+      screen: RankingProdutos,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
+        },
+      },
+    },
+    PerfilCliente: {
+      screen: GerenciaCliente,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
@@ -128,7 +140,7 @@ export const TabsVendedor = TabNavigator({
         },
       },
     },
-    Perfil: {
+    PerfilVendedor: {
       screen: PerfilVendedor,
       navigationOptions: {
         tabBar: {
@@ -179,14 +191,11 @@ export const Root = StackNavigator({
   Cliente: {
     screen: Cliente,
   },
-  TabsVendedor: {
-    screen: TabsVendedor
-  },
   TabsCliente: {
     screen: TabsCliente
   },
-  ConfiguracaoCliente: {
-    screen: ConfiguracaoCliente
+  TabsVendedor: {
+    screen: TabsVendedor
   }
 }, {
   mode: 'card',

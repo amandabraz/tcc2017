@@ -16,21 +16,41 @@ export default class PerfilCliente extends Component {
       dataNascimentoText: '',
       emailText: '',
       tagsText: '',
+      restricoesDieteticasText: '',
       CPFText: '',
       celularText: '',
       confText: '  Configuração',
       dietasArray: [],
     };
+    this.buscaDadosCliente();
     this.preencherDietasArray();
-    this.nomeCliente();
   }
 
-  nomeCliente(){
-    fetch('http://10.0.2.2:8080/cliente/usuario/'+ this.state.userId)
+  buscaDadosCliente() {
+    fetch('http://10.0.2.2:8080/cliente/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
-        var nome = responseJson.usuario.nome
-          this.setState({nomeText: nome});
+          if (!responseJson.errorMssage) {
+          this.setState({nomeText: responseJson.usuario.nome});
+          var dataNormal = new Date(responseJson.usuario.dataNasc);
+          var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+          this.setState({dataNascimentoText: dataNasc});
+          this.setState({emailText: responseJson.usuario.email});
+          this.setState({CPFText: responseJson.usuario.cpf});
+          this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
+          var tags = "";
+          for(i in responseJson.tags) {
+            tags += "#" + responseJson.tags[i].descricao + "  ";
+          }
+          tags = tags.slice(0, -3);
+          this.setState({tagsText: tags});
+          var restricoes = "";
+          for(i in responseJson.restricoesDieteticas) {
+            restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
+          }
+          restricoes = restricoes.slice(0, -3);
+          this.setState({restricoesDieteticasText: restricoes});
+        }
       });
   };
 
@@ -44,23 +64,6 @@ export default class PerfilCliente extends Component {
             }
             this.setState({dietasArray: dietasBuscadas});
         });
-  };
-
-  mostrarCheckboxesDieta() {
-    var views = [];
-    for(i in this.state.dietasArray) {
-      var descricao = this.state.dietasArray[i];
-      views.push (
-        <View key={i} style={styles.item}>
-          <CheckBox
-            style={{flex: 1, padding: 10}}
-            isChecked={descricao.checked}
-            leftText={descricao.descricao}
-            />
-        </View>
-      );
-    }
-    return views;
   };
 
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
@@ -148,11 +151,15 @@ export default class PerfilCliente extends Component {
               value={this.state.tagsText}
               editable={false}
               inputStyle={styles.baseText}/>
-
-          <ScrollView>
-                {this.mostrarCheckboxesDieta()}
-          </ScrollView>
-
+          <Fumi
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              label={'Restrições dietéticas'}
+              iconClass={FontAwesomeIcon}
+              iconName={'hashtag'}
+              iconColor={'darkslategrey'}
+              value={this.state.restricoesDieteticasText}
+              editable={false}
+              inputStyle={styles.baseText}/>
       </ScrollView>
       </Image>
     );
