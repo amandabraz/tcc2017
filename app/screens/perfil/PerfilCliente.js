@@ -11,17 +11,28 @@ export default class PerfilCliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nomeText: "Cícero",
-      dataNascimentoText: '19/05/1990',
-      emailText: 'cicinho@mail.com',
-      tagsText: 'Arroz Feijão eBatata',
-      CPFText: '35101042854',
-      celularText: '19997868781',
+      userId: 14,
+      nomeText: '',
+      dataNascimentoText: '',
+      emailText: '',
+      tagsText: '',
+      CPFText: '',
+      celularText: '',
       confText: '  Configuração',
       dietasArray: [],
     };
     this.preencherDietasArray();
+    this.nomeCliente();
   }
+
+  nomeCliente(){
+    fetch('http://10.0.2.2:8080/cliente/usuario/'+ this.state.userId)
+    .then((response) => response.json())
+      .then((responseJson) => {
+        var nome = responseJson.usuario.nome
+          this.setState({nomeText: nome});
+      });
+  };
 
   preencherDietasArray() {
     fetch('http://10.0.2.2:8080/restricaodietetica')
