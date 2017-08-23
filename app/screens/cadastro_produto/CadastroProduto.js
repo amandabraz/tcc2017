@@ -114,12 +114,12 @@ return (
         title={titleConfig}
         leftButton={
           <TouchableOpacity onPress={() => goBack()}>
-            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'} />
+            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }
         rightButton={
           <TouchableOpacity onPress={() => this.salvaProduto}>
-            <MaterialsIcon name="check" size={34} color={'#8B636C'} />
+            <MaterialsIcon name="check" size={34} color={'#8B636C'} style={{ padding: 5 }} />
           </TouchableOpacity>
         } />
       <ScrollView>
