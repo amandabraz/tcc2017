@@ -145,19 +145,15 @@ return (
                   iconColor={'#8B636C'}/>
 
           <View>
-              <MaterialsIcon name="description" size={20} color={'#8B636C'} />
-              <ModalDropdown options={['Doce', 'Salgado', 'Bebida']}
+              <MaterialsIcon name="description" size={20} color={'#8B636C'} /><Text style={{color: '#8B636C', fontSize: 20, fontWeight: 'bold', fontFamily: 'Roboto'}}>Selecionar categoria:</Text>
+              <ModalDropdown options={this.state.categoriasArray}
               style={{width: 390, height: 48}}
-              defaultValue="Selecione a Categoria"
+              defaultValue="Categorias"
               onSelect={(categoria) => this.setState({categoria: categoria})}
               textStyle={{color: '#8B636C', fontSize: 20, fontWeight: 'bold', fontFamily: 'Roboto'}}
               dropdownTextStyle={{color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center'}}
-              dropdownStyle={{width: 390, height: 78}}
+              dropdownStyle={{alignSelf: 'flex-end', width: 390 }}
               />
-              <Picker 
-                      onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}>
-                {this.mostrarCategorias()}
-              </Picker>
             </View>
 
           <DatePicker
