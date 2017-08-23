@@ -16,7 +16,7 @@ public class Categoria {
 
     private Long id;
 
-    @Column(name = "DESCRICAO", nullable = false, length = 100, unique = true)
+    @Column(name = "DESCRICAO", unique = true)
     private String descricao;
 
     public Categoria(Long id, String descricao) {
@@ -24,6 +24,10 @@ public class Categoria {
         this.id = id;
         this.descricao = descricao;
     }
+
+    public Categoria(String descricao) {
+            this.descricao = descricao;
+        }
 
     public Categoria() {
         super();

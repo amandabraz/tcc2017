@@ -7,12 +7,13 @@ import tcc.Models.Categoria;
 
 @Service
 public class CategoriaService {
+
     @Autowired
     private CategoriaDAO categoriaDAO;
 
     public Categoria cadastraCategoria(Categoria categoria) {
         try {
-            if (categoriaDAO.findByNome(categoria.getNome()) != null) {
+            if (categoriaDAO.findByDescricao(categoria.getDescricao()) != null) {
                 return null;
             }
             return categoriaDAO.save(categoria);
