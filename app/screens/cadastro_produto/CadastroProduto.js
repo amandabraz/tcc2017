@@ -23,9 +23,10 @@ import Camera from 'react-native-camera';
 import ImagePicker from 'react-native-image-crop-picker';
 import TagInput from 'react-native-tag-input';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Kohana, Fumi } from 'react-native-textinput-effects';
+import { Fumi } from 'react-native-textinput-effects';
 import ModalDropdown from 'react-native-modal-dropdown';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+
 
 //dimensão da janela
 //const { width, height } = Dimensions.get("window");
@@ -90,18 +91,18 @@ export default class CadastroProduto extends Component {
 render() {
     const {goBack} = this.props.navigation;
     const inputIngredientes = {
-      placeholder: 'Ingredientes',
+      placeholder: 'Adicione aqui os ingredientes do produto',
       placeholderTextColor: '#8B636C',
-      fontSize: 20,
+      fontSize: 16,
       fontFamily: 'Roboto',
       fontWeight: 'bold',
       height:300
     };
 
   const inputTags = {
-     placeholder: 'Tags',
+     placeholder: 'Adicione aqui tags relacionadas ao produto',
      placeholderTextColor: '#8B636C',
-     fontSize: 20,
+     fontSize: 16,
      fontFamily: 'Roboto',
      fontWeight: 'bold',
      height:300
@@ -123,8 +124,6 @@ return (
         } />
       <ScrollView>
         <View style={styles.container}>
-
-          <Text style={styles.foto}>Foto do Produto</Text>
           <TouchableOpacity onPress={this.selecionarFoto.bind(this)}>
             <Image source={this.state.image}/>
           </TouchableOpacity>
@@ -144,21 +143,23 @@ return (
                   iconName={'dollar'}
                   iconColor={'#8B636C'}/>
 
-          <View>
-              <MaterialsIcon name="description" size={20} color={'#8B636C'} /><Text style={{color: '#8B636C', fontSize: 20, fontWeight: 'bold', fontFamily: 'Roboto'}}>Selecionar categoria:</Text>
+          <View style={{flexDirection: 'row', justifyContent:'space-around', paddingLeft: 18}}>
+              <MaterialsIcon name="description" size={20} color={'#CCCCCC'} />
+              <Text style={{textAlign: 'left', paddingLeft: 4, fontSize: 16, fontWeight: 'bold', fontFamily: 'Roboto'}}>Selecione uma categoria:</Text>
+          </View>
+          <View style={{justifyContent:'space-around', padding:10, width: 340}}>
               <ModalDropdown options={this.state.categoriasArray}
-              style={{width: 390, height: 48}}
-              defaultValue="Categorias"
-              onSelect={(categoria) => this.setState({categoria: categoria})}
-              textStyle={{color: '#8B636C', fontSize: 20, fontWeight: 'bold', fontFamily: 'Roboto'}}
-              dropdownTextStyle={{color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center'}}
-              dropdownStyle={{alignSelf: 'flex-end', width: 390 }}
-              />
-            </View>
+                  style={{width: 340, height: 48}}
+                  defaultValue="Lista de categorias"
+                  onSelect={(categoria) => this.setState({categoria: categoria})}
+                  textStyle={{color: '#8B636C', fontSize: 16, fontStyle: 'italic', fontFamily: 'Roboto'}}
+                  dropdownTextStyle={{fontSize: 16, fontFamily: 'Roboto', textAlign: 'center'}}
+                  dropdownStyle={{alignSelf: 'flex-end', width: 340 }}
+                  />
+          </View>
 
           <DatePicker
-              style={{width: 390,
-              height: 48, borderColor: '#EEE9E9',  borderWidth: 0.5 }}
+              style={{width: 390, height: 48}}
               date={this.state.date}
               mode="date"
               placeholder="Data de Preparação"
@@ -166,6 +167,7 @@ return (
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               customStyles={{
+                dateInput: { borderWidth: 0 },
                dateIcon: {
                  position: 'absolute',
                  left: 0,
@@ -173,15 +175,13 @@ return (
                  marginLeft: 0
                },
                placeholderText: {
-                 color: '#8B636C',
                  fontFamily: 'Roboto',
                  fontWeight: 'bold',
-                 fontSize: 20
+                 fontSize: 16
                },
                dateText: {
-                 color: '#8B636C',
                  fontFamily: 'Roboto',
-                 fontSize: 20
+                 fontSize: 16
                }
              }}
               onDateChange={(date) => {this.setState({date: date});}}
@@ -241,17 +241,9 @@ const styles = StyleSheet.create({
     padding: 15
   },
 
-  texto: {
-    color: '#8B636C',
-    fontSize: 30,
-    fontFamily: 'Roboto',
-    textAlign: 'center',
-    backgroundColor: '#ffffff',
-  },
-
   foto: {
     color: '#8B636C',
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'Roboto',
     fontWeight: 'bold',
     textAlign: 'center'
