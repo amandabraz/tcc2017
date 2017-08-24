@@ -68,7 +68,7 @@ public class ClienteController {
             Cliente cliente = clienteService.buscaClientePorUsuario(usuario);
             return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return new ResponseEntity<>(new CustomError("Erro ao carregar dados do cliente"), HttpStatus.NOT_FOUND);
         }
     }
 }

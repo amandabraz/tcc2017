@@ -11,45 +11,59 @@ export default class PerfilCliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nomeText: "Cícero",
-      dataNascimentoText: '19/05/1990',
-      emailText: 'cicinho@mail.com',
-      tagsText: 'Arroz Feijão eBatata',
-      CPFText: '35101042854',
-      celularText: '19997868781',
-      confText: '  Configuração',
-      dietasArray: [],
+      userId: 20,
+      nomeText: '',
+      dataNascimentoText: '',
+      emailText: '',
+      tagsText: "nenhuma tag inserida",
+      tagEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
+      restricoesDieteticasText: "nenhuma restrição escolhida",
+      restricaoEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
+      CPFText: '',
+      celularText: '',
+      confText: '  Configuração'
     };
-    this.preencherDietasArray();
+    this.buscaDadosCliente();
   }
 
-  preencherDietasArray() {
-    fetch('http://10.0.2.2:8080/restricaodietetica')
-      .then((response) => response.json())
-        .then((responseJson) => {
-          var dietasBuscadas = [];
-            for (i in responseJson) {
-              dietasBuscadas.push(responseJson[i]);
+  buscaDadosCliente() {
+    fetch('http://10.0.2.2:8080/cliente/usuario/' + this.state.userId)
+    .then((response) => response.json())
+      .then((responseJson) => {
+          if (!responseJson.errorMssage) {
+          this.setState({nomeText: responseJson.usuario.nome});
+          var dataNormal = new Date(responseJson.usuario.dataNasc);
+          var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+          this.setState({dataNascimentoText: dataNasc});
+          this.setState({emailText: responseJson.usuario.email});
+          this.setState({CPFText: responseJson.usuario.cpf});
+          this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
+          if (responseJson.tags.length > 0) {
+            this.setState({tagEstilo: styles.baseText})
+            var tags = "";
+            for(i in responseJson.tags) {
+              tags += "#" + responseJson.tags[i].descricao + "  ";
             }
-            this.setState({dietasArray: dietasBuscadas});
-        });
-  };
-
-  mostrarCheckboxesDieta() {
-    var views = [];
-    for(i in this.state.dietasArray) {
-      var descricao = this.state.dietasArray[i];
-      views.push (
-        <View key={i} style={styles.item}>
-          <CheckBox
-            style={{flex: 1, padding: 10}}
-            isChecked={descricao.checked}
-            leftText={descricao.descricao}
-            />
-        </View>
-      );
-    }
-    return views;
+            tags = tags.slice(0, -3);
+            this.setState({tagsText: tags});
+          }
+          if (responseJson.restricoesDieteticas.length > 0) {
+            this.setState({restricaoEstilo: styles.baseText})
+            var restricoes = "";
+            for(i in responseJson.restricoesDieteticas) {
+              restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
+            }
+            restricoes = restricoes.slice(0, -3);
+            this.setState({restricoesDieteticasText: restricoes});
+          }
+        }
+      });
   };
 
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
@@ -136,12 +150,16 @@ export default class PerfilCliente extends Component {
               iconColor={'darkslategrey'}
               value={this.state.tagsText}
               editable={false}
-              inputStyle={styles.baseText}/>
-
-          <ScrollView>
-                {this.mostrarCheckboxesDieta()}
-          </ScrollView>
-
+              inputStyle={this.state.tagEstilo}/>
+          <Fumi
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              label={'Restrições dietéticas'}
+              iconClass={FontAwesomeIcon}
+              iconName={'asterisk'}
+              iconColor={'darkslategrey'}
+              value={this.state.restricoesDieteticasText}
+              editable={false}
+              inputStyle={this.state.restricaoEstilo}/>
       </ScrollView>
       </Image>
     );
@@ -198,7 +216,7 @@ export default class PerfilCliente extends Component {
   baseText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
-    fontSize: 25,
+    fontSize: 20,
   },
   barText: {
     fontFamily: 'Roboto',
