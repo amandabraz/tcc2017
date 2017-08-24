@@ -38,19 +38,19 @@ export const GerenciaCliente = StackNavigator({
 });
 
 export const TabsCliente = TabNavigator({
+    PerfilCliente: {
+      screen: GerenciaCliente,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
+        },
+      },
+    },
     Busca: {
       screen: BuscaProduto,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
-        },
-      },
-    },
-    Favoritos: {
-      screen: ProdutosFavoritos,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
         },
       },
     },
@@ -62,19 +62,19 @@ export const TabsCliente = TabNavigator({
         },
       },
     },
+    Favoritos: {
+      screen: ProdutosFavoritos,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
+        },
+      },
+    },
     Ranking: {
       screen: RankingProdutos,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-        },
-      },
-    },
-    PerfilCliente: {
-      screen: GerenciaCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
         },
       },
     }

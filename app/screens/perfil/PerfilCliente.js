@@ -11,7 +11,7 @@ export default class PerfilCliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: 20,
+      userId: this.props.navigation.state.params.userId,
       nomeText: '',
       dataNascimentoText: '',
       emailText: '',
@@ -50,7 +50,7 @@ export default class PerfilCliente extends Component {
             for(i in responseJson.tags) {
               tags += "#" + responseJson.tags[i].descricao + "  ";
             }
-            tags = tags.slice(0, -3);
+            tags = tags.slice(0, -2);
             this.setState({tagsText: tags});
           }
           if (responseJson.restricoesDieteticas.length > 0) {
