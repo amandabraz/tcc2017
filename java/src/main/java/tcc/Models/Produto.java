@@ -56,6 +56,13 @@ public class Produto {
     private Set<RestricaoDietetica> restricoesDieteticas;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+    @JoinTable(name="PRODUTO_INGREDIENTE", joinColumns =
+            {@JoinColumn(name="ID_PRODUTO", referencedColumnName = "ID_PRODUTO")}, inverseJoinColumns =
+            {@JoinColumn(name="ID_INGREDIENTE", referencedColumnName = "ID_INGREDIENTE")}
+    )
+    private Set<Ingrediente> ingredientes;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JoinTable(name="PRODUTO_TAG", joinColumns =
             {@JoinColumn(name="ID_PRODUTO", referencedColumnName = "ID_PRODUTO")}, inverseJoinColumns =
             {@JoinColumn(name="ID_TAG", referencedColumnName = "ID_TAG")}
@@ -65,6 +72,14 @@ public class Produto {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_CATEGORIA", nullable = false)
     private Categoria categoria;
+
+    @Column(name = "OBSERVACAO")
+    private String observacao;
+
+
+    //TODO: implementar logica que calcula o score com base nas avaliacoes dadas
+    @Column(name = "SCORE")
+    private float score;
 
     public Produto() {
         super();
@@ -159,6 +174,30 @@ public class Produto {
         this.restricoesDieteticas = restricoesDieteticas;
     }
 
+    public Set<Ingrediente> getIngredientes() {
+        return ingredientes;
+    }
+
+    public void setIngredientes(Set<Ingrediente> ingredientes) {
+        this.ingredientes = ingredientes;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
+    }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
     @Override
     public String toString() {
         return "Produto{" +
@@ -170,8 +209,11 @@ public class Produto {
                 ", deletado=" + deletado +
                 ", vendedor=" + vendedor +
                 ", restricoesDieteticas=" + restricoesDieteticas +
+                ", ingredientes=" + ingredientes +
                 ", tags=" + tags +
                 ", categoria=" + categoria +
+                ", observacao='" + observacao + '\'' +
+                ", score=" + score +
                 '}';
     }
 }
