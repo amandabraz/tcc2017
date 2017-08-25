@@ -1,17 +1,24 @@
 package tcc.Models;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
-
-/**
- * Created by larissa on 18/05/17.
- */
 
 @Entity
 @Table(name = "PRODUTO")
 public class Produto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_PRODUTO")
@@ -36,17 +43,17 @@ public class Produto {
 
     @Column(name = "DELETADO",
             nullable = false)
-    private boolean deletado;
+    private boolean deletado = false;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_VENDEDOR", nullable = false)
     private Vendedor vendedor;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="PRODUTO_RESTRICAO", joinColumns =
-            {@JoinColumn(name="ID_PRODUTO")}, inverseJoinColumns =
-            {@JoinColumn(name="ID_RESTRICAO")})
-    private List<RestricaoDietetica> restricoesDieteticas;
+            {@JoinColumn(name="ID_PRODUTO", referencedColumnName = "ID_PRODUTO")}, inverseJoinColumns =
+            {@JoinColumn(name="ID_RESTRICAO", referencedColumnName = "ID_RESTRICAO")})
+    private Set<RestricaoDietetica> restricoesDieteticas;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JoinTable(name="PRODUTO_TAG", joinColumns =
@@ -55,42 +62,28 @@ public class Produto {
     )
     private Set<Tag> tags;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
-    @JoinTable(name="PRODUTO_CATEGORIA", joinColumns =
-            {@JoinColumn(name="ID_PRODUTO")}, inverseJoinColumns =
-            {@JoinColumn(name="ID_CATEGORIA")})
-    private List<Categoria> categorias;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "FK_CATEGORIA", nullable = false)
+    private Categoria categoria;
 
     public Produto() {
+        super();
+    }
+
+    /**
+     * Este construtor serve para classes que tem produto como FK
+     * @param id
+     */
+    public Produto(Long id) {
+        super();
         this.id = id;
-        this.nome = nome;
-        this.dataPreparacao = dataPreparacao;
-        this.quantidade = quantidade;
-        this.preco = preco;
-        this.deletado = deletado;
-        this.vendedor = vendedor;
-        this.restricoesDieteticas = restricoesDieteticas;
-        this.tags = tags;
-        this.categorias = categorias;
     }
 
-    public Produto(String nome, Date dataPreparacao, int quantidade, float preco, boolean deletado, Vendedor vendedor, List<RestricaoDietetica> restricoesDieteticas, Set<Tag> tags, List<Categoria> categorias) {
-        this.nome = nome;
-        this.dataPreparacao = dataPreparacao;
-        this.quantidade = quantidade;
-        this.preco = preco;
-        this.deletado = deletado;
-        this.vendedor = vendedor;
-        this.restricoesDieteticas = restricoesDieteticas;
-        this.tags = tags;
-        this.categorias = categorias;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -150,19 +143,19 @@ public class Produto {
         this.tags = tags;
     }
 
-    public List<Categoria> getCategorias() {
-        return categorias;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCategorias(List<Categoria> categorias) {
-        this.categorias = categorias;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
-    public List<RestricaoDietetica> getRestricoesDieteticas() {
+    public Set<RestricaoDietetica> getRestricoesDieteticas() {
         return restricoesDieteticas;
     }
 
-    public void setRestricoesDieteticas(List<RestricaoDietetica> restricoesDieteticas) {
+    public void setRestricoesDieteticas(Set<RestricaoDietetica> restricoesDieteticas) {
         this.restricoesDieteticas = restricoesDieteticas;
     }
 
@@ -178,7 +171,7 @@ public class Produto {
                 ", vendedor=" + vendedor +
                 ", restricoesDieteticas=" + restricoesDieteticas +
                 ", tags=" + tags +
-                ", categorias=" + categorias +
+                ", categoria=" + categoria +
                 '}';
     }
 }
