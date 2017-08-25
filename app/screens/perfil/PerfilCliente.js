@@ -45,7 +45,7 @@ export default class PerfilCliente extends Component {
           this.setState({CPFText: responseJson.usuario.cpf});
           this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
           if (responseJson.tags.length > 0) {
-            this.setState({tagEstilo: styles.baseText})
+            this.setState({tagEstilo: styles.listText})
             var tags = "";
             for(i in responseJson.tags) {
               tags += "#" + responseJson.tags[i].descricao + "  ";
@@ -54,7 +54,7 @@ export default class PerfilCliente extends Component {
             this.setState({tagsText: tags});
           }
           if (responseJson.restricoesDieteticas.length > 0) {
-            this.setState({restricaoEstilo: styles.baseText})
+            this.setState({restricaoEstilo: styles.listText})
             var restricoes = "";
             for(i in responseJson.restricoesDieteticas) {
               restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
@@ -143,21 +143,23 @@ export default class PerfilCliente extends Component {
               inputStyle={styles.baseText}/>
 
           <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
               label={'Tags'}
               iconClass={FontAwesomeIcon}
               iconName={'hashtag'}
               iconColor={'darkslategrey'}
               value={this.state.tagsText}
               editable={false}
+              multiline={true}
               inputStyle={this.state.tagEstilo}/>
           <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+              style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
               label={'Restrições dietéticas'}
               iconClass={FontAwesomeIcon}
               iconName={'asterisk'}
               iconColor={'darkslategrey'}
               value={this.state.restricoesDieteticasText}
+              multiline={true}
               editable={false}
               inputStyle={this.state.restricaoEstilo}/>
       </ScrollView>
@@ -217,6 +219,11 @@ export default class PerfilCliente extends Component {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
     fontSize: 20,
+  },
+  listText: {
+    fontFamily: 'Roboto',
+    color: 'darkslategrey',
+    fontSize: 14,
   },
   barText: {
     fontFamily: 'Roboto',
