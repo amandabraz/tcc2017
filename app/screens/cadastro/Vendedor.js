@@ -19,7 +19,7 @@ class Vendedor extends Component {
         userId: this.props.navigation.state.params.userId,
         pagamentosArray: [],
         nomeLoja: '',
-        pagamentosAceitos: []
+        meiosPagamentos: []
     }
     this.preencherPagamentosArray();
   }
@@ -37,7 +37,7 @@ class Vendedor extends Component {
   }
 
  pagamentoEscolhido = () => {
-     if (this.state.pagamentosAceitos.length > 0) {
+     if (this.state.meiosPagamentos.length > 0) {
        return true;
      }
      else {
@@ -57,14 +57,14 @@ class Vendedor extends Component {
         state: {
           userId,
           nomeLoja,
-          pagamentosAceitos
+          meiosPagamentos
         }
       } = this;
       // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
       vendedor = {
         "usuario": userId,
         "nomeFantasia": nomeLoja,
-        "pagamentosAceitos": pagamentosAceitos
+        "meiosPagamentos": meiosPagamentos
       }
 
       //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
@@ -92,9 +92,9 @@ class Vendedor extends Component {
   };
   onClick(descricao) {
     descricao.checked = !descricao.checked;
-    var meiosAceitos = this.state.pagamentosAceitos;
-    meiosAceitos.push(descricao);
-    this.setState({ pagamentosAceitos: meiosAceitos });
+    var pagamentos = this.state.meiosPagamentos;
+    pagamentos.push(descricao);
+    this.setState({ meiosPagamentos: pagamentos });
   }
 
   mostrarCheckboxesPagamento() {
