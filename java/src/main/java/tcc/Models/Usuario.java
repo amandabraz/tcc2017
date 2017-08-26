@@ -8,12 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "USUARIO")
-public class Usuario {
+public class Usuario  implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

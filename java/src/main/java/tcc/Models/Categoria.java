@@ -13,7 +13,6 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_CATEGORIA")
-
     private Long id;
 
     @Column(name = "DESCRICAO", unique = true)
@@ -21,6 +20,15 @@ public class Categoria {
 
     public Categoria() {
         super();
+    }
+
+    /**
+     * Este construtor serve para classes que tem categoria como FK
+     * @param id
+     */
+    public Categoria(Long id) {
+        super();
+        this.id = id;
     }
 
     public Categoria(long id, String descricao) {
