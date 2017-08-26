@@ -34,9 +34,11 @@ const onButtonPress = () => { Alert.alert('Bem vindo Vendedor'); };
 //Exporto essa classe pra que na minha "Main"
 export default class CadastroProduto extends Component {
   constructor(props) {
-    super(props);
+  super(props);
 
-    this.state = {
+  this.state = {
+     userId: this.props.navigation.state.params.userId,
+     vendedorId: this.props.navigation.state.params.vendedorId,
      date: '',
      tags: [],
      ingredientes: [],
