@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface VendedorDAO extends CrudRepository<Vendedor, Long> {
     List<Vendedor> findByNomeFantasia(String nomeFantasia);
+    List<Vendedor> findById(Integer id);
 }
