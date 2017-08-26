@@ -21,7 +21,7 @@ public class Galeria {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_GALERIA")
-    public long id;
+    public Long id;
 
     @Column(name = "IMAGEM")
     public String imagem;
@@ -34,16 +34,21 @@ public class Galeria {
         super();
     }
 
+    public Galeria(Long id) {
+        super();
+        this.id = id;
+    }
+
     public Galeria(String imagem, Produto produto) {
         this.imagem = imagem;
         this.produto = produto;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

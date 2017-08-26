@@ -35,14 +35,16 @@ export default class CadastroProduto extends Component {
   super(props);
 
   this.state = {
-   date: '',
-   tags: [],
-   ingredientes: [],
-   quantidade: '',
-   categoria: '',
-   nome: '',
-   preco: '',
-   image: require('./img/camera11.jpg'),
+     userId: this.props.navigation.state.params.userId,
+     vendedorId: this.props.navigation.state.params.vendedorId,
+     date: '',
+     tags: [],
+     ingredientes: [],
+     quantidade: '',
+     categoria: '',
+     nome: '',
+     preco: '',
+     image: require('./img/camera11.jpg'),
  };
 }
 
