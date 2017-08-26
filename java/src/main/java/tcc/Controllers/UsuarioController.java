@@ -14,10 +14,6 @@ import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
 import tcc.Services.UsuarioService;
 
-/**
- * Created by amanda on 04/05/2017.
- */
-
 @RequestMapping(value = "/usuario")
 @RestController
 public class UsuarioController {
@@ -68,15 +64,13 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-
     @RequestMapping(value = "/email/{email:.+}/{senha}", method = RequestMethod.GET)
-    @ResponseBody
     public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email, @PathVariable("senha") String senha){
         Character type;
-        try{
+        try {
             Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(email, senha);
             return new ResponseEntity<Usuario>(usuarioBd, HttpStatus.OK);
-        }catch(NullPointerException | IndexOutOfBoundsException e){
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado!");
         }
     }
