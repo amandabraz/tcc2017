@@ -24,6 +24,8 @@ import TagInput from 'react-native-tag-input';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 import ModalDropdown from 'react-native-modal-dropdown';
+import CheckBox from 'react-native-check-box';
+
 
 //dimensão da janela
 //const { width, height } = Dimensions.get("window");
@@ -40,13 +42,28 @@ export default class CadastroProduto extends Component {
      date: '',
      tags: [],
      ingredientes: [],
+     restricoesDieteticas: [],
+     dietasArray: [],
      quantidade: '',
      categoria: '',
      nome: '',
      preco: '',
      image: require('./img/camera11.jpg'),
+    }
+    this.preencherDietasArray();
  };
-}
+
+  preencherDietasArray() {
+   fetch('http://10.0.2.2:8080/restricaodietetica')
+     .then((response) => response.json())
+       .then((responseJson) => {
+         var dietasBuscadas = [];
+           for (i in responseJson) {
+             dietasBuscadas.push(responseJson[i]);
+           }
+           this.setState({dietasArray: dietasBuscadas});
+       });
+  };
 
   onChangeTags = (tags) => {
     this.setState({
@@ -60,6 +77,31 @@ export default class CadastroProduto extends Component {
     });
 };
 
+onClickRestricao(descricao) {
+  descricao.checked = !descricao.checked;
+  var restricoes = this.state.restricoesDieteticas;
+  restricoes.push(descricao);
+  this.setState({restricoesDieteticas: restricoes});
+};
+
+mostrarCheckboxesDieta() {
+  var views = [];
+  for(i in this.state.dietasArray) {
+    let dieta = this.state.dietasArray[i];
+    views.push (
+      <View key={i} style={styles.item}>
+        <CheckBox
+          style={{flex: 1, padding: 10}}
+          onClick={()=>this.onClickRestricao(dieta)}
+          isChecked={dieta.checked}
+          leftText={dieta.descricao}
+          />
+      </View>
+    );
+  }
+  return views;
+};
+
   selecionarFoto(){
     ImagePicker.openCamera({
       width: 200,
@@ -71,8 +113,6 @@ export default class CadastroProduto extends Component {
               image: {uri: image.path, width: image.width, height: image.height}});
         });
     }
-
-
 
 render() {
     const inputProps = {
@@ -176,6 +216,15 @@ return (
                   labelStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
                   inputStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
 
+
+      <View style={styles.restricoes}>
+          <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+              Adequado para:
+          </Text>
+          <ScrollView>
+              {this.mostrarCheckboxesDieta()}
+          </ScrollView>
+      </View>
       <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
 
         <TagInput
@@ -188,9 +237,8 @@ return (
           numberOfLines={15}/>
 
         </View>
-
-      <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
-       <TagInput
+        <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
+        <TagInput
           value={this.state.tags}
           onChange={this.onChangeTags}
           tagColor="#8B636C"
@@ -227,7 +275,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15
   },
-
+  restricoes: {
+      width: 340,
+      flex: 3,
+      justifyContent: 'space-between',
+      backgroundColor: '#fff',
+      padding: 15
+  },
   texto: {
     color: '#8B636C',
     fontSize: 30,
@@ -248,9 +302,8 @@ const styles = StyleSheet.create({
       flex: 1,
       width: null,
       height: null,
-},
-
-    tag: {
+  },
+  tag: {
     justifyContent: 'center',
     backgroundColor: '#e0e0e0',
     borderRadius: 16,
