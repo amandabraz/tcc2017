@@ -36,13 +36,6 @@ class Cadastro extends Component {
   }
  }
 
- uploadWidget() {
-       cloudinary.openUploadWidget({ cloud_name: 'amoracloudname', upload_preset: 'presetnameamora', tags:['user']},
-           function(error, result) {
-               console.log(result);
-           });
-   }
-
   validaEmail = (email) => {
     var re = /\S+@\S+\.\S+/;
    return re.test(email);
@@ -181,7 +174,7 @@ class Cadastro extends Component {
     let continuar = this.validaCampos(usuario);
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario', {
+      fetch('http://10.0.3.2:8080/usuario', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
@@ -222,7 +215,7 @@ class Cadastro extends Component {
     let continuar = this.validaCampos(usuario);
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario', {
+      fetch('http://10.0.3.2:8080/usuario', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
@@ -400,7 +393,7 @@ class Cadastro extends Component {
 
       <Button title ="        Quero Vender         "
               color="#ffa07a"
-              onPress={this.uploadWidget.bind(this)}/>
+              onPress={this.onButtonVendedor}/>
 
       <Button title="       Quero Comprar      "
               color="#87cefa"
