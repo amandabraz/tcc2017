@@ -20,7 +20,7 @@ public class Pagamento {
     @Column(name = "ID_PAGAMENTO")
     private Long id;
 
-    @Column(name = "MEIO_PAGAMENTO")
+    @Column(name = "MEIO_PAGAMENTO", unique = true)
     private String meioPagamento;
 
     public Pagamento() {
