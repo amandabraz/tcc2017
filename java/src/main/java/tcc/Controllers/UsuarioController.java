@@ -14,10 +14,6 @@ import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
 import tcc.Services.UsuarioService;
 
-/**
- * Created by amanda on 04/05/2017.
- */
-
 @RequestMapping(value = "/usuario")
 @RestController
 public class UsuarioController {
@@ -63,20 +59,26 @@ public class UsuarioController {
     }
 
     /**
-     * Busca o tipo de Usuário de acordo com o e-mail dele.
-     * @param email e-mail do Usuário a ser buscado.
+     * Efetua login com email e senha
+     * @param usuario
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/email/{email:.+}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email){
-        Character type;
-        try{
-            Usuario usuarioBd = usuarioDao.findUsuarioByEmail(email);
-            return new ResponseEntity<Character>(Character.valueOf(usuarioBd.getPerfil()), HttpStatus.OK);
-        }catch(NullPointerException | IndexOutOfBoundsException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado!");
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity efetuaLogin(@RequestBody Usuario usuario){
+        try {
+            Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
+            if (usuarioBd != null) {
+                return new ResponseEntity<Usuario>(usuarioBd, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
+            }
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomError("Erro ao efetuar login"), HttpStatus.FORBIDDEN);
         }
     }
 

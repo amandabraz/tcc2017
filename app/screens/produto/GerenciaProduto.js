@@ -110,7 +110,6 @@ const styleProduto = StyleSheet.create({
 
 const RowProduto = (props) => (
   <View style={styleProduto.container}>
-//    <Image source={{ uri: props.picture.large}} style={styleProduto.photo} />
     <Text style={styleProduto.text}>
       {`${props.name}`}
     </Text>
