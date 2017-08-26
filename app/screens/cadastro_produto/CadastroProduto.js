@@ -13,7 +13,8 @@ import {
     ScrollView,
     Alert,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    Picker
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
@@ -22,8 +23,10 @@ import Camera from 'react-native-camera';
 import ImagePicker from 'react-native-image-crop-picker';
 import TagInput from 'react-native-tag-input';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Kohana } from 'react-native-textinput-effects';
+import { Fumi } from 'react-native-textinput-effects';
 import ModalDropdown from 'react-native-modal-dropdown';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+
 
 //dimensão da janela
 //const { width, height } = Dimensions.get("window");
@@ -40,6 +43,7 @@ export default class CadastroProduto extends Component {
    ingredientes: [],
    quantidade: '',
    categoria: '',
+   categoriasArray: ['Doce', 'Salgado', 'Bebida'],
    nome: '',
    preco: '',
    image: require('./img/camera11.jpg'),
@@ -70,22 +74,35 @@ export default class CadastroProduto extends Component {
         });
     }
 
-
+    mostrarCategorias() {
+      var pickerItems = [];
+      for(i in this.state.categoriasArray) {
+        let categoria = this.state.categoriasArray[i];
+        pickerItems.push (
+          <Picker.Item key={i} label={categoria} value={categoria} />
+        );
+      }
+      return pickerItems;
+    }
+  salvaProduto() {
+    // TODO; rest para salvar o produto no banco
+  }
 
 render() {
-    const inputProps = {
-      placeholder: 'Ingredientes',
+    const {goBack} = this.props.navigation;
+    const inputIngredientes = {
+      placeholder: 'Adicione aqui os ingredientes do produto',
       placeholderTextColor: '#8B636C',
-      fontSize: 20,
+      fontSize: 16,
       fontFamily: 'Roboto',
       fontWeight: 'bold',
       height:300
-};
+    };
 
-  const inputProp = {
-     placeholder: 'Tags',
+  const inputTags = {
+     placeholder: 'Adicione aqui tags relacionadas ao produto',
      placeholderTextColor: '#8B636C',
-     fontSize: 20,
+     fontSize: 16,
      fontFamily: 'Roboto',
      fontWeight: 'bold',
      height:300
@@ -93,120 +110,118 @@ render() {
 
 return (
     <View style= {{flex: 3}}>
-    <ScrollView>
+      <NavigationBar
+        title={titleConfig}
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }
+        rightButton={
+          <TouchableOpacity onPress={() => this.salvaProduto}>
+            <MaterialsIcon name="check" size={34} color={'#8B636C'} style={{ padding: 5 }} />
+          </TouchableOpacity>
+        } />
+      <ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={this.selecionarFoto.bind(this)}>
+            <Image source={this.state.image}/>
+          </TouchableOpacity>
 
-    <View style={styles.container}>
-
-    <Text style={styles.foto}>Foto do Produto</Text>
-    <TouchableOpacity onPress={this.selecionarFoto.bind(this)}>
-    <Image source={this.state.image}/>
-    </TouchableOpacity>
-
-
-    <Kohana style={{ backgroundColor: 'transparent' }}
-            label={'Nome'}
-            iconClass={FontAwesomeIcon}
-            onChangeText={(nome) => this.setState({nome: nome})}
-            iconName={'cutlery'}
-            iconColor={'#8B636C'}
-            labelStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-            inputStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
-
-
-
-    <Kohana style={{ backgroundColor: 'transparent' }}
-            label={'Preço'}
-            iconClass={FontAwesomeIcon}
-            onChangeText={(preco) => this.setState({preco: preco})}
-            keyboardType={'numeric'}
-            iconName={'dollar'}
-            iconColor={'#8B636C'}
-            labelStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-            inputStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
-
-  <ModalDropdown options={['Doce', 'Salgado', 'Bebida']}
-            style={{width: 390, height: 48}}
-            defaultValue="Selecione a Categoria"
-            onSelect={(categoria) => this.setState({categoria: categoria})}
-            textStyle={{color: '#8B636C', fontSize: 20, fontWeight: 'bold', fontFamily: 'Roboto', textAlign: 'center'}}
-            dropdownTextStyle={{color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center'}}
-            dropdownStyle={{width: 390, height: 78}}
-            />
-
-    <DatePicker
-        style={{width: 390,
-        height: 48, borderColor: '#EEE9E9',  borderWidth: 0.5 }}
-        date={this.state.date}
-        mode="date"
-        placeholder="Data de Preparação"
-        format="DD-MM-YYYY"
-        confirmBtnText="Confirm"
-        cancelBtnText="Cancel"
-        customStyles={{
-         dateIcon: {
-           position: 'absolute',
-           left: 0,
-           top: 4,
-           marginLeft: 0
-         },
-         placeholderText: {
-           color: '#8B636C',
-           fontFamily: 'Roboto',
-           fontWeight: 'bold',
-           fontSize: 20
-         },
-         dateText: {
-           color: '#8B636C',
-           fontFamily: 'Roboto',
-           fontSize: 20
-         }
-       }}
-        onDateChange={(date) => {this.setState({date: date});}}
-        />
-
-          <Kohana style={{ backgroundColor: 'transparent' }}
-                  label={'Quantidade Disponível'}
+          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+                  label={'Nome'}
                   iconClass={FontAwesomeIcon}
-                  onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
+                  onChangeText={(nome) => this.setState({nome: nome})}
+                  iconName={'cutlery'}
+                  iconColor={'#8B636C'}/>
+
+          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+                  label={'Preço'}
+                  iconClass={FontAwesomeIcon}
+                  onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
-                  iconName={'shopping-cart'}
-                  iconColor={'#8B636C'}
-                  labelStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-                  inputStyle={{ color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
+                  iconName={'dollar'}
+                  iconColor={'#8B636C'}/>
 
-      <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
+          <View style={{flexDirection: 'row', justifyContent:'space-around', paddingLeft: 18}}>
+              <MaterialsIcon name="description" size={20} color={'#CCCCCC'} />
+              <Text style={{textAlign: 'left', paddingLeft: 4, fontSize: 16, fontWeight: 'bold', fontFamily: 'Roboto'}}>Selecione uma categoria:</Text>
+          </View>
+          <View style={{justifyContent:'space-around', padding:10, width: 340}}>
+              <ModalDropdown options={this.state.categoriasArray}
+                  style={{width: 340, height: 48}}
+                  defaultValue="Lista de categorias"
+                  onSelect={(categoria) => this.setState({categoria: categoria})}
+                  textStyle={{color: '#8B636C', fontSize: 16, fontStyle: 'italic', fontFamily: 'Roboto'}}
+                  dropdownTextStyle={{fontSize: 16, fontFamily: 'Roboto', textAlign: 'center'}}
+                  dropdownStyle={{alignSelf: 'flex-end', width: 340 }}
+                  />
+          </View>
 
-        <TagInput
-          value={this.state.ingredientes}
-          onChange={this.onChangeIngredientes}
-          tagColor="#8B636C"
-          tagTextColor="white"
-          tagAlign="center"
-          inputProps={inputProps}
-          numberOfLines={15}/>
+          <DatePicker
+              style={{width: 390, height: 48}}
+              date={this.state.date}
+              mode="date"
+              placeholder="Data de Preparação"
+              format="DD-MM-YYYY"
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              customStyles={{
+                dateInput: { borderWidth: 0 },
+               dateIcon: {
+                 position: 'absolute',
+                 left: 0,
+                 top: 4,
+                 marginLeft: 0
+               },
+               placeholderText: {
+                 fontFamily: 'Roboto',
+                 fontWeight: 'bold',
+                 fontSize: 16
+               },
+               dateText: {
+                 fontFamily: 'Roboto',
+                 fontSize: 16
+               }
+             }}
+              onDateChange={(date) => {this.setState({date: date});}}
+              />
 
-        </View>
+            <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+                    label={'Quantidade Disponível'}
+                    iconClass={FontAwesomeIcon}
+                    onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
+                    keyboardType={'numeric'}
+                    iconName={'shopping-cart'}
+                    iconColor={'#8B636C'}/>
 
-      <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
-       <TagInput
-          value={this.state.tags}
-          onChange={this.onChangeTags}
-          tagColor="#8B636C"
-          tagTextColor="white"
-          tagAlign="center"
-          inputProps={inputProp}
-          numberOfLines={15}/>
+            <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
 
-        </View>
-        <Button
-         title ="Adicionar Produto"
-         color="#8B636C"
-          buttonStyle={{ padding: 16, marginBottom: 3 }}
-         onPress={onButtonPress}/>
+              <TagInput
+                value={this.state.ingredientes}
+                onChange={this.onChangeIngredientes}
+                tagColor="#8B636C"
+                tagTextColor="white"
+                tagAlign="center"
+                inputProps={inputIngredientes}
+                numberOfLines={15}/>
 
-         </View>
-     </ScrollView>
-       </View>
+              </View>
+
+            <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
+             <TagInput
+                value={this.state.tags}
+                onChange={this.onChangeTags}
+                tagColor="#8B636C"
+                tagTextColor="white"
+                tagAlign="center"
+                inputProps={inputTags}
+                numberOfLines={15}/>
+
+              </View>
+            </View>
+        </ScrollView>
+    </View>
 
     );
   }
@@ -226,17 +241,9 @@ const styles = StyleSheet.create({
     padding: 15
   },
 
-  texto: {
-    color: '#8B636C',
-    fontSize: 30,
-    fontFamily: 'Roboto',
-    textAlign: 'center',
-    backgroundColor: '#ffffff',
-  },
-
   foto: {
     color: '#8B636C',
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'Roboto',
     fontWeight: 'bold',
     textAlign: 'center'
