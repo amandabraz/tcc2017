@@ -25,7 +25,7 @@ class Vendedor extends Component {
   }
 
   preencherPagamentosArray() {
-    fetch('http://10.0.2.2:8080/pagamento')
+    fetch('http://10.0.3.2:8080/pagamento')
       .then((response) => response.json())
         .then((responseJson) => {
           var pagamentosBuscados = [];
@@ -68,7 +68,7 @@ class Vendedor extends Component {
       }
 
       //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
-       fetch('http://10.0.2.2:8080/vendedor', {
+       fetch('http://10.0.3.2:8080/vendedor', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
@@ -90,24 +90,24 @@ class Vendedor extends Component {
             });
     }
   };
-  onClick(meioPagamento) {
-    meioPagamento.checked = !meioPagamento.checked;
+  onClick(descricao) {
+    descricao.checked = !descricao.checked;
     var meiosAceitos = this.state.pagamentosAceitos;
-    meiosAceitos.push(meioPagamento);
+    meiosAceitos.push(descricao);
     this.setState({ pagamentosAceitos: meiosAceitos });
   }
 
   mostrarCheckboxesPagamento() {
     var views = [];
     for(i in this.state.pagamentosArray) {
-      let meioPagamento = this.state.pagamentosArray[i];
+      let descricao = this.state.pagamentosArray[i];
       views.push (
         <View key={i} style={styles.item}>
           <CheckBox
             style={{flex: 1, padding: 10}}
-            onClick={()=>this.onClick(meioPagamento)}
-            isChecked={meioPagamento.checked}
-            leftText={meioPagamento.meioPagamento}
+            onClick={()=>this.onClick(descricao)}
+            isChecked={descricao.checked}
+            leftText={descricao.descricao}
             />
         </View>
       );
