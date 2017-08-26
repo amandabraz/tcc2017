@@ -19,8 +19,14 @@ public class PagamentoController {
     private PagamentoDAO pagamentoDAO;
 
     @RequestMapping(value="/pagamento", method = RequestMethod.GET)
-    public List<Pagamento> buscaTodosMeiosPagamento() {
-        List<Pagamento> meiosPagamento = pagamentoDAO.findAll();
-        return meiosPagamento;
+    public List<Pagamento> consultarMeiosPagamento() {
+
+        try {
+            List<Pagamento> listaMeiosPagamento = pagamentoDAO.findAll();
+            return listaMeiosPagamento;
+
+        } catch ( Exception e) {
+            throw e;
+        }
     }
 }

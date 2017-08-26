@@ -5,17 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tcc.DAOs.PagamentoDAO;
-import tcc.DAOs.UsuarioDAO;
-import tcc.DAOs.VendedorDAO;
 import tcc.ErrorHandling.CustomError;
-import tcc.Models.Pagamento;
 import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 import tcc.Services.VendedorService;
 
+import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by amanda on 04/05/2017.
@@ -33,13 +30,13 @@ public class VendedorController {
      * @param
      * @return
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity cadastraVendedor(@RequestBody Vendedor vendedor) {
         Vendedor novoVendedor = null;
         try {
             novoVendedor = vendedorService.salvaVendedor(vendedor);
         } catch (Exception ex) {
-            System.out.println(ex.fillInStackTrace());
             return new ResponseEntity<>(new CustomError("Erro ao salvar Vendedor"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(novoVendedor.getId(), HttpStatus.OK);

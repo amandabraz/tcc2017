@@ -11,9 +11,17 @@ public class PagamentoService {
     @Autowired
     private PagamentoDAO pagamentoDAO;
 
+    public Pagamento buscaMeioPagamento(Long id) {
+        try {
+            return pagamentoDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public Pagamento cadastraMeioPagamento(Pagamento pagamento) {
         try {
-            if (pagamentoDAO.findByMeioPagamento(pagamento.getMeioPagamento()) != null) {
+            if (pagamentoDAO.findByDescricao(pagamento.getDescricao()) != null) {
                 return null;
             }
             return pagamentoDAO.save(pagamento);
