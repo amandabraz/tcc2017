@@ -40,7 +40,7 @@ public class Vendedor implements Serializable {
     private String nomeFantasia;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "PAGAMENTOS_ACEITOS", joinColumns =
+    @JoinTable(name = "VENDEDOR_PAGAMENTO", joinColumns =
             {@JoinColumn(name = "ID_VENDEDOR")}, inverseJoinColumns =
             {@JoinColumn(name = "ID_PAGAMENTO")})
     private Set<Pagamento> meiosPagamento;
