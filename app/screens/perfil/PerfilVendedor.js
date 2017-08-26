@@ -16,7 +16,7 @@ export default class PerfilVendedor extends Component {
       nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
-      meiosPagamentoText: "Nenhuma Meio de Pagamento Escolhido",
+      meiosPagamentoText: "Nenhum Meio de Pagamento Escolhido",
       CPFText: '',
       celularText: '',
       confText: '  Configuração'
