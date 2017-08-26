@@ -25,24 +25,41 @@ import TagInput from 'react-native-tag-input';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import CheckBox from 'react-native-check-box';
+
 
 export default class CadastroProduto extends Component {
   constructor(props) {
   super(props);
 
   this.state = {
-   date: '',
-   tags: [],
-   ingredientes: [],
-   quantidade: '',
-   categoria: '',
-   categoriasArray: [],
-   nome: '',
-   preco: '',
-   image: require('./img/camera11.jpg'),
+     date: '',
+     tags: [],
+     ingredientes: [],
+     restricoesDieteticas: [],
+     dietasArray: [],
+     quantidade: '',
+     categoria: '',
+     categoriasArray: [],
+     nome: '',
+     preco: '',
+     image: require('./img/camera11.jpg'),
+    }
+    this.preencherDietasArray();
+    this.carregarCategoriasArray();
  };
- this.carregarCategoriasArray();
-}
+
+  preencherDietasArray() {
+   fetch('http://10.0.2.2:8080/restricaodietetica')
+     .then((response) => response.json())
+       .then((responseJson) => {
+         var dietasBuscadas = [];
+           for (i in responseJson) {
+             dietasBuscadas.push(responseJson[i]);
+           }
+           this.setState({dietasArray: dietasBuscadas});
+       });
+  };
 
   carregarCategoriasArray() {
     fetch('http://10.0.2.2:8080/categoria')
@@ -65,6 +82,31 @@ export default class CadastroProduto extends Component {
     this.setState({
       ingredientes,
     });
+};
+
+onClickRestricao(descricao) {
+  descricao.checked = !descricao.checked;
+  var restricoes = this.state.restricoesDieteticas;
+  restricoes.push(descricao);
+  this.setState({restricoesDieteticas: restricoes});
+};
+
+mostrarCheckboxesDieta() {
+  var views = [];
+  for(i in this.state.dietasArray) {
+    let dieta = this.state.dietasArray[i];
+    views.push (
+      <View key={i} style={styles.item}>
+        <CheckBox
+          style={{flex: 1, padding: 10}}
+          onClick={()=>this.onClickRestricao(dieta)}
+          isChecked={dieta.checked}
+          leftText={dieta.descricao}
+          />
+      </View>
+    );
+  }
+  return views;
 };
 
   selecionarFoto(){
@@ -195,6 +237,14 @@ return (
                     iconName={'shopping-cart'}
                     iconColor={'#8B636C'}/>
 
+            <View style={styles.restricoes}>
+                <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                    Adequado para:
+                </Text>
+                <ScrollView>
+                    {this.mostrarCheckboxesDieta()}
+                </ScrollView>
+            </View>
             <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
 
               <TagInput
@@ -240,6 +290,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15
   },
+  restricoes: {
+      width: 340,
+      flex: 3,
+      justifyContent: 'space-between',
+      backgroundColor: '#fff',
+      padding: 15
+  },
+  texto: {
+    color: '#8B636C',
+    fontSize: 30,
+    fontFamily: 'Roboto',
+    textAlign: 'center',
+    backgroundColor: '#ffffff',
+  },
 
   foto: {
     color: '#8B636C',
@@ -253,9 +317,8 @@ const styles = StyleSheet.create({
       flex: 1,
       width: null,
       height: null,
-},
-
-    tag: {
+  },
+  tag: {
     justifyContent: 'center',
     backgroundColor: '#e0e0e0',
     borderRadius: 16,
