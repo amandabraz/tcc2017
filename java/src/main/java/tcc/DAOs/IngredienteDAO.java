@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface IngredienteDAO extends CrudRepository <Ingrediente, Long> {
     List<Ingrediente> findById(Long id);
-    List<Ingrediente> findByItem(String item);
+    Ingrediente findByItem(String item);
 }

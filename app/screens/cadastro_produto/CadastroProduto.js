@@ -24,15 +24,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import TagInput from 'react-native-tag-input';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
-import ModalDropdown from 'react-native-modal-dropdown';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 
-
-//dimensão da janela
-//const { width, height } = Dimensions.get("window");
-const onButtonPress = () => { Alert.alert('Bem vindo Vendedor'); };
-
-//Exporto essa classe pra que na minha "Main"
 export default class CadastroProduto extends Component {
   constructor(props) {
   super(props);
@@ -43,13 +36,25 @@ export default class CadastroProduto extends Component {
    ingredientes: [],
    quantidade: '',
    categoria: '',
-   categoriasArray: ['Doce', 'Salgado', 'Bebida'],
+   categoriasArray: [],
    nome: '',
    preco: '',
    image: require('./img/camera11.jpg'),
  };
+ this.carregarCategoriasArray();
 }
 
+  carregarCategoriasArray() {
+    fetch('http://10.0.2.2:8080/categoria')
+      .then((response) => response.json())
+        .then((responseJson) => {
+          var categoriasBuscadas = [];
+            for (i in responseJson) {
+              categoriasBuscadas.push(responseJson[i]);
+            }
+            this.setState({categoriasArray: categoriasBuscadas});
+        });
+  }
   onChangeTags = (tags) => {
     this.setState({
       tags,
@@ -77,9 +82,9 @@ export default class CadastroProduto extends Component {
     mostrarCategorias() {
       var pickerItems = [];
       for(i in this.state.categoriasArray) {
-        let categoria = this.state.categoriasArray[i];
-        pickerItems.push (
-          <Picker.Item key={i} label={categoria} value={categoria} />
+        let opcao = this.state.categoriasArray[i];
+        pickerItems.push(
+          <Picker.Item key={i} label={opcao.descricao} value={opcao} />
         );
       }
       return pickerItems;
@@ -148,14 +153,9 @@ return (
               <Text style={{textAlign: 'left', paddingLeft: 4, fontSize: 16, fontWeight: 'bold', fontFamily: 'Roboto'}}>Selecione uma categoria:</Text>
           </View>
           <View style={{justifyContent:'space-around', padding:10, width: 340}}>
-              <ModalDropdown options={this.state.categoriasArray}
-                  style={{width: 340, height: 48}}
-                  defaultValue="Lista de categorias"
-                  onSelect={(categoria) => this.setState({categoria: categoria})}
-                  textStyle={{color: '#8B636C', fontSize: 16, fontStyle: 'italic', fontFamily: 'Roboto'}}
-                  dropdownTextStyle={{fontSize: 16, fontFamily: 'Roboto', textAlign: 'center'}}
-                  dropdownStyle={{alignSelf: 'flex-end', width: 340 }}
-                  />
+            <Picker onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}>
+              {this.mostrarCategorias()}
+            </Picker>
           </View>
 
           <DatePicker
