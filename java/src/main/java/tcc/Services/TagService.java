@@ -18,7 +18,7 @@ public class TagService {
             Tag tagEncontrada = tagDAO.findByDescricao(tag.getDescricao());
             if (tagEncontrada != null) return tagEncontrada;
             return cadastraTag(tag);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -32,5 +32,13 @@ public class TagService {
             throw e;
         }
         return tagCadastrada;
+    }
+
+    public Tag buscaTag(Long id) {
+        try {
+            return tagDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
