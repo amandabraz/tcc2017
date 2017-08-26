@@ -11,8 +11,7 @@ import java.util.List;
 @Repository
 public interface UsuarioDAO extends CrudRepository<Usuario, Long> {
 
-//    @Query("select u from Usuario u where u.email = :email")
-    Usuario findUsuarioByEmail(@Param("email") String email);
+    Usuario findUsuarioByEmailAndSenha(@Param("email") String email, @Param("senha") String senha);
 
     Iterable<Usuario> findUsuarioByNome(@Param("nome") String nome);
 

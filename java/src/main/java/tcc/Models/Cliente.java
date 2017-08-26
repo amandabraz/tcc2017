@@ -12,34 +12,37 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name= "CLIENTE")
-public class Cliente {
+public class Cliente implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_CLIENTE")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
+
 
     @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JoinTable(name="CLIENTE_TAG", joinColumns =
             {@JoinColumn(name="ID_CLIENTE", referencedColumnName = "ID_CLIENTE")}, inverseJoinColumns =
-            {@JoinColumn(name="ID_TAG", referencedColumnName = "ID_TAG")}
-        )
+            {@JoinColumn(name="ID_TAG", referencedColumnName = "ID_TAG")})
     private Set<Tag> tags;
-    
-    @ManyToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="CLIENTE_RESTRICAO", joinColumns =
             {@JoinColumn(name="ID_CLIENTE")}, inverseJoinColumns =
             {@JoinColumn(name="ID_RESTRICAO")})
-    private List<RestricaoDietetica> restricoesDieteticas;
+    private Set<RestricaoDietetica> restricoesDieteticas;
 
     public Cliente() {
         this.id = id;
@@ -48,7 +51,7 @@ public class Cliente {
         this.restricoesDieteticas = restricoesDieteticas;
     }
 
-    public Cliente(Usuario usuario, Set<Tag> tags, List<RestricaoDietetica> restricaoDieteticas) {
+    public Cliente(Usuario usuario, Set<Tag> tags, Set<RestricaoDietetica> restricaoDieteticas) {
         this.usuario = usuario;
         this.tags = tags;
         this.restricoesDieteticas = restricoesDieteticas;
@@ -88,11 +91,11 @@ public class Cliente {
         this.tags = tags;
     }
 
-    public List<RestricaoDietetica> getRestricoesDieteticas() {
+    public Set<RestricaoDietetica> getRestricoesDieteticas() {
         return restricoesDieteticas;
     }
 
-    public void setRestricoesDieteticas(List<RestricaoDietetica> restricoesDieteticas) {
+    public void setRestricoesDieteticas(Set<RestricaoDietetica> restricoesDieteticas) {
         this.restricoesDieteticas = restricoesDieteticas;
     }
 }

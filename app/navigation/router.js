@@ -25,12 +25,40 @@ import Vendedor from '../screens/cadastro/Vendedor';
 /**
 MENU SOMENTE PARA CLIENTE
 **/
+export const GerenciaCliente = StackNavigator({
+  PerfilCliente: {
+    screen: PerfilCliente
+  },
+  ConfiguracaoCliente: {
+    screen: ConfiguracaoCliente
+  }
+ }, {
+  mode: 'card',
+  headerMode: 'none',
+});
+
 export const TabsCliente = TabNavigator({
+    PerfilCliente: {
+      screen: GerenciaCliente,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
+        },
+      },
+    },
     Busca: {
       screen: BuscaProduto,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
+        },
+      },
+    },
+    Home: {
+      screen: HomeCliente,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
         },
       },
     },
@@ -47,30 +75,6 @@ export const TabsCliente = TabNavigator({
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-        },
-      },
-    },
-    Home: {
-      screen: HomeCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
-        },
-      },
-    },
-    Perfil: {
-      screen: PerfilCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
-        },
-      },
-    },
-    Configuração: {
-      screen: ConfiguracaoCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
         },
       },
     }
@@ -136,7 +140,7 @@ export const TabsVendedor = TabNavigator({
         },
       },
     },
-    Perfil: {
+    PerfilVendedor: {
       screen: PerfilVendedor,
       navigationOptions: {
         tabBar: {
@@ -187,11 +191,11 @@ export const Root = StackNavigator({
   Cliente: {
     screen: Cliente,
   },
-  TabsVendedor: {
-    screen: TabsVendedor
-  },
   TabsCliente: {
     screen: TabsCliente
+  },
+  TabsVendedor: {
+    screen: TabsVendedor
   }
 }, {
   mode: 'card',
