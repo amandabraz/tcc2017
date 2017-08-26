@@ -59,19 +59,26 @@ public class UsuarioController {
     }
 
     /**
-     * Busca o tipo de Usuário de acordo com o e-mail dele.
-     * @param email e-mail do Usuário a ser buscado.
+     * Efetua login com email e senha
+     * @param usuario
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/email/{email:.+}/{senha}", method = RequestMethod.GET)
-    public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email, @PathVariable("senha") String senha){
-        Character type;
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity efetuaLogin(@RequestBody Usuario usuario){
         try {
-            Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(email, senha);
-            return new ResponseEntity<Usuario>(usuarioBd, HttpStatus.OK);
+            Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
+            if (usuarioBd != null) {
+                return new ResponseEntity<Usuario>(usuarioBd, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
+            }
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado!");
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomError("Erro ao efetuar login"), HttpStatus.FORBIDDEN);
         }
     }
 

@@ -87,17 +87,28 @@ export default class Login extends Component {
     //Link de exemplo, item Signing up Users and Acquiring a JWT
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario/email/' + login.email + '/' + login.senha)
+      fetch('http://10.0.2.2:8080/usuario/login', {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(login)
+        })
         .then((response) => response.json())
         .then((responseJson) => {
-          usuarioLogado = responseJson;
-          ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-          if (usuarioLogado != null) {
-            if (usuarioLogado.perfil == "V") {
-              this.props.navigation.navigate('TabsVendedor', {userId: usuarioLogado.id});
-            } else {
-              this.props.navigation.navigate('TabsCliente', {userId: usuarioLogado.id});
+          if (!responseJson.errorMessage) {
+            usuarioLogado = responseJson;
+            ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+            if (usuarioLogado != null) {
+              if (usuarioLogado.perfil == "V") {
+                this.props.navigation.navigate('TabsVendedor', {userId: usuarioLogado.id});
+              } else {
+                this.props.navigation.navigate('TabsCliente', {userId: usuarioLogado.id});
+              }
             }
+          } else {
+              Alert.alert("E-mail ou senha inválidos!");
           }
         })
         .catch((error) => {
