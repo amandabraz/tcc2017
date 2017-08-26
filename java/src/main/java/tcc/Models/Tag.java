@@ -7,14 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@BatchSize(size = 50)
 @Table(name= "TAG")
-public class Tag {
+public class Tag implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,9 +24,6 @@ public class Tag {
 
     @Column(name = "DESCRICAO", unique = true)
     private String descricao;
-
-    @ManyToMany(mappedBy = "tags")
-    private Set<Cliente> clientes;
 
     public Long getId() {
         return id;
@@ -46,25 +44,15 @@ public class Tag {
     public Tag() {
         this.id = id;
         this.descricao = descricao;
-        this.clientes = clientes;
     }
 
     public Tag(Long id, String descricao, Set<Cliente> clientes) {
         this.id = id;
         this.descricao = descricao;
-        this.clientes = clientes;
     }
 
     public Tag(String descricao) {
         this.descricao = descricao;
-    }
-
-    public Set<Cliente> getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(Set<Cliente> clientes) {
-        this.clientes = clientes;
     }
 
     @Override
@@ -72,7 +60,6 @@ public class Tag {
         return "Tag{" +
                 "id=" + id +
                 ", descricao='" + descricao + '\'' +
-                ", clientes=" + clientes +
                 '}';
     }
 }

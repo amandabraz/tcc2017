@@ -7,24 +7,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
-import java.util.Date;
-import java.util.List;
+import tcc.Services.UsuarioService;
 
-/**
- * Created by amanda on 04/05/2017.
- */
-
+@RequestMapping(value = "/usuario")
 @RestController
 public class UsuarioController {
 
     @Autowired
     private UsuarioDAO usuarioDao;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
@@ -32,12 +30,12 @@ public class UsuarioController {
      * @param usuario
      * @return
      */
-    @RequestMapping(value = "/usuario", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity cadastraUsuario(@RequestBody Usuario usuario) {
 
         Usuario novoUsuario = null;
         try {
-            CustomError temErro = validaUsuario(usuario);
+            CustomError temErro = usuarioService.validaUsuario(usuario);
             if (temErro != null) {
                 System.out.println(temErro.toString());
                 return new ResponseEntity(temErro, HttpStatus.CONFLICT);
@@ -55,26 +53,32 @@ public class UsuarioController {
      * Retorna todos os usuários salvos no banco.
      * @return todos os usuários salvos no banco.
      */
-    @RequestMapping(value = "/usuario", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Iterable<Usuario>> buscaUsuarios() {
         return new ResponseEntity<Iterable<Usuario>>(usuarioDao.findAll(), HttpStatus.OK);
     }
 
     /**
-     * Busca o tipo de Usuário de acordo com o e-mail dele.
-     * @param email e-mail do Usuário a ser buscado.
+     * Efetua login com email e senha
+     * @param usuario
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/email/{email:.+}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity buscaTipoPerfilUsuarioPorEmail(@PathVariable("email") String email){
-        Character type;
-        try{
-            Usuario usuarioBd = usuarioDao.findUsuarioByEmail(email);
-            return new ResponseEntity<Character>(Character.valueOf(usuarioBd.getPerfil()), HttpStatus.OK);
-        }catch(NullPointerException | IndexOutOfBoundsException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("E-mail não encontrado!");
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity efetuaLogin(@RequestBody Usuario usuario){
+        try {
+            Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
+            if (usuarioBd != null) {
+                return new ResponseEntity<Usuario>(usuarioBd, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
+            }
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomError("Erro ao efetuar login"), HttpStatus.FORBIDDEN);
         }
     }
 
@@ -88,15 +92,14 @@ public class UsuarioController {
     @ResponseBody
     public ResponseEntity buscaUsuario(@PathVariable("id") Long id){
         Character type;
-        try{
+        try {
             Usuario usuarioBd = usuarioDao.findUsuarioById(id);
-            if(usuarioBd.getId().equals(id)){
-                return new ResponseEntity<Usuario>((usuarioBd), HttpStatus.OK);
-            }
-        }catch(NullPointerException | IndexOutOfBoundsException e){
+            return new ResponseEntity<Usuario>((usuarioBd), HttpStatus.OK);
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na busca do Usuário! Tente novamente");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na busca do Usuário! Tente novamente");
     }
 
     /**
@@ -105,7 +108,7 @@ public class UsuarioController {
      * @return Character usuarioBd se um ou mais Usuários forem encontrados de acordo com o nome.
      *          Erro    se o nome não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/nome/{nome}", method = RequestMethod.GET)
+    @RequestMapping(value = "/nome/{nome}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaPerfilUsuarioPorNome(@PathVariable("nome") String nome){
         Character type;
@@ -114,23 +117,6 @@ public class UsuarioController {
         }catch(NullPointerException | IndexOutOfBoundsException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
         }
-    }
-
-
-    private CustomError validaUsuario(Usuario usuario) {
-        Usuario usuarioBuscado = usuarioDao.findByEmail(usuario.getEmail());
-        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            return new CustomError("E-mail já cadastrado!");
-        }
-        usuarioBuscado = usuarioDao.findByCpf(usuario.getCpf());
-        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            return new CustomError("CPF já cadastrado!");
-        }
-        usuarioBuscado = usuarioDao.findByDddAndTelefone(usuario.getDdd(), usuario.getTelefone());
-        if (usuarioBuscado != null && usuarioBuscado.getId() > 0) {
-            return new CustomError("Celular já cadastrado!");
-        }
-        return null;
     }
 }
 
