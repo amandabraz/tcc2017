@@ -14,7 +14,8 @@ import {
     Alert,
     Image,
     TouchableOpacity,
-    Picker
+    Picker,
+    ToastAndroid
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
@@ -33,6 +34,8 @@ export default class CadastroProduto extends Component {
   super(props);
 
   this.state = {
+     userId: this.props.navigation.state.params.userId,
+     vendedorId: this.props.navigation.state.params.vendedorId,
      date: '',
      tags: [],
      ingredientes: [],
@@ -142,10 +145,53 @@ selecionarFoto() {
         );
       }
       return pickerItems;
-    }
+    };
+
   salvaProduto() {
-    // TODO; rest para salvar o produto no banco
-  }
+    const {
+      state: {
+        vendedorId,
+        date,
+        tags,
+        ingredientes,
+        restricoesDieteticas,
+        quantidade,
+        categoria,
+        nome,
+        preco,
+      }
+    } = this;
+
+    produto = {
+      "nome": nome,
+      "dataPreparacao": date,
+      "quantidade": quantidade,
+      "preco": preco,
+      "vendedor": vendedorId,
+      "tags": tags,
+      "restricoesDieteticas": restricoesDieteticas,
+      "categoria": categoria
+    }
+
+    fetch('http://10.0.2.2:8080/produto', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(produto)
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.errorMessage) {
+          Alert.alert("Houve um erro ao cadastrar produto! Por favor, tente novamente.");
+        } else {
+          ToastAndroid.showWithGravity('Produto cadastrado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+          this.props.navigation.navigate('GerenciaProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+  };
 
 render() {
     const {goBack} = this.props.navigation;
@@ -177,7 +223,7 @@ return (
           </TouchableOpacity>
         }
         rightButton={
-          <TouchableOpacity onPress={() => this.salvaProduto}>
+          <TouchableOpacity onPress={() => this.salvaProduto()}>
             <MaterialsIcon name="check" size={34} color={'#8B636C'} style={{ padding: 5 }} />
           </TouchableOpacity>
         } />
@@ -218,7 +264,7 @@ return (
               date={this.state.date}
               mode="date"
               placeholder="Data de Preparação"
-              format="DD-MM-YYYY"
+              format="YYYY-MM-DD"
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               customStyles={{

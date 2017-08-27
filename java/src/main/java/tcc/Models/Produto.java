@@ -12,6 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.Set;
 
@@ -29,6 +31,7 @@ public class Produto {
             length = 100)
     private String nome;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATA_PREPARACAO",
             nullable = false)
     private Date dataPreparacao;
