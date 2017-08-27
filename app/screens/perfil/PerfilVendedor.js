@@ -135,7 +135,7 @@ export default class PerfilVendedor extends Component {
                 iconColor={'darkslategrey'}
                 value={this.state.nomeFantasia}
                 editable={false}
-                inputStyle={styles.titleText}/>
+                inputStyle={styles.baseText}/>
 
 
           <Fumi
