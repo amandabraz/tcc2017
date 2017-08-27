@@ -46,6 +46,7 @@ export default class CadastroProduto extends Component {
      categoriasArray: [],
      nome: '',
      preco: '',
+     observacao: '',
      image: require('./img/camera11.jpg'),
     }
     this.preencherDietasArray();
@@ -159,6 +160,7 @@ selecionarFoto() {
         categoria,
         nome,
         preco,
+        observacao
       }
     } = this;
 
@@ -170,7 +172,8 @@ selecionarFoto() {
       "vendedor": vendedorId,
       "tags": tags,
       "restricoesDieteticas": restricoesDieteticas,
-      "categoria": categoria
+      "categoria": categoria,
+      "observacao": observacao
     }
 
     fetch('http://10.0.2.2:8080/produto', {
@@ -251,7 +254,7 @@ return (
                   iconColor={'#8B636C'}/>
 
          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                    label={'Quantidade Disponível'}
+                    label={'Quantidade disponível'}
                     iconClass={FontAwesomeIcon}
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
@@ -287,30 +290,35 @@ return (
               onDateChange={(date) => {this.setState({date: date});}}/>
         </View>
 
-            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
-                        Selecione uma categoria:
-            </Text>
-            <View style={{paddingLeft: 16}}>
-            <View style={{justifyContent:'space-around', width: 340, height: 50, backgroundColor: 'white'}}>
-            <Picker onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}
-                    selectedValue={this.state.categoria}
-                    mode = 'dropdown'>
-                {this.mostrarCategorias()}
-            </Picker>
+            <View style={styles.linhaTitulo}>
+              <MaterialsIcon name="description" size={22} color={'#9fa1a3'} /><Text style={styles.titulo}>
+                  Selecione uma categoria:{'\n'}{'\n'}
+              </Text>
             </View>
+            <View style={{paddingLeft: 16, justifyContent:'space-around', width: 340, height: 50, backgroundColor: 'white'}}>
+              <Picker onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}
+                      selectedValue={this.state.categoria}
+                      mode = 'dropdown'>
+                  {this.mostrarCategorias()}
+              </Picker>
             </View>
-
-            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
-                Adequado para a dieta:
-            </Text>
+            <Text>{'\n'}</Text>
+            <View style={styles.linhaTitulo}>
+              <MaterialsIcon name="check-circle" size={20} color={'#9fa1a3'} /><Text style={styles.titulo}>
+                  Adequado para a dieta:
+              </Text>
+            </View>
             <View style={styles.restricoes}>
                 <ScrollView>
                     {this.mostrarCheckboxesDieta()}
                 </ScrollView>
             </View>
-            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
-              Adicione aqui os ingredientes:
-            </Text>
+
+            <View style={styles.linhaTitulo}>
+              <MaterialsIcon name="list" size={23} color={'#9fa1a3'} /><Text style={styles.titulo}>
+                Ingredientes:
+              </Text>
+            </View>
             <View style={{ width: 378, height: 86, alignItems: 'center'}}>
               <TagInput
                 value={this.state.ingredientes}
@@ -322,9 +330,11 @@ return (
                 numberOfLines={15}/>
               </View>
 
-            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
-              Adicione aqui tags relacionadas:
-            </Text>
+            <View style={styles.linhaTitulo}>
+              <FontAwesomeIcon name="hashtag" size={17} color={'#9fa1a3'} /><Text style={styles.titulo}>
+                Tags relacionadas:
+              </Text>
+            </View>
             <View style={{ width: 378, height: 86, alignItems: 'center'}}>
              <TagInput
                 value={this.state.tags}
@@ -336,6 +346,18 @@ return (
                 numberOfLines={15}/>
               </View>
 
+            </View>
+            <View style={styles.container}>
+              <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 100 }}
+                      label={'Observações'}
+                      placeholder={'campo opcional'}
+                      placeholderTextColor={'#ccc'}
+                      iconClass={FontAwesomeIcon}
+                      onChangeText={(observacao) => this.setState({observacao: observacao})}
+                      iconName={'pencil-square-o'}
+                      iconColor={'#8B636C'}
+                      multiline={true}
+                      maxLength={255}/>
             </View>
         </ScrollView>
     </View>
@@ -363,7 +385,19 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       padding: 15
   },
-
+  linhaTitulo: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: 16,
+    paddingLeft: 15
+  },
+  titulo: {
+    paddingLeft: 15,
+    color: '#5a5c60',
+    fontSize: 16,
+    fontFamily: 'Roboto',
+    fontWeight: 'bold'
+  },
   foto: {
     color: '#8B636C',
     fontSize: 16,
