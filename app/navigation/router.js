@@ -98,6 +98,12 @@ export const TabsCliente = TabNavigator({
   });
 
   export const GerenciaVendedor = StackNavigator({
+      PerfilVendedor: {
+        screen: PerfilVendedor
+      },
+      ConfiguracaoVendedor: {
+        screen: ConfiguracaoVendedor
+      },
       GerenciaProduto: {
           screen: GerenciaProduto,
         },

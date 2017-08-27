@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Classe/Tabela que indica MEIOS DE PAGAMENTO que o vendedor aceita
@@ -14,22 +15,29 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PAGAMENTO")
-public class Pagamento {
+public class MeioPagamento implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_PAGAMENTO")
     private Long id;
 
-    @Column(name = "MEIO_PAGAMENTO", unique = true)
-    private String meioPagamento;
+    @Column(name = "DESCRICAO", unique = true)
+    private String descricao;
 
-    public Pagamento() {
+    public MeioPagamento(Long id, String descricao) {
         this.id = id;
-        this.meioPagamento = meioPagamento;
+        this.descricao = descricao;
     }
 
-    public Pagamento(String meioPagamento) {
-        this.meioPagamento = meioPagamento;
+    public MeioPagamento(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public MeioPagamento() {
+        super();
     }
 
     public Long getId() {
@@ -40,19 +48,19 @@ public class Pagamento {
         this.id = id;
     }
 
-    public String getMeioPagamento() {
-        return meioPagamento;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setMeioPagamento(String meioPagamento) {
-        this.meioPagamento = meioPagamento;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     @Override
     public String toString() {
         return "Pagamento{" +
                 "id=" + id +
-                ", meioPagamento='" + meioPagamento + '\'' +
+                ", descricao='" + descricao + '\'' +
                 '}';
     }
 }
