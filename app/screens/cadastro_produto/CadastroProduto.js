@@ -20,7 +20,7 @@ import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
 import CameraRollPicker from 'react-native-camera-roll-picker';
 import Camera from 'react-native-camera';
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-picker';
 import TagInput from 'react-native-tag-input';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
@@ -109,18 +109,30 @@ mostrarCheckboxesDieta() {
   return views;
 };
 
-  selecionarFoto(){
-    ImagePicker.openCamera({
-      width: 200,
-      height: 200,
-      cropping: true
-        }).then(image => {
-            console.log(image);
-            this.setState({
-              image: {uri: image.path, width: image.width, height: image.height}});
-        });
+selecionarFoto() {
+  var options = {
+    title: 'Selecione sua foto',
+    takePhotoButtonTitle: 'Tirar uma foto',
+    chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+    cancelButtonTitle: 'Cancelar',
+    storageOptions: {
+      skipBackup: false,
+      path: 'images'
     }
-
+  };
+  ImagePicker.showImagePicker(options, (response) => {
+    if (response.didCancel) {
+      //do nothing
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else {
+      let source = { uri: response.uri };
+      this.setState({
+        image: {uri: response.uri, width: 200, height: 200, changed: true}
+      });
+    }
+  });
+}
     mostrarCategorias() {
       var pickerItems = [];
       for(i in this.state.categoriasArray) {
@@ -138,8 +150,8 @@ mostrarCheckboxesDieta() {
 render() {
     const {goBack} = this.props.navigation;
     const inputIngredientes = {
-      placeholder: 'Adicione aqui os ingredientes do produto',
-      placeholderTextColor: '#8B636C',
+      placeholder: 'ex: farinha, leite em pó',
+      placeholderTextColor: '#CCCCCC',
       fontSize: 16,
       fontFamily: 'Roboto',
       fontWeight: 'bold',
@@ -147,8 +159,8 @@ render() {
     };
 
   const inputTags = {
-     placeholder: 'Adicione aqui tags relacionadas ao produto',
-     placeholderTextColor: '#8B636C',
+     placeholder: 'ex: brigadeiro, paçoca, bolo',
+     placeholderTextColor: '#CCCCCC',
      fontSize: 16,
      fontFamily: 'Roboto',
      fontWeight: 'bold',
@@ -171,9 +183,11 @@ return (
         } />
       <ScrollView>
         <View style={styles.container}>
+        <View style={{ alignItems: 'center'}}>
           <TouchableOpacity onPress={this.selecionarFoto.bind(this)}>
             <Image source={this.state.image}/>
           </TouchableOpacity>
+        </View>
 
           <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Nome'}
@@ -190,46 +204,7 @@ return (
                   iconName={'dollar'}
                   iconColor={'#8B636C'}/>
 
-          <View style={{flexDirection: 'row', justifyContent:'space-around', paddingLeft: 18}}>
-              <MaterialsIcon name="description" size={20} color={'#CCCCCC'} />
-              <Text style={{textAlign: 'left', paddingLeft: 4, fontSize: 16, fontWeight: 'bold', fontFamily: 'Roboto'}}>Selecione uma categoria:</Text>
-          </View>
-          <View style={{justifyContent:'space-around', padding:10, width: 340}}>
-            <Picker onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}>
-              {this.mostrarCategorias()}
-            </Picker>
-          </View>
-
-          <DatePicker
-              style={{width: 390, height: 48}}
-              date={this.state.date}
-              mode="date"
-              placeholder="Data de Preparação"
-              format="DD-MM-YYYY"
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateInput: { borderWidth: 0 },
-               dateIcon: {
-                 position: 'absolute',
-                 left: 0,
-                 top: 4,
-                 marginLeft: 0
-               },
-               placeholderText: {
-                 fontFamily: 'Roboto',
-                 fontWeight: 'bold',
-                 fontSize: 16
-               },
-               dateText: {
-                 fontFamily: 'Roboto',
-                 fontSize: 16
-               }
-             }}
-              onDateChange={(date) => {this.setState({date: date});}}
-              />
-
-            <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+         <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                     label={'Quantidade Disponível'}
                     iconClass={FontAwesomeIcon}
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
@@ -237,16 +212,60 @@ return (
                     iconName={'shopping-cart'}
                     iconColor={'#8B636C'}/>
 
+      <View style={{ alignItems: 'center'}}>
+        <DatePicker
+              style={{width: 352, height: 50}}
+              date={this.state.date}
+              mode="date"
+              placeholder="Data de Preparação"
+              format="DD-MM-YYYY"
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              customStyles={{
+                  dateInput: { borderWidth: 0 },
+                   dateIcon: {
+                       position: 'absolute',
+                       left: 0,
+                       top: 4,
+                       marginLeft: 0},
+                   placeholderText: {
+                      fontFamily: 'Roboto',
+                      fontWeight: 'bold',
+                      color: 'gray',
+                      fontSize: 16},
+                   dateText: {
+                       fontFamily: 'Roboto',
+                       fontSize: 16,
+                       color: '#8B636C'}
+                       }}
+              onDateChange={(date) => {this.setState({date: date});}}/>
+        </View>
+
+            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                        Selecione uma categoria:
+            </Text>
+            <View style={{paddingLeft: 16}}>
+            <View style={{justifyContent:'space-around', width: 340, height: 50, backgroundColor: 'white'}}>
+            <Picker onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}
+                    selectedValue={this.state.categoria}
+                    mode = 'dropdown'>
+                {this.mostrarCategorias()}
+            </Picker>
+            </View>
+            </View>
+
+            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                Adequado para a dieta:
+            </Text>
             <View style={styles.restricoes}>
-                <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
-                    Adequado para:
-                </Text>
                 <ScrollView>
                     {this.mostrarCheckboxesDieta()}
                 </ScrollView>
             </View>
-            <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
-
+            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+              Adicione aqui os ingredientes:
+            </Text>
+            <View style={{ width: 378, height: 86, alignItems: 'center'}}>
               <TagInput
                 value={this.state.ingredientes}
                 onChange={this.onChangeIngredientes}
@@ -255,10 +274,12 @@ return (
                 tagAlign="center"
                 inputProps={inputIngredientes}
                 numberOfLines={15}/>
-
               </View>
 
-            <View style={{ width: 378, height: 86, alignItems: 'center', padding: 15}}>
+            <Text style={{paddingTop: 16, paddingLeft: 16, color: '#8B636C', fontSize: 17, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+              Adicione aqui tags relacionadas:
+            </Text>
+            <View style={{ width: 378, height: 86, alignItems: 'center'}}>
              <TagInput
                 value={this.state.tags}
                 onChange={this.onChangeTags}
@@ -267,8 +288,8 @@ return (
                 tagAlign="center"
                 inputProps={inputTags}
                 numberOfLines={15}/>
-
               </View>
+
             </View>
         </ScrollView>
     </View>
@@ -287,22 +308,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 3,
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 15
+    padding: 15,
+    backgroundColor: '#F5F5F5'
   },
   restricoes: {
       width: 340,
       flex: 3,
       justifyContent: 'space-between',
-      backgroundColor: '#fff',
       padding: 15
-  },
-  texto: {
-    color: '#8B636C',
-    fontSize: 30,
-    fontFamily: 'Roboto',
-    textAlign: 'center',
-    backgroundColor: '#ffffff',
   },
 
   foto: {
@@ -318,6 +331,7 @@ const styles = StyleSheet.create({
       width: null,
       height: null,
   },
+
   tag: {
     justifyContent: 'center',
     backgroundColor: '#e0e0e0',
