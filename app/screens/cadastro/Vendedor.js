@@ -25,7 +25,7 @@ class Vendedor extends Component {
   }
 
   preencherPagamentosArray() {
-    fetch('http://10.0.2.2:8080/pagamento')
+    fetch('http://10.0.2.2:8080/meiopagamento')
       .then((response) => response.json())
         .then((responseJson) => {
           var pagamentosBuscados = [];
