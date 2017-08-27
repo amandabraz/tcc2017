@@ -11,15 +11,12 @@ export default class PerfilVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: 'this.props.navigation.state.params.userId',
+      userId: this.props.navigation.state.params.userId,
       nomeText: '',
+      nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
-      meiosPagamentoText: "Nenhuma Meio de Pagamento Escolhido",
-      meiosPagamentoEstilo: {
-        color: '#CCCCCC',
-        fontStyle: 'italic'
-      },
+      meiosPagamentoText: "Nenhum Meio de Pagamento Escolhido",
       CPFText: '',
       celularText: '',
       confText: '  Configuração'
@@ -28,11 +25,12 @@ export default class PerfilVendedor extends Component {
   }
 
   buscaDadosVendedor() {
-    fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.userId)
+    fetch('http://10.0.3.2:8080/vendedor/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
           this.setState({nomeText: responseJson.usuario.nome});
+          this.setState({nomeFantasiaText: responseJson.nomeFantasia});
           var dataNormal = new Date(responseJson.usuario.dataNasc);
           var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
           this.setState({dataNascimentoText: dataNasc});
@@ -135,9 +133,9 @@ export default class PerfilVendedor extends Component {
                 iconSize={20}
                 iconName={'user'}
                 iconColor={'darkslategrey'}
-                value={this.state.nomeText}
+                value={this.state.nomeFantasia}
                 editable={false}
-                inputStyle={styles.titleText}/>
+                inputStyle={styles.baseText}/>
 
 
           <Fumi
