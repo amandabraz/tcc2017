@@ -10,6 +10,7 @@ import java.util.List;
  * Created by amanda on 05/05/2017.
  */
 public interface VendedorDAO extends CrudRepository<Vendedor, Long> {
-    Vendedor findByUsuario(Usuario usuario);
     List<Vendedor> findById(Integer id);
+    Vendedor findByUsuario(Usuario usuario);
+
 }

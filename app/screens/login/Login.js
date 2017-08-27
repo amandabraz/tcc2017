@@ -98,13 +98,18 @@ export default class Login extends Component {
         .then((response) => response.json())
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
-            usuarioLogado = responseJson;
-            ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            if (usuarioLogado != null) {
-              if (usuarioLogado.perfil == "V") {
-                this.props.navigation.navigate('TabsVendedor', {userId: usuarioLogado.id});
-              } else {
-                this.props.navigation.navigate('TabsCliente', {userId: usuarioLogado.id});
+            if (responseJson != null) {
+              ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              if (responseJson.usuario.perfil == "V") {
+                this.props.navigation.navigate('TabsVendedor', {
+                  userId: responseJson.usuario.id,
+                  vendedorId: responseJson.id
+                });
+              } else if (responseJson.usuario.perfil == "C") {
+                this.props.navigation.navigate('TabsCliente', {
+                  userId: responseJson.usuario.id,
+                  clienteId: responseJson.id
+                });
               }
             }
           } else {

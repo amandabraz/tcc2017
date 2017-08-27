@@ -1,7 +1,6 @@
 package tcc.Models;
 
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,14 +44,25 @@ public class Vendedor implements Serializable {
             {@JoinColumn(name = "ID_PAGAMENTO")})
     private Set<Pagamento> meiosPagamento;
 
+
     public Vendedor() {
+        super();
+    }
+
+    /**
+     * Este construtor serve para classes que tem vendedor como FK
+     * @param id
+     */
+    public Vendedor(Long id) {
+        super();
         this.id = id;
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
         this.meiosPagamento = meiosPagamento;
     }
 
-    public Vendedor(Usuario usuario, String nomeFantasia) {
+
+    public Vendedor(Usuario usuario, String nomeFantasia, Set<Pagamento> meiosPagamento) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
         this.meiosPagamento = meiosPagamento;
