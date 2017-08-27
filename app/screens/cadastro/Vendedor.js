@@ -25,7 +25,7 @@ class Vendedor extends Component {
   }
 
   preencherPagamentosArray() {
-    fetch('http://10.0.3.2:8080/pagamento')
+    fetch('http://10.0.2.2:8080/pagamento')
       .then((response) => response.json())
         .then((responseJson) => {
           var pagamentosBuscados = [];
@@ -68,7 +68,7 @@ class Vendedor extends Component {
       }
 
       //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
-       fetch('http://10.0.3.2:8080/vendedor', {
+       fetch('http://10.0.2.2:8080/vendedor', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',

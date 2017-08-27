@@ -30,7 +30,7 @@ export default class PerfilVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
           this.setState({nomeText: responseJson.usuario.nome});
-          this.setState({nomeFantasiaText: responseJson.nomeFantasia});
+          this.setState({nomeFantasiaText: responseJson.usuario.nomeFantasia});
           var dataNormal = new Date(responseJson.usuario.dataNasc);
           var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
           this.setState({dataNascimentoText: dataNasc});
@@ -130,7 +130,6 @@ export default class PerfilVendedor extends Component {
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome da loja'}
                 iconClass={FontAwesomeIcon}
-                iconSize={20}
                 iconName={'user'}
                 iconColor={'darkslategrey'}
                 value={this.state.nomeFantasia}
