@@ -400,7 +400,7 @@ class Cadastro extends Component {
 
       <Button title ="        Quero Vender         "
               color="#ffa07a"
-              onPress={this.uploadWidget.bind(this)}/>
+              onPress={this.onButtonVendedor}/>
 
       <Button title="       Quero Comprar      "
               color="#87cefa"
