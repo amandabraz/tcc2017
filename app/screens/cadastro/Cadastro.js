@@ -36,13 +36,6 @@ class Cadastro extends Component {
   }
  }
 
- uploadWidget() {
-       cloudinary.openUploadWidget({ cloud_name: 'amoracloudname', upload_preset: 'presetnameamora', tags:['user']},
-           function(error, result) {
-               console.log(result);
-           });
-   }
-
   validaEmail = (email) => {
     var re = /\S+@\S+\.\S+/;
    return re.test(email);
