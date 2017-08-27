@@ -14,7 +14,7 @@ import java.io.Serializable;
  * Created by amanda on 10/05/2017.
  */
 @Entity
-@Table(name = "MEIO_PAGAMENTO")
+@Table(name = "PAGAMENTO")
 public class MeioPagamento implements Serializable {
 
     public static final Long serialVersionUID = 1L;
