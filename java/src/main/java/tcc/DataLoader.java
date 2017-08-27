@@ -5,17 +5,17 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import tcc.Models.Categoria;
-import tcc.Models.Pagamento;
+import tcc.Models.MeioPagamento;
 import tcc.Models.RestricaoDietetica;
 import tcc.Services.CategoriaService;
-import tcc.Services.PagamentoService;
+import tcc.Services.MeioPagamentoService;
 import tcc.Services.RestricaoDieteticaService;
 
 @Component
 public class DataLoader implements ApplicationRunner {
 
     @Autowired
-    private PagamentoService pagamentoService;
+    private MeioPagamentoService meioPagamentoService;
 
     @Autowired
     private RestricaoDieteticaService restricaoDieteticaService;
@@ -27,8 +27,8 @@ public class DataLoader implements ApplicationRunner {
 
         // Para adicionar dado a tabela, só copiar uma linha e mudar o conteúdo
         
-        pagamentoService.cadastraMeioPagamento(new Pagamento("Dinheiro"));
-        pagamentoService.cadastraMeioPagamento(new Pagamento("Débito"));
+        meioPagamentoService.cadastraMeioPagamento(new MeioPagamento("Dinheiro"));
+        meioPagamentoService.cadastraMeioPagamento(new MeioPagamento("Débito"));
 
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Vegetariano"));
         restricaoDieteticaService.cadastraRestricaoDietetica(new RestricaoDietetica("Vegano"));

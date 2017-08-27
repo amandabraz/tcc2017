@@ -14,8 +14,8 @@ import java.io.Serializable;
  * Created by amanda on 10/05/2017.
  */
 @Entity
-@Table(name = "PAGAMENTO")
-public class Pagamento implements Serializable {
+@Table(name = "MEIO_PAGAMENTO")
+public class MeioPagamento implements Serializable {
 
     public static final Long serialVersionUID = 1L;
 
@@ -27,16 +27,16 @@ public class Pagamento implements Serializable {
     @Column(name = "DESCRICAO", unique = true)
     private String descricao;
 
-    public Pagamento(Long id, String descricao) {
+    public MeioPagamento(Long id, String descricao) {
         this.id = id;
         this.descricao = descricao;
     }
 
-    public Pagamento(String descricao) {
+    public MeioPagamento(String descricao) {
         this.descricao = descricao;
     }
 
-    public Pagamento() {
+    public MeioPagamento() {
         super();
     }
 

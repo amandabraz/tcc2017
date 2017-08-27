@@ -39,4 +39,12 @@ public class VendedorService {
             throw e;
         }
     }
+
+    public Vendedor procuraVendedorPorUsuario(Usuario usuario) {
+        try {
+            return vendedorDAO.findByUsuario(usuario);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

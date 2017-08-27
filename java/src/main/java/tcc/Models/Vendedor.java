@@ -42,11 +42,14 @@ public class Vendedor implements Serializable {
     @JoinTable(name = "VENDEDOR_PAGAMENTO", joinColumns =
             {@JoinColumn(name = "ID_VENDEDOR")}, inverseJoinColumns =
             {@JoinColumn(name = "ID_PAGAMENTO")})
-    private Set<Pagamento> meiosPagamento;
+    private Set<MeioPagamento> meiosPagamento;
 
 
     public Vendedor() {
-        super();
+        this.id = id;
+        this.usuario = usuario;
+        this.nomeFantasia = nomeFantasia;
+        this.meiosPagamento = meiosPagamento;
     }
 
     /**
@@ -62,7 +65,7 @@ public class Vendedor implements Serializable {
     }
 
 
-    public Vendedor(Usuario usuario, String nomeFantasia, Set<Pagamento> meiosPagamento) {
+    public Vendedor(Usuario usuario, String nomeFantasia, Set<MeioPagamento> meioPagamento) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
         this.meiosPagamento = meiosPagamento;
@@ -92,11 +95,11 @@ public class Vendedor implements Serializable {
         this.usuario = usuario;
     }
 
-    public Set<Pagamento> getPagamentosAceitos() {
+    public Set<MeioPagamento> getMeiosPagamentos() {
         return meiosPagamento;
     }
 
-    public void setPagamentosAceitos(Set<Pagamento> meiosPagamento) {
+    public void setMeiosPagamentos(Set<MeioPagamento> meiosPagamento) {
         this.meiosPagamento = meiosPagamento;
     }
 

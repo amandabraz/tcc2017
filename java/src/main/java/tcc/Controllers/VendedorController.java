@@ -24,12 +24,14 @@ import java.util.Set;
  * Created by amanda on 04/05/2017.
  */
 
-@RequestMapping(value = "/vendedor")
 @RestController
+@RequestMapping(value = "/vendedor")
 public class VendedorController {
 
     @Autowired
     private VendedorService vendedorService;
+
+    @Autowired
     private VendedorDAO vendedorDAO;
 
     /**
@@ -50,16 +52,16 @@ public class VendedorController {
         return new ResponseEntity<>(novoVendedor.getId(), HttpStatus.OK);
     }
 
-    /*@RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity buscaVendedorPorUsuario(@PathVariable("id") Long usuarioId) {
+    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity procuraVendedorPorUsuario(@PathVariable("id") Long usuarioId) {
         try {
             Usuario usuario = new Usuario(usuarioId);
-            Vendedor vendedor = vendedorService.buscaVendedorPorUsuario(usuario);
+            Vendedor vendedor = vendedorService.procuraVendedorPorUsuario(usuario);
             return new ResponseEntity<Vendedor>(vendedor, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao carregar dados do vendedor"), HttpStatus.NOT_FOUND);
         }
-    }*/
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity buscaVendedorPorUsuario(@RequestParam(value = "usuarioId") Long usuarioId) {
