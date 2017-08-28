@@ -13,7 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,7 +41,7 @@ public class Vendedor implements Serializable {
     @JoinTable(name = "VENDEDOR_PAGAMENTO", joinColumns =
             {@JoinColumn(name = "ID_VENDEDOR")}, inverseJoinColumns =
             {@JoinColumn(name = "ID_PAGAMENTO")})
-    private Set<MeioPagamento> meiosPagamento;
+    private Set<Pagamento> meiosPagamento;
 
 
     public Vendedor() {
@@ -65,7 +64,7 @@ public class Vendedor implements Serializable {
     }
 
 
-    public Vendedor(Usuario usuario, String nomeFantasia, Set<MeioPagamento> meioPagamento) {
+    public Vendedor(Usuario usuario, String nomeFantasia, Set<Pagamento> pagamento) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
         this.meiosPagamento = meiosPagamento;
@@ -95,11 +94,11 @@ public class Vendedor implements Serializable {
         this.usuario = usuario;
     }
 
-    public Set<MeioPagamento> getMeiosPagamentos() {
+    public Set<Pagamento> getMeiosPagamentos() {
         return meiosPagamento;
     }
 
-    public void setMeiosPagamentos(Set<MeioPagamento> meiosPagamento) {
+    public void setMeiosPagamentos(Set<Pagamento> meiosPagamento) {
         this.meiosPagamento = meiosPagamento;
     }
 
@@ -109,7 +108,7 @@ public class Vendedor implements Serializable {
                 "id=" + id +
                 ", usuario=" + usuario +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", pagamentosAceitos=" + meiosPagamento +
+                ", meiosPagamento=" + meiosPagamento +
                 '}';
     }
 }

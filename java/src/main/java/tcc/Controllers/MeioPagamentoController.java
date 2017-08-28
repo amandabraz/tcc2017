@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.MeioPagamentoDAO;
-import tcc.Models.MeioPagamento;
+import tcc.Models.Pagamento;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ public class MeioPagamentoController {
     private MeioPagamentoDAO meioPagamentoDAO;
 
     @RequestMapping(value="/meiopagamento", method = RequestMethod.GET)
-    public List<MeioPagamento> consultarMeioPagamento() {
+    public List<Pagamento> consultarMeioPagamento() {
 
         try {
-            List<MeioPagamento> listaPagamentos = meioPagamentoDAO.findAll();
+            List<Pagamento> listaPagamentos = meioPagamentoDAO.findAll();
             return listaPagamentos;
 
         } catch ( Exception e) {
