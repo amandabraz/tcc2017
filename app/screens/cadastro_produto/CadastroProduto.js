@@ -48,6 +48,7 @@ export default class CadastroProduto extends Component {
      preco: '',
      observacao: '',
      image: require('./img/camera11.jpg'),
+     backgroundColorPreco: "transparent"
     }
     this.preencherDietasArray();
     this.carregarCategoriasArray();
@@ -113,6 +114,60 @@ mostrarCheckboxesDieta() {
   return views;
 };
 
+validaPreco = (preco) => {
+  var re = /\S+,\S+\S+/;
+ return re.test(preco);
+}
+
+validaCampos = (produto) => {
+  let camposVazios = [];
+  let erros = [];
+  //validar nome
+  if (!produto.nome) {
+      camposVazios.push("nome");
+  }
+  //validar preco
+  if (!produto.preco) {
+    camposVazios.push("preço");
+  } else {
+    if (!this.validaPreco(produto.preco)) {
+      erros.push("Preço inválido");
+    }
+  }
+  //validar data de preparo
+  if (!produto.dataPreparacao) {
+    camposVazios.push("data de preparo");
+  }
+
+  // validar quantidade
+  if (!produto.quantidade) {
+    camposVazios.push("quantidade disponível");
+  }
+
+  // validar categoria
+  if (!produto.categoria) {
+    camposVazios.push("categoria");
+  }
+
+  if (camposVazios.length) {
+    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    return false;
+  }
+  if (erros.length) {
+    ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+    return false;
+  }
+  return true;
+}
+
+quebraEmLinhas(lista) {
+  var listaQuebrada = "";
+  for(item in lista) {
+    listaQuebrada += lista[item] + "\n";
+  }
+  return listaQuebrada.trim();
+}
+
 selecionarFoto() {
   var options = {
     title: 'Selecione sua foto',
@@ -149,6 +204,7 @@ selecionarFoto() {
     };
 
   salvaProduto() {
+
     const {
       state: {
         vendedorId,
@@ -175,7 +231,9 @@ selecionarFoto() {
       "categoria": categoria,
       "observacao": observacao
     }
+    let continuar = this.validaCampos(produto);
 
+    if (continuar){
     fetch('http://10.0.2.2:8080/produto', {
       method: 'POST',
       headers: {
@@ -194,6 +252,7 @@ selecionarFoto() {
       }).catch((error) => {
         console.error(error);
       });
+  }
   };
 
 render() {
@@ -245,10 +304,16 @@ return (
                   iconName={'cutlery'}
                   iconColor={'#8B636C'}/>
 
-          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+          <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
                   iconClass={FontAwesomeIcon}
-                  onChangeText={(preco) => this.setState({preco: preco})}
+                  onChangeText={(preco) => {
+                    this.setState({preco: preco});
+                    if (this.validaPreco(preco)) {
+                      this.setState({backgroundColorPreco: 'transparent'});
+                      } else {
+                      this.setState({backgroundColorPreco: 'rgba(255, 0, 0, 0.3);'});
+                  }}}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
                   iconColor={'#8B636C'}/>
