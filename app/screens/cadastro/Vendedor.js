@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid, Text, Dimensions } from 'react-native';
 import { Tile, Button } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
-import { Kohana } from 'react-native-textinput-effects';
+import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import NavigationBar from 'react-native-navbar';
 
@@ -16,7 +16,7 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        userId: this.props.navigation.state.params.userId,
+        userId: 39,
         pagamentosArray: [],
         nomeLoja: '',
         meiosPagamentos: []
@@ -130,8 +130,8 @@ class Vendedor extends Component {
           />
         <View style={styles.container}>
           <ScrollView style={{ backgroundColor: '#fff' }}>
-              <Kohana
-                style={{ height: 45 }}
+              <Fumi
+                style={{ width: 375, height: 70 }}
                 label={'Nome da sua loja'}
                 iconClass={MaterialsIcon}
                 iconName={'store'}

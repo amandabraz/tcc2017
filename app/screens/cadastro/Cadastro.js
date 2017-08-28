@@ -14,8 +14,9 @@ import { AppRegistry,
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Kohana } from 'react-native-textinput-effects';
+import { Fumi } from 'react-native-textinput-effects';
 import ImagePicker from 'react-native-image-picker';
+import { Icon } from 'react-native-elements';
 
 class Cadastro extends Component {
   constructor(props) {
@@ -264,9 +265,8 @@ class Cadastro extends Component {
 
  render() {
     return (
-      <View style= {{flex: 3}}>
-      <Image source={require('./img/cake1.jpg')}
-             style={styles.backgroundImage}>
+      <View style= {{flex: 3, backgroundColor: '#C1CDCD'}}>
+
 
       <NavigationBar title={titleConfig}
                      tintColor="#f5f5f5"/>
@@ -280,17 +280,18 @@ class Cadastro extends Component {
                source={this.state.image}/>
       </TouchableOpacity>
 
-      <Kohana style={{ backgroundColor: 'transparent' }}
-              label={'Nome Completo'}
-              iconClass={FontAwesomeIcon}
-              onChangeText={(nome) => this.setState({nome: nome})}
-              iconName={'user'}
-              iconColor={'#f5f5f5'}
-              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
+      <Fumi
+        style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+        label={'Nome Completo'}
+        iconClass={FontAwesomeIcon}
+        maxLength={50}
+        onChangeText={(nome) => this.setState({nome: nome})}
+        iconName={'user'}
+        iconColor={'#f5f5f5'}
+        labelStyle={styles.texto}
+        inputStyle={styles.input}/>
 
-
-      <Kohana style={{ backgroundColor: this.state.backgroundColorCpf }}
+      <Fumi style={{ backgroundColor: this.state.backgroundColorCpf, width: 375, height: 70 }}
               label={'CPF'}
               maxLength={11}
               iconClass={FontAwesomeIcon}
@@ -303,12 +304,12 @@ class Cadastro extends Component {
                 }
             }}
               iconName={'info'}
-              iconColor={'#f5f5f5'}
               keyboardType={'numeric'}
-              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
+              iconColor={'#f5f5f5'}
+              labelStyle={styles.texto}
+              inputStyle={styles.input}/>
 
-      <Kohana style={{ backgroundColor: 'transparent' }}
+      <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
               label={'Celular'}
               maxLength={11}
               iconClass={FontAwesomeIcon}
@@ -316,10 +317,16 @@ class Cadastro extends Component {
               iconName={'mobile'}
               keyboardType={'phone-pad'}
               iconColor={'#f5f5f5'}
-              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
+              labelStyle={styles.texto}
+              inputStyle={styles.input}/>
 
-      <DatePicker style={{width: 375, height: 48}}
+      <View style={{flexDirection:'row', padding: 10, alignItems: 'center'}}>
+        <FontAwesomeIcon
+          name='calendar'
+          color='#f5f5f5'
+          size = {18}/>
+
+          <DatePicker style={{width: 330}}
                   date={this.state.date}
                   mode="date"
                   placeholder="Data de Nascimento"
@@ -327,28 +334,26 @@ class Cadastro extends Component {
                   maxDate="2002-01-01"
                   confirmBtnText="Confirm"
                   cancelBtnText="Cancel"
+                  showIcon={false}
                   customStyles={{
-                    dateInput: { borderWidth: 0 },
-                    dateIcon: {
-                      position: 'absolute',
-                      left: 0,
-                      top: 4,
-                      marginLeft: 5
-                    },
+                    dateInput: { borderWidth: 0},
                     placeholderText: {
                       color: '#f5f5f5',
                       fontFamily: 'Roboto',
-                      fontSize: 20
+                      fontSize: 16,
+                      textAlign: 'left'
                     },
                     dateText: {
                       color: '#f5f5f5',
                       fontFamily: 'Roboto',
-                      fontSize: 20
+                      fontSize: 20,
+                      textAlign: 'left'
                     }
                   }}
                   onDateChange={(date) => {this.setState({date: date});}}/>
+      </View>
 
-      <Kohana style={{ backgroundColor: this.state.backgroundColorEmail }}
+      <Fumi style={{ backgroundColor: this.state.backgroundColorEmail, width: 375, height: 70 }}
               label={'Email'}
               iconClass={FontAwesomeIcon}
               keyboardType={'email-address'}
@@ -361,34 +366,35 @@ class Cadastro extends Component {
               }}}
               iconName={'at'}
               iconColor={'#f5f5f5'}
-              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}/>
+              labelStyle={styles.texto}
+              inputStyle={styles.input}/>
 
-      <Kohana style={{ backgroundColor: this.state.backgroundColorSenha }}
+      <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
               label={'Senha'}
               maxLength={10}
               iconClass={FontAwesomeIcon}
               iconName={'lock'}
               onChangeText={(senha) => this.setState({senha: senha})}
               iconColor={'#f5f5f5'}
-              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
+              labelStyle={styles.texto}
+              inputStyle={styles.input}
               secureTextEntry={true}/>
 
-      <Kohana style={{ backgroundColor: this.state.backgroundColorSenha }}
+      <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
               label={'Confirmação de Senha'}
               maxLength={10}
               iconClass={FontAwesomeIcon}
               iconName={'lock'}
               onChangeText={(confirmaSenha) => this.setState({confirmaSenha: confirmaSenha})}
               iconColor={'#f5f5f5'}
-              labelStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
-              inputStyle={{ color: '#f5f5f5', fontSize: 20, fontFamily: 'Roboto', textAlign: 'center' }}
+              labelStyle={styles.texto}
+              inputStyle={styles.input}
               secureTextEntry={true}/>
 
-      </View>
+
       <Text>{'\n'}</Text>
 
+      </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5}}>
 
       <Button title ="        Quero Vender         "
@@ -399,9 +405,9 @@ class Cadastro extends Component {
               color="#87cefa"
               onPress={this.onButtonCliente}/>
 
+
       </View>
       </ScrollView>
-      </Image>
       </View>
     );
   }
@@ -409,7 +415,7 @@ class Cadastro extends Component {
 
 const titleConfig = {
   title: 'Faça seu Cadastro',
-  tintColor: '#f08080',
+  tintColor: '#838B8B',
   fontFamily: 'Roboto',
 };
 
@@ -422,28 +428,15 @@ const styles = StyleSheet.create({
   },
 
   texto: {
-    color: '#f08080',
-    fontSize: 30,
+    color: '#f5f5f5',
+    fontSize: 12,
     fontFamily: 'Roboto',
-    textAlign: 'center'
-  },
-
-  backgroundImage: {
-      flex: 1,
-      width: null,
-      height: null,
   },
 
     input:{
-      width: 378,
-      height: 65,
-      borderColor: "#778899",
-      borderWidth: 0.15,
-      margin: 5,
-      fontFamily: 'Roboto',
-      color: '#f08080',
-      fontSize: 20,
-      textAlign: 'center',
+       color: '#f5f5f5',
+       fontSize: 20,
+       fontFamily: 'Roboto'
     },
 });
 
