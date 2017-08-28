@@ -9,11 +9,9 @@ import {
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 
-
-
 class GerenciaProduto extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       userId: this.props.navigation.state.params.userId,

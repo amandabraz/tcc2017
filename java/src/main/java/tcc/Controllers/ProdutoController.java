@@ -47,7 +47,11 @@ public class ProdutoController {
                 }
             }
             Produto novoProduto = produtoService.salvaProduto(produto);
-            return new ResponseEntity<>(novoProduto.getId(), HttpStatus.OK);
+            if (novoProduto != null) {
+                return new ResponseEntity<>(novoProduto.getId(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Erro ao salvar Produto"), HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             System.out.println(e.fillInStackTrace());
             return new ResponseEntity<>(new CustomError("Erro ao salvar Produto"), HttpStatus.BAD_REQUEST);
