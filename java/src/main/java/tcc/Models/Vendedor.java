@@ -13,7 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "VENDEDOR")
@@ -26,22 +26,26 @@ public class Vendedor implements Serializable {
     @Column(name = "ID_VENDEDOR")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID_USUARIO", nullable = false)
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
     @Column(name = "NOME_FANTASIA", nullable = true, length = 100)
     private String nomeFantasia;
 
-    @ManyToMany
-    @JoinTable(name = "PAGAMENTOS_ACEITOS",
-            joinColumns = { @JoinColumn(name = "ID_VENDEDOR") },
-            inverseJoinColumns = { @JoinColumn(name = "ID_PAGAMENTO") })
-    private List<Pagamento> pagamentosAceitos;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "VENDEDOR_PAGAMENTO", joinColumns =
+            {@JoinColumn(name = "ID_VENDEDOR")}, inverseJoinColumns =
+            {@JoinColumn(name = "ID_PAGAMENTO")})
+    private Set<Pagamento> meiosPagamento;
 
 
     public Vendedor() {
-        super();
+        this.id = id;
+        this.usuario = usuario;
+        this.nomeFantasia = nomeFantasia;
+        this.meiosPagamento = meiosPagamento;
     }
 
     /**
@@ -51,12 +55,16 @@ public class Vendedor implements Serializable {
     public Vendedor(Long id) {
         super();
         this.id = id;
+        this.usuario = usuario;
+        this.nomeFantasia = nomeFantasia;
+        this.meiosPagamento = meiosPagamento;
     }
 
 
-    public Vendedor(Usuario usuario, String nomeFantasia) {
+    public Vendedor(Usuario usuario, String nomeFantasia, Set<Pagamento> pagamento) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
+        this.meiosPagamento = meiosPagamento;
     }
 
     public Long getId() {
@@ -83,12 +91,12 @@ public class Vendedor implements Serializable {
         this.usuario = usuario;
     }
 
-    public List<Pagamento> getPagamentosAceitos() {
-        return pagamentosAceitos;
+    public Set<Pagamento> getMeiosPagamentos() {
+        return meiosPagamento;
     }
 
-    public void setPagamentosAceitos(List<Pagamento> pagamentosAceitos) {
-        this.pagamentosAceitos = pagamentosAceitos;
+    public void setMeiosPagamentos(Set<Pagamento> meiosPagamento) {
+        this.meiosPagamento = meiosPagamento;
     }
 
     @Override
@@ -97,7 +105,7 @@ public class Vendedor implements Serializable {
                 "id=" + id +
                 ", usuario=" + usuario +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", pagamentosAceitos=" + pagamentosAceitos +
+                ", meiosPagamento=" + meiosPagamento +
                 '}';
     }
 }

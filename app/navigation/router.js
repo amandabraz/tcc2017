@@ -98,6 +98,17 @@ export const TabsCliente = TabNavigator({
   });
 
   export const GerenciaVendedor = StackNavigator({
+      PerfilVendedor: {
+        screen: PerfilVendedor
+      },
+      ConfiguracaoVendedor: {
+        screen: ConfiguracaoVendedor
+      } }, {
+      mode: 'card',
+      headerMode: 'none',
+    });
+
+    export const GerenciaProdutos = StackNavigator({
       GerenciaProduto: {
           screen: GerenciaProduto,
         },
@@ -109,15 +120,15 @@ export const TabsCliente = TabNavigator({
         }
     }, {
       mode: 'card',
-      headerMode: 'none',
+      headerMode: 'none'
     });
 
 /**
 MENU SOMENTE PARA VENDEDORES
 **/
 export const TabsVendedor = TabNavigator({
-    Loja: {
-      screen: GerenciaVendedor,
+    GerenciaProdutos: {
+      screen: GerenciaProdutos,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
@@ -140,14 +151,15 @@ export const TabsVendedor = TabNavigator({
         },
       },
     },
-    PerfilVendedor: {
-      screen: PerfilVendedor,
+    GerenciaVendedor: {
+      screen: GerenciaVendedor,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
         },
       },
     },
+    // TODO: colocar outra rota no lugar de configuracao já que ele foi pra dentro de GerenciaVendedor
     Configuração: {
       screen: ConfiguracaoVendedor,
       navigationOptions: {
