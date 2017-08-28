@@ -103,7 +103,7 @@ export const TabsCliente = TabNavigator({
       },
       ConfiguracaoVendedor: {
         screen: ConfiguracaoVendedor
-      }, {
+      } }, {
       mode: 'card',
       headerMode: 'none',
     });

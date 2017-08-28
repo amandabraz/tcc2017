@@ -42,7 +42,7 @@ export default class PerfilVendedor extends Component {
           this.setState({CPFText: responseJson.usuario.cpf});
           this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
           if (responseJson.meiosPagamentos.length > 0) {
-            this.setState({meiosPagamentoEstilo: styles.listText})
+            this.setState({pagamentoEstilo: styles.listText})
             var pagamentos = "";
             for(i in responseJson.meiosPagamentos) {
               pagamentos += responseJson.meiosPagamentos[i].descricao + " - ";
@@ -142,7 +142,7 @@ export default class PerfilVendedor extends Component {
 
 
           <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
+              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
               label={'Meios de Pagamento'}
               iconClass={FontAwesomeIcon}
               iconName={'asterisk'}
@@ -150,7 +150,7 @@ export default class PerfilVendedor extends Component {
               value={this.state.meiosPagamentoText}
               multiline={true}
               editable={false}
-              inputStyle={this.state.baseText}/>
+              inputStyle={this.state.pagamentoEstilo}/>
       </ScrollView>
       </Image>
     );
@@ -212,7 +212,7 @@ export default class PerfilVendedor extends Component {
   listText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
-    fontSize: 14,
+    fontSize: 16,
   },
   barText: {
     fontFamily: 'Roboto',
