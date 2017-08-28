@@ -15,24 +15,8 @@ import {
   View
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-
-//TextInput utilizado nessa textAlign
-class CampinhoTexto extends Component{
-  constructor(props) {
-   super(props);
-   this.state = { text: 'Ex: Paçoquinha'};
- }
-  render() {
-   return (
-      <TextInput
-        style={styles.input}
-        underlineColorAndroid={'#91d8ab'}
-        value={this.state.text}
-        onChangeText={(text) => this.setState({text})}
-      />
-   );
- }
-}
+import NavigationBar from 'react-native-navbar';
+import Search from 'react-native-search-box';
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
@@ -40,16 +24,16 @@ const { width, height } = Dimensions.get("window");
 
 //Retornando as fotos das comidas
 //TODO: EU TENTEI MORES :( deixei comentado porque quero continuar +tarde
-  
+
 // getFoods = (foods) => {
-//   foods.map(  
+//   foods.map(
 //     food => <View><Image source={{ uri: './img/'+food.name+'.jpg' }}/></View>
 //   );
 // }
 // const foodsList = getFoods([
 //   {name: 'paçoca'},
 //   {name: 'salgadinho'},
-//   {name: 'brigadeiro'}, 
+//   {name: 'brigadeiro'},
 //   {name: 'pudim'}
 // ]);
 
@@ -57,97 +41,140 @@ const { width, height } = Dimensions.get("window");
 export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      nomeProduto: 'Produto',
+      nomeVendedor: 'Vendedor',
+      precoProduto: 'preço',
+      lojaVendedor: 'Nome Fantasia',
+      imagemProduto: require('./img/pacoca.jpg'),
+      imagemVendedor: require('./img/sabrina-copy.jpg'),
+      resultadoPesquisaProduto: [1],
+      resultadoPesquisaVendedor: [1]
+    }
+
     //TODO: EU TENTEI MORES :( deixei comentado porque quero continuar +tarde
     // this.state = {
     //   result: [<View></View>],
     // };
     // this.search = this.search.bind(this);
   }
-  search = () => {    
+  search = () => {
     Alert.alert("Pesquisa!");
 
-    //TODO: EU TENTEI MORES :( deixei comentado porque quero continuar +tarde  
+    //TODO: EU TENTEI MORES :( deixei comentado porque quero continuar +tarde
     // this.setState({
     //   result:{foodsList}
     // });
   }
 
+  buscaProduto() {
+    var views = [];
+    for(i in this.state.resultadoPesquisaProduto) {
+    views.push (
+    <View style={styles.oneResult}>
+          <Image source={this.state.imagemProduto}
+                 style={styles.imageResultSearch}
+                 justifyContent='flex-start'/>
+
+          <View style={{width: 250}}>
+          <Text style={styles.oneResultfontTitle} justifyContent='center'>{this.state.nomeProduto}</Text>
+          <Text style={styles.oneResultfont} justifyContent='center'>{this.state.precoProduto}</Text>
+          <Text style={styles.oneResultfont} justifyContent='center'>{this.state.nomeVendedor}</Text>
+          </View>
+          <Icon
+          name='arrow-forward'
+          type=' material-community'
+          color='#1C1C1C'
+          style={styles.imageResultSearch}
+          left='25'
+          onPress={this.search} />
+        </View>
+      );
+    }
+      return views;
+  }
+
+  buscaVendedor(){
+    var views = [];
+    for(i in this.state.resultadoPesquisaVendedor) {
+    views.push (
+    <View style={styles.oneResult}>
+      <Image source={this.state.imagemVendedor}
+             style={styles.imageResultSearch}
+             justifyContent='flex-start'/>
+
+      <View style={{width: 250}}>
+      <Text style={styles.oneResultfontTitle} justifyContent='center'>{this.state.nomeVendedor}</Text>
+      <Text style={styles.oneResultfont} justifyContent='center'>{this.state.lojaVendedor}</Text>
+      </View>
+      <Icon
+      name='arrow-forward'
+      type=' material-community'
+      color='#1C1C1C'
+      style={styles.imageResultSearch}
+      left='25'
+      onPress={this.search} />
+    </View>
+    );
+  }
+  return views;
+}
+
   render() {
     return (
+      <View style={{flex: 1}}>
+        <NavigationBar
+          title={titleConfig}
+          tintColor="#CDB7B5"
+        />
        <View style={styles.container}>
-        <Image source={require('./img/comidinhas.jpg')} style={styles.background}>
-            <View style={styles.centralView}>
-              <Text style={styles.font}>Busca de Produtos</Text>
-              <View style={styles.search}>
-                <CampinhoTexto/> 
-                <Icon
-                  raised
-                  name='search'
-                  type=' material-community'
-                  color='#91d8ab'
-                  onPress={this.search} />
-              </View>
-              <View style={styles.results}>
-                <View style={styles.oneResult}>
-                  <Image source={require('./img/pacoca.jpg')} style={styles.imageResultSearch} justifyContent='flex-start'/>
-                  <Text  style={styles.oneResultfont} justifyContent='center'>Paçocas do Vieira</Text>
-                  <Icon
-                  name='arrow-forward'
-                  type=' material-community'
-                  color='#4f774d'
-                  style={styles.imageResultSearch}
-                  left='25'
-                  onPress={this.search} />
-                </View>
-                <View style={styles.oneResult}>
-                  <Image source={require('./img/pudim.jpg')} style={styles.imageResultSearch} justifyContent='flex-start'/>
-                  <Text  style={styles.oneResultfont} justifyContent='center'>Pudim da Ana</Text>
-                  <Icon
-                  name='arrow-forward'
-                  type=' material-community'
-                  color='#4f774d'
-                  style={styles.imageResultSearch}
-                  left='25'
-                  onPress={this.search} />
-                </View>
-                <View style={styles.oneResult}>
-                  <Image source={require('./img/salgadinho.jpg')} style={styles.imageResultSearch} justifyContent='flex-start'/>
-                  <Text  style={styles.oneResultfont} justifyContent='center'>Serjão Salgados</Text>
-                  <Icon
-                  name='arrow-forward'
-                  type=' material-community'
-                  color='#4f774d'
-                  style={styles.imageResultSearch}
-                  left='25'
-                  onPress={this.search} />
-                </View>
-              </View>              
-            </View>
-        </Image>
+        <Search ref="search_box"
+               placeholder= "Pesquisar"
+               cancelTitle="Cancelar"/>
+
+        <View style={styles.centralView}>
+          <View style={styles.results}>
+            {this.buscaProduto()}
+            {this.buscaVendedor()}
+
+          </View>
+        </View>
+      </View>
       </View>
     );
   }
 }
 
+const titleConfig = {
+  title: 'Busca de Produtos',
+  tintColor: "#DCDCDC",
+  fontFamily: 'Roboto',
+};
+
 //css
 const styles = StyleSheet.create({
   oneResult:{
-     width: 300,
-     backgroundColor: 'rgba(156, 178, 155, 0.7)',
+     width: 370,
      flexDirection: 'row',
      alignItems:'center',
+     paddingTop: 10,
   },
-  oneResultfont:{
-    color: '#4f774d',
+  oneResultfontTitle:{
+    color: '#1C1C1C',
     fontWeight: 'bold',
     fontSize: 18,
+    left: 5,
+  },
+  oneResultfont:{
+    color: '#1C1C1C',
+    fontSize: 15,
     left: 5,
   },
   results:{
     top:70,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 250,
+    width: 370,
   },
   search:{
     top: 50,
@@ -157,13 +184,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-  },
-  background: { //tornando a imagem do tamanho da tela
-    width,
-    height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    resizeMode: 'cover',
+    backgroundColor: '#DCDCDC'
   },
   centralView: {
     position: 'absolute',
@@ -173,33 +194,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: 'rgba(100, 108, 122, 0.7)',
-  },
-  input:{
-    width: 250,
-    height: 60,
-    borderColor: 'gray',
-    fontFamily: 'Roboto',
-    color: '#91d8ab',
-    fontWeight: 'bold',
-    fontSize: 18,
-    textAlign: 'left',
-  },
-  button: {
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: "#50a1e0",
-    alignSelf: 'stretch',
-  },
-  font: {
-    top: 50,
-    fontWeight: 'bold',
-    fontSize: 25,
-    color:'#95c9db',
-    textAlign:'center',
   },
   imageResultSearch:{
     width: 70,
