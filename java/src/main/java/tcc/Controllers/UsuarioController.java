@@ -11,18 +11,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
+import tcc.Models.Cliente;
 import tcc.Models.Usuario;
+import tcc.Models.Vendedor;
+import tcc.Services.ClienteService;
 import tcc.Services.UsuarioService;
+import tcc.Services.VendedorService;
 
 @RequestMapping(value = "/usuario")
 @RestController
 public class UsuarioController {
+
+    private char VENDEDOR = 'V';
+    private char CLIENTE = 'C';
 
     @Autowired
     private UsuarioDAO usuarioDao;
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private VendedorService vendedorService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
@@ -65,19 +78,28 @@ public class UsuarioController {
      *          Erro    se o email não estiver cadastrado.
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity efetuaLogin(@RequestBody Usuario usuario){
+    public ResponseEntity efetuaLogin(@RequestBody Usuario usuario) {
         try {
             Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
             if (usuarioBd != null) {
+                //TODO: retornar ou outra opcao caso o usuario esteja DELETADO ou BLOQUEADO
+                if (VENDEDOR == usuarioBd.getPerfil()) {
+                    Vendedor vendedor = vendedorService.buscaVendedorPorUsuario(usuarioBd);
+                    vendedor.setUsuario(usuarioBd);
+                    return new ResponseEntity<Vendedor>(vendedor, HttpStatus.OK);
+                } else if (CLIENTE == usuarioBd.getPerfil()) {
+                    Cliente cliente = clienteService.buscaClientePorUsuario(usuarioBd);
+                    cliente.setUsuario(usuarioBd);
+                    return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
+                }
+                // Fallback somente: return Usuario
                 return new ResponseEntity<Usuario>(usuarioBd, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
             }
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>(new CustomError("Erro ao efetuar login"), HttpStatus.FORBIDDEN);
         }
     }

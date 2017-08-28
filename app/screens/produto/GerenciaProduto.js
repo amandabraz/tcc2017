@@ -9,13 +9,13 @@ import {
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 
-
-
 class GerenciaProduto extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
+      userId: this.props.navigation.state.params.userId,
+      vendedorId: this.props.navigation.state.params.vendedorId,
       dataSource: ds.cloneWithRows(['row 1', 'row 2']),
     };
   }
@@ -26,7 +26,7 @@ class GerenciaProduto extends Component {
 
 
   adicionarProduto = () => {
-    this.props.navigation.navigate('CadastroProduto');
+    this.props.navigation.navigate('CadastroProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
   };
 
   render() {

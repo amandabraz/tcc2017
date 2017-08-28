@@ -10,18 +10,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Created by amanda on 21/08/2017.
  */
 @Entity
 @Table(name = "GALERIA")
-public class Galeria {
+public class Galeria implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_GALERIA")
-    public long id;
+    public Long id;
 
     @Column(name = "IMAGEM")
     public String imagem;
@@ -34,16 +37,21 @@ public class Galeria {
         super();
     }
 
+    public Galeria(Long id) {
+        super();
+        this.id = id;
+    }
+
     public Galeria(String imagem, Produto produto) {
         this.imagem = imagem;
         this.produto = produto;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

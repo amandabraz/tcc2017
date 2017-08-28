@@ -1,7 +1,6 @@
 package tcc.Models;
 
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,14 +12,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by amanda on 10/05/2017.
- */
 @Entity
 @Table(name = "VENDEDOR")
-public class Vendedor {
+public class Vendedor implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,12 +39,20 @@ public class Vendedor {
             inverseJoinColumns = { @JoinColumn(name = "ID_PAGAMENTO") })
     private List<Pagamento> pagamentosAceitos;
 
+
     public Vendedor() {
-        this.id = id;
-        this.usuario = usuario;
-        this.nomeFantasia = nomeFantasia;
-        this.pagamentosAceitos = pagamentosAceitos;
+        super();
     }
+
+    /**
+     * Este construtor serve para classes que tem vendedor como FK
+     * @param id
+     */
+    public Vendedor(Long id) {
+        super();
+        this.id = id;
+    }
+
 
     public Vendedor(Usuario usuario, String nomeFantasia) {
         this.usuario = usuario;

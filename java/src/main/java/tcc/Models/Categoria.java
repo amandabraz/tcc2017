@@ -1,6 +1,7 @@
 package tcc.Models;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by larissa on 24/05/17.
@@ -8,12 +9,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "CATEGORIA")
-public class Categoria {
+public class Categoria implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_CATEGORIA")
-
     private Long id;
 
     @Column(name = "DESCRICAO", unique = true)
@@ -21,6 +23,15 @@ public class Categoria {
 
     public Categoria() {
         super();
+    }
+
+    /**
+     * Este construtor serve para classes que tem categoria como FK
+     * @param id
+     */
+    public Categoria(Long id) {
+        super();
+        this.id = id;
     }
 
     public Categoria(long id, String descricao) {

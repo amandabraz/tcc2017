@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Created by larissa on 24/05/17.
@@ -14,28 +15,43 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "INGREDIENTE")
-public class Ingrediente {
+public class Ingrediente implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_INGREDIENTE")
-    private long id;
+    private Long id;
 
     @Column(name = "ITEM",
             nullable = false,
             length = 100)
     private String item;
 
-    public Ingrediente(long id, String item) {
+    public Ingrediente() {
+        super();
+    }
+
+    public Ingrediente(Long id) {
+        super();
+        this.id = id;
+    }
+    public Ingrediente(String item) {
+        super();
+        this.item = item;
+    }
+
+    public Ingrediente(Long id, String item) {
         this.id = id;
         this.item = item;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

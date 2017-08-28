@@ -17,7 +17,7 @@ public class Avaliacao {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_AVALIACAO")
-    public long id;
+    public Long id;
 
     @Column(name = "NOTA")
     public float nota;
@@ -30,6 +30,11 @@ public class Avaliacao {
     @JoinColumn(name = "AVALIADOR", nullable = false)
     public Cliente cliente;
 
+    public Avaliacao(Long id) {
+        super();
+        this.id = id;
+    }
+
     public Avaliacao() {
         super();
     }
@@ -40,11 +45,11 @@ public class Avaliacao {
         this.cliente = cliente;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
