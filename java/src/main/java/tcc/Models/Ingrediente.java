@@ -19,23 +19,32 @@ public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_INGREDIENTE")
-    private long id;
+    private Long id;
 
     @Column(name = "ITEM",
             nullable = false,
             length = 100)
     private String item;
 
-    public Ingrediente(long id, String item) {
+    public Ingrediente() {
+        super();
+    }
+
+    public Ingrediente(Long id) {
+        super();
+        this.id = id;
+    }
+
+    public Ingrediente(Long id, String item) {
         this.id = id;
         this.item = item;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
