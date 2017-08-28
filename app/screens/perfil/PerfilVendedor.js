@@ -17,6 +17,10 @@ export default class PerfilVendedor extends Component {
       dataNascimentoText: '',
       emailText: '',
       meiosPagamentoText: "Nenhum Meio de Pagamento Escolhido",
+      pagamentoEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
       CPFText: '',
       celularText: '',
       confText: '  Configuração'
@@ -37,11 +41,11 @@ export default class PerfilVendedor extends Component {
           this.setState({emailText: responseJson.usuario.email});
           this.setState({CPFText: responseJson.usuario.cpf});
           this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
-          if (responseJson.meiosPagamento.length > 0) {
+          if (responseJson.meiosPagamentos.length > 0) {
             this.setState({meiosPagamentoEstilo: styles.listText})
             var pagamentos = "";
-            for(i in responseJson.meiosPagamento) {
-              pagamentos += responseJson.meiosPagamento[i].descricao + " - ";
+            for(i in responseJson.meiosPagamentos) {
+              pagamentos += responseJson.meiosPagamentos[i].descricao + " - ";
             }
             pagamentos = pagamentos.slice(0, -3);
             this.setState({meiosPagamentoText: pagamentos});
@@ -130,10 +134,9 @@ export default class PerfilVendedor extends Component {
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome da loja'}
                 iconClass={FontAwesomeIcon}
-                iconSize={20}
                 iconName={'user'}
                 iconColor={'darkslategrey'}
-                value={this.state.nomeFantasia}
+                value={this.state.nomeFantasiaText}
                 editable={false}
                 inputStyle={styles.baseText}/>
 
@@ -147,7 +150,7 @@ export default class PerfilVendedor extends Component {
               value={this.state.meiosPagamentoText}
               multiline={true}
               editable={false}
-              inputStyle={this.state.meiosPagamentoEstilo}/>
+              inputStyle={this.state.baseText}/>
       </ScrollView>
       </Image>
     );

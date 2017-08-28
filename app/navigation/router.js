@@ -98,6 +98,12 @@ export const TabsCliente = TabNavigator({
   });
 
   export const GerenciaVendedor = StackNavigator({
+      PerfilVendedor: {
+        screen: PerfilVendedor
+      },
+      ConfiguracaoVendedor: {
+        screen: ConfiguracaoVendedor
+      },
       GerenciaProduto: {
           screen: GerenciaProduto,
         },
@@ -178,7 +184,6 @@ export const TabsVendedor = TabNavigator({
 
 // TODO: Creio que aqui colocamos uma logica pra dizer: se usuario está logado, carregar dashboard, senão, carregar tela de login
 export const Root = StackNavigator({
-
   Login: {
     screen: Login,
   },
