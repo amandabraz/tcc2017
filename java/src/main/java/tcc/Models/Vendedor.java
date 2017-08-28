@@ -12,14 +12,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by amanda on 10/05/2017.
- */
 @Entity
 @Table(name = "VENDEDOR")
-public class Vendedor {
+public class Vendedor implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
