@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.VendedorDAO;
 import tcc.ErrorHandling.CustomError;
-import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
+import tcc.Services.VendedorService;
+
+import java.util.List;
 
 @RequestMapping(value = "/vendedor")
 @RestController
@@ -19,6 +21,9 @@ public class VendedorController {
 
     @Autowired
     private VendedorDAO vendedorDAO;
+
+    @Autowired
+    private VendedorService vendedorService;
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
@@ -36,12 +41,12 @@ public class VendedorController {
         }
         return new ResponseEntity<Vendedor>(novoVendedor, HttpStatus.OK);
     }
+    
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity buscaVendedorPorUsuario(@RequestParam(value = "usuarioId") Long usuarioId) {
+    public ResponseEntity buscaVendedorPorFiltro(@RequestParam(value = "filtro") String filtro) {
         try {
-            Usuario usuario = new Usuario(usuarioId);
-            return new ResponseEntity<Vendedor> (vendedorDAO.findByUsuario(usuario), HttpStatus.OK);
+            return new ResponseEntity<List<Vendedor>> (vendedorService.encontraVendedorPorFiltro(filtro), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao procurar Vendedor"), HttpStatus.BAD_REQUEST);
         }

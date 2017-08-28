@@ -7,6 +7,7 @@ import tcc.Models.Produto;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -34,7 +35,11 @@ public class ProdutoService {
             listaProdutos.addAll(produtoDAO.findByRestricoesDieteticasDescricaoIgnoreCaseContaining(filtro));
             listaProdutos.addAll(produtoDAO.findByCategoriaDescricaoIgnoreCaseContaining(filtro));
             listaProdutos.addAll(produtoDAO.findByVendedorNomeFantasiaIgnoreCaseContaining(filtro));
-            return listaProdutos;
+
+            // remove resultados duplicados
+            List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
+
+            return listaProdutosFiltrada;
         } catch (Exception e) {
             throw e;
         }
