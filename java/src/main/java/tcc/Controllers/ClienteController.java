@@ -41,18 +41,16 @@ public class ClienteController {
     public ResponseEntity cadastraCliente(@RequestBody Cliente cliente) {
         Cliente novoCliente = null;
         try {
-            if (!cliente.getTags().isEmpty()) {
-                Set<Tag> tagsSalvas = new HashSet<>();
-                Tag tagSalva;
-                for (Tag tagProposta : cliente.getTags()) {
-                    tagSalva = tagService.verificarTag(tagProposta);
-                    if (tagSalva != null) {
-                        tagsSalvas.add(tagSalva);
-                    }
+            Set<Tag> tagsSalvas = new HashSet<>();
+            Tag tagSalva;
+            for (Tag tagProposta : cliente.getTags()) {
+                tagSalva = tagService.verificarTag(tagProposta);
+                if (tagSalva != null) {
+                    tagsSalvas.add(tagSalva);
                 }
-                if (!tagsSalvas.isEmpty()) {
-                    cliente.setTags(tagsSalvas);
-                }
+            }
+            if (!tagsSalvas.isEmpty()) {
+                cliente.setTags(tagsSalvas);
             }
             novoCliente = clienteService.salvaCliente(cliente);
         } catch (Exception ex) {
