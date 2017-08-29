@@ -30,6 +30,11 @@ public class Ingrediente {
         super();
     }
 
+    public Ingrediente(String item) {
+        super();
+        this.item = item;
+    }
+
     public Ingrediente(Long id) {
         super();
         this.id = id;

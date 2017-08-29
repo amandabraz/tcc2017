@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.ErrorHandling.CustomError;
+import tcc.Models.Ingrediente;
 import tcc.Models.Produto;
 import tcc.Models.Tag;
+import tcc.Services.IngredienteService;
 import tcc.Services.ProdutoService;
 import tcc.Services.TagService;
 
@@ -27,6 +29,9 @@ public class ProdutoController {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private IngredienteService ingredienteService;
+
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity cadastraProduto(@RequestBody Produto produto) {
@@ -42,6 +47,19 @@ public class ProdutoController {
                 }
                 if (!tagsSalvas.isEmpty()) {
                     produto.setTags(tagsSalvas);
+                }
+            }
+            if (!produto.getIngredientes().isEmpty()) {
+                Set<Ingrediente> ingredientesSalvos = new HashSet<>();
+                Ingrediente ingredienteSalvo;
+                for (Ingrediente ingredienteProposto : produto.getIngredientes()) {
+                    ingredienteSalvo = ingredienteService.verificarIngrediente(ingredienteProposto);
+                    if (ingredienteSalvo != null) {
+                        ingredientesSalvos.add(ingredienteSalvo);
+                    }
+                }
+                if (!ingredientesSalvos.isEmpty()) {
+                    produto.setIngredientes(ingredientesSalvos);
                 }
             }
             Produto novoProduto = produtoService.salvaProduto(produto);
