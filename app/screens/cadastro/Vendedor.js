@@ -19,13 +19,13 @@ class Vendedor extends Component {
         userId: this.props.navigation.state.params.userId,
         pagamentosArray: [],
         nomeLoja: '',
-        pagamentosAceitos: []
+        meiosPagamentos: []
     }
     this.preencherPagamentosArray();
   }
 
   preencherPagamentosArray() {
-    fetch('http://10.0.2.2:8080/pagamento')
+    fetch('http://10.0.2.2:8080/meiopagamento')
       .then((response) => response.json())
         .then((responseJson) => {
           var pagamentosBuscados = [];
@@ -37,7 +37,7 @@ class Vendedor extends Component {
   }
 
  pagamentoEscolhido = () => {
-     if (this.state.pagamentosAceitos.length > 0) {
+     if (this.state.meiosPagamentos.length > 0) {
        return true;
      }
      else {
@@ -57,14 +57,14 @@ class Vendedor extends Component {
         state: {
           userId,
           nomeLoja,
-          pagamentosAceitos
+          meiosPagamentos
         }
       } = this;
       // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
       vendedor = {
         "usuario": userId,
         "nomeFantasia": nomeLoja,
-        "pagamentosAceitos": pagamentosAceitos
+        "meiosPagamentos": meiosPagamentos
       }
 
       //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
@@ -90,24 +90,24 @@ class Vendedor extends Component {
             });
     }
   };
-  onClick(meioPagamento) {
-    meioPagamento.checked = !meioPagamento.checked;
-    var meiosAceitos = this.state.pagamentosAceitos;
-    meiosAceitos.push(meioPagamento);
-    this.setState({ pagamentosAceitos: meiosAceitos });
+  onClick(descricao) {
+    descricao.checked = !descricao.checked;
+    var pagamentos = this.state.meiosPagamentos;
+    pagamentos.push(descricao);
+    this.setState({ meiosPagamentos: pagamentos });
   }
 
   mostrarCheckboxesPagamento() {
     var views = [];
     for(i in this.state.pagamentosArray) {
-      let meioPagamento = this.state.pagamentosArray[i];
+      let descricao = this.state.pagamentosArray[i];
       views.push (
         <View key={i} style={styles.item}>
           <CheckBox
             style={{flex: 1, padding: 10}}
-            onClick={()=>this.onClick(meioPagamento)}
-            isChecked={meioPagamento.checked}
-            leftText={meioPagamento.meioPagamento}
+            onClick={()=>this.onClick(descricao)}
+            isChecked={descricao.checked}
+            leftText={descricao.descricao}
             />
         </View>
       );
