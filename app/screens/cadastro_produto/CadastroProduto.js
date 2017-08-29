@@ -71,6 +71,7 @@ export default class CadastroProduto extends Component {
       .then((response) => response.json())
         .then((responseJson) => {
           var categoriasBuscadas = [];
+          categoriasBuscadas.push({descricao: '-----'})
             for (i in responseJson) {
               categoriasBuscadas.push(responseJson[i]);
             }
@@ -114,10 +115,6 @@ mostrarCheckboxesDieta() {
   return views;
 };
 
-validaPreco = (preco) => {
-  var re = /\S+,\S+\S+/;
- return re.test(preco);
-}
 
 validaCampos = (produto) => {
   let camposVazios = [];
@@ -129,10 +126,6 @@ validaCampos = (produto) => {
   //validar preco
   if (!produto.preco) {
     camposVazios.push("preço");
-  } else {
-    if (!this.validaPreco(produto.preco)) {
-      erros.push("Preço inválido");
-    }
   }
   //validar data de preparo
   if (!produto.dataPreparacao) {
@@ -228,6 +221,7 @@ selecionarFoto() {
       "vendedor": vendedorId,
       "tags": tags,
       "restricoesDieteticas": restricoesDieteticas,
+      "ingredientes": ingredientes,
       "categoria": categoria,
       "observacao": observacao
     }
@@ -300,26 +294,23 @@ return (
           <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Nome'}
                   iconClass={FontAwesomeIcon}
+                  maxLength={50}
                   onChangeText={(nome) => this.setState({nome: nome})}
                   iconName={'cutlery'}
                   iconColor={'#8B636C'}/>
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
+                  maxLength={6}
                   iconClass={FontAwesomeIcon}
-                  onChangeText={(preco) => {
-                    this.setState({preco: preco});
-                    if (this.validaPreco(preco)) {
-                      this.setState({backgroundColorPreco: 'transparent'});
-                      } else {
-                      this.setState({backgroundColorPreco: 'rgba(255, 0, 0, 0.3);'});
-                  }}}
+                  onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
                   iconColor={'#8B636C'}/>
 
          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                     label={'Quantidade disponível'}
+                    maxLength={4}
                     iconClass={FontAwesomeIcon}
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
