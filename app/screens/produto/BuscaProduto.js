@@ -57,7 +57,7 @@ export default class BuscaProduto extends Component {
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
 
-              <View style={{width: 250}}>
+              <View style={{width: 210, margin: 10}}>
                 <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
                 <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
                 <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
@@ -80,12 +80,13 @@ export default class BuscaProduto extends Component {
     for(i in this.state.resultadoPesquisaVendedor) {
       let vendedor = this.state.resultadoPesquisaVendedor[i];
       views.push (
-        <View key={i} style={styles.oneResult}>
+        <View key={i}>
+        <View style={styles.oneResult}>
           <Image source={this.state.imagemVendedor}
                  style={styles.imageResultSearch}
                  justifyContent='flex-start'/>
 
-          <View style={{width: 250}}>
+          <View style={{width: 210, margin: 10}}>
             <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
             <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
           </View>
@@ -95,6 +96,8 @@ export default class BuscaProduto extends Component {
             color='#1C1C1C'
             style={styles.imageResultSearch}
              />
+        </View>
+        <Text>{'\n'}</Text>
         </View>
       );
   }
@@ -118,14 +121,15 @@ export default class BuscaProduto extends Component {
            value={this.state.searchText}
            placeholder={'Search'} />
         </View>
-        <View style={styles.centralView}>
-          <View style={styles.results}>
-            <ScrollView>
+
+        <ScrollView>
+          <View style={styles.centralView}>
+            <View style={styles.results}>
               {this.buscaProduto()}
               {this.buscaVendedor()}
-            </ScrollView>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -142,12 +146,12 @@ const styles = StyleSheet.create({
   oneResult:{
      width: 370,
      flexDirection: 'row',
-     backgroundColor: '#fff',
+     backgroundColor: 'rgba(255, 255, 255, 0.55)',
      borderWidth: 1,
      borderRadius: 10,
      borderColor: '#fff',
      padding: 10,
-     margin: 15,
+     margin: 3,
   },
   oneResultfontTitle:{
     color: '#1C1C1C',
@@ -159,30 +163,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   results:{
-    top:70,
     justifyContent: 'center',
     alignItems: 'center',
     width: 370,
   },
   search:{
-    top: 50,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
-    flex: 1,
     flexDirection: 'row',
     backgroundColor: '#DCDCDC'
   },
   centralView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   imageResultSearch:{
     width: 70,
