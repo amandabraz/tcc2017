@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tcc.DAOs.VendedorDAO;
 import tcc.ErrorHandling.CustomError;
+import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 import tcc.Services.VendedorService;
 
