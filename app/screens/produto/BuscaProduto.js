@@ -1,3 +1,8 @@
+/**
+* Interface de Busca de Produtos.
+* by https://github.com/maiarar
+*/
+
 import React, { Component } from 'react';
 import {
   Alert,
@@ -14,7 +19,6 @@ import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 
 const { width, height } = Dimensions.get("window");
-
 
 export default class BuscaProduto extends Component {
   constructor(props) {
@@ -102,59 +106,6 @@ export default class BuscaProduto extends Component {
 
 
 
-  buscaProduto() {
-    var views = [];
-    for(i in this.state.resultadoPesquisaProduto) {
-    views.push (
-    <View style={styles.oneResult}>
-          <Image source={this.state.imagemProduto}
-                 style={styles.imageResultSearch}
-                 justifyContent='flex-start'/>
-
-          <View style={{width: 250}}>
-          <Text style={styles.oneResultfontTitle} justifyContent='center'>{this.state.nomeProduto}</Text>
-          <Text style={styles.oneResultfont} justifyContent='center'>{this.state.precoProduto}</Text>
-          <Text style={styles.oneResultfont} justifyContent='center'>{this.state.nomeVendedor}</Text>
-          </View>
-          <Icon
-          name='arrow-forward'
-          type=' material-community'
-          color='#1C1C1C'
-          style={styles.imageResultSearch}
-          left='25'
-          onPress={this.search} />
-        </View>
-      );
-    }
-      return views;
-  }
-
-  buscaVendedor(){
-    var views = [];
-    for(i in this.state.resultadoPesquisaVendedor) {
-    views.push (
-    <View style={styles.oneResult}>
-      <Image source={this.state.imagemVendedor}
-             style={styles.imageResultSearch}
-             justifyContent='flex-start'/>
-
-      <View style={{width: 250}}>
-      <Text style={styles.oneResultfontTitle} justifyContent='center'>{this.state.nomeVendedor}</Text>
-      <Text style={styles.oneResultfont} justifyContent='center'>{this.state.lojaVendedor}</Text>
-      </View>
-      <Icon
-      name='arrow-forward'
-      type=' material-community'
-      color='#1C1C1C'
-      style={styles.imageResultSearch}
-      left='25'
-      onPress={this.search} />
-    </View>
-    );
-  }
-  return views;
-}
-
   render() {
     return (
       <View style={{flex: 1}}>
@@ -176,10 +127,10 @@ export default class BuscaProduto extends Component {
             <View style={styles.results}>
               {this.buscaProduto()}
               {this.buscaVendedor()}
+
             </View>
           </View>
         </ScrollView>
-
       </View>
     );
   }
@@ -211,11 +162,6 @@ const styles = StyleSheet.create({
   oneResultfont:{
     color: '#1C1C1C',
     fontSize: 15,
-  },
-  oneResultfont:{
-    color: '#1C1C1C',
-    fontSize: 15,
-    left: 5,
   },
   results:{
     justifyContent: 'center',
