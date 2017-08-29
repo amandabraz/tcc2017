@@ -1,6 +1,7 @@
 package tcc.Models;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by larissa on 24/05/17.
@@ -8,7 +9,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "CATEGORIA")
-public class Categoria {
+public class Categoria implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

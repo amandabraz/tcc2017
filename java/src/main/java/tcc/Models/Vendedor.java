@@ -14,10 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.List;
 
-/**
- * Created by amanda on 10/05/2017.
- */
 @Entity
 @Table(name = "VENDEDOR")
 public class Vendedor implements Serializable {

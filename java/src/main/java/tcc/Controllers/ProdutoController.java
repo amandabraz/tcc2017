@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Ingrediente;
@@ -17,6 +18,7 @@ import tcc.Services.TagService;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RequestMapping(value = "/produto")
@@ -67,6 +69,17 @@ public class ProdutoController {
         } catch (Exception e) {
             System.out.println(e.fillInStackTrace());
             return new ResponseEntity<>(new CustomError("Erro ao salvar Produto"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity buscaProdutos(@RequestParam(value = "filtro") String filtro) {
+        try {
+            return new ResponseEntity<List<Produto>>(produtoService.encontraProduto(filtro), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.fillInStackTrace());
+            return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }
     }
 }
