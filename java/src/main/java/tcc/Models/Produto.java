@@ -12,9 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -85,7 +85,7 @@ public class Produto implements Serializable {
 
     //TODO: implementar logica que calcula o score com base nas avaliacoes dadas
     @Column(name = "SCORE")
-    private float score;
+    private float score = 0;
 
     public Produto() {
         super();
