@@ -7,6 +7,8 @@ import tcc.DAOs.VendedorDAO;
 import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 
+import javax.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -67,5 +69,4 @@ public class VendedorService {
             throw e;
         }
     }
-
 }

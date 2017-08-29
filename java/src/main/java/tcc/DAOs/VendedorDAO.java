@@ -11,5 +11,4 @@ public interface VendedorDAO extends CrudRepository<Vendedor, Long> {
     Vendedor findByUsuario(Usuario usuario);
     List<Vendedor> findByUsuarioNomeIgnoreCaseContaining(String nome);
     List<Vendedor> findByNomeFantasiaIgnoreCaseContaining(String nomeFantasia);
-
 }
