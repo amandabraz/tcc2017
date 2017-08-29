@@ -35,19 +35,14 @@ export default class BuscaProduto extends Component {
     let searchText = event.nativeEvent.text;
     this.setState({searchText});
     fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
-      .then((response) => {
-      response.json();})
+     .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaProduto: responseJson});
         });
     fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
-    .then((response) => {
-      response.json();
-    })
+     .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaVendedor: responseJson});
-
-              Alert.alert(JSON.stringify(responseJson));
         });
   }
 
@@ -56,23 +51,24 @@ export default class BuscaProduto extends Component {
     for(i in this.state.resultadoPesquisaProduto) {
       let produto = this.state.resultadoPesquisaProduto[i];
       views.push (
-        <View key={i} style={styles.oneResult}>
-            <Image source={this.state.imagemProduto}
-                   style={styles.imageResultSearch}
-                   justifyContent='flex-start'/>
+        <View key={i}>
+          <View style={styles.oneResult}>
+              <Image source={this.state.imagemProduto}
+                     style={styles.imageResultSearch}
+                     justifyContent='flex-start'/>
 
-            <View style={{width: 250}}>
-              <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+              <View style={{width: 250}}>
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+              </View>
+              <Icon
+                name='arrow-forward'
+                type=' material-community'
+                color='#1C1C1C'
+                style={styles.imageResultSearch} />
             </View>
-            <Icon
-              name='arrow-forward'
-              type=' material-community'
-              color='#1C1C1C'
-              style={styles.imageResultSearch}
-              left='25'
-               />
+            <Text>{'\n'}</Text>
           </View>
         );
     }
@@ -83,8 +79,6 @@ export default class BuscaProduto extends Component {
     var views = [];
     for(i in this.state.resultadoPesquisaVendedor) {
       let vendedor = this.state.resultadoPesquisaVendedor[i];
-      Alert.alert(vendedor);
-
       views.push (
         <View key={i} style={styles.oneResult}>
           <Image source={this.state.imagemVendedor}
@@ -100,7 +94,6 @@ export default class BuscaProduto extends Component {
             type=' material-community'
             color='#1C1C1C'
             style={styles.imageResultSearch}
-            left='25'
              />
         </View>
       );
@@ -123,12 +116,12 @@ export default class BuscaProduto extends Component {
            returnKeyType={'search'}
            style={styles.searchBar}
            value={this.state.searchText}
-           placeholder={'Search'}
-           multiline={false} />
+           placeholder={'Search'} />
         </View>
         <View style={styles.centralView}>
           <View style={styles.results}>
             <ScrollView>
+              {this.buscaProduto()}
               {this.buscaVendedor()}
             </ScrollView>
           </View>
@@ -149,18 +142,21 @@ const styles = StyleSheet.create({
   oneResult:{
      width: 370,
      flexDirection: 'row',
-     paddingTop: 10,
+     backgroundColor: '#fff',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 15,
   },
   oneResultfontTitle:{
     color: '#1C1C1C',
     fontWeight: 'bold',
     fontSize: 18,
-    left: 5,
   },
   oneResultfont:{
     color: '#1C1C1C',
     fontSize: 15,
-    left: 5,
   },
   results:{
     top:70,
@@ -193,6 +189,7 @@ const styles = StyleSheet.create({
     height: 70,
     alignItems:  'center',
     justifyContent: 'center',
+    borderRadius: 100,
   },
   searchBar: {
     paddingLeft: 30,
