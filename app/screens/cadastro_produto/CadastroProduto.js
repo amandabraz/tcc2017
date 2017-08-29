@@ -71,6 +71,7 @@ export default class CadastroProduto extends Component {
       .then((response) => response.json())
         .then((responseJson) => {
           var categoriasBuscadas = [];
+          categoriasBuscadas.push({descricao: '-----'})
             for (i in responseJson) {
               categoriasBuscadas.push(responseJson[i]);
             }
@@ -293,12 +294,14 @@ return (
           <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Nome'}
                   iconClass={FontAwesomeIcon}
+                  maxLength={50}
                   onChangeText={(nome) => this.setState({nome: nome})}
                   iconName={'cutlery'}
                   iconColor={'#8B636C'}/>
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
+                  maxLength={6}
                   iconClass={FontAwesomeIcon}
                   onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
@@ -307,6 +310,7 @@ return (
 
          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                     label={'Quantidade disponível'}
+                    maxLength={4}
                     iconClass={FontAwesomeIcon}
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
