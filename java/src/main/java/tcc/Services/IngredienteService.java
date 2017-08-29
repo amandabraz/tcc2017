@@ -15,8 +15,8 @@ public class IngredienteService {
 
     public Ingrediente verificarIngrediente(Ingrediente ingrediente) {
         try {
-            Ingrediente ingredienteEncontrada = ingredienteDAO.findByItem(ingrediente.getItem());
-            if (ingredienteEncontrada != null) return ingredienteEncontrada;
+            Ingrediente ingredienteEncontrado = ingredienteDAO.findByItem(ingrediente.getItem());
+            if (ingredienteEncontrado != null) return ingredienteEncontrado;
             return cadastraIngrediente(ingrediente);
         } catch(Exception e) {
             throw e;
@@ -25,12 +25,12 @@ public class IngredienteService {
 
     @Transactional
     public Ingrediente cadastraIngrediente(Ingrediente ingrediente) {
-        Ingrediente ingredienteCadastrada;
+        Ingrediente ingredienteCadastrado;
         try {
-            ingredienteCadastrada = ingredienteDAO.save(ingrediente);
+            ingredienteCadastrado = ingredienteDAO.save(ingrediente);
         } catch (Exception e) {
             throw e;
         }
-        return ingredienteCadastrada;
+        return ingredienteCadastrado;
     }
 }

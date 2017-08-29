@@ -48,6 +48,7 @@ export default class CadastroProduto extends Component {
      preco: '',
      observacao: '',
      image: require('./img/camera11.jpg'),
+     backgroundColorPreco: "transparent"
     }
     this.preencherDietasArray();
     this.carregarCategoriasArray();
@@ -70,6 +71,7 @@ export default class CadastroProduto extends Component {
       .then((response) => response.json())
         .then((responseJson) => {
           var categoriasBuscadas = [];
+          categoriasBuscadas.push({descricao: '-----'})
             for (i in responseJson) {
               categoriasBuscadas.push(responseJson[i]);
             }
@@ -113,6 +115,52 @@ mostrarCheckboxesDieta() {
   return views;
 };
 
+
+validaCampos = (produto) => {
+  let camposVazios = [];
+  let erros = [];
+  //validar nome
+  if (!produto.nome) {
+      camposVazios.push("nome");
+  }
+  //validar preco
+  if (!produto.preco) {
+    camposVazios.push("preço");
+  }
+  //validar data de preparo
+  if (!produto.dataPreparacao) {
+    camposVazios.push("data de preparo");
+  }
+
+  // validar quantidade
+  if (!produto.quantidade) {
+    camposVazios.push("quantidade disponível");
+  }
+
+  // validar categoria
+  if (!produto.categoria) {
+    camposVazios.push("categoria");
+  }
+
+  if (camposVazios.length) {
+    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    return false;
+  }
+  if (erros.length) {
+    ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+    return false;
+  }
+  return true;
+}
+
+quebraEmLinhas(lista) {
+  var listaQuebrada = "";
+  for(item in lista) {
+    listaQuebrada += lista[item] + "\n";
+  }
+  return listaQuebrada.trim();
+}
+
 selecionarFoto() {
   var options = {
     title: 'Selecione sua foto',
@@ -149,6 +197,7 @@ selecionarFoto() {
     };
 
   salvaProduto() {
+
     const {
       state: {
         vendedorId,
@@ -172,10 +221,13 @@ selecionarFoto() {
       "vendedor": vendedorId,
       "tags": tags,
       "restricoesDieteticas": restricoesDieteticas,
+      "ingredientes": ingredientes,
       "categoria": categoria,
       "observacao": observacao
     }
+    let continuar = this.validaCampos(produto);
 
+    if (continuar){
     fetch('http://10.0.2.2:8080/produto', {
       method: 'POST',
       headers: {
@@ -194,6 +246,7 @@ selecionarFoto() {
       }).catch((error) => {
         console.error(error);
       });
+  }
   };
 
 render() {
@@ -241,12 +294,14 @@ return (
           <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Nome'}
                   iconClass={FontAwesomeIcon}
+                  maxLength={50}
                   onChangeText={(nome) => this.setState({nome: nome})}
                   iconName={'cutlery'}
                   iconColor={'#8B636C'}/>
 
-          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+          <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
+                  maxLength={6}
                   iconClass={FontAwesomeIcon}
                   onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
@@ -255,6 +310,7 @@ return (
 
          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                     label={'Quantidade disponível'}
+                    maxLength={4}
                     iconClass={FontAwesomeIcon}
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
