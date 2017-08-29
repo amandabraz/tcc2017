@@ -36,31 +36,27 @@ public class ProdutoController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity cadastraProduto(@RequestBody Produto produto) {
         try {
-            if (!produto.getTags().isEmpty()) {
-                Set<Tag> tagsSalvas = new HashSet<>();
-                Tag tagSalva;
-                for (Tag tagProposta : produto.getTags()) {
-                    tagSalva = tagService.verificarTag(tagProposta);
-                    if (tagSalva != null) {
-                        tagsSalvas.add(tagSalva);
-                    }
-                }
-                if (!tagsSalvas.isEmpty()) {
-                    produto.setTags(tagsSalvas);
+            Set<Tag> tagsSalvas = new HashSet<>();
+            Tag tagSalva;
+            for (Tag tagProposta : produto.getTags()) {
+                tagSalva = tagService.verificarTag(tagProposta);
+                if (tagSalva != null) {
+                    tagsSalvas.add(tagSalva);
                 }
             }
-            if (!produto.getIngredientes().isEmpty()) {
-                Set<Ingrediente> ingredientesSalvos = new HashSet<>();
-                Ingrediente ingredienteSalvo;
-                for (Ingrediente ingredienteProposto : produto.getIngredientes()) {
-                    ingredienteSalvo = ingredienteService.verificarIngrediente(ingredienteProposto);
-                    if (ingredienteSalvo != null) {
-                        ingredientesSalvos.add(ingredienteSalvo);
-                    }
+            if (!tagsSalvas.isEmpty()) {
+                produto.setTags(tagsSalvas);
+            }
+            Set<Ingrediente> ingredientesSalvos = new HashSet<>();
+            Ingrediente ingredienteSalvo;
+            for (Ingrediente ingredienteProposto : produto.getIngredientes()) {
+                ingredienteSalvo = ingredienteService.verificarIngrediente(ingredienteProposto);
+                if (ingredienteSalvo != null) {
+                    ingredientesSalvos.add(ingredienteSalvo);
                 }
-                if (!ingredientesSalvos.isEmpty()) {
-                    produto.setIngredientes(ingredientesSalvos);
-                }
+            }
+            if (!ingredientesSalvos.isEmpty()) {
+                produto.setIngredientes(ingredientesSalvos);
             }
             Produto novoProduto = produtoService.salvaProduto(produto);
             if (novoProduto != null) {
