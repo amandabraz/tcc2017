@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.VendedorDAO;
 import tcc.ErrorHandling.CustomError;
+import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 import tcc.Services.VendedorService;
 
+import java.util.List;
 import javax.transaction.Transactional;
+
 import java.util.Date;
 import java.util.Set;
 import java.util.List;
@@ -23,9 +26,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/vendedor")
 public class VendedorController {
-
-    @Autowired
-    private VendedorService vendedorService;
 
     @Autowired
     private VendedorDAO vendedorDAO;

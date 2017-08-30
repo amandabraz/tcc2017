@@ -12,134 +12,125 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  ScrollView
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
-import Search from 'react-native-search-box';
 
-//dimensão da janela
 const { width, height } = Dimensions.get("window");
 
-
-//Retornando as fotos das comidas
-//TODO: EU TENTEI MORES :( deixei comentado porque quero continuar +tarde
-
-// getFoods = (foods) => {
-//   foods.map(
-//     food => <View><Image source={{ uri: './img/'+food.name+'.jpg' }}/></View>
-//   );
-// }
-// const foodsList = getFoods([
-//   {name: 'paçoca'},
-//   {name: 'salgadinho'},
-//   {name: 'brigadeiro'},
-//   {name: 'pudim'}
-// ]);
-
-//Exporto essa classe pra que na minha "Main"
 export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nomeProduto: 'Produto',
-      nomeVendedor: 'Vendedor',
-      precoProduto: 'preço',
-      lojaVendedor: 'Nome Fantasia',
       imagemProduto: require('./img/pacoca.jpg'),
       imagemVendedor: require('./img/sabrina-copy.jpg'),
-      resultadoPesquisaProduto: [1],
-      resultadoPesquisaVendedor: [1]
+      resultadoPesquisaProduto: [],
+      resultadoPesquisaVendedor: []
     }
-
-    //TODO: EU TENTEI MORES :( deixei comentado porque quero continuar +tarde
-    // this.state = {
-    //   result: [<View></View>],
-    // };
-    // this.search = this.search.bind(this);
   }
-  search = () => {
-    Alert.alert("Pesquisa!");
 
-    //TODO: EU TENTEI MORES :( deixei comentado porque quero continuar +tarde
-    // this.setState({
-    //   result:{foodsList}
-    // });
+  setSearchText(event) {
+    let searchText = event.nativeEvent.text;
+    this.setState({searchText});
+    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
+     .then((response) => response.json())
+      .then((responseJson) => {
+            this.setState({resultadoPesquisaProduto: responseJson});
+        });
+    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
+     .then((response) => response.json())
+      .then((responseJson) => {
+            this.setState({resultadoPesquisaVendedor: responseJson});
+        });
   }
 
   buscaProduto() {
     var views = [];
     for(i in this.state.resultadoPesquisaProduto) {
-    views.push (
-    <View style={styles.oneResult}>
-          <Image source={this.state.imagemProduto}
-                 style={styles.imageResultSearch}
-                 justifyContent='flex-start'/>
+      let produto = this.state.resultadoPesquisaProduto[i];
+      views.push (
+        <View key={i}>
+          <View style={styles.oneResult}>
+              <Image source={this.state.imagemProduto}
+                     style={styles.imageResultSearch}
+                     justifyContent='flex-start'/>
 
-          <View style={{width: 250}}>
-          <Text style={styles.oneResultfontTitle} justifyContent='center'>{this.state.nomeProduto}</Text>
-          <Text style={styles.oneResultfont} justifyContent='center'>{this.state.precoProduto}</Text>
-          <Text style={styles.oneResultfont} justifyContent='center'>{this.state.nomeVendedor}</Text>
+              <View style={{width: 210, margin: 10}}>
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+              </View>
+              <Icon
+                name='arrow-forward'
+                type=' material-community'
+                color='#1C1C1C'
+                style={styles.imageResultSearch} />
+            </View>
+            <Text>{'\n'}</Text>
           </View>
-          <Icon
-          name='arrow-forward'
-          type=' material-community'
-          color='#1C1C1C'
-          style={styles.imageResultSearch}
-          left='25'
-          onPress={this.search} />
-        </View>
-      );
+        );
     }
       return views;
   }
 
-  buscaVendedor(){
+  buscaVendedor() {
     var views = [];
     for(i in this.state.resultadoPesquisaVendedor) {
-    views.push (
-    <View style={styles.oneResult}>
-      <Image source={this.state.imagemVendedor}
-             style={styles.imageResultSearch}
-             justifyContent='flex-start'/>
+      let vendedor = this.state.resultadoPesquisaVendedor[i];
+      views.push (
+        <View key={i}>
+        <View style={styles.oneResult}>
+          <Image source={this.state.imagemVendedor}
+                 style={styles.imageResultSearch}
+                 justifyContent='flex-start'/>
 
-      <View style={{width: 250}}>
-      <Text style={styles.oneResultfontTitle} justifyContent='center'>{this.state.nomeVendedor}</Text>
-      <Text style={styles.oneResultfont} justifyContent='center'>{this.state.lojaVendedor}</Text>
-      </View>
-      <Icon
-      name='arrow-forward'
-      type=' material-community'
-      color='#1C1C1C'
-      style={styles.imageResultSearch}
-      left='25'
-      onPress={this.search} />
-    </View>
-    );
+          <View style={{width: 210, margin: 10}}>
+            <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
+            <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
+          </View>
+          <Icon
+            name='arrow-forward'
+            type=' material-community'
+            color='#1C1C1C'
+            style={styles.imageResultSearch}
+             />
+        </View>
+        <Text>{'\n'}</Text>
+        </View>
+      );
   }
   return views;
 }
+
+
 
   render() {
     return (
       <View style={{flex: 1}}>
         <NavigationBar
           title={titleConfig}
-          tintColor="#CDB7B5"
+          tintColor="#023329"
         />
        <View style={styles.container}>
-        <Search ref="search_box"
-               placeholder= "Pesquisar"
-               cancelTitle="Cancelar"/>
-
-        <View style={styles.centralView}>
-          <View style={styles.results}>
-            {this.buscaProduto()}
-            {this.buscaVendedor()}
-
-          </View>
+         <TextInput
+           onSubmitEditing={this.setSearchText.bind(this)}
+           returnKeyType={'search'}
+           style={styles.searchBar}
+           value={this.state.searchText}
+           placeholder={'Search'} />
         </View>
-      </View>
+
+        <ScrollView>
+          <View style={styles.centralView}>
+            <View style={styles.results}>
+              {this.buscaProduto()}
+              {this.buscaVendedor()}
+
+            </View>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -156,49 +147,53 @@ const styles = StyleSheet.create({
   oneResult:{
      width: 370,
      flexDirection: 'row',
-     alignItems:'center',
-     paddingTop: 10,
+     backgroundColor: 'rgba(255, 255, 255, 0.55)',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 3,
   },
   oneResultfontTitle:{
     color: '#1C1C1C',
     fontWeight: 'bold',
     fontSize: 18,
-    left: 5,
   },
   oneResultfont:{
     color: '#1C1C1C',
     fontSize: 15,
-    left: 5,
   },
   results:{
-    top:70,
     justifyContent: 'center',
     alignItems: 'center',
     width: 370,
   },
   search:{
-    top: 50,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
-    flex: 1,
+    flexDirection: 'row',
     backgroundColor: '#DCDCDC'
   },
   centralView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   imageResultSearch:{
     width: 70,
     height: 70,
     alignItems:  'center',
     justifyContent: 'center',
+    borderRadius: 100,
+  },
+  searchBar: {
+    paddingLeft: 30,
+    fontSize: 15,
+    height: 20,
+    flex: .1,
+    borderWidth: 9,
+    backgroundColor: '#fff',
+    borderColor: '#E4E4E4',
   },
 });
