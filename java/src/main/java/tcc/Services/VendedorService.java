@@ -2,12 +2,12 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import tcc.DAOs.VendedorDAO;
 import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 
 import javax.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,14 +45,6 @@ public class VendedorService {
         }
     }
 
-    public Vendedor procuraVendedorPorUsuario(Usuario usuario) {
-        try {
-            return vendedorDAO.findByUsuario(usuario);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-  
     @Transactional
     public List<Vendedor> encontraVendedorPorFiltro(String filtro) {
         try {
@@ -64,6 +56,14 @@ public class VendedorService {
             List<Vendedor> listaVendedoresFiltrada = new ArrayList<Vendedor>(new HashSet<Vendedor>(listaVendedores));
 
             return listaVendedoresFiltrada;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Vendedor procuraVendedorPorUsuario(Usuario usuario) {
+        try {
+            return vendedorDAO.findByUsuario(usuario);
         } catch (Exception e) {
             throw e;
         }
