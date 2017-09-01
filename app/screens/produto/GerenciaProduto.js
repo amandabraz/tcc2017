@@ -27,6 +27,7 @@ class GerenciaProduto extends Component {
 
   adicionarProduto = () => {
     this.props.navigation.navigate('CadastroProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
+
   };
 
   render() {
@@ -45,7 +46,6 @@ class GerenciaProduto extends Component {
     //     });
     //   });
     // },
-
     return(
 
         <View style={{flex: 1}}>
@@ -54,12 +54,12 @@ class GerenciaProduto extends Component {
             tintColor="darkblue"
           />
           <View style={styles.container}>
-            <Text>Blablabla</Text>
-            <ListView
-              dataSource={this.state.dataSource}
-              renderRow={(data) => <RowProduto {...data} />}
-            />
-
+          <Text>Blablabla</Text>
+          <ListView
+                  style={styles.container}
+                  dataSource={this.state.dataSource}
+                  renderRow={(data) => <RowProduto {...data} />}
+                />
           </View>
           <ActionButton
             buttonColor="rgba(231,76,60,1)"
