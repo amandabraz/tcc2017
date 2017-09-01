@@ -53,7 +53,7 @@ public class UsuarioController {
                 System.out.println(temErro.toString());
                 return new ResponseEntity(temErro, HttpStatus.CONFLICT);
             }
-            novoUsuario = usuarioDao.save(usuario);
+            novoUsuario = usuarioService.cadastraUsuario(usuario);
         } catch (Exception ex) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)

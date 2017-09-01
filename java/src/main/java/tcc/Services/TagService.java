@@ -6,6 +6,7 @@ import tcc.DAOs.TagDAO;
 import tcc.Models.Tag;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 
 @Service
 public class TagService {
@@ -27,6 +28,12 @@ public class TagService {
     public Tag cadastraTag(Tag tag) {
         Tag tagCadastrada;
         try {
+            if (tag.getId() == null) {
+                tag.setRegDate(new Date());
+                //tag.setRegUser();
+            }
+            tag.setModDate(new Date());
+            //tag.setRegUser();
             tagCadastrada = tagDAO.save(tag);
         } catch (Exception e) {
             throw e;

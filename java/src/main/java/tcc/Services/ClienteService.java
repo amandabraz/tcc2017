@@ -7,6 +7,8 @@ import tcc.DAOs.ClienteDAO;
 import tcc.Models.Cliente;
 import tcc.Models.Usuario;
 
+import java.util.Date;
+
 /**
  * Created by amanda on 17/08/2017.
  */
@@ -20,6 +22,12 @@ public class ClienteService {
     public Cliente salvaCliente(Cliente cliente) {
         Cliente clienteResolvido;
         try {
+            if (cliente.getId() == null) {
+                cliente.setRegDate(new Date());
+                cliente.setRegUser(cliente.getUsuario().getId());
+            }
+            cliente.setModDate(new Date());
+            cliente.setRegUser(cliente.getUsuario().getId());
             clienteResolvido = clienteDAO.save(cliente);
         } catch (Exception e) {
             throw e;

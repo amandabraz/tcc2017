@@ -18,6 +18,20 @@ public class Usuario  implements Serializable {
 
     public static final Long serialVersionUID = 1L;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="REG_DATE")
+    public Date regDate;
+
+    @Column(name="REG_USER")
+    public Long regUser;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="MOD_DATE")
+    public Date modDate;
+
+    @Column(name="MOD_USER")
+    public Long modUser;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_USUARIO")
@@ -61,62 +75,12 @@ public class Usuario  implements Serializable {
     private boolean bloqueado;
 
     /**
-     * Construtor com todos os dados para retorno do banco
-     */
-    public Usuario() {
-        this.id = id;
-        this.senha = senha;
-        this.deletado = deletado;
-        this.perfil = perfil;
-        this.nome = nome;
-        this.email = email;
-        this.dataNasc = dataNasc;
-        this.cpf = cpf;
-        this.ddd = ddd;
-        this.telefone = telefone;
-        this.localizacao = localizacao;
-        this.notificacao = notificacao;
-        this.bloqueado = bloqueado;
-    }
-
-    /**
      * Este construtor serve para classes que tem usuario como FK
      * @param id
      */
     public Usuario(Long id) {
         super();
         this.id = id;
-    }
-
-
-    /**
-     * @param senha
-     * @param deletado
-     * @param perfil
-     * @param nome
-     * @param email
-     * @param dataNasc
-     * @param cpf
-     * @param ddd
-     * @param telefone
-     * @param localizacao
-     * @param notificacao
-     * @param bloqueado
-     */
-    public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   String cpf, String ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
-        this.senha = senha;
-        this.deletado = deletado;
-        this.perfil = perfil;
-        this.nome = nome;
-        this.email = email;
-        this.dataNasc = dataNasc;
-        this.cpf = cpf;
-        this.ddd = ddd;
-        this.telefone = telefone;
-        this.localizacao = localizacao;
-        this.notificacao = notificacao;
-        this.bloqueado = bloqueado;
     }
 
     public Long getId() {
@@ -224,25 +188,6 @@ public class Usuario  implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", senha='" + senha + '\'' +
-                ", deletado=" + deletado +
-                ", perfil=" + perfil +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", dataNasc=" + dataNasc +
-                ", cpf='" + cpf + '\'' +
-                ", ddd='" + ddd + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", localizacao=" + localizacao +
-                ", notificacao=" + notificacao +
-                ", bloqueado=" + bloqueado +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -265,5 +210,37 @@ public class Usuario  implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, localizacao, notificacao, bloqueado);
+    }
+
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
+    public Long getRegUser() {
+        return regUser;
+    }
+
+    public void setRegUser(Long regUser) {
+        this.regUser = regUser;
+    }
+
+    public Date getModDate() {
+        return modDate;
+    }
+
+    public void setModDate(Date modDate) {
+        this.modDate = modDate;
+    }
+
+    public Long getModUser() {
+        return modUser;
+    }
+
+    public void setModUser(Long modUser) {
+        this.modUser = modUser;
     }
 }

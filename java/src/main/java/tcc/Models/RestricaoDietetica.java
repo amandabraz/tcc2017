@@ -6,13 +6,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name= "RESTRICAO_DIETETICA")
 public class RestricaoDietetica implements Serializable {
 
     public static final Long serialVersionUID = 1L;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="REG_DATE")
+    public Date regDate;
+
+    @Column(name="REG_USER")
+    public Long regUser;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="MOD_DATE")
+    public Date modDate;
+
+    @Column(name="MOD_USER")
+    public Long modUser;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,11 +68,35 @@ public class RestricaoDietetica implements Serializable {
         this.descricao = descricao;
     }
 
-    @Override
-    public String toString() {
-        return "RestricaoDietetica{" +
-                "id=" + id +
-                ", descricao='" + descricao + '\'' +
-                '}';
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
+    public Long getRegUser() {
+        return regUser;
+    }
+
+    public void setRegUser(Long regUser) {
+        this.regUser = regUser;
+    }
+
+    public Date getModDate() {
+        return modDate;
+    }
+
+    public void setModDate(Date modDate) {
+        this.modDate = modDate;
+    }
+
+    public Long getModUser() {
+        return modUser;
+    }
+
+    public void setModUser(Long modUser) {
+        this.modUser = modUser;
     }
 }

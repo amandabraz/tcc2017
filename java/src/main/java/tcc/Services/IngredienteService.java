@@ -6,6 +6,7 @@ import tcc.DAOs.IngredienteDAO;
 import tcc.Models.Ingrediente;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 
 @Service
 public class IngredienteService {
@@ -27,6 +28,9 @@ public class IngredienteService {
     public Ingrediente cadastraIngrediente(Ingrediente ingrediente) {
         Ingrediente ingredienteCadastrado;
         try {
+            ingrediente.setRegDate(new Date());
+            ingrediente.setModDate(new Date());
+            //TODO: definir de onde virá o user pro reg_user e mod_user... deveria ser o id do user vendedor mas fica ruim passar pra cá esse valor
             ingredienteCadastrado = ingredienteDAO.save(ingrediente);
         } catch (Exception e) {
             throw e;

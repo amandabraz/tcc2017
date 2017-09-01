@@ -12,15 +12,31 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
-import java.util.List;
 
 @Entity
 @Table(name = "VENDEDOR")
 public class Vendedor implements Serializable {
 
     public static final Long serialVersionUID = 1L;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="REG_DATE")
+    public Date regDate;
+
+    @Column(name="REG_USER")
+    public Long regUser;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="MOD_DATE")
+    public Date modDate;
+
+    @Column(name="MOD_USER")
+    public Long modUser;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,25 +60,6 @@ public class Vendedor implements Serializable {
 
     public Vendedor() {
         this.id = id;
-        this.usuario = usuario;
-        this.nomeFantasia = nomeFantasia;
-        this.meiosPagamento = meiosPagamento;
-    }
-
-    /**
-     * Este construtor serve para classes que tem vendedor como FK
-     * @param id
-     */
-    public Vendedor(Long id) {
-        super();
-        this.id = id;
-        this.usuario = usuario;
-        this.nomeFantasia = nomeFantasia;
-        this.meiosPagamento = meiosPagamento;
-    }
-
-
-    public Vendedor(Usuario usuario, String nomeFantasia, Set<Pagamento> pagamento) {
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
         this.meiosPagamento = meiosPagamento;
@@ -92,21 +89,43 @@ public class Vendedor implements Serializable {
         this.usuario = usuario;
     }
 
-    public Set<Pagamento> getMeiosPagamentos() {
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
+    public Long getRegUser() {
+        return regUser;
+    }
+
+    public void setRegUser(Long regUser) {
+        this.regUser = regUser;
+    }
+
+    public Date getModDate() {
+        return modDate;
+    }
+
+    public void setModDate(Date modDate) {
+        this.modDate = modDate;
+    }
+
+    public Long getModUser() {
+        return modUser;
+    }
+
+    public void setModUser(Long modUser) {
+        this.modUser = modUser;
+    }
+
+    public Set<Pagamento> getMeiosPagamento() {
         return meiosPagamento;
     }
 
-    public void setMeiosPagamentos(Set<Pagamento> meiosPagamento) {
+    public void setMeiosPagamento(Set<Pagamento> meiosPagamento) {
         this.meiosPagamento = meiosPagamento;
-    }
-
-    @Override
-    public String toString() {
-        return "Vendedor{" +
-                "id=" + id +
-                ", usuario=" + usuario +
-                ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", meiosPagamento=" + meiosPagamento +
-                '}';
     }
 }

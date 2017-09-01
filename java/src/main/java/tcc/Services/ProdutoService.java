@@ -7,6 +7,7 @@ import tcc.Models.Produto;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -19,6 +20,14 @@ public class ProdutoService {
     @Transactional
     public Produto salvaProduto(Produto produto) {
         try {
+            if (produto.getId() == null) {
+                // se não existe no banco, cadastra reg date e reg user
+                produto.setRegDate(new Date());
+                produto.setRegUser(produto.getVendedor().getUsuario().getId());
+            }
+            produto.setModDate(new Date());
+            produto.setModUser(produto.getVendedor().getUsuario().getId());
+
             return produtoDAO.save(produto);
         } catch (Exception e) {
             throw e;

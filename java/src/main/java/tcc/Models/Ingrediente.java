@@ -7,7 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by larissa on 24/05/17.
@@ -18,6 +21,20 @@ import java.io.Serializable;
 public class Ingrediente implements Serializable {
 
     public static final Long serialVersionUID = 1L;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="REG_DATE")
+    public Date regDate;
+
+    @Column(name="REG_USER")
+    public Long regUser;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="MOD_DATE")
+    public Date modDate;
+
+    @Column(name="MOD_USER")
+    public Long modUser;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +59,11 @@ public class Ingrediente implements Serializable {
         this.item = item;
     }
 
-    public Ingrediente(Long id, String item) {
+    public Ingrediente(Date regDate, Long regUser, Date modDate, Long modUser, Long id, String item) {
+        this.regDate = regDate;
+        this.regUser = regUser;
+        this.modDate = modDate;
+        this.modUser = modUser;
         this.id = id;
         this.item = item;
     }
@@ -63,11 +84,35 @@ public class Ingrediente implements Serializable {
         this.item = item;
     }
 
-    @Override
-    public String toString() {
-        return "Ingrediente{" +
-                "id=" + id +
-                ", item='" + item + '\'' +
-                '}';
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
+    public Long getRegUser() {
+        return regUser;
+    }
+
+    public void setRegUser(Long regUser) {
+        this.regUser = regUser;
+    }
+
+    public Date getModDate() {
+        return modDate;
+    }
+
+    public void setModDate(Date modDate) {
+        this.modDate = modDate;
+    }
+
+    public Long getModUser() {
+        return modUser;
+    }
+
+    public void setModUser(Long modUser) {
+        this.modUser = modUser;
     }
 }

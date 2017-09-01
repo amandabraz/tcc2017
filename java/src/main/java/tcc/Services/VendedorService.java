@@ -9,6 +9,7 @@ import tcc.Models.Vendedor;
 import javax.transaction.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -22,6 +23,12 @@ public class VendedorService {
     public Vendedor salvaVendedor(Vendedor vendedor) {
         Vendedor vendedorResolvido;
         try {
+            if (vendedor.getId() == null) {
+                vendedor.setRegDate(new Date());
+                vendedor.setRegUser(vendedor.getUsuario().getId());
+            }
+            vendedor.setModDate(new Date());
+            vendedor.setModUser(vendedor.getUsuario().getId());
             vendedorResolvido = vendedorDAO.save(vendedor);
         } catch (Exception e) {
             throw e;

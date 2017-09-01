@@ -12,7 +12,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -20,6 +23,20 @@ import java.util.Set;
 public class Cliente implements Serializable {
 
     public static final Long serialVersionUID = 1L;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="REG_DATE")
+    public Date regDate;
+
+    @Column(name="REG_USER")
+    public Long regUser;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="MOD_DATE")
+    public Date modDate;
+
+    @Column(name="MOD_USER")
+    public Long modUser;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,20 +68,15 @@ public class Cliente implements Serializable {
         this.restricoesDieteticas = restricoesDieteticas;
     }
 
-    public Cliente(Usuario usuario, Set<Tag> tags, Set<RestricaoDietetica> restricaoDieteticas) {
+    public Cliente(Date regDate, Long regUser, Date modDate, Long modUser, Long id, Usuario usuario, Set<Tag> tags, Set<RestricaoDietetica> restricoesDieteticas) {
+        this.regDate = regDate;
+        this.regUser = regUser;
+        this.modDate = modDate;
+        this.modUser = modUser;
+        this.id = id;
         this.usuario = usuario;
         this.tags = tags;
         this.restricoesDieteticas = restricoesDieteticas;
-    }
-
-    @Override
-    public String toString() {
-        return "Cliente{" +
-                "id=" + id +
-                ", usuario=" + usuario +
-                ", tags=" + tags +
-                ", Restrições Dieteticas=" + restricoesDieteticas +
-                '}';
     }
 
     public Long getId() {
@@ -97,5 +109,37 @@ public class Cliente implements Serializable {
 
     public void setRestricoesDieteticas(Set<RestricaoDietetica> restricoesDieteticas) {
         this.restricoesDieteticas = restricoesDieteticas;
+    }
+
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
+    public Long getRegUser() {
+        return regUser;
+    }
+
+    public void setRegUser(Long regUser) {
+        this.regUser = regUser;
+    }
+
+    public Date getModDate() {
+        return modDate;
+    }
+
+    public void setModDate(Date modDate) {
+        this.modDate = modDate;
+    }
+
+    public Long getModUser() {
+        return modUser;
+    }
+
+    public void setModUser(Long modUser) {
+        this.modUser = modUser;
     }
 }
