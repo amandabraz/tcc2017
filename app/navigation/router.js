@@ -6,8 +6,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 // TELAS CRIADAS (TODAS DEVEM ESTAR LISTADAS)
 import Login from '../screens/login/Login';
-import Cadastro from '../screens/cadastro/Cadastro';
-import Vendedor from '../screens/cadastro/Vendedor';
 import Cliente from '../screens/cadastro/Cliente';
 import PerfilCliente from '../screens/perfil/PerfilCliente';
 import PerfilVendedor from '../screens/perfil/PerfilVendedor';
@@ -20,12 +18,50 @@ import BuscaProduto from '../screens/produto/BuscaProduto';
 import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
 import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
-
+import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
+import Cadastro from '../screens/cadastro/Cadastro';
+import Vendedor from '../screens/cadastro/Vendedor';
 
 /**
 MENU SOMENTE PARA CLIENTE
 **/
+export const GerenciaCliente = StackNavigator({
+  PerfilCliente: {
+    screen: PerfilCliente
+  },
+  ConfiguracaoCliente: {
+    screen: ConfiguracaoCliente
+  }
+ }, {
+  mode: 'card',
+  headerMode: 'none',
+});
+
 export const TabsCliente = TabNavigator({
+    PerfilCliente: {
+      screen: GerenciaCliente,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
+        },
+      },
+    },
+    Busca: {
+      screen: BuscaProduto,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
+        },
+      },
+    },
+    Home: {
+      screen: HomeCliente,
+      navigationOptions: {
+        tabBar: {
+          icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
+        },
+      },
+    },
     Favoritos: {
       screen: ProdutosFavoritos,
       navigationOptions: {
@@ -39,30 +75,6 @@ export const TabsCliente = TabNavigator({
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-        },
-      },
-    },
-    Home: {
-      screen: HomeCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
-        },
-      },
-    },
-    Perfil: {
-      screen: PerfilCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
-        },
-      },
-    },
-    Configuração: {
-      screen: ConfiguracaoCliente,
-      navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
         },
       },
     }
@@ -85,12 +97,38 @@ export const TabsCliente = TabNavigator({
     }
   });
 
+  export const GerenciaVendedor = StackNavigator({
+      PerfilVendedor: {
+        screen: PerfilVendedor
+      },
+      ConfiguracaoVendedor: {
+        screen: ConfiguracaoVendedor
+      } }, {
+      mode: 'card',
+      headerMode: 'none',
+    });
+
+    export const GerenciaProdutos = StackNavigator({
+      GerenciaProduto: {
+          screen: GerenciaProduto,
+        },
+      CadastroProduto: {
+          screen: CadastroProduto,
+          navigationOptions: {
+            title: 'Novo Produto'
+          },
+        }
+    }, {
+      mode: 'card',
+      headerMode: 'none'
+    });
+
 /**
 MENU SOMENTE PARA VENDEDORES
 **/
 export const TabsVendedor = TabNavigator({
-    Loja: {
-      screen: GerenciaProduto,
+    GerenciaProdutos: {
+      screen: GerenciaProdutos,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
@@ -113,14 +151,15 @@ export const TabsVendedor = TabNavigator({
         },
       },
     },
-    Perfil: {
-      screen: PerfilVendedor,
+    GerenciaVendedor: {
+      screen: GerenciaVendedor,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
         },
       },
     },
+    // TODO: colocar outra rota no lugar de configuracao já que ele foi pra dentro de GerenciaVendedor
     Configuração: {
       screen: ConfiguracaoVendedor,
       navigationOptions: {
@@ -163,11 +202,11 @@ export const Root = StackNavigator({
   Cliente: {
     screen: Cliente,
   },
-  TabsVendedor: {
-    screen: TabsVendedor
-  },
   TabsCliente: {
     screen: TabsCliente
+  },
+  TabsVendedor: {
+    screen: TabsVendedor
   }
 }, {
   mode: 'card',

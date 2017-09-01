@@ -9,23 +9,25 @@ import {
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 
-
-
 class GerenciaProduto extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
+      userId: this.props.navigation.state.params.userId,
+      vendedorId: this.props.navigation.state.params.vendedorId,
       dataSource: ds.cloneWithRows(['row 1', 'row 2']),
     };
   }
 
 // ListView carregando os itens do banco
 // se nenhum item: msg dizendo nada aqui! cadastre seu primeiro produto
-//  se algum item: exibir nome produto, + qtd - , lapis pra editar
+//  se algum item: exibir x (para deletar, com confirmação), nome produto, + qtd - , lapis pra editar
+
 
   adicionarProduto = () => {
-    this.props.navigation.navigate('CadastroProduto');
+    this.props.navigation.navigate('CadastroProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
+
   };
 
   render() {
@@ -35,6 +37,15 @@ class GerenciaProduto extends Component {
       fontFamily: 'Roboto',
     };
 
+    // _refreshData: function() {
+    //   fetch(ENDPOINT)
+    //     .then((response) => response.json())
+    //     .then((rjson) => {
+    //       this.setState({
+    //       dataSource: this.state.dataSource.cloneWithRows(rjson.results.produtos)
+    //     });
+    //   });
+    // },
     return(
 
         <View style={{flex: 1}}>
@@ -87,9 +98,18 @@ const styleProduto = StyleSheet.create({
   },
 });
 
+// const RowProduto = (data) => {
+//   return (
+//     <View style={styleProduto.container}>
+//       <Text style={styleProduto.text}>
+//         {data}
+//       </Text>
+//     </View>
+//   )
+// };
+
 const RowProduto = (props) => (
   <View style={styleProduto.container}>
-//    <Image source={{ uri: props.picture.large}} style={styleProduto.photo} />
     <Text style={styleProduto.text}>
       {`${props.name}`}
     </Text>
@@ -97,5 +117,4 @@ const RowProduto = (props) => (
 );
 
 GerenciaProduto.defaultProps = { ...GerenciaProduto };
-
 export default GerenciaProduto;

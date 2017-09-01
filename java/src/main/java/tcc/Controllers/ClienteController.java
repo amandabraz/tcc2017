@@ -2,47 +2,77 @@ package tcc.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import tcc.DAOs.ClienteDAO;
-import tcc.DAOs.TagDAO;
-import tcc.DAOs.UsuarioDAO;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import tcc.ErrorHandling.CustomError;
 import tcc.Models.Cliente;
 import tcc.Models.Tag;
+import tcc.Models.Usuario;
+import tcc.Services.ClienteService;
+import tcc.Services.TagService;
 
-import java.util.Date;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Created by aline on 17/05/17.
- */
 @RestController
+@RequestMapping(value="/cliente")
 public class ClienteController {
 
     @Autowired
-    private ClienteDAO clienteDAO;
+    private ClienteService clienteService;
+
     @Autowired
-    private UsuarioDAO usuarioDAO;
-    @Autowired
-    private TagDAO tagDAO;
+    private TagService tagService;
+
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
      * @param
      * @return
      */
-    @RequestMapping("/cliente")
-    public ResponseEntity<Cliente> cadastraVendedor(@RequestBody Cliente cliente) {
+    @Transactional
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity cadastraCliente(@RequestBody Cliente cliente) {
         Cliente novoCliente = null;
         try {
-            novoCliente = clienteDAO.save(cliente);
+            Set<Tag> tagsSalvas = new HashSet<>();
+            Tag tagSalva;
+            for (Tag tagProposta : cliente.getTags()) {
+                tagSalva = tagService.verificarTag(tagProposta);
+                if (tagSalva != null) {
+                    tagsSalvas.add(tagSalva);
+                }
+            }
+            if (!tagsSalvas.isEmpty()) {
+                cliente.setTags(tagsSalvas);
+            }
+            novoCliente = clienteService.salvaCliente(cliente);
         } catch (Exception ex) {
-//            return "Error creating the user: " + ex.toString();
-            return new ResponseEntity<Cliente>(novoCliente, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CustomError("Erro ao salvar Cliente"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Cliente>(novoCliente, HttpStatus.OK);
+        return new ResponseEntity<>(novoCliente.getId(), HttpStatus.OK);
     }
 
-    //TODO: Ta dando ruim adicionar tag pq da conflito de int para string
-
+    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity buscaClientePorUsuario(@PathVariable("id") Long usuarioId) {
+        try {
+            Usuario usuario = new Usuario(usuarioId);
+            Cliente cliente = clienteService.buscaClientePorUsuario(usuario);
+            return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao carregar dados do cliente"), HttpStatus.NOT_FOUND);
+        }
+    }
 }
+
+
+
+
+
+

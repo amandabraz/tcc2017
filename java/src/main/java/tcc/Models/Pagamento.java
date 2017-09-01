@@ -1,8 +1,13 @@
 package tcc.Models;
 
-import tcc.Enums.MeioPagamento;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Classe/Tabela que indica MEIOS DE PAGAMENTO que o vendedor aceita
@@ -10,23 +15,29 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "PAGAMENTO")
-public class Pagamento {
+public class Pagamento implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_PAGAMENTO")
     private Long id;
 
-    @Column(name = "MEIO_PAGAMENTO")
-    @Enumerated(EnumType.STRING)
-    private MeioPagamento meioPagamento;
+    @Column(name = "DESCRICAO", unique = true)
+    private String descricao;
 
-    public Pagamento(Long id) {
-        super();
+    public Pagamento(Long id, String descricao) {
         this.id = id;
+        this.descricao = descricao;
     }
 
-    public Pagamento(MeioPagamento meioPagamento) {
-        this.meioPagamento = meioPagamento;
+    public Pagamento(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Pagamento() {
+        super();
     }
 
     public Long getId() {
@@ -37,11 +48,19 @@ public class Pagamento {
         this.id = id;
     }
 
-    public MeioPagamento getMeioPagamento() {
-        return meioPagamento;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setMeioPagamento(MeioPagamento meioPagamento) {
-        this.meioPagamento = meioPagamento;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    @Override
+    public String toString() {
+        return "Pagamento{" +
+                "id=" + id +
+                ", descricao='" + descricao + '\'' +
+                '}';
     }
 }

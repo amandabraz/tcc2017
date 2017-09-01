@@ -1,7 +1,3 @@
-/**
- * author: Aline Bender
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -10,58 +6,143 @@ import {
   TextInput,
   View,
   Alert,
-  Dimensions
+  Dimensions,
+  ToastAndroid,
+  ScrollView
 } from 'react-native';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 import TagInput from 'react-native-tag-input';
+import CheckBox from 'react-native-check-box';
 
-//TODO ALINE: Redirecionar para tela inicial de Cliente
-//const botaoFinalizar = () => { Alert.alert('Botão Finalizar foi pressionado!'); };
+const {width, height} = Dimensions.get("window");
 
-export default class Cliente extends Component {
+class Cliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tags: [],
-    };
-  }
-
-  onChangeTags = (tags) => {
-    this.setState({
-      tags,
-    });
+        userId: this.props.navigation.state.params.userId,
+        dietasArray: [],
+        restricoesDieteticas: [],
+        tags: []
+    }
+    this.preencherDietasArray();
   };
 
-  botaoFinalizar = () => {
-    this.props.navigation.navigate('TabsCliente');
-  }
+  preencherDietasArray() {
+    fetch('http://10.0.2.2:8080/restricaodietetica')
+      .then((response) => response.json())
+        .then((responseJson) => {
+          var dietasBuscadas = [];
+            for (i in responseJson) {
+              dietasBuscadas.push(responseJson[i]);
+            }
+            this.setState({dietasArray: dietasBuscadas});
+        });
+  };
+
+
+
+  handleFinalizarPress = () => {
+    const {
+      state: {
+        userId,
+        tags,
+        restricoesDieteticas
+      }
+    } = this;
+
+    cliente = {
+      "usuario": userId,
+      "tags": tags,
+      "restricoesDieteticas": restricoesDieteticas
+    }
+      fetch('http://10.0.2.2:8080/cliente', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cliente)
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          if (!responseJson.errorMessage) {
+            ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+            this.props.navigation.navigate('TabsCliente', {userId: this.state.userId});
+          } else {
+            Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  };
+
+  onClick(descricao) {
+    descricao.checked = !descricao.checked;
+    var restricoes = this.state.restricoesDieteticas;
+    restricoes.push(descricao);
+    this.setState({restricoesDieteticas: restricoes});
+  };
+
+  mostrarCheckboxesDieta() {
+    var views = [];
+    for(i in this.state.dietasArray) {
+      let descricao = this.state.dietasArray[i];
+      views.push (
+        <View key={i} style={styles.item}>
+          <CheckBox
+            style={{flex: 1, padding: 10}}
+            onClick={()=>this.onClick(descricao)}
+            isChecked={descricao.checked}
+            leftText={descricao.descricao}
+            />
+        </View>
+      );
+    }
+    return views;
+  };
 
   render() {
     const inputProps = {
       keyboardType: 'default',
-      placeholder: 'Insira aqui tags dietéticas',
-      autoFocus: true,
+      placeholder: 'ex: brigadeiro, doce, paçoca',
       placeholderTextColor: '#dc143c',
       height:300
     };
 
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         <NavigationBar
           title={titleConfig}
           tintColor="#95c9db"
         />
-        <View style={{ flexDirection: 'column', flex: 1}}>
+        <View style={styles.container}>
+
+              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                  Selecione sua dieta:
+              </Text>
+              <View style={styles.container}>
+                  <ScrollView>
+                      {this.mostrarCheckboxesDieta()}
+                  </ScrollView>
+              </View>
+              <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
+                Adicione suas tags:
+              </Text>
+          <View style={{ flexDirection: 'column', flex: 1}}>
+
           <TagInput
             value={this.state.tags}
-            onChange={this.onChangeTags}
+            onChange={(tags) => this.setState({tags,})}
             tagColor="pink"
             tagTextColor="white"
             inputProps={inputProps}
             numberOfLines={15}
           />
-          <Button onPress={this.botaoFinalizar} title="Finalizar" color="#dc143c" />
+          </View>
+          <Button onPress={this.handleFinalizarPress} title="Finalizar" color="#dc143c" />
         </View>
       </View>
     );
@@ -74,77 +155,34 @@ const titleConfig = {
   fontFamily: 'Roboto',
 };
 
-
-//CSS
 const styles = StyleSheet.create({
+  multiline: {
+    height: 60,
+    fontSize: 16,
+    padding: 4,
+    marginBottom: 10,
+  },
+  singleLine: {
+    fontSize: 16,
+    padding: 4,
+    height: 45,
+  },
   container: {
-    flex: 1,
+      flex: 1,
+      justifyContent: 'space-between',
+      backgroundColor: '#fff',
+      padding: 15
   },
-  button: {
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: "#50a1e0",
-    alignSelf: 'stretch',
+  item: {
+      flexDirection: 'row',
   },
-  title: {
-    fontFamily: 'Roboto',
-    color: '#95c9db',
-    fontWeight: 'bold',
-    fontSize: 40,
-    backgroundColor: 'rgba(0, 121, 163, 0.7)',
+    line: {
+      flex: 1,
+      height: 0.3,
+      backgroundColor: 'darkgray',
   },
-  centralView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(100, 108, 122, 0.7)',
-  },
-  input: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 37,
-    width: 250,
-  },
-  textInputContainer: {
-    flex: 1,
-    width: 100,
-    height: 32,
-    margin: 4,
-    borderRadius: 16,
-    backgroundColor: '#ccc',
-  },
+  });
 
-  textInput: {
-    margin: 0,
-    padding: 0,
-    paddingLeft: 12,
-    paddingRight: 12,
-    flex: 1,
-    height: 32,
-    fontSize: 13,
-    color: 'rgba(0, 0, 0, 0.87)',
-  },
+Cliente.defaultProps = { ...Cliente };
 
-  tag: {
-    justifyContent: 'center',
-    backgroundColor: '#e0e0e0',
-    borderRadius: 16,
-    paddingLeft: 12,
-    paddingRight: 12,
-    height: 32,
-    margin: 4,
-  },
-  tagLabel: {
-    fontSize: 13,
-    color: 'rgba(0, 0, 0, 0.87)',
-  },
-});
-
-AppRegistry.registerComponent('tcc2017', () => tcc2017);
+export default Cliente;

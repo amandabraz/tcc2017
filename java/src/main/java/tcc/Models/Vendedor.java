@@ -1,57 +1,71 @@
 package tcc.Models;
 
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Set;
 import java.util.List;
 
-/**
- * Created by amanda on 10/05/2017.
- */
 @Entity
 @Table(name = "VENDEDOR")
-public class Vendedor {
+public class Vendedor implements Serializable {
+
+    public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_VENDEDOR")
     private Long id;
 
-    @OneToOne
+
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
     @Column(name = "NOME_FANTASIA", nullable = true, length = 100)
     private String nomeFantasia;
 
-    @Column(name = "CPF", nullable = false, length = 11, unique = true)
-    private String cpf;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "VENDEDOR_PAGAMENTO", joinColumns =
+            {@JoinColumn(name = "ID_VENDEDOR")}, inverseJoinColumns =
+            {@JoinColumn(name = "ID_PAGAMENTO")})
+    private Set<Pagamento> meiosPagamento;
 
-    @Transient
-    private Long fkRestricaoDietetica;
-
-    @Transient
-    //@Column(name = "VISUALIZA_ESTATISTICAS", nullable = false)
-    private boolean visualizaEstatisticas;
-
-    @OneToMany
-    @JoinTable(name = "PAGAMENTOS_ACEITOS",
-            joinColumns = { @JoinColumn(name = "ID_VENDEDOR") },
-            inverseJoinColumns = { @JoinColumn(name = "ID_PAGAMENTO") })
-    private List<Pagamento> pagamentosAceitos;
 
     public Vendedor() {
         this.id = id;
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
-        this.cpf = cpf;
-        //this.fkRestricaoDietetica = fkRestricaoDietetica;
-        //this.visualizaEstatisticas = visualizaEstatisticas;
-        this.pagamentosAceitos = pagamentosAceitos;
+        this.meiosPagamento = meiosPagamento;
     }
 
-    public Vendedor(Usuario usuario, String nomeFantasia, String cpf) {
+    /**
+     * Este construtor serve para classes que tem vendedor como FK
+     * @param id
+     */
+    public Vendedor(Long id) {
+        super();
+        this.id = id;
         this.usuario = usuario;
         this.nomeFantasia = nomeFantasia;
-        this.cpf = cpf;
+        this.meiosPagamento = meiosPagamento;
+    }
+
+
+    public Vendedor(Usuario usuario, String nomeFantasia, Set<Pagamento> pagamento) {
+        this.usuario = usuario;
+        this.nomeFantasia = nomeFantasia;
+        this.meiosPagamento = meiosPagamento;
     }
 
     public Long getId() {
@@ -70,30 +84,6 @@ public class Vendedor {
         this.nomeFantasia = nomeFantasia;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public Long getFkRestricaoDietetica() {
-        return fkRestricaoDietetica;
-    }
-
-    public void setFkRestricaoDietetica(Long fkRestricaoDietetica) {
-        this.fkRestricaoDietetica = fkRestricaoDietetica;
-    }
-
-    public boolean isVisualizaEstatisticas() {
-        return visualizaEstatisticas;
-    }
-
-    public void setVisualizaEstatisticas(boolean visualizaEstatisticas) {
-        this.visualizaEstatisticas = visualizaEstatisticas;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -102,12 +92,12 @@ public class Vendedor {
         this.usuario = usuario;
     }
 
-    public List<Pagamento> getPagamentosAceitos() {
-        return pagamentosAceitos;
+    public Set<Pagamento> getMeiosPagamentos() {
+        return meiosPagamento;
     }
 
-    public void setPagamentosAceitos(List<Pagamento> pagamentosAceitos) {
-        this.pagamentosAceitos = pagamentosAceitos;
+    public void setMeiosPagamentos(Set<Pagamento> meiosPagamento) {
+        this.meiosPagamento = meiosPagamento;
     }
 
     @Override
@@ -116,10 +106,7 @@ public class Vendedor {
                 "id=" + id +
                 ", usuario=" + usuario +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", fkRestricaoDietetica=" + fkRestricaoDietetica +
-                ", visualizaEstatisticas=" + visualizaEstatisticas +
-                ", pagamentosAceitos=" + pagamentosAceitos +
+                ", meiosPagamento=" + meiosPagamento +
                 '}';
     }
 }
