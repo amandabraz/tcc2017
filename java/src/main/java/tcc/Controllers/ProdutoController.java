@@ -2,7 +2,9 @@ package tcc.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@RequestMapping(value = "/produto")
 @RestController
 public class ProdutoController {
 
@@ -35,7 +36,7 @@ public class ProdutoController {
     private IngredienteService ingredienteService;
 
     @Transactional
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/produto", method = RequestMethod.POST)
     public ResponseEntity cadastraProduto(@RequestBody Produto produto) {
         try {
             Set<Tag> tagsSalvas = new HashSet<>();
@@ -67,18 +68,26 @@ public class ProdutoController {
                 return new ResponseEntity<>(new CustomError("Erro ao salvar Produto"), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            System.out.println(e.fillInStackTrace());
             return new ResponseEntity<>(new CustomError("Erro ao salvar Produto"), HttpStatus.BAD_REQUEST);
         }
     }
 
     @Transactional
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/produto", method = RequestMethod.GET)
     public ResponseEntity buscaProdutos(@RequestParam(value = "filtro") String filtro) {
         try {
             return new ResponseEntity<List<Produto>>(produtoService.encontraProduto(filtro), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.fillInStackTrace());
+            return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/vendedor/{idVendedor}/produto", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity buscaProdutosPorVendedor(@PathVariable("idVendedor") Long idVendedor) {
+        try {
+            return new ResponseEntity<List<Produto>>(produtoService.buscaProdutosPorVendedor(idVendedor), HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }
     }

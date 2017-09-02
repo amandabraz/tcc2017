@@ -44,4 +44,13 @@ public class ProdutoService {
             throw e;
         }
     }
+
+    @Transactional
+    public List<Produto> buscaProdutosPorVendedor(Long idVendedor) {
+        try {
+            return produtoDAO.findByDeletadoAndVendedorId(false, idVendedor);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
