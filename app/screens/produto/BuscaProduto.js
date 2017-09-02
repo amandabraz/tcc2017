@@ -34,17 +34,41 @@ export default class BuscaProduto extends Component {
   setSearchText(event) {
     let searchText = event.nativeEvent.text;
     this.setState({searchText});
-    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
+    fetch("http://10.0.3.2:8080/produto?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaProduto: responseJson});
         });
-    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
+    fetch("http://10.0.3.2:8080/vendedor?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaVendedor: responseJson});
         });
   }
+
+
+
+
+
+
+
+
+
+  onButtonOpenProduct = () => {
+    this.props.navigation.navigate('ExibeProduto', {userId: responseJson.id});
+  };
+
+
+
+
+
+
+
+
+
+
+
+
 
   buscaProduto() {
     var views = [];
@@ -66,6 +90,7 @@ export default class BuscaProduto extends Component {
                 name='arrow-forward'
                 type=' material-community'
                 color='#1C1C1C'
+                onPress={this.onButtonOpenProduct}
                 style={styles.imageResultSearch} />
             </View>
             <Text>{'\n'}</Text>
@@ -91,6 +116,7 @@ export default class BuscaProduto extends Component {
             <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
           </View>
           <Icon
+            onPress={this.onButtonOpenVendedor}
             name='arrow-forward'
             type=' material-community'
             color='#1C1C1C'

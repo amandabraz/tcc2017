@@ -15,6 +15,8 @@ import ProdutosFavoritos from '../screens/produto/ProdutosFavoritos';
 import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
+import ExibeProduto from '../screens/produto/ExibeProduto';
+import ExibeVendedor from '../screens/produto/ExibeVendedor';
 import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
 import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
@@ -53,6 +55,12 @@ export const TabsCliente = TabNavigator({
           icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
         },
       },
+    },
+    ExibeProduto: {
+      screen: ExibeProduto
+    },
+    ExibeVendedor: {
+      screen: ExibeVendedor
     },
     Home: {
       screen: HomeCliente,
