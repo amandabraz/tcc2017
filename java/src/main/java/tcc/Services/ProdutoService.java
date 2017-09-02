@@ -29,12 +29,12 @@ public class ProdutoService {
     public List<Produto> encontraProduto(String filtro) {
         try {
             List<Produto> listaProdutos = new ArrayList<>();
-            listaProdutos.addAll(produtoDAO.findByNomeIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByTagsDescricaoIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByIngredientesItemIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByRestricoesDieteticasDescricaoIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByCategoriaDescricaoIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByVendedorNomeFantasiaIgnoreCaseContaining(filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndNomeIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndTagsDescricaoIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndIngredientesItemIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndRestricoesDieteticasDescricaoIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndCategoriaDescricaoIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContaining(false, filtro));
 
             // remove resultados duplicados
             List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
