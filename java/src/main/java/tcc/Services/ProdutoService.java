@@ -44,4 +44,41 @@ public class ProdutoService {
             throw e;
         }
     }
+
+    @Transactional
+    public List<Produto> buscaProdutosPorVendedor(Long idVendedor) {
+        try {
+            return produtoDAO.findByDeletadoAndVendedorIdOrderByDataPreparacaoDesc(false, idVendedor);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Produto deletaProduto(Long idVendedor, Long idProduto) {
+        try {
+            Produto produtoADeletar = produtoDAO.findOne(idProduto);
+            if (idVendedor == produtoADeletar.getVendedor().getId()) {
+                produtoADeletar.setDeletado(true);
+            }
+            return this.salvaProduto(produtoADeletar);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Produto alteraQuantidadeProduto(Long idVendedor, Long idProduto, int novaQtd) {
+        try {
+            Produto produtoAAlterar = produtoDAO.findOne(idProduto);
+            if (produtoAAlterar != null
+                    && idVendedor == produtoAAlterar.getVendedor().getId()
+                    && produtoAAlterar.getQuantidade() != novaQtd) {
+                produtoAAlterar.setQuantidade(novaQtd);
+            }
+            return this.salvaProduto(produtoAAlterar);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

@@ -19,5 +19,5 @@ public interface ProdutoDAO extends CrudRepository <Produto, Long> {
 
     List<Produto> findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContaining(boolean deletado, String nomeFantasia);
 
-    List<Produto> findByDeletadoAndVendedorId(boolean deletado, Long id);
+    List<Produto> findByDeletadoAndVendedorIdOrderByDataPreparacaoDesc(boolean deletado, Long id);
 }
