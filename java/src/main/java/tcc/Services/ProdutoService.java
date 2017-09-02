@@ -55,10 +55,12 @@ public class ProdutoService {
     }
 
     @Transactional
-    public Produto deletaProduto(Long idProduto) {
+    public Produto deletaProduto(Long idVendedor, Long idProduto) {
         try {
             Produto produtoADeletar = produtoDAO.findOne(idProduto);
-            produtoADeletar.setDeletado(true);
+            if (idVendedor == produtoADeletar.getVendedor().getId()) {
+                produtoADeletar.setDeletado(true);
+            }
             return produtoDAO.save(produtoADeletar);
         } catch (Exception e) {
             throw e;
@@ -66,10 +68,11 @@ public class ProdutoService {
     }
 
     @Transactional
-    public Produto alteraQuantidadeProduto(Long idProduto, int novaQtd) {
+    public Produto alteraQuantidadeProduto(Long idVendedor, Long idProduto, int novaQtd) {
         try {
             Produto produtoAAlterar = produtoDAO.findOne(idProduto);
             if (produtoAAlterar != null
+                    && idVendedor == produtoAAlterar.getVendedor().getId()
                     && produtoAAlterar.getQuantidade() != novaQtd) {
                 produtoAAlterar.setQuantidade(novaQtd);
             }

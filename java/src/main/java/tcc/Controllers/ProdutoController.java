@@ -93,10 +93,11 @@ public class ProdutoController {
     }
 
     @Transactional
-    @RequestMapping(value = "/produto/{idProduto}", method = RequestMethod.DELETE)
-    public ResponseEntity deletaProduto(@PathVariable("idProduto") Long idProduto) {
+    @RequestMapping(value = "/vendedor/{idVendedor}/produto/{idProduto}", method = RequestMethod.DELETE)
+    public ResponseEntity deletaProduto(@PathVariable("idVendedor") Long idVendedor,
+                                        @PathVariable("idProduto") Long idProduto) {
         try {
-            Produto produtoDeletado = produtoService.deletaProduto(idProduto);
+            Produto produtoDeletado = produtoService.deletaProduto(idVendedor, idProduto);
             return new ResponseEntity<Produto>(produtoDeletado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao deletar Produto"), HttpStatus.BAD_REQUEST);
@@ -104,10 +105,12 @@ public class ProdutoController {
     }
 
     @Transactional
-    @RequestMapping(value = "/produto/{idProduto}/qtd/{qtdProduto}", method = RequestMethod.PUT)
-    public ResponseEntity alteraQuantidadeProduto(@PathVariable("idProduto") Long idProduto, @PathVariable("qtdProduto") int qtdProduto) {
+    @RequestMapping(value = "/vendedor/{idVendedor}/produto/{idProduto}/qtd/{qtdProduto}", method = RequestMethod.PUT)
+    public ResponseEntity alteraQuantidadeProduto(@PathVariable("idVendedor") Long idVendedor,
+                                                  @PathVariable("idProduto") Long idProduto,
+                                                  @PathVariable("qtdProduto") int qtdProduto) {
         try {
-            Produto produtoAtualizado = produtoService.alteraQuantidadeProduto(idProduto, qtdProduto);
+            Produto produtoAtualizado = produtoService.alteraQuantidadeProduto(idVendedor, idProduto, qtdProduto);
             return new ResponseEntity<Produto>(produtoAtualizado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao alterar quantidade do Produto"), HttpStatus.BAD_REQUEST);
