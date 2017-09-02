@@ -24,12 +24,12 @@ class GerenciaProduto extends Component {
       listaProdutos: [],
       imagemProduto: require('./img/pacoca.jpg')
     };
-    this.buscaProdutos();
+  //this.buscaProdutos();
   }
 
   buscaProdutos() {
     //fetch pra buscar os dados no banco
-    this.setState({listaProdutos: produtos});
+    //this.setState({listaProdutos: produtos});
   };
 
   adicionarProduto = () => {
@@ -54,29 +54,39 @@ class GerenciaProduto extends Component {
     for (i in this.state.listaProdutos) {
       let produto = this.state.listaProdutos[i];
       views.push(
-        <View key={i} style={styles.oneResult}>
-          <View style={styles.half}>
-          <TouchableOpacity onPress={() => this.deletarProduto()}>
-            <FontAwesomeIcon name="trash" size={20} color={'#ccc'} />
-          </TouchableOpacity>
-            <Image source={this.state.imagemProduto}
-                 style={styles.photo}
-                 justifyContent='flex-start'/>
-            <Text style={styles.text}> {produto.nome} </Text>
-          </View>
-          <View style={styles.half}>
-            <View style={styles.qtd}>
-              <TouchableOpacity onPress={() => this.aumentaQuantidade()}>
-                <FontAwesomeIcon name="plus" size={20} color={'darkblue'}/>
-              </TouchableOpacity>
-              <Text style={styles.text}> {produto.quantidade} </Text>
-              <TouchableOpacity onPress={() => this.diminuiQuantidade()}>
-                <FontAwesomeIcon name="minus" size={20} color={'darkblue'}/>
+        <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>
+          <View style={styles.oneResult}>
+            <View style={styles.parteEsquerda}>
+            <TouchableOpacity onPress={() => this.deletarProduto()}>
+              <FontAwesomeIcon name="trash" size={20} color={'#ccc'} />
+            </TouchableOpacity>
+              <Image source={this.state.imagemProduto}
+                   style={styles.photo}
+                   justifyContent='flex-start'/>
+              <View style={{width: '65%', marginLeft: 12, marginRight: 12}}>
+                <Text style={styles.textNome}> {produto.nome} </Text>
+              </View>
+            </View>
+            <View style={styles.parteDireita}>
+              <View style={styles.qtd}>
+                <TouchableOpacity onPress={() => this.aumentaQuantidade()}>
+                  <FontAwesomeIcon name="plus" size={20} color={'darkblue'}/>
+                </TouchableOpacity>
+                <Text style={styles.text}> {produto.quantidade} </Text>
+                <TouchableOpacity onPress={() => this.diminuiQuantidade()}>
+                  <FontAwesomeIcon name="minus" size={20} color={'darkblue'}/>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={() => this.editarProduto()}>
+                <FontAwesomeIcon name="pencil" size={20} color={'#ccc'} />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => this.editarProduto()}>
-              <FontAwesomeIcon name="pencil" size={20} color={'#ccc'} />
-            </TouchableOpacity>
+          </View>
+          <View style={{alignSelf: 'flex-start', paddingLeft: 40}}>
+            <Text style={styles.textoMenor}>
+              Preparado no dia {produto.dataPreparacao}
+              {'\n'}{'\n'}
+            </Text>
           </View>
         </View>
       );
@@ -97,11 +107,17 @@ class GerenciaProduto extends Component {
             title={titleConfig}
             tintColor="darkblue"
           />
-          <View style={styles.container}>
-            <ScrollView>
-              {this.mostraProdutos()}
-            </ScrollView>
+          <View style={{flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#ccc'}}>
+            <Text style={{fontWeight: 'bold', fontSize: 12}}>
+              NOME
+            </Text>
+            <Text style={{fontWeight: 'bold', fontSize: 12}}>
+              QUANTIDADE
+            </Text>
           </View>
+          <ScrollView>
+            {this.mostraProdutos()}
+          </ScrollView>
           <ActionButton
             buttonColor="rgba(231,76,60,1)"
             onPress={this.adicionarProduto}
@@ -113,15 +129,8 @@ class GerenciaProduto extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width,
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   oneResult: {
-     width: this.width - 10,
+     width: '90%',
      flexDirection: 'row',
      backgroundColor: 'rgba(255, 255, 255, 0.55)',
      borderWidth: 1,
@@ -130,18 +139,29 @@ const styles = StyleSheet.create({
      padding: 10,
      margin: 3,
   },
-  half: {
-    width: '50%',
+  parteEsquerda: {
+    width: '60%',
+    flexDirection: 'row',
+    alignItems:  'center',
+  },
+  parteDireita: {
+    width: '40%',
     flexDirection: 'row',
     alignItems:  'center',
   },
   text: {
     marginLeft: 12,
+    marginRight: 10,
     fontSize: 16,
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start'
+  },
+  textoMenor: {
+    marginLeft: 12,
+    fontSize: 12,
+    justifyContent: 'flex-start'
   },
   qtd: {
-    width: '90%',
+    width: '85%',
     flexDirection: 'row',
     justifyContent: 'space-around'
   },
