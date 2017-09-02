@@ -91,4 +91,26 @@ public class ProdutoController {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "/produto/{idProduto}", method = RequestMethod.DELETE)
+    public ResponseEntity deletaProduto(@PathVariable("idProduto") Long idProduto) {
+        try {
+            Produto produtoDeletado = produtoService.deletaProduto(idProduto);
+            return new ResponseEntity<Produto>(produtoDeletado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao deletar Produto"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/produto/{idProduto}/qtd/{qtdProduto}", method = RequestMethod.PUT)
+    public ResponseEntity alteraQuantidadeProduto(@PathVariable("idProduto") Long idProduto, @PathVariable("qtdProduto") int qtdProduto) {
+        try {
+            Produto produtoAtualizado = produtoService.alteraQuantidadeProduto(idProduto, qtdProduto);
+            return new ResponseEntity<Produto>(produtoAtualizado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao alterar quantidade do Produto"), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
