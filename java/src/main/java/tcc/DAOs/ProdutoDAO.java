@@ -7,11 +7,17 @@ import java.util.List;
 
 public interface ProdutoDAO extends CrudRepository <Produto, Long> {
     List<Produto> findById(Long id);
-    List<Produto> findByNomeIgnoreCaseContaining(String nome);
+    List<Produto> findByDeletadoAndNomeIgnoreCaseContaining(boolean deletado, String nome);
 
-    List<Produto> findByTagsDescricaoIgnoreCaseContaining(String descricao);
-    List<Produto> findByIngredientesItemIgnoreCaseContaining(String item);
-    List<Produto> findByRestricoesDieteticasDescricaoIgnoreCaseContaining(String descricao);
-    List<Produto> findByCategoriaDescricaoIgnoreCaseContaining(String descricao);
-    List<Produto> findByVendedorNomeFantasiaIgnoreCaseContaining(String nomeFantasia);
+    List<Produto> findByDeletadoAndTagsDescricaoIgnoreCaseContaining(boolean deletado, String descricao);
+
+    List<Produto> findByDeletadoAndIngredientesItemIgnoreCaseContaining(boolean deletado, String item);
+
+    List<Produto> findByDeletadoAndRestricoesDieteticasDescricaoIgnoreCaseContaining(boolean deletado, String descricao);
+
+    List<Produto> findByDeletadoAndCategoriaDescricaoIgnoreCaseContaining(boolean deletado, String descricao);
+
+    List<Produto> findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContaining(boolean deletado, String nomeFantasia);
+
+    List<Produto> findByDeletadoAndVendedorId(boolean deletado, Long id);
 }
