@@ -21,21 +21,16 @@ class GerenciaProduto extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
-      listaProdutos: [{
-          "id": 22,
-          "nome": "Suco detox",
-          "quantidade": 3
-        },
-        {
-          "id": 23,
-          "nome": "Cookie",
-          "quantidade": 10
-        }
-      ],
+      listaProdutos: [],
       imagemProduto: require('./img/pacoca.jpg')
     };
-    //this.refreshData();
+    this.buscaProdutos();
   }
+
+  buscaProdutos() {
+    //fetch pra buscar os dados no banco
+    this.setState({listaProdutos: produtos});
+  };
 
   adicionarProduto = () => {
     this.props.navigation.navigate('CadastroProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
@@ -53,20 +48,6 @@ class GerenciaProduto extends Component {
   diminuiQuantidade() {
    //fetch pra diminuir quantidade. seta o valor da tela como ele - 1
   }
-  refreshData() {
-    var produtos = [{
-        "id": 22,
-        "nome": "Suco detox",
-        "quantidade": 3
-      },
-      {
-        "id": 23,
-        "nome": "Cookie",
-        "quantidade": 10
-      }
-    ];
-    this.setState({listaProdutos: produtos});
-  };
 
   mostraProdutos() {
     var views = [];
