@@ -61,7 +61,7 @@ public class ProdutoService {
             if (idVendedor == produtoADeletar.getVendedor().getId()) {
                 produtoADeletar.setDeletado(true);
             }
-            return produtoDAO.save(produtoADeletar);
+            return this.salvaProduto(produtoADeletar);
         } catch (Exception e) {
             throw e;
         }
@@ -76,7 +76,7 @@ public class ProdutoService {
                     && produtoAAlterar.getQuantidade() != novaQtd) {
                 produtoAAlterar.setQuantidade(novaQtd);
             }
-            return produtoDAO.save(produtoAAlterar);
+            return this.salvaProduto(produtoAAlterar);
         } catch (Exception e) {
             throw e;
         }
