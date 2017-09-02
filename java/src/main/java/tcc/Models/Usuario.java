@@ -60,6 +60,9 @@ public class Usuario  implements Serializable {
     @Column(name = "BLOQUEADO", nullable = false)
     private boolean bloqueado;
 
+    @Column(name = "IND_LOCALIZACAO_ATIVA", nullable = false)
+    private boolean indLocalizacaoAtiva;
+
     /**
      * Construtor com todos os dados para retorno do banco
      */
@@ -77,6 +80,7 @@ public class Usuario  implements Serializable {
         this.localizacao = localizacao;
         this.notificacao = notificacao;
         this.bloqueado = bloqueado;
+        this.indLocalizacaoAtiva = indLocalizacaoAtiva;
     }
 
     /**
@@ -102,9 +106,10 @@ public class Usuario  implements Serializable {
      * @param localizacao
      * @param notificacao
      * @param bloqueado
+     * @param indLocalizacaoAtiva
      */
     public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   String cpf, String ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
+                   String cpf, String ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado, boolean indLocalizacaoAtiva) {
         this.senha = senha;
         this.deletado = deletado;
         this.perfil = perfil;
@@ -117,6 +122,7 @@ public class Usuario  implements Serializable {
         this.localizacao = localizacao;
         this.notificacao = notificacao;
         this.bloqueado = bloqueado;
+        this.indLocalizacaoAtiva = indLocalizacaoAtiva;
     }
 
     public Long getId() {
@@ -223,6 +229,14 @@ public class Usuario  implements Serializable {
         this.bloqueado = bloqueado;
     }
 
+    public boolean isIndLocalizacaoAtiva() {
+        return indLocalizacaoAtiva;
+    }
+
+    public void setIndLocalizacaoAtiva(boolean indLocalizacaoAtiva) {
+        this.indLocalizacaoAtiva = indLocalizacaoAtiva;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -239,6 +253,7 @@ public class Usuario  implements Serializable {
                 ", localizacao=" + localizacao +
                 ", notificacao=" + notificacao +
                 ", bloqueado=" + bloqueado +
+                ", indLocalizacaoAtiva=" + indLocalizacaoAtiva +
                 '}';
     }
 
@@ -252,6 +267,7 @@ public class Usuario  implements Serializable {
                 localizacao == usuario.localizacao &&
                 notificacao == usuario.notificacao &&
                 bloqueado == usuario.bloqueado &&
+                indLocalizacaoAtiva == usuario.indLocalizacaoAtiva &&
                 Objects.equals(id, usuario.id) &&
                 Objects.equals(senha, usuario.senha) &&
                 Objects.equals(nome, usuario.nome) &&
@@ -264,6 +280,6 @@ public class Usuario  implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, localizacao, notificacao, bloqueado);
+        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, localizacao, notificacao, bloqueado, indLocalizacaoAtiva);
     }
 }
