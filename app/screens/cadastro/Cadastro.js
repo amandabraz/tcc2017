@@ -258,7 +258,7 @@ class Cadastro extends Component {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        let source = 'data:image/jpeg;base64,' + response.data
+        let source = 'data:image/jpeg;base64,' + response.data;
         this.setState({
           image: {uri: response.uri, width: 200, height: 200, changed: true}
         });
