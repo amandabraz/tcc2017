@@ -48,12 +48,12 @@ export default class BuscaProduto extends Component {
 
   //TODO: Implementar busca para tela do produto
   onButtonOpenProduct = () => {
-    this.props.navigation.navigate('ExibeProduto', {userId: responseJson.id});
+    this.props.navigation.navigate('ExibeProduto');
   };
 
   //TODO: Implementar busca para tela do vendedor
   onButtonOpenVendedor = () => {
-    this.props.navigation.navigate('ExibeProduto', {userId: responseJson.id});
+    this.props.navigation.navigate('ExibeVendedor');
   };
 
   buscaProduto() {

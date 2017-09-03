@@ -31,6 +31,12 @@ export const GerenciaCliente = StackNavigator({
   PerfilCliente: {
     screen: PerfilCliente
   },
+  ExibeProduto: {
+    screen: ExibeProduto
+  },
+  ExibeVendedor: {
+    screen: ExibeVendedor
+  },
   ConfiguracaoCliente: {
     screen: ConfiguracaoCliente
   }
@@ -55,12 +61,6 @@ export const TabsCliente = TabNavigator({
           icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
         },
       },
-    },
-    ExibeProduto: {
-      screen: ExibeProduto
-    },
-    ExibeVendedor: {
-      screen: ExibeVendedor
     },
     Home: {
       screen: HomeCliente,
