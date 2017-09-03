@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
+import {
+  AppRegistry,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+  ScrollView
+} from 'react-native';
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
-import { Icon } from 'react-native-elements';
+import {
+  Icon,
+  Button
+} from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 
 //TODO: Pegar dados do produto certo, o que o clique foi feito
@@ -70,6 +81,11 @@ export default class ExibeProduto extends Component {
             this.setState({categoriasArray: categoriasBuscadas});
         });
   }
+
+  //TODO: Implementar busca para tela do comprovante
+  onButtonFinalizarCompra = () => {
+    this.props.navigation.navigate('ExibeComprovante');
+  };
 
   buscaDadosProduto() {
     //TODO: Fazer busca de dados do produto
@@ -214,6 +230,13 @@ export default class ExibeProduto extends Component {
                   editable={false}
                   inputStyle={styles.baseText}/>
 
+                  <Button
+                    onPress={this.onButtonFinalizarCompra}
+                    title="Comprar"
+                    color="#dc143c"
+                    textStyle={{fontSize: 25}}
+                  />
+
       </ScrollView>
       </Image>
     );
@@ -256,6 +279,16 @@ export default class ExibeProduto extends Component {
     alignSelf: 'stretch',
     borderRadius: 100,
     borderWidth: 4
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: "#50a1e0",
+    alignSelf: 'stretch',
   },
   bar:{
     borderTopColor: '#fff',
