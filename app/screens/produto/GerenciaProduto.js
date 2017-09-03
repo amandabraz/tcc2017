@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
@@ -24,40 +25,72 @@ class GerenciaProduto extends Component {
       listaProdutos: [],
       imagemProduto: require('./img/pacoca.jpg')
     };
-  //this.buscaProdutos();
-  }
+    this.buscaProdutos();
+  };
 
   buscaProdutos() {
-    //fetch pra buscar os dados no banco
-    //this.setState({listaProdutos: produtos});
+    fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto", {method: 'GET'})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({listaProdutos: responseJson});
+        }
+    });
   };
 
   adicionarProduto = () => {
     this.props.navigation.navigate('CadastroProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
   };
 
-  deletarProduto() {
-   // alerta: deseja deletar o produto? confirmando: fetch() pra fazer o deletado no banco ser 1 e não 0
-  }
-  editarProduto() {
-   // navigate pra tela de edição do produto
-  }
-  aumentaQuantidade() {
-   //fetch pra aumentar quantidade no banco. seta o valor da tela como ele + 1
-  }
-  diminuiQuantidade() {
-   //fetch pra diminuir quantidade. seta o valor da tela como ele - 1
-  }
+  deletarProduto(produto) {
+    Alert.alert(
+      'Deletar ' + produto.nome,
+      'Tem certeza que quer deletar ' + produto.nome + '?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto/" + produto.id, {method: 'DELETE'})
+            .then((response) => response.json())
+            .then((responseJson) => {
+              if (!responseJson.errorMessage) {
+                this.buscaProdutos();
+                this.mostraProdutos();
+              }
+            });
+          }
+        },
+      ],
+      { cancelable: false }
+    )
+  };
+
+  editarProduto(produto) {
+   // TODO: navigate pra tela de edição do produto (sprint 13)
+ };
+
+  alteraQuantidade(produto) {
+   fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto/" + produto.id + "/qtd/" + produto.quantidade, {method: 'PUT'})
+     .then((response) => response.json())
+     .then((responseJson) => {
+       if (!responseJson.errorMessage) {
+         this.buscaProdutos();
+         this.mostraProdutos();
+       }
+     });
+  };
 
   mostraProdutos() {
     var views = [];
     for (i in this.state.listaProdutos) {
       let produto = this.state.listaProdutos[i];
+      var dataNormal = new Date(produto.dataPreparacao);
+      var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+      produto.dataPreparacao = dataPrep;
       views.push(
         <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>
           <View style={styles.oneResult}>
             <View style={styles.parteEsquerda}>
-            <TouchableOpacity onPress={() => this.deletarProduto()}>
+            <TouchableOpacity onPress={() => this.deletarProduto(produto)}>
               <FontAwesomeIcon name="trash" size={20} color={'#ccc'} />
             </TouchableOpacity>
               <Image source={this.state.imagemProduto}
@@ -69,15 +102,23 @@ class GerenciaProduto extends Component {
             </View>
             <View style={styles.parteDireita}>
               <View style={styles.qtd}>
-                <TouchableOpacity onPress={() => this.aumentaQuantidade()}>
+                <TouchableOpacity onPress={() => {
+                  produto.quantidade += 1;
+                  this.alteraQuantidade(produto);
+                }}>
                   <FontAwesomeIcon name="plus" size={20} color={'darkblue'}/>
                 </TouchableOpacity>
                 <Text style={styles.text}> {produto.quantidade} </Text>
-                <TouchableOpacity onPress={() => this.diminuiQuantidade()}>
+                <TouchableOpacity onPress={() => {
+                  if (produto.quantidade > 0) {
+                    produto.quantidade -= 1;
+                    this.alteraQuantidade(produto);
+                  }
+                }}>
                   <FontAwesomeIcon name="minus" size={20} color={'darkblue'}/>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={() => this.editarProduto()}>
+              <TouchableOpacity onPress={() => this.editarProduto(produto)}>
                 <FontAwesomeIcon name="pencil" size={20} color={'#ccc'} />
               </TouchableOpacity>
             </View>
@@ -92,7 +133,7 @@ class GerenciaProduto extends Component {
       );
     }
     return views;
-  }
+  };
 
   render() {
     const titleConfig = {
