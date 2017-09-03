@@ -34,12 +34,12 @@ export default class BuscaProduto extends Component {
   setSearchText(event) {
     let searchText = event.nativeEvent.text;
     this.setState({searchText});
-    fetch("http://10.0.3.2:8080/produto?filtro=" + searchText)
+    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaProduto: responseJson});
         });
-    fetch("http://10.0.3.2:8080/vendedor?filtro=" + searchText)
+    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaVendedor: responseJson});

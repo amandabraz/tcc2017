@@ -58,7 +58,7 @@ export default class ExibeProduto extends Component {
   }
 
   preencherDietasArray() {
-   fetch('http://10.0.3.2:8080/restricaodietetica')
+   fetch('http://10.0.2.2:8080/restricaodietetica')
      .then((response) => response.json())
        .then((responseJson) => {
          var dietasBuscadas = [];
@@ -70,7 +70,7 @@ export default class ExibeProduto extends Component {
   };
 
   carregarCategoriasArray() {
-    fetch('http://10.0.3.2:8080/categoria')
+    fetch('http://10.0.2.2:8080/categoria')
       .then((response) => response.json())
         .then((responseJson) => {
           var categoriasBuscadas = [];

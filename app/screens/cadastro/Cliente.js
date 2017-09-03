@@ -30,7 +30,7 @@ class Cliente extends Component {
   };
 
   preencherDietasArray() {
-    fetch('http://10.0.3.2:8080/restricaodietetica')
+    fetch('http://10.0.2.2:8080/restricaodietetica')
       .then((response) => response.json())
         .then((responseJson) => {
           var dietasBuscadas = [];
@@ -57,7 +57,7 @@ class Cliente extends Component {
       "tags": tags,
       "restricoesDieteticas": restricoesDieteticas
     }
-      fetch('http://10.0.3.2:8080/cliente', {
+      fetch('http://10.0.2.2:8080/cliente', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
