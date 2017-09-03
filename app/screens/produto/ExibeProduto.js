@@ -126,25 +126,27 @@ export default class ExibeProduto extends Component {
                 editable={false}
                 inputStyle={this.state.restricaoEstilo}/>
 
-          <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'Dietas'}
-              iconClass={FontAwesomeIcon}
-              iconName={'info'}
-              iconColor={'darkslategrey'}
-              value={this.state.dietasText}
-              editable={false}
-              inputStyle={styles.baseText}/>
+                <Fumi
+                    style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
+                    label={'Dietas'}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'cutlery'}
+                    iconColor={'darkslategrey'}
+                    value={this.state.restricoesDieteticasText}
+                    multiline={true}
+                    editable={false}
+                    inputStyle={this.state.restricaoEstilo}/>
 
-              <Fumi
-                  style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                  label={'Ingredientes'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'info'}
-                  iconColor={'darkslategrey'}
-                  value={this.state.ingredientesText}
-                  editable={false}
-                  inputStyle={styles.baseText}/>
+                    <Fumi
+                        style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
+                        label={'Ingredientes'}
+                        iconClass={FontAwesomeIcon}
+                        iconName={'cutlery'}
+                        iconColor={'darkslategrey'}
+                        value={this.state.restricoesDieteticasText}
+                        multiline={true}
+                        editable={false}
+                        inputStyle={this.state.restricaoEstilo}/>
 
                   <Fumi
                       style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
