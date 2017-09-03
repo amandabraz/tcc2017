@@ -23,8 +23,7 @@ export default class ExibeVendedor extends Component {
         fontStyle: 'italic'
       },
       CPFText: '',
-      celularText: '',
-      confText: '  Configuração'
+      celularText: ''
     };
     this.buscaDadosVendedor();
   }
@@ -55,8 +54,6 @@ export default class ExibeVendedor extends Component {
       });
   };
 
-  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoVendedor');}
-
   render () {
     return (
         <Image style={styles.headerBackground}
@@ -68,16 +65,6 @@ export default class ExibeVendedor extends Component {
             source={require('./img/sabrina-copy.jpg')}/>
           </View>
           </View>
-
-        <TouchableOpacity onPress={this.openConfiguracao}>
-          <View style={[styles.bar, styles.barItem]}>
-          <Icon name="settings" size={25} color={'#fff'}/>
-          <Text style={styles.barText}>
-            {this.state.confText}
-          </Text>
-
-          </View>
-        </TouchableOpacity>
 
         <ScrollView>
           <Fumi
