@@ -30,6 +30,7 @@ class Cadastro extends Component {
     email: '',
     senha:'',
     confirmaSenha: '',
+    imagemPerfil: '',
     image: require('./img/cameraa.jpg'),
     backgroundColorEmail: "transparent",
     backgroundColorCpf: "transparent",
@@ -159,7 +160,7 @@ class Cadastro extends Component {
   onButtonVendedor = () => {
     const {
       state: {
-        date, nome, email, cpf, celular, senha
+        date, nome, email, cpf, celular, senha, imagemPerfil
       }
     } = this;
     usuario = {
@@ -170,7 +171,8 @@ class Cadastro extends Component {
       "ddd": celular.substr(0,2),
       "telefone": celular.substr(2,10),
       "senha": senha,
-      "perfil": 'V'
+      "perfil": 'V',
+      "imagemPerfil": imagemPerfil
     }
     let continuar = this.validaCampos(usuario);
 
@@ -200,7 +202,7 @@ class Cadastro extends Component {
   onButtonCliente = () => {
     const {
       state: {
-        date, nome, cpf, celular, email, senha
+        date, nome, cpf, celular, email, senha, imagemPerfil
       }
     } = this;
     usuario = {
@@ -211,7 +213,8 @@ class Cadastro extends Component {
       "ddd": celular.substr(0,2),
       "telefone": celular.substr(2,10),
       "senha": senha,
-      "perfil": 'C'
+      "perfil": 'C',
+      "imagemPerfil": imagemPerfil
     }
     let continuar = this.validaCampos(usuario);
 
@@ -255,10 +258,11 @@ class Cadastro extends Component {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        let source = { uri: response.uri };
+        let source = 'data:image/jpeg;base64,' + response.data
         this.setState({
           image: {uri: response.uri, width: 200, height: 200, changed: true}
         });
+        this.setState({imagemPerfil: source});
       }
     });
   }
