@@ -13,17 +13,32 @@ export default class ExibeProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: '',
-      tags: [],
-      ingredientes: [],
-      restricoesDieteticas: [],
-      dietasArray: [],
-      quantidade: '',
-      categoria: '',
-      categoriasArray: [],
-      nome: '',
-      preco: '',
-      observacao: '',
+      nomeProdutoText: '',
+      tagsText: "Nenhuma tag cadastrada",
+      tagEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
+      restricoesDieteticasText: "Nenhuma restrição cadastrada",
+      restricaoEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
+      dietaProdutoText: "Nenhuma restrição cadastrada",
+      dietaEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
+      ingredientesText: "Nenhum ingrediente cadastrado",
+      ingredientesEstilo: {
+        color: '#CCCCCC',
+        fontStyle: 'italic'
+      },
+      dateText: '',
+      quantidadeText: '',
+      categoriaText: '',
+      precoText: '',
+      observacaoText: '',
       image: require('./img/camera11.jpg')
     };
     this.buscaDadosProduto();
@@ -105,6 +120,26 @@ export default class ExibeProduto extends Component {
             inputStyle={styles.titleText}/>
 
             <Fumi
+                style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+                label={'Categoria'}
+                iconClass={FontAwesomeIcon}
+                iconName={'check-square-o'}
+                iconColor={'darkslategrey'}
+                value={this.state.categoriaText}
+                editable={false}
+                inputStyle={styles.baseText}/>
+
+            <Fumi
+                style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+                label={'Dieta'}
+                iconClass={FontAwesomeIcon}
+                iconName={'cutlery'}
+                iconColor={'darkslategrey'}
+                value={this.state.dietaProdutoText}
+                editable={false}
+                inputStyle={this.state.dietaEstilo}/>
+
+            <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
                 label={'Tags'}
                 iconClass={FontAwesomeIcon}
@@ -126,43 +161,22 @@ export default class ExibeProduto extends Component {
                 editable={false}
                 inputStyle={this.state.restricaoEstilo}/>
 
-                <Fumi
-                    style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
-                    label={'Dietas'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'cutlery'}
-                    iconColor={'darkslategrey'}
-                    value={this.state.restricoesDieteticasText}
-                    multiline={true}
-                    editable={false}
-                    inputStyle={this.state.restricaoEstilo}/>
-
-                    <Fumi
-                        style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
-                        label={'Ingredientes'}
-                        iconClass={FontAwesomeIcon}
-                        iconName={'cutlery'}
-                        iconColor={'darkslategrey'}
-                        value={this.state.restricoesDieteticasText}
-                        multiline={true}
-                        editable={false}
-                        inputStyle={this.state.restricaoEstilo}/>
-
-                  <Fumi
-                      style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                      label={'Categoria'}
-                      iconClass={FontAwesomeIcon}
-                      iconName={'info'}
-                      iconColor={'darkslategrey'}
-                      value={this.state.categoriaText}
-                      editable={false}
-                      inputStyle={styles.baseText}/>
+              <Fumi
+                  style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
+                  label={'Ingredientes'}
+                  iconClass={FontAwesomeIcon}
+                  iconName={'file-text-o'}
+                  iconColor={'darkslategrey'}
+                  value={this.state.ingredientesText}
+                  multiline={true}
+                  editable={false}
+                  inputStyle={this.state.ingredientesEstilo}/>
 
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
               label={'Quantidade'}
               iconClass={FontAwesomeIcon}
-              iconName={'mobile'}
+              iconName={'plus-square-o'}
               iconColor={'darkslategrey'}
               value={this.state.quantidadeText}
               editable={false}
@@ -174,18 +188,18 @@ export default class ExibeProduto extends Component {
               iconClass={FontAwesomeIcon}
               iconName={'calendar'}
               iconColor={'darkslategrey'}
-              value={this.state.dataFabricacaoText}
+              value={this.state.dateText}
               editable={false}
               inputStyle={styles.baseText}/>
 
 
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                label={'Observação'}
+                label={'Preço'}
                 iconClass={FontAwesomeIcon}
-                iconName={'user'}
+                iconName={'money'}
                 iconColor={'darkslategrey'}
-                value={this.state.observacaoText}
+                value={this.state.precoText}
                 editable={false}
                 inputStyle={styles.baseText}/>
 
@@ -194,7 +208,7 @@ export default class ExibeProduto extends Component {
                   style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Observação'}
                   iconClass={FontAwesomeIcon}
-                  iconName={'user'}
+                  iconName={'info'}
                   iconColor={'darkslategrey'}
                   value={this.state.observacaoText}
                   editable={false}
@@ -274,6 +288,11 @@ export default class ExibeProduto extends Component {
     fontWeight: 'bold',
     color: 'darkslategrey',
     fontFamily: 'Roboto',
+  },
+  baseText: {
+    fontFamily: 'Roboto',
+    color: 'darkslategrey',
+    fontSize: 20,
   },
 });
 
