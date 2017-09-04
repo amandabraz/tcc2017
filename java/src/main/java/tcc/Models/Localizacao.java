@@ -12,9 +12,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
-
 
 @Entity
 @Table(name = "LOCALIZACAO")
@@ -40,8 +39,8 @@ public class Localizacao implements Serializable {
     private Float altitude;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "HORARIO_LOCALIZACAO", nullable = false)
-    private DateTimeFormatter horarioLocalizacao;
+    @Column(name = "HORARIO", nullable = false)
+    private Date horario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FK_USUARIO", nullable = false)
@@ -95,12 +94,12 @@ public class Localizacao implements Serializable {
         this.altitude = altitude;
     }
 
-    public DateTimeFormatter getHorarioLocalizacao() {
-        return horarioLocalizacao;
+    public Date getHorario() {
+        return horario;
     }
 
-    public void setHorarioLocalizacao(DateTimeFormatter horarioLocalizacao) {
-        this.horarioLocalizacao = horarioLocalizacao;
+    public void setHorario(Date horario) {
+        this.horario = horario;
     }
 
     public Usuario getUsuario() {
@@ -121,13 +120,13 @@ public class Localizacao implements Serializable {
                 Objects.equals(longitude, that.longitude) &&
                 Objects.equals(precisao_mts, that.precisao_mts) &&
                 Objects.equals(altitude, that.altitude) &&
-                Objects.equals(horarioLocalizacao, that.horarioLocalizacao) &&
+                Objects.equals(horario, that.horario) &&
                 Objects.equals(usuario, that.usuario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, latitude, longitude, precisao_mts, altitude, horarioLocalizacao, usuario);
+        return Objects.hash(id, latitude, longitude, precisao_mts, altitude, horario, usuario);
     }
 
     @Override
@@ -138,7 +137,7 @@ public class Localizacao implements Serializable {
                 ", longitude=" + longitude +
                 ", precisao_mts=" + precisao_mts +
                 ", altitude=" + altitude +
-                ", horarioLocalizacao=" + horarioLocalizacao +
+                ", horario=" + horario +
                 ", usuario=" + usuario +
                 '}';
     }
