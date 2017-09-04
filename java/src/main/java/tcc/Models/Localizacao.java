@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+
 @Entity
 @Table(name = "LOCALIZACAO")
 public class Localizacao implements Serializable {
