@@ -2,10 +2,13 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import tcc.DAOs.ProdutoDAO;
 import tcc.Models.Produto;
+import tcc.Utils.UploadUtil;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,8 +20,11 @@ public class ProdutoService {
     private ProdutoDAO produtoDAO;
 
     @Transactional
-    public Produto salvaProduto(Produto produto) {
+    public Produto salvaProduto(Produto produto) throws IOException {
         try {
+            if (!StringUtils.isEmpty(produto.getImagemPrincipal())) {
+                produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
+            }
             return produtoDAO.save(produto);
         } catch (Exception e) {
             throw e;

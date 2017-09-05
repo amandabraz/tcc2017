@@ -48,6 +48,7 @@ export default class CadastroProduto extends Component {
      preco: '',
      observacao: '',
      image: require('./img/camera11.jpg'),
+     imagemProduto: '',
      backgroundColorPreco: "transparent"
     }
     this.preencherDietasArray();
@@ -178,10 +179,11 @@ selecionarFoto() {
     } else if (response.error) {
       console.log('ImagePicker Error: ', response.error);
     } else {
-      let source = { uri: response.uri };
+      let source = 'data:image/jpeg;base64,' + response.data;
       this.setState({
         image: {uri: response.uri, width: 200, height: 200, changed: true}
       });
+      this.setState({imagemProduto: source})
     }
   });
 }
@@ -209,7 +211,8 @@ selecionarFoto() {
         categoria,
         nome,
         preco,
-        observacao
+        observacao,
+        imagemProduto
       }
     } = this;
 
@@ -223,7 +226,8 @@ selecionarFoto() {
       "restricoesDieteticas": restricoesDieteticas,
       "ingredientes": ingredientes,
       "categoria": categoria,
-      "observacao": observacao
+      "observacao": observacao,
+      "imagemPrincipal": imagemProduto
     }
     let continuar = this.validaCampos(produto);
 

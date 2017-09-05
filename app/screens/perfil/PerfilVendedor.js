@@ -16,7 +16,8 @@ export default class PerfilVendedor extends Component {
       nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
-      meiosPagamentoText: "Nenhum Meio de Pagamento Escolhido",
+      imagemPerfil: require('./img/camera2.jpg'),
+      meiosPagamentoText: "Nenhum meio de pagamento escolhido",
       pagamentoEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
@@ -33,6 +34,9 @@ export default class PerfilVendedor extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
+            if (responseJson.usuario.imagemPerfil) {
+              this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
+            }
           this.setState({nomeText: responseJson.usuario.nome});
           this.setState({nomeFantasiaText: responseJson.nomeFantasia});
           var dataNormal = new Date(responseJson.usuario.dataNasc);
@@ -64,7 +68,7 @@ export default class PerfilVendedor extends Component {
           <View style={styles.profilepicWrap}>
           <Image
             style={styles.profilepic}
-            source={require('./img/cicero.jpg')}/>
+            source={this.state.imagemPerfil}/>
           </View>
           </View>
 
