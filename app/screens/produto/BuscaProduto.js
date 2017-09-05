@@ -34,12 +34,12 @@ export default class BuscaProduto extends Component {
   setSearchText(event) {
     let searchText = event.nativeEvent.text;
     this.setState({searchText});
-    fetch("http://10.0.3.2:8080/produto?filtro=" + searchText)
+    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaProduto: responseJson});
         });
-    fetch("http://10.0.3.2:8080/vendedor?filtro=" + searchText)
+    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaVendedor: responseJson});
@@ -73,7 +73,7 @@ export default class BuscaProduto extends Component {
                 <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
               </View>
               <Icon
-                name='arrow-forward'
+                name='shopping-cart'
                 type=' material-community'
                 color='#1C1C1C'
                 onPress={this.onButtonOpenProduct}
@@ -102,10 +102,10 @@ export default class BuscaProduto extends Component {
             <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
           </View>
           <Icon
-            onPress={this.onButtonOpenVendedor}
-            name='arrow-forward'
+            name='person'
             type=' material-community'
             color='#1C1C1C'
+            onPress={this.onButtonOpenVendedor}
             style={styles.imageResultSearch}
              />
         </View>
