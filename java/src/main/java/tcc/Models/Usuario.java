@@ -60,6 +60,9 @@ public class Usuario  implements Serializable {
     @Column(name = "BLOQUEADO", nullable = false)
     private boolean bloqueado;
 
+    @Column(name = "imagem_perfil", nullable = true)
+    private String imagemPerfil;
+
     /**
      * Construtor com todos os dados para retorno do banco
      */
@@ -221,6 +224,14 @@ public class Usuario  implements Serializable {
 
     public void setBloqueado(boolean bloqueado) {
         this.bloqueado = bloqueado;
+    }
+
+    public String getImagemPerfil() {
+        return imagemPerfil;
+    }
+
+    public void setImagemPerfil(String imagemPerfil) {
+        this.imagemPerfil = imagemPerfil;
     }
 
     @Override
