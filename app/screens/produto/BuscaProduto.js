@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import {
   Alert,
+  AppRegistry,
   Dimensions,
   Image,
   StyleSheet,
@@ -15,8 +16,13 @@ import {
   View,
   ScrollView
 } from 'react-native';
-import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {
+  Icon,
+  Button
+} from 'react-native-elements';
+import { Fumi } from 'react-native-textinput-effects';
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,12 +40,12 @@ export default class BuscaProduto extends Component {
   setSearchText(event) {
     let searchText = event.nativeEvent.text;
     this.setState({searchText});
-    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
+    fetch("http://10.0.3.2:8080/produto?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaProduto: responseJson});
         });
-    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
+    fetch("http://10.0.3.2:8080/vendedor?filtro=" + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaVendedor: responseJson});
