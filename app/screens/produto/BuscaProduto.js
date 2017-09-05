@@ -24,11 +24,15 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.navigation.state.params.userId,
+      clienteId: this.props.navigation.state.params.clienteId,
+      localizacao: this.props.navigation.state.params.localizacao,
       imagemProduto: require('./img/pacoca.jpg'),
       imagemVendedor: require('./img/sabrina-copy.jpg'),
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: []
     }
+    this.verificaLocalizacaoFlag();
   }
 
   setSearchText(event) {
