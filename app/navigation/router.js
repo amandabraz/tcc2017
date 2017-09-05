@@ -15,6 +15,8 @@ import ProdutosFavoritos from '../screens/produto/ProdutosFavoritos';
 import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
+import ExibeProduto from '../screens/produto/ExibeProduto';
+import ExibeVendedor from '../screens/produto/ExibeVendedor';
 import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
 import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
@@ -28,6 +30,12 @@ MENU SOMENTE PARA CLIENTE
 export const GerenciaCliente = StackNavigator({
   PerfilCliente: {
     screen: PerfilCliente
+  },
+  ExibeProduto: {
+    screen: ExibeProduto
+  },
+  ExibeVendedor: {
+    screen: ExibeVendedor
   },
   ConfiguracaoCliente: {
     screen: ConfiguracaoCliente

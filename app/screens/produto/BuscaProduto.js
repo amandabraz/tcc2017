@@ -44,6 +44,16 @@ export default class BuscaProduto extends Component {
         });
   }
 
+  //TODO: Implementar busca para tela do produto
+  onButtonOpenProduct = () => {
+    this.props.navigation.navigate('ExibeProduto');
+  };
+
+  //TODO: Implementar busca para tela do vendedor
+  onButtonOpenVendedor = () => {
+    this.props.navigation.navigate('ExibeVendedor');
+  };
+
   buscaProduto() {
     var views = [];
     for(i in this.state.resultadoPesquisaProduto) {
@@ -61,9 +71,10 @@ export default class BuscaProduto extends Component {
                 <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
               </View>
               <Icon
-                name='arrow-forward'
+                name='shopping-cart'
                 type=' material-community'
                 color='#1C1C1C'
+                onPress={this.onButtonOpenProduct}
                 style={styles.imageResultSearch} />
             </View>
             <Text>{'\n'}</Text>
@@ -89,9 +100,10 @@ export default class BuscaProduto extends Component {
             <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
           </View>
           <Icon
-            name='arrow-forward'
+            name='person'
             type=' material-community'
             color='#1C1C1C'
+            onPress={this.onButtonOpenVendedor}
             style={styles.imageResultSearch}
              />
         </View>
