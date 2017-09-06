@@ -35,7 +35,7 @@ export default class ExibeProduto extends Component {
         color: '#CCCCCC',
         fontStyle: 'italic'
       },
-      dietaProdutoText: "Nenhuma restrição cadastrada",
+      dietaProdutoText: "Nenhuma dieta cadastrada",
       dietaEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
@@ -54,34 +54,8 @@ export default class ExibeProduto extends Component {
       image: require('./img/camera11.jpg')
     };
     this.buscaDadosProduto();
-    this.preencherDietasArray();
-    this.carregarCategoriasArray();
   }
 
-  preencherDietasArray() {
-   fetch('http://10.0.2.2:8080/restricaodietetica')
-     .then((response) => response.json())
-       .then((responseJson) => {
-         var dietasBuscadas = [];
-           for (i in responseJson) {
-             dietasBuscadas.push(responseJson[i]);
-           }
-           this.setState({dietasArray: dietasBuscadas});
-       });
-  };
-
-  carregarCategoriasArray() {
-    fetch('http://10.0.2.2:8080/categoria')
-      .then((response) => response.json())
-        .then((responseJson) => {
-          var categoriasBuscadas = [];
-          categoriasBuscadas.push({descricao: '-----'})
-            for (i in responseJson) {
-              categoriasBuscadas.push(responseJson[i]);
-            }
-            this.setState({categoriasArray: categoriasBuscadas});
-        });
-  }
 
   //TODO: Implementar busca para tela do comprovante
   onButtonFinalizarCompra = () => {
