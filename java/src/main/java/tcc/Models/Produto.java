@@ -12,7 +12,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
@@ -87,6 +86,10 @@ public class Produto implements Serializable {
     //TODO: implementar logica que calcula o score com base nas avaliacoes dadas
     @Column(name = "SCORE")
     private float score = 0;
+
+    //Adicionada imagem como principal, o restante pode ir para a galeria
+    @Column(name = "imagem_principal", nullable = true)
+    private String imagemPrincipal;
 
     public Produto() {
         super();
@@ -203,6 +206,14 @@ public class Produto implements Serializable {
 
     public void setScore(float score) {
         this.score = score;
+    }
+
+    public String getImagemPrincipal() {
+        return imagemPrincipal;
+    }
+
+    public void setImagemPrincipal(String imagemPrincipal) {
+        this.imagemPrincipal = imagemPrincipal;
     }
 
     @Override

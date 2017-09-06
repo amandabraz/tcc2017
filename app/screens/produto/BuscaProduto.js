@@ -57,7 +57,7 @@ export default class BuscaProduto extends Component {
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
-              <Image source={this.state.imagemProduto}
+              <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
 
@@ -86,7 +86,7 @@ export default class BuscaProduto extends Component {
       views.push (
         <View key={i}>
         <View style={styles.oneResult}>
-          <Image source={this.state.imagemVendedor}
+          <Image source={{ uri: vendedor.usuario.imagemPerfil }}
                  style={styles.imageResultSearch}
                  justifyContent='flex-start'/>
 
