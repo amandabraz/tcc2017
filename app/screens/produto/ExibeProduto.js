@@ -58,7 +58,7 @@ export default class ExibeProduto extends Component {
   }
 
   preencherDietasArray() {
-   fetch('http://10.0.2.2:8080/restricaodietetica')
+   fetch('http://10.0.3.2:8080/restricaodietetica')
      .then((response) => response.json())
        .then((responseJson) => {
          var dietasBuscadas = [];
@@ -70,7 +70,7 @@ export default class ExibeProduto extends Component {
   };
 
   carregarCategoriasArray() {
-    fetch('http://10.0.2.2:8080/categoria')
+    fetch('http://10.0.3.2:8080/categoria')
       .then((response) => response.json())
         .then((responseJson) => {
           var categoriasBuscadas = [];
@@ -230,6 +230,30 @@ export default class ExibeProduto extends Component {
                   editable={false}
                   inputStyle={styles.baseText}/>
 
+
+                  <View style={styles.baseQuantidadeText}>
+                    <Text style={styles.baseText}>   Quantidade:  </Text>
+                    <TouchableOpacity onPress={() => {
+                      if (produto.quantidade > 0) {
+                        produto.quantidade -= 1;
+                        this.alteraQuantidade(produto);
+                      }
+                    }}>
+                      <FontAwesomeIcon name="minus" size={40} color={'pink'}/>
+                    </TouchableOpacity>
+                    <Text style={styles.baseText}> 01 </Text>
+                    <TouchableOpacity onPress={() => {
+                      produto.quantidade += 1;
+                      this.alteraQuantidade(produto);
+                    }}>
+                      <FontAwesomeIcon name="plus" size={40} color={'pink'}/>
+                    </TouchableOpacity>
+
+                  </View>
+
+
+
+
                   <Button
                     onPress={this.onButtonFinalizarCompra}
                     title="Comprar"
@@ -304,6 +328,15 @@ export default class ExibeProduto extends Component {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
     fontSize: 20,
+  },
+  baseQuantidadeText: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    width: 375,
+    height: 70,
   },
   listText: {
     fontFamily: 'Roboto',

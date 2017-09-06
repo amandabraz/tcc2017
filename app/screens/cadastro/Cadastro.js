@@ -175,7 +175,7 @@ class Cadastro extends Component {
     let continuar = this.validaCampos(usuario);
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario', {
+      fetch('http://10.0.3.2:8080/usuario', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
@@ -216,7 +216,7 @@ class Cadastro extends Component {
     let continuar = this.validaCampos(usuario);
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario', {
+      fetch('http://10.0.3.2:8080/usuario', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
