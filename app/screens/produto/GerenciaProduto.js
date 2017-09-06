@@ -22,8 +22,7 @@ class GerenciaProduto extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
-      listaProdutos: [],
-      imagemProduto: require('./img/pacoca.jpg')
+      listaProdutos: []
     };
     this.buscaProdutos();
   };
@@ -93,7 +92,7 @@ class GerenciaProduto extends Component {
             <TouchableOpacity onPress={() => this.deletarProduto(produto)}>
               <FontAwesomeIcon name="trash" size={20} color={'#ccc'} />
             </TouchableOpacity>
-              <Image source={this.state.imagemProduto}
+              <Image source={{ uri: produto.imagemPrincipal }}
                    style={styles.photo}
                    justifyContent='flex-start'/>
               <View style={{width: '65%', marginLeft: 12, marginRight: 12}}>
