@@ -50,6 +50,7 @@ export default class ExibeProduto extends Component {
       categoriaText: '',
       precoText: '',
       observacaoText: '',
+      precoTotalText: "0,00",
       image: require('./img/camera11.jpg')
     };
     this.buscaDadosProduto();
@@ -190,16 +191,6 @@ export default class ExibeProduto extends Component {
 
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'Quantidade'}
-              iconClass={FontAwesomeIcon}
-              iconName={'plus-square-o'}
-              iconColor={'darkslategrey'}
-              value={this.state.quantidadeText}
-              editable={false}
-              inputStyle={styles.baseText}/>
-
-          <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
               label={'Data'}
               iconClass={FontAwesomeIcon}
               iconName={'calendar'}
@@ -211,7 +202,7 @@ export default class ExibeProduto extends Component {
 
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                label={'Preço'}
+                label={'Preço da unidade'}
                 iconClass={FontAwesomeIcon}
                 iconName={'money'}
                 iconColor={'darkslategrey'}
@@ -248,9 +239,20 @@ export default class ExibeProduto extends Component {
                     }}>
                       <FontAwesomeIcon name="plus" size={40} color={'pink'}/>
                     </TouchableOpacity>
-
                   </View>
 
+
+                                      <Fumi
+                                        style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+                                        label={'Preço total R$'}
+                                        iconClass={FontAwesomeIcon}
+                                        iconName={'money'}
+                                        iconColor={'darkslategrey'}
+                                        value={this.state.precoTotalText}
+                                        editable={false}
+                                        inputStyle={styles.baseText}
+                                        // Fazer multiplicação da quantidade pelo preço unitário onChangeText={(text) => { this.setState({textValue: text})
+                                         />
 
 
 
