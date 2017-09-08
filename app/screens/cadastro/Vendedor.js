@@ -16,7 +16,7 @@ class Vendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        userId: 39,
+        userId: this.props.navigation.state.params.userId,
         pagamentosArray: [],
         nomeLoja: '',
         meiosPagamentos: []
