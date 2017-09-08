@@ -3,6 +3,7 @@ import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollVie
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
@@ -137,8 +138,8 @@ export default class PerfilVendedor extends Component {
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome da loja'}
-                iconClass={FontAwesomeIcon}
-                iconName={'user'}
+                iconClass={MaterialsIcon}
+                iconName={'store'}
                 iconColor={'darkslategrey'}
                 value={this.state.nomeFantasiaText}
                 editable={false}
