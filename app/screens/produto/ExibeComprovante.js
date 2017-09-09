@@ -1,8 +1,3 @@
-
-/**
-  Interface de Login para o usuário.
-*/
-
 import React, { Component } from 'react';
 import {
   Alert,
@@ -19,107 +14,34 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Kohana } from 'react-native-textinput-effects';
+import { Fumi } from 'react-native-textinput-effects';
+import {
+  Icon,
+  Button
+} from 'react-native-elements';
+
+import NavigationBar from 'react-native-navbar';
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
-export default class Login extends Component {
+export default class ExibeComprovante extends Component {
   constructor(props) {
    super(props);
 
    this.state = {
-     email: '',
-     senha: ''
+     nomeProdutoText: '',
+     quantidadeText: '',
+     precoText: '',
+     tokenText: ''
    }
   }
 
-  esqueceuSenha = () => {
-    Alert.alert("Programar envio por email..");
-    //TODO: Colocar envio de recuperacao de senha por email
-  }
-
-  validaCampos = (login) => {
-    var camposVazios = "";
-    //validar Email
-    if (!login.email) {
-      camposVazios += " Email ";
-    }
-    //validar senha
-    if (!login.senha) {
-      if (camposVazios) {
-        camposVazios += "e Senha ";
-      } else {
-        camposVazios += " Senha ";
-      }
-    }
-    if (camposVazios) {
-      ToastAndroid.showWithGravity('Campo (s) ' + camposVazios + 'com preenchimento obrigatório.' , ToastAndroid.LONG, ToastAndroid.CENTER);
-      return false;
-    }
-    return true;
-  }
-
-  cadastrar = () => {
-    this.props.navigation.navigate('Cadastro');
-  };
-
-  //evento no click do botão
-  eventLogin = () => {
-    const {
-      state: {
-        email, senha
-      }
-    } = this;
-    login = {
-      "email": email,
-      "senha": senha,
-    }
-
-    let continuar = this.validaCampos(login);
-
-    //https://auth0.com/blog/adding-authentication-to-react-native-using-jwt/
-    //Link de exemplo, item Signing up Users and Acquiring a JWT
-
-    if (continuar) {
-      fetch('http://10.0.3.2:8080/usuario/login', {
-          method: 'POST',
-          headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(login)
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-            if (responseJson != null) {
-              ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-              if (responseJson.usuario.perfil == "V") {
-                this.props.navigation.navigate('TabsVendedor', {
-                  userId: responseJson.usuario.id,
-                  vendedorId: responseJson.id
-                });
-              } else if (responseJson.usuario.perfil == "C") {
-                this.props.navigation.navigate('TabsCliente', {
-                  userId: responseJson.usuario.id,
-                  clienteId: responseJson.id
-                });
-              }
-            }
-          } else {
-              Alert.alert("E-mail ou senha inválidos!");
-          }
-        })
-        .catch((error) => {
-          Alert.alert("error Response", JSON.stringify(error));
-          console.error(error);
-      });
-    }
-
+  //TODO: Implementar busca para tela do comprovante
+  onButtonVoltar = () => {
+    this.props.navigation.navigate('ExibeComprovante');
   };
 
   //render
@@ -129,7 +51,7 @@ export default class Login extends Component {
 
       <ScrollView>
       <View style={styles.container}>
-        <Image source={require('./img/cupcakes.jpg')} style={styles.background}>
+        <Image source={require('./img/fundo2.png')} style={styles.background}>
             <View style={styles.centralView}>
               <Text style={styles.title}>Bem-Vindo(a)!{'\n'}{'\n'}</Text>
 
