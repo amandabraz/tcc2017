@@ -46,7 +46,7 @@ export default class BuscaProduto extends Component {
 
   //TODO: Implementar busca para tela do produto
   onButtonOpenProduct = () => {
-    this.props.navigation.navigate('ExibeProduto');
+    this.props.navigation.navigate('ExibeProduto');//, {produto: produto});
   };
 
   //TODO: Implementar busca para tela do vendedor
@@ -74,7 +74,7 @@ export default class BuscaProduto extends Component {
                 name='shopping-cart'
                 type=' material-community'
                 color='#1C1C1C'
-                onPress={this.onButtonOpenProduct}
+                onPress={this.onButtonOpenProduct}//(produto)}
                 style={styles.imageResultSearch} />
             </View>
             <Text>{'\n'}</Text>
