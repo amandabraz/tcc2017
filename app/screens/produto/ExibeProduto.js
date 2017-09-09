@@ -9,7 +9,6 @@ import {
   ScrollView
 } from 'react-native';
 import Modal from 'react-native-modal';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import {
@@ -290,16 +289,6 @@ export default class ExibeProduto extends Component {
     backgroundColor: "#50a1e0",
     alignSelf: 'stretch',
   },
-  bar:{
-    borderTopColor: '#fff',
-    borderTopWidth: 4,
-    backgroundColor: 'darkslategrey',
-    flexDirection: 'row'
-  },
-  barItem:{
-    padding: 18,
-    alignItems: 'center'
-  },
   baseText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
@@ -318,12 +307,6 @@ export default class ExibeProduto extends Component {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
     fontSize: 16,
-  },
-  barText: {
-    fontFamily: 'Roboto',
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 18,
   },
   titleText: {
     fontSize: 30,
