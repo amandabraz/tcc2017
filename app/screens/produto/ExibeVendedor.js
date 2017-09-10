@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
+import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView, Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -14,17 +14,21 @@ export default class ExibeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.navigation.state.params.userId,
+      vendedorId: this.props.navigation.state.params.vendedorId,
       nomeText: '',
       nomeFantasiaText: '',
-      meiosPagamentoText: "Nenhum Meio de Pagamento Escolhido",
+      meiosPagamentoText: '',
       pagamentoEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
       },
       celularText: '',
-      resultadoProduto: [1,2,3,4]
+      resultadoProduto: [],
+      imagemPerfil: require('./img/camera11.jpg')
     };
     this.buscaDadosVendedor();
+    this.buscaProdutos();
   }
 
   buscaDadosVendedor() {
@@ -32,14 +36,12 @@ export default class ExibeVendedor extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
+            if (responseJson.usuario.imagemPerfil) {
+              this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
+            }
           this.setState({nomeText: responseJson.usuario.nome});
           this.setState({nomeFantasiaText: responseJson.nomeFantasia});
-          var dataNormal = new Date(responseJson.usuario.dataNasc);
-          var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-          this.setState({dataNascimentoText: dataNasc});
-          this.setState({emailText: responseJson.usuario.email});
-          this.setState({CPFText: responseJson.usuario.cpf});
-          this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
+          this.setState({celularText: "(" + responseJson.usuario.ddd + ") " + responseJson.usuario.telefone});
           if (responseJson.meiosPagamentos.length > 0) {
             this.setState({pagamentoEstilo: styles.listText})
             var pagamentos = "";
@@ -53,28 +55,48 @@ export default class ExibeVendedor extends Component {
       });
   };
 
+  buscaProdutos() {
+    fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto", {method: 'GET'})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({resultadoProduto: responseJson});
+        }
+    });
+  };
+
   mostraProduto() {
     var views = [];
+    if(this.state.resultadoProduto.length > 0){
     for(i in this.state.resultadoProduto) {
       let produto = this.state.resultadoProduto[i];
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
-              <Image source={require('./img/fundo2.png')}
+              <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
 
-                <Text style={styles.oneResultfontTitle} justifyContent='center'>Nome Produto</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>Categoria</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>preco</Text>
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.categoria}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
 
             </View>
             <Text>{'\n'}</Text>
           </View>
         );
     }
-      return views;
+  } else {
+    views.push(
+      <View key={0} style={{alignItems: 'center'}}>
+      <Text style={{marginTop: 12,fontSize: 18, justifyContent: 'center'}}>
+        Esse vendedor não tem produtos cadastrados!
+      </Text>
+      </View>
+    )
   }
+      return views;
+}
 
   render () {
     return (
@@ -84,11 +106,11 @@ export default class ExibeVendedor extends Component {
           <View style={styles.profilepicWrap}>
           <Image
             style={styles.profilepic}
-            source={require('./img/sabrina-copy.jpg')}/>
+            source={this.state.imagemPerfil}/>
           </View>
           <View style={{alignItems: 'center'}}>
           <Text style={styles.titleText}>
-          Nome {this.state.nomeText}
+          {this.state.nomeText}
           </Text>
           </View>
           </View>
@@ -130,7 +152,7 @@ export default class ExibeVendedor extends Component {
       <View style={styles.results}>
       <ScrollView horizontal={true}
                   showsHorizontalScrollIndicator={true}>
-                {this.mostraProduto()}
+          {this.mostraProduto()}
       </ScrollView>
       </View>
       </ScrollView>
