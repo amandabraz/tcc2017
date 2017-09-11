@@ -85,7 +85,7 @@ export default class Login extends Component {
     //Link de exemplo, item Signing up Users and Acquiring a JWT
 
     if (continuar) {
-      fetch('http://10.0.3.2:8080/usuario/login', {
+      fetch('http://10.0.2.2:8080/usuario/login', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',

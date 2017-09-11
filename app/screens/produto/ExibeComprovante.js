@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   Alert,
   AppRegistry,
-  Button,
   Dimensions,
   Image,
   ScrollView,
