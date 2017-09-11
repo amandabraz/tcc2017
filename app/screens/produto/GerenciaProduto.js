@@ -22,8 +22,7 @@ class GerenciaProduto extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
-      listaProdutos: [],
-      imagemProduto: require('./img/pacoca.jpg')
+      listaProdutos: []
     };
     this.buscaProdutos();
   };
