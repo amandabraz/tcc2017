@@ -55,7 +55,6 @@ export default class ExibeProduto extends Component {
     this.buscaDadosProduto();
   }
 
-
   //TODO: Implementar busca para tela do comprovante
   onButtonFinalizarCompra = () => {
     this.props.navigation.navigate('ExibeComprovante');
@@ -193,7 +192,6 @@ export default class ExibeProduto extends Component {
                   value={this.state.observacaoText}
                   editable={false}
                   inputStyle={styles.baseText}/>
-
 
                   <View style={styles.baseQuantidadeText}>
                     <Text style={styles.baseText}>   Quantidade:  </Text>
