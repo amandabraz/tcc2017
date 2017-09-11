@@ -24,7 +24,6 @@ import CheckBox from 'react-native-check-box';
 //TODO: Pegar dados do produto certo, o que o clique foi feito
 
 export default class ExibeProduto extends Component {
-
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -59,7 +58,7 @@ export default class ExibeProduto extends Component {
         };
         this.buscaDadosProduto();
     }
-
+    
     _confirmTest() {
         this.popup.confirm({
             title: 'Confirmar Compra',
@@ -214,7 +213,6 @@ export default class ExibeProduto extends Component {
                     value={this.state.observacaoText}
                     editable={false}
                     inputStyle={styles.baseText}/>
-
 
                   <View style={styles.baseQuantidadeText}>
                     <Text style={styles.baseText}>   Quantidade:  </Text>
