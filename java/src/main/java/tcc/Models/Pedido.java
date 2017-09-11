@@ -25,7 +25,7 @@ public class Pedido implements Serializable {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "STATUS")
+    @Column(name = "STATUS", nullable = false)
     private String status;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -212,6 +212,7 @@ public class Pedido implements Serializable {
     }
 
     public Pedido(Long id) {
+        super();
         this.id = id;
     }
 
