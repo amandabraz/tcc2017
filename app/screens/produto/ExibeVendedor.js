@@ -101,7 +101,6 @@ export default class ExibeVendedor extends Component {
   render () {
     return (
       <View style={styles.container}>
-
         <View style={styles.header}>
           <View style={styles.profilepicWrap}>
           <Image
@@ -136,7 +135,6 @@ export default class ExibeVendedor extends Component {
               editable={false}
               inputStyle={styles.baseText}/>
 
-
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
               label={'Meios de Pagamento'}
@@ -147,7 +145,6 @@ export default class ExibeVendedor extends Component {
               multiline={true}
               editable={false}
               inputStyle={this.state.pagamentoEstilo}/>
-
 
       <View style={styles.results}>
       <ScrollView horizontal={true}
