@@ -17,7 +17,7 @@ export default class ExibeVendedor extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       nomeText: '',
-      nomeFantasiaText: '',
+      nomeFantasiaText: '----',
       meiosPagamentoText: '',
       pagamentoEstilo: {
         color: '#CCCCCC',
@@ -61,7 +61,7 @@ export default class ExibeVendedor extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({resultadoProduto: responseJson});
-        }
+      }
     });
   };
 
@@ -78,8 +78,8 @@ export default class ExibeVendedor extends Component {
                      justifyContent='flex-start'/>
 
                 <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.categoria}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.categoria.descricao}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>Preço: {produto.preco}</Text>
 
             </View>
             <Text>{'\n'}</Text>
@@ -215,6 +215,7 @@ export default class ExibeVendedor extends Component {
   },
   oneResult:{
      height: 200,
+     width: 180,
      alignItems:  'center',
      justifyContent: 'center',
      backgroundColor: 'rgba(255, 255, 255, 0.55)',
