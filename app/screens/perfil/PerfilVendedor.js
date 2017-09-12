@@ -3,6 +3,7 @@ import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollVie
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
@@ -16,7 +17,8 @@ export default class PerfilVendedor extends Component {
       nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
-      meiosPagamentoText: "Nenhum Meio de Pagamento Escolhido",
+      imagemPerfil: require('./img/camera2.jpg'),
+      meiosPagamentoText: "Nenhum meio de pagamento escolhido",
       pagamentoEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
@@ -33,6 +35,9 @@ export default class PerfilVendedor extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
+            if (responseJson.usuario.imagemPerfil) {
+              this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
+            }
           this.setState({nomeText: responseJson.usuario.nome});
           this.setState({nomeFantasiaText: responseJson.nomeFantasia});
           var dataNormal = new Date(responseJson.usuario.dataNasc);
@@ -64,7 +69,7 @@ export default class PerfilVendedor extends Component {
           <View style={styles.profilepicWrap}>
           <Image
             style={styles.profilepic}
-            source={require('./img/cicero.jpg')}/>
+            source={this.state.imagemPerfil}/>
           </View>
           </View>
 
@@ -133,8 +138,8 @@ export default class PerfilVendedor extends Component {
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome da loja'}
-                iconClass={FontAwesomeIcon}
-                iconName={'user'}
+                iconClass={MaterialsIcon}
+                iconName={'store'}
                 iconColor={'darkslategrey'}
                 value={this.state.nomeFantasiaText}
                 editable={false}

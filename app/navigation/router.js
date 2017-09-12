@@ -32,6 +32,18 @@ export const GerenciaCliente = StackNavigator({
   PerfilCliente: {
     screen: PerfilCliente
   },
+  ConfiguracaoCliente: {
+    screen: ConfiguracaoCliente
+  }
+ }, {
+  mode: 'card',
+  headerMode: 'none',
+});
+
+export const BuscaPro = StackNavigator({
+  BuscaProduto: {
+    screen: BuscaProduto
+  },
   ExibeProduto: {
     screen: ExibeProduto
   },
@@ -41,10 +53,8 @@ export const GerenciaCliente = StackNavigator({
   ExibeVendedor: {
     screen: ExibeVendedor
   },
-  ConfiguracaoCliente: {
-    screen: ConfiguracaoCliente
-  }
- }, {
+ },
+ {
   mode: 'card',
   headerMode: 'none',
 });
@@ -59,7 +69,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Busca: {
-      screen: BuscaProduto,
+      screen: BuscaPro,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />

@@ -3,6 +3,7 @@ package tcc.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import tcc.Models.Vendedor;
 import tcc.Services.ClienteService;
 import tcc.Services.UsuarioService;
 import tcc.Services.VendedorService;
+import tcc.Utils.UploadUtil;
 
 @RequestMapping(value = "/usuario")
 @RestController
@@ -45,9 +47,11 @@ public class UsuarioController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity cadastraUsuario(@RequestBody Usuario usuario) {
-
         Usuario novoUsuario = null;
         try {
+            if (!StringUtils.isEmpty(usuario.getImagemPerfil())) {
+                usuario.setImagemPerfil(UploadUtil.uploadFoto(usuario.getImagemPerfil()));
+            }
             CustomError temErro = usuarioService.validaUsuario(usuario);
             if (temErro != null) {
                 System.out.println(temErro.toString());

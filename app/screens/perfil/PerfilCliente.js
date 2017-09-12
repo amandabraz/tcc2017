@@ -15,12 +15,13 @@ export default class PerfilCliente extends Component {
       nomeText: '',
       dataNascimentoText: '',
       emailText: '',
-      tagsText: "nenhuma tag inserida",
+      imagemPerfil: require('./img/camera2.jpg'),
+      tagsText: "Nenhuma tag inserida",
       tagEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
       },
-      restricoesDieteticasText: "nenhuma restrição escolhida",
+      restricoesDieteticasText: "Nenhuma restrição escolhida",
       restricaoEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
@@ -37,32 +38,36 @@ export default class PerfilCliente extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
-          this.setState({nomeText: responseJson.usuario.nome});
-          var dataNormal = new Date(responseJson.usuario.dataNasc);
-          var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-          this.setState({dataNascimentoText: dataNasc});
-          this.setState({emailText: responseJson.usuario.email});
-          this.setState({CPFText: responseJson.usuario.cpf});
-          this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
-          if (responseJson.tags.length > 0) {
-            this.setState({tagEstilo: styles.listText})
-            var tags = "";
-            for(i in responseJson.tags) {
-              tags += "#" + responseJson.tags[i].descricao + "  ";
+            if (responseJson.usuario.imagemPerfil) {
+              this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
             }
-            tags = tags.slice(0, -2);
-            this.setState({tagsText: tags});
-          }
-          if (responseJson.restricoesDieteticas.length > 0) {
-            this.setState({restricaoEstilo: styles.listText})
-            var restricoes = "";
-            for(i in responseJson.restricoesDieteticas) {
-              restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
+            this.setState({nomeText: responseJson.usuario.nome});
+            this.setState({})
+            var dataNormal = new Date(responseJson.usuario.dataNasc);
+            var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+            this.setState({dataNascimentoText: dataNasc});
+            this.setState({emailText: responseJson.usuario.email});
+            this.setState({CPFText: responseJson.usuario.cpf});
+            this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
+            if (responseJson.tags.length > 0) {
+              this.setState({tagEstilo: styles.listText})
+              var tags = "";
+              for(i in responseJson.tags) {
+                tags += "#" + responseJson.tags[i].descricao + "  ";
+              }
+              tags = tags.slice(0, -2);
+              this.setState({tagsText: tags});
             }
-            restricoes = restricoes.slice(0, -3);
-            this.setState({restricoesDieteticasText: restricoes});
+            if (responseJson.restricoesDieteticas.length > 0) {
+              this.setState({restricaoEstilo: styles.listText})
+              var restricoes = "";
+              for(i in responseJson.restricoesDieteticas) {
+                restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
+              }
+              restricoes = restricoes.slice(0, -3);
+              this.setState({restricoesDieteticasText: restricoes});
+            }
           }
-        }
       });
   };
 
@@ -76,7 +81,7 @@ export default class PerfilCliente extends Component {
           <View style={styles.profilepicWrap}>
           <Image
             style={styles.profilepic}
-            source={require('./img/cicero.jpg')}/>
+            source={this.state.imagemPerfil}/>
           </View>
           </View>
 

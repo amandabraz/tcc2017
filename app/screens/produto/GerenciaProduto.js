@@ -54,12 +54,7 @@ class GerenciaProduto extends Component {
             tintColor="darkblue"
           />
           <View style={styles.container}>
-          <Text>Blablabla</Text>
-          <ListView
-                  style={styles.container}
-                  dataSource={this.state.dataSource}
-                  renderRow={(data) => <RowProduto {...data} />}
-                />
+        
           </View>
           <ActionButton
             buttonColor="rgba(231,76,60,1)"

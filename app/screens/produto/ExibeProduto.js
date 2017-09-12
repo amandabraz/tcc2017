@@ -9,7 +9,6 @@ import {
   ScrollView
 } from 'react-native';
 import Modal from 'react-native-modal';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import {
@@ -35,7 +34,7 @@ export default class ExibeProduto extends Component {
         color: '#CCCCCC',
         fontStyle: 'italic'
       },
-      dietaProdutoText: "Nenhuma restrição cadastrada",
+      dietaProdutoText: "Nenhuma dieta cadastrada",
       dietaEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
@@ -50,37 +49,11 @@ export default class ExibeProduto extends Component {
       categoriaText: '',
       precoText: '',
       observacaoText: '',
+      precoTotalText: "0,00",
       image: require('./img/camera11.jpg')
     };
     this.buscaDadosProduto();
-    this.preencherDietasArray();
-    this.carregarCategoriasArray();
-  }
-
-  preencherDietasArray() {
-   fetch('http://10.0.3.2:8080/restricaodietetica')
-     .then((response) => response.json())
-       .then((responseJson) => {
-         var dietasBuscadas = [];
-           for (i in responseJson) {
-             dietasBuscadas.push(responseJson[i]);
-           }
-           this.setState({dietasArray: dietasBuscadas});
-       });
-  };
-
-  carregarCategoriasArray() {
-    fetch('http://10.0.3.2:8080/categoria')
-      .then((response) => response.json())
-        .then((responseJson) => {
-          var categoriasBuscadas = [];
-          categoriasBuscadas.push({descricao: '-----'})
-            for (i in responseJson) {
-              categoriasBuscadas.push(responseJson[i]);
-            }
-            this.setState({categoriasArray: categoriasBuscadas});
-        });
-  }
+}
 
   //TODO: Implementar busca para tela do comprovante
   onButtonFinalizarCompra = () => {
@@ -190,16 +163,6 @@ export default class ExibeProduto extends Component {
 
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'Quantidade'}
-              iconClass={FontAwesomeIcon}
-              iconName={'plus-square-o'}
-              iconColor={'darkslategrey'}
-              value={this.state.quantidadeText}
-              editable={false}
-              inputStyle={styles.baseText}/>
-
-          <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
               label={'Data'}
               iconClass={FontAwesomeIcon}
               iconName={'calendar'}
@@ -211,7 +174,7 @@ export default class ExibeProduto extends Component {
 
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                label={'Preço'}
+                label={'Preço da unidade'}
                 iconClass={FontAwesomeIcon}
                 iconName={'money'}
                 iconColor={'darkslategrey'}
@@ -229,6 +192,40 @@ export default class ExibeProduto extends Component {
                   value={this.state.observacaoText}
                   editable={false}
                   inputStyle={styles.baseText}/>
+
+                  <View style={styles.baseQuantidadeText}>
+                    <Text style={styles.baseText}>   Quantidade:  </Text>
+                    <TouchableOpacity onPress={() => {
+                      if (produto.quantidade > 0) {
+                        produto.quantidade -= 1;
+                        this.alteraQuantidade(produto);
+                      }
+                    }}>
+                      <FontAwesomeIcon name="minus" size={40} color={'pink'}/>
+                    </TouchableOpacity>
+                    <Text style={styles.baseText}> 01 </Text>
+                    <TouchableOpacity onPress={() => {
+                      produto.quantidade += 1;
+                      this.alteraQuantidade(produto);
+                    }}>
+                      <FontAwesomeIcon name="plus" size={40} color={'pink'}/>
+                    </TouchableOpacity>
+                  </View>
+
+
+                                      <Fumi
+                                        style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
+                                        label={'Preço total R$'}
+                                        iconClass={FontAwesomeIcon}
+                                        iconName={'money'}
+                                        iconColor={'darkslategrey'}
+                                        value={this.state.precoTotalText}
+                                        editable={false}
+                                        inputStyle={styles.baseText}
+                                        // Fazer multiplicação da quantidade pelo preço unitário onChangeText={(text) => { this.setState({textValue: text})
+                                         />
+
+
 
                   <Button
                     onPress={this.onButtonFinalizarCompra}
@@ -290,31 +287,24 @@ export default class ExibeProduto extends Component {
     backgroundColor: "#50a1e0",
     alignSelf: 'stretch',
   },
-  bar:{
-    borderTopColor: '#fff',
-    borderTopWidth: 4,
-    backgroundColor: 'darkslategrey',
-    flexDirection: 'row'
-  },
-  barItem:{
-    padding: 18,
-    alignItems: 'center'
-  },
   baseText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
     fontSize: 20,
   },
+  baseQuantidadeText: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    width: 375,
+    height: 70,
+  },
   listText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
     fontSize: 16,
-  },
-  barText: {
-    fontFamily: 'Roboto',
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 18,
   },
   titleText: {
     fontSize: 30,

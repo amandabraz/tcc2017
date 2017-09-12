@@ -30,8 +30,6 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imagemProduto: require('./img/pacoca.jpg'),
-      imagemVendedor: require('./img/sabrina-copy.jpg'),
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: []
     }
@@ -69,7 +67,7 @@ export default class BuscaProduto extends Component {
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
-              <Image source={this.state.imagemProduto}
+              <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
 
@@ -79,7 +77,7 @@ export default class BuscaProduto extends Component {
                 <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
               </View>
               <Icon
-                name='arrow-forward'
+                name='shopping-cart'
                 type=' material-community'
                 color='#1C1C1C'
                 onPress={this.onButtonOpenProduct}//(produto)}
@@ -99,7 +97,7 @@ export default class BuscaProduto extends Component {
       views.push (
         <View key={i}>
         <View style={styles.oneResult}>
-          <Image source={this.state.imagemVendedor}
+          <Image source={{ uri: vendedor.usuario.imagemPerfil }}
                  style={styles.imageResultSearch}
                  justifyContent='flex-start'/>
 
@@ -108,10 +106,10 @@ export default class BuscaProduto extends Component {
             <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
           </View>
           <Icon
-            onPress={this.onButtonOpenVendedor}
-            name='arrow-forward'
+            name='person'
             type=' material-community'
             color='#1C1C1C'
+            onPress={this.onButtonOpenVendedor}
             style={styles.imageResultSearch}
              />
         </View>
