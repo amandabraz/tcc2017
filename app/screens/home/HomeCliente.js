@@ -19,30 +19,7 @@ class HomeCliente extends Component {
     }
     this.verificaLocalizacaoFlag();
   };
-
-  verificaLocalizacaoFlag() {
-    if (!this.state.localizacao) {
-      Alert.alert(
-        'Ative uso de localização!',
-        'Para utilizar este aplicativo, é necessário permitir o uso do GPS.',
-        [
-          {text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          {text: 'Permitir', onPress: () => {
-            fetch("", {method: 'PUT'})
-              .then((response) => response.json())
-              .then((responseJson) => {
-                if (!responseJson.errorMessage) {
-                  // implement stuff here
-                }
-              });
-            }
-          },
-        ],
-        { cancelable: false }
-      )
-    }
-  }
-
+  
   render() {
     return(
       <View>
