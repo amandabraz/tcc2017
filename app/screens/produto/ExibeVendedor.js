@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView, Alert } from 'react-native';
+import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -72,6 +72,7 @@ export default class ExibeVendedor extends Component {
       let produto = this.state.resultadoProduto[i];
       views.push (
         <View key={i}>
+        <TouchableOpacity onPress={this.onButtonOpenProduct}>
           <View style={styles.oneResult}>
               <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
@@ -81,9 +82,10 @@ export default class ExibeVendedor extends Component {
                 <Text style={styles.oneResultfont} justifyContent='center'>{produto.categoria.descricao}</Text>
                 <Text style={styles.oneResultfont} justifyContent='center'>Preço: {produto.preco}</Text>
 
-            </View>
-            <Text>{'\n'}</Text>
           </View>
+            <Text>{'\n'}</Text>
+        </TouchableOpacity>
+        </View>
         );
     }
   } else {
@@ -97,6 +99,10 @@ export default class ExibeVendedor extends Component {
   }
       return views;
 }
+
+onButtonOpenProduct = () => {
+  this.props.navigation.navigate('ExibeProduto');
+};
 
   render () {
     return (
