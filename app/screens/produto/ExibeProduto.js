@@ -81,7 +81,6 @@ export default class ExibeProduto extends Component {
             }
         });
     }
->>>>>>> subtask/452-interface-pop-up-para-confirmacao-de-compra
 
     buscaDadosProduto() {
       //TODO: Fazer busca de dados do produto
