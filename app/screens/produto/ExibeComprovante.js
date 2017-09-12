@@ -52,21 +52,9 @@ export default class ExibeComprovante extends Component {
       <View style={styles.container}>
         <Image source={require('./img/fundo2.png')} style={styles.background}>
             <View style={styles.centralView}>
-              <Text style={styles.title}>Bem-Vindo(a)!{'\n'}{'\n'}</Text>
-
-              <TextInput
-                style={styles.input}
-                onChangeText = {
-                  (email) => {
-                    this.setState({email: email});
-                  }
-                }
-                underlineColorAndroid={'#e2b1a3'}
-                maxLength={40}
-                placeholder = "seu_email@provedorbacana.com"
-                placeholderTextColor = "#e2b1a3"
-                keyboardType={'email-address'}
-              />
+              <Text style={styles.title}>Compra solicitada!{'\n'}{'\n'}</Text>
+                <View style={styles.container}>
+                  <Image source={require('./img/fundo3.jpg')} style={styles.background}>
 
               <TextInput
                 style={styles.input}
@@ -82,27 +70,8 @@ export default class ExibeComprovante extends Component {
                 placeholderTextColor = "#e2b1a3"
               />
 
-              <TouchableOpacity
-              style={styles.button}
-              onPress={this.eventLogin}
-              accessibilityLabel={'Botão de login'}>
-                  <Text style={styles.font}>{'Entrar'}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-              style={styles.button}
-              onPress={this.cadastrar}
-              accessibilityLabel={'Botão de cadastro'}>
-                  <Text style={styles.font}>{'Cadastre-se!'}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-              style={styles.buttonEsqueceuSenha}
-              onPress={this.esqueceuSenha}
-              accessibilityLabel={'Esqueceu sua senha'}>
-                  <Text style={styles.fontEsqueciSenha}>{'\n'}{'Esqueci minha senha'}</Text>
-              </TouchableOpacity>
-
+              </Image>
+              </View>
             </View>
         </Image>
       </View>
