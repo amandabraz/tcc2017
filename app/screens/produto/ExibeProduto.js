@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+import React, {
+  Component
+} from 'react';
 import {
     AppRegistry,
     Dimensions,
@@ -20,8 +22,6 @@ import {
     Button
 } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
-
-//TODO: Pegar dados do produto certo, o que o clique foi feito
 
 export default class ExibeProduto extends Component {
     constructor(props, context) {
@@ -58,7 +58,7 @@ export default class ExibeProduto extends Component {
         };
         this.buscaDadosProduto();
     }
-    
+
     _confirmTest() {
         this.popup.confirm({
             title: 'Confirmar Compra',
@@ -85,25 +85,6 @@ export default class ExibeProduto extends Component {
     buscaDadosProduto() {
       //TODO: Fazer busca de dados do produto
     }
-
-    quebraEmLinhas(lista) {
-      var listaQuebrada = "";
-      for(item in lista) {
-        listaQuebrada += lista[item] + "\n";
-      }
-      return listaQuebrada.trim();
-    }
-
-    mostrarCategorias() {
-      var pickerItems = [];
-      for(i in this.state.categoriasArray) {
-        let opcao = this.state.categoriasArray[i];
-        pickerItems.push(
-          <Picker.Item key={i} label={opcao.descricao} value={opcao} />
-        );
-      }
-      return pickerItems;
-    };
 
     render() {
         return (
