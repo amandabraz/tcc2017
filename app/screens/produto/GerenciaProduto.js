@@ -13,6 +13,7 @@ import {
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,6 +23,7 @@ class GerenciaProduto extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
+      localizacao: this.props.navigation.state.params.localizacao,
       listaProdutos: [],
       imagemProduto: require('./img/pacoca.jpg')
     };
@@ -142,29 +144,36 @@ class GerenciaProduto extends Component {
       fontFamily: 'Roboto',
     };
 
-    return(
-        <View style={{flex: 1}}>
-          <NavigationBar
-            title={titleConfig}
-            tintColor="darkblue"
-          />
-          <View style={{flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#ccc'}}>
-            <Text style={{fontWeight: 'bold', fontSize: 12}}>
-              NOME
-            </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 12}}>
-              QUANTIDADE
-            </Text>
+    var checkLocal = require('../localizacao/checkLocalizacao.js');    
+    if (!checkLocal.verificaLocalizacao(this.state.localizacao, this.state.userId)) {
+      return(
+        <LocalizacaoNaoPermitida />
+      );
+    } else {
+      return(
+          <View style={{flex: 1}}>
+            <NavigationBar
+              title={titleConfig}
+              tintColor="darkblue"
+            />
+            <View style={{flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#ccc'}}>
+              <Text style={{fontWeight: 'bold', fontSize: 12}}>
+                NOME
+              </Text>
+              <Text style={{fontWeight: 'bold', fontSize: 12}}>
+                QUANTIDADE
+              </Text>
+            </View>
+            <ScrollView>
+              {this.mostraProdutos()}
+            </ScrollView>
+            <ActionButton
+              buttonColor="rgba(231,76,60,1)"
+              onPress={this.adicionarProduto}
+            />
           </View>
-          <ScrollView>
-            {this.mostraProdutos()}
-          </ScrollView>
-          <ActionButton
-            buttonColor="rgba(231,76,60,1)"
-            onPress={this.adicionarProduto}
-          />
-        </View>
-    );
+      );
+    }
   }
 
 }
