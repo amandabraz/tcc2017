@@ -14,7 +14,7 @@ export default class ExibeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.navigation.state.params.userId,
+      selectUserId: this.props.navigation.state.params.selectUserId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       nomeText: '',
       nomeFantasiaText: '----',
@@ -32,7 +32,7 @@ export default class ExibeVendedor extends Component {
   }
 
   buscaDadosVendedor() {
-    fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.userId)
+    fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.selectUserId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
