@@ -39,4 +39,22 @@ public class UsuarioService {
         }
         return null;
     }
+
+    public Usuario salvaUsuario(Usuario usuario) {
+        try {
+            return usuarioDAO.save(usuario);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Usuario ativaLocalizacao(Long id) {
+        try {
+            Usuario usuario = this.buscaUsuario(id);
+            usuario.setLocalizacao(true);
+            return this.salvaUsuario(usuario);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

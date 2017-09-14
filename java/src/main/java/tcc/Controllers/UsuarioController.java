@@ -114,7 +114,7 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o id.
      *          Erro    se o id não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaUsuario(@PathVariable("id") Long id){
         Character type;
@@ -142,6 +142,20 @@ public class UsuarioController {
             return new ResponseEntity<Iterable<Usuario>>(usuarioDao.findUsuarioByNome(nome), HttpStatus.OK);
         }catch(NullPointerException | IndexOutOfBoundsException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
+        }
+    }
+
+    @RequestMapping(value = "/{id}/localizacao", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity ativaLocalizacao(@PathVariable("id") Long id) {
+        try {
+            Usuario usuarioAtualizado = usuarioService.ativaLocalizacao(id);
+            if (usuarioAtualizado == null) {
+                return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<Usuario>(usuarioAtualizado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao alterar cadastro de usuário"), HttpStatus.FORBIDDEN);
         }
     }
 }
