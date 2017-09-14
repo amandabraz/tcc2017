@@ -31,14 +31,20 @@ export default class ExibeComprovante extends Component {
    super(props);
 
    this.state = {
-     nomeProdutoText: '',
-     quantidadeText: '',
-     precoText: '',
-     tokenText: ''
-   }
+     nomeProdutoText: 'Nome exemplo',
+     quantidadeText: '01',
+     precoText: '1.00',
+     meioPagamentoText: 'dinheiro',
+     tokenText: 'BLABLA123',
+     nomeVendedorText: 'Nome vendedor exemplo'
+   };
+   this.buscaDadosPedido();
   }
 
-  //TODO: Implementar busca para tela do comprovante
+  buscaDadosPedido() {
+      //TODO: Implementar busca de pedido para tela do comprovante
+  }
+
   onButtonVoltar = () => {
     this.props.navigation.navigate('ExibeComprovante');
   };
@@ -50,32 +56,27 @@ export default class ExibeComprovante extends Component {
 
       <ScrollView>
       <View style={styles.container}>
-        <Image source={require('./img/fundo2.png')} style={styles.background}>
-            <View style={styles.centralView}>
-              <Text style={styles.title}>Compra solicitada!{'\n'}{'\n'}</Text>
-                <View style={styles.container}>
-                  <Image source={require('./img/fundo3.jpg')} style={styles.background}>
-
-              <TextInput
-                style={styles.input}
-                onChangeText = {
-                  (senha) => this.setState({
-                    senha: senha
-                  })
-                }
-                underlineColorAndroid={'#e2b1a3'}
-                maxLength={10}
-                secureTextEntry={true}
-                placeholder = "Senha"
-                placeholderTextColor = "#e2b1a3"
-              />
-
-              </Image>
+        <Image source={require('./img/comidinhas.jpg')} style={styles.background}>
+            <View style={styles.oneResult}>
+              <Image source={require('./img/sabrina-copy.jpg')}
+                     style={styles.imageResultSearch}
+                     justifyContent='flex-start'/>
+              <View style={{width: 290, margin: 10}}>
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{this.state.nomeProdutoText}</Text>
+                <Text>{'\n'}{'\n'}{'\n'}</Text>
+                <Text style={styles.oneResultfont}>Quantidade solicitada:    {this.state.quantidadeText}</Text>
+                <Text>{'\n'}{'\n'}</Text>
+                <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:</Text>
+                <Text style={styles.totalFont}>R$ {this.state.precoText}</Text>
+                <Text>{'\n'}{'\n'}{'\n'}</Text>
+                <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com {this.state.nomeVendedorText}:</Text>
               </View>
+
             </View>
-        </Image>
-      </View>
-      </ScrollView>
+              </Image>
+            </View>
+</ScrollView>
+
     );
   }
 }
@@ -91,30 +92,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 40,
   },
-  background: { //tornando a imagem do tamanho da tela
+  background: {
     width,
     height,
     justifyContent: 'center',
     alignItems: 'center',
     resizeMode: 'cover',
   },
-  centralView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  profilepicWrap:{
+    width: 180,
+    height: 180,
+    borderRadius: 100,
+    borderColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(100, 108, 122, 0.7)',
+    flexDirection: 'row',
   },
-  buttonEsqueceuSenha: {
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
+  profilepic:{
+    flex: 1,
+    width: null,
+    borderRadius: 100,
+    borderWidth: 4
   },
   input:{
     width: 300,
@@ -141,14 +139,56 @@ const styles = StyleSheet.create({
     color:'white',
     alignSelf: 'center',
   },
-  fontEsqueciSenha: {
-    width: 300,
-    height: 60,
-    borderColor: 'gray',
-    fontFamily: 'Roboto',
-    color: 'white',
-    fontSize: 13,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
+  oneResult:{
+     width: 370,
+     height: 390,
+     flexDirection: 'row',
+     backgroundColor: 'rgba(255, 255, 255, 0.97)',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 3,
+  },
+  oneResultfontTitle:{
+    color: '#1C1C1C',
+    fontWeight: 'bold',
+    fontSize: 25,
+    alignSelf: 'center',
+  },
+  oneResultfont:{
+    color: '#1C1C1C',
+    fontSize: 20,
+    textAlign: 'left',
+  },
+  totalFont:{
+    color: '#1C1C1C',
+    fontSize: 20,
+    textAlign: 'left',
+    fontWeight: 'bold',
+  },
+  results:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 370,
+  },
+  search:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    flexDirection: 'row',
+    backgroundColor: '#DCDCDC'
+  },
+  centralView: {
+    alignItems: 'center'
+  },
+  imageResultSearch:{
+    width: 70,
+    height: 70,
+    alignItems:  'center',
+    justifyContent: 'center',
+    borderRadius: 100,
   },
 });

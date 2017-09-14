@@ -94,17 +94,6 @@ export default class ExibeProduto extends Component {
       return listaQuebrada.trim();
     }
 
-    mostrarCategorias() {
-      var pickerItems = [];
-      for(i in this.state.categoriasArray) {
-        let opcao = this.state.categoriasArray[i];
-        pickerItems.push(
-          <Picker.Item key={i} label={opcao.descricao} value={opcao} />
-        );
-      }
-      return pickerItems;
-    };
-
     render() {
         return (
           <Image style={styles.headerBackground}
