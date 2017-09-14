@@ -18,7 +18,9 @@ public final class UploadUtil {
                 "api_secret", "lJPsEUhmWOzCWgTx8Mq7NS7LuSA"));
         try {
             Map result = cloudinary.uploader().upload(imagemUri, ObjectUtils.emptyMap());
-            return (String) result.get("url");
+            String url = (String) result.get("secure_url");
+            System.out.println("Uploaded photo: " + url);
+            return url;
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
