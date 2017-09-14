@@ -15,7 +15,7 @@ class HomeVendedor extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
-      localizacao: this.props.navigation.state.params.localizacao,
+      localizacao: this.props.navigation.state.params.localizacao
     };
   };
 
