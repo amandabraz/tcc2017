@@ -144,38 +144,30 @@ class GerenciaProduto extends Component {
       fontFamily: 'Roboto',
     };
 
-    var checkLocal = require('../localizacao/checkLocalizacao.js');    
-    if (!checkLocal.verificaLocalizacao(this.state.localizacao, this.state.userId)) {
-      return(
-        <LocalizacaoNaoPermitida />
-      );
-    } else {
-      return(
-          <View style={{flex: 1}}>
-            <NavigationBar
-              title={titleConfig}
-              tintColor="darkblue"
-            />
-            <View style={{flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#ccc'}}>
-              <Text style={{fontWeight: 'bold', fontSize: 12}}>
-                NOME
-              </Text>
-              <Text style={{fontWeight: 'bold', fontSize: 12}}>
-                QUANTIDADE
-              </Text>
-            </View>
-            <ScrollView>
-              {this.mostraProdutos()}
-            </ScrollView>
-            <ActionButton
-              buttonColor="rgba(231,76,60,1)"
-              onPress={this.adicionarProduto}
-            />
+    return(
+        <View style={{flex: 1}}>
+          <NavigationBar
+            title={titleConfig}
+            tintColor="darkblue"
+          />
+          <View style={{flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#ccc'}}>
+            <Text style={{fontWeight: 'bold', fontSize: 12}}>
+              NOME
+            </Text>
+            <Text style={{fontWeight: 'bold', fontSize: 12}}>
+              QUANTIDADE
+            </Text>
           </View>
-      );
-    }
+          <ScrollView>
+            {this.mostraProdutos()}
+          </ScrollView>
+          <ActionButton
+            buttonColor="rgba(231,76,60,1)"
+            onPress={this.adicionarProduto}
+          />
+        </View>
+    );
   }
-
 }
 
 const styles = StyleSheet.create({

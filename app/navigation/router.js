@@ -79,6 +79,7 @@ export const TabsCliente = TabNavigator({
       },
     }
   },{
+    initialRouteName: 'Home',    
     tabBarComponent: TabView.TabBarBottom,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
@@ -169,6 +170,7 @@ export const TabsVendedor = TabNavigator({
       },
     }
   },{
+    initialRouteName: 'Home',
     tabBarComponent: TabView.TabBarBottom,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
