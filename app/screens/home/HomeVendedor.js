@@ -20,7 +20,7 @@ class HomeVendedor extends Component {
   };
 
   render() {
-    if (!verificaLocalizacao(this.state.localizacao, this.state.userId)) {
+    if (verificaLocalizacao(this.state.localizacao, this.state.userId) == false) {
       return(
         <LocalizacaoNaoPermitida />
       );
