@@ -1,6 +1,7 @@
 package tcc.Models;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,21 +10,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "PEDIDO")
 public class Pedido implements Serializable {
 
     public static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
-    private Long id;
+    @Column(name = "ID_PEDIDO")
+    public Long id;
 
     @Column(name = "STATUS", nullable = false)
     private String status;
@@ -55,9 +61,32 @@ public class Pedido implements Serializable {
             nullable = false)
     private boolean deletado = false;
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "TOKEN")
-    private Long token;
+
+    private static String stringHexa(byte[] bytes) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            int parteAlta = ((bytes[i] >> 4) & 0xf) << 4;
+            int parteBaixa = bytes[i] & 0xf;
+            if (parteAlta == 0) s.append('0');
+            s.append(Integer.toHexString(parteAlta | parteBaixa));
+        }
+        return s.toString();
+    }
+
+    public static byte[] gerarHash(String frase, String algoritmo) {
+        try {
+            MessageDigest md = MessageDigest.getInstance(algoritmo);
+            md.update(frase.getBytes());
+            return md.digest();
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    String frase = "Quero gerar códigos hash desta mensagem.";
+
+    @Column(name = "TOKEN", nullable = false)
+    private String token = (stringHexa(gerarHash(frase, "MD5")));
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="PEDIDO_PRODUTO", joinColumns =
@@ -137,11 +166,11 @@ public class Pedido implements Serializable {
         this.deletado = deletado;
     }
 
-    public Long getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(Long token) {
+    public void setToken(String token) {
         this.token = token;
     }
 
@@ -219,4 +248,5 @@ public class Pedido implements Serializable {
     public Pedido() {
         super();
     }
+
 }
