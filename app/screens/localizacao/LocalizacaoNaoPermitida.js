@@ -10,12 +10,17 @@ class LocalizacaoNaoPermitida extends Component {
 
     render() {
         return (
-            <View style={{flexDirection: 'column',
+            <View style={{
+                flex: 1,
+                flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center'}}>
-                <MaterialsIcon name="location-off" size={120} color={'#8B636C'}  />                
-                <Text style={{fontStyle: 'italic'}}> Ative seu GPS para utilizar o aplicativo!</Text> 
-            </View>
+                alignItems: 'center',
+                margin: 40}}>
+                
+                <MaterialsIcon name="location-off" size={120} color={'#8B636C'}  />
+                <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}> Ative sua localização</Text>                 
+                <Text style={{fontStyle: 'italic', textAlign: 'center'}}> Para utilizar este aplicativo, é necessário permitir o uso do GPS.</Text> 
+                </View>
         );
     }
 }

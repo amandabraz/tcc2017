@@ -4,9 +4,10 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
+  Alert,
+  TouchableHighlight
 } from 'react-native';
-import verificaLocalizacao from '../localizacao/checkLocalizacao.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 
 class HomeVendedor extends Component {
@@ -15,14 +16,24 @@ class HomeVendedor extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
-      localizacao: this.props.navigation.state.params.localizacao
+      gps: 0
     };
   };
 
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({gps: position});
+    }, (error) => {
+      this.setState({gps: 0});
+    });
+  }
+
   render() {
-    if (verificaLocalizacao(this.state.localizacao, this.state.userId) == false) {
+    if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(
-        <LocalizacaoNaoPermitida />
+        <View>
+          <LocalizacaoNaoPermitida />
+        </View>      
       );
     } else {
       return(
@@ -32,8 +43,25 @@ class HomeVendedor extends Component {
       );
     }
   }
-
 }
+
+const styles = StyleSheet.create({  
+  button: {
+    justifyContent: 'center',
+    height: 50,
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: "#50a1e0",
+    alignSelf: 'stretch',
+  },
+  font: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    color:'white',
+    alignSelf: 'center',
+  }
+});
 
 HomeVendedor.defaultProps = { ...HomeVendedor };
 

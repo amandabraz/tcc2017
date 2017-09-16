@@ -101,14 +101,12 @@ export default class Login extends Component {
               if (responseJson.usuario.perfil == "V") {
                 this.props.navigation.navigate('TabsVendedor', {
                   userId: responseJson.usuario.id,
-                  vendedorId: responseJson.id,
-                  localizacao: responseJson.usuario.localizacao
+                  vendedorId: responseJson.id
                 });
               } else if (responseJson.usuario.perfil == "C") {
                 this.props.navigation.navigate('TabsCliente', {
                   userId: responseJson.usuario.id,
-                  clienteId: responseJson.id,
-                  localizacao: responseJson.usuario.localizacao
+                  clienteId: responseJson.id
                 });
               }
             }

@@ -144,19 +144,5 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
         }
     }
-
-    @RequestMapping(value = "/{id}/localizacao", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity ativaLocalizacao(@PathVariable("id") Long id) {
-        try {
-            Usuario usuarioAtualizado = usuarioService.ativaLocalizacao(id);
-            if (usuarioAtualizado == null) {
-                return new ResponseEntity<>(new CustomError("Usuário não encontrado"), HttpStatus.FORBIDDEN);
-            }
-            return new ResponseEntity<Usuario>(usuarioAtualizado, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError("Erro ao alterar cadastro de usuário"), HttpStatus.FORBIDDEN);
-        }
-    }
 }
 

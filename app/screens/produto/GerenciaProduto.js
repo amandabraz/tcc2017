@@ -13,7 +13,6 @@ import {
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 
 const { width, height } = Dimensions.get("window");
 

@@ -178,7 +178,7 @@ export const TabsVendedor = TabNavigator({
     backBehavior: 'none',
     tabBarOptions: {
       showLabel: false,
-      activeTintColor: '#8fbc8f',
+      activeTintColor: '#333333',
       inactiveTintColor: '#fff',
       labelStyle: {
         fontSize: 12,
