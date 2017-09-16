@@ -1,5 +1,7 @@
 package tcc.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -83,6 +85,7 @@ public class Pedido implements Serializable {
         }
     }
 
+    @JsonIgnore
     String frase = "Quero gerar códigos hash desta mensagem.";
 
     @Column(name = "TOKEN", nullable = false)
