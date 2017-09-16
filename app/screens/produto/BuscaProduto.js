@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import {
   Alert,
+  AppRegistry,
   Dimensions,
   Image,
   StyleSheet,
@@ -15,8 +16,13 @@ import {
   View,
   ScrollView
 } from 'react-native';
-import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {
+  Icon,
+  Button
+} from 'react-native-elements';
+import { Fumi } from 'react-native-textinput-effects';
 
 const { width, height } = Dimensions.get("window");
 
