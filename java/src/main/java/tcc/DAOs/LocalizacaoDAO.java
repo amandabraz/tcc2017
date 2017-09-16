@@ -9,5 +9,4 @@ import java.util.List;
 
 public interface LocalizacaoDAO extends CrudRepository<Localizacao, Long>{
     List<Localizacao> findByUsuario(Usuario usuario);
-
 }

@@ -115,7 +115,7 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o id.
      *          Erro    se o id não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaUsuario(@PathVariable("id") Long id){
         Character type;
