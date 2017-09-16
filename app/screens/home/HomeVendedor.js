@@ -5,8 +5,7 @@ import {
   Text,
   TextInput,
   View,
-  Alert,
-  TouchableHighlight
+  Alert
 } from 'react-native';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 
@@ -14,6 +13,7 @@ class HomeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      screenName: 'TabsVendedor',
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       gps: 0
@@ -30,10 +30,10 @@ class HomeVendedor extends Component {
 
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
-      return(
-        <View>
-          <LocalizacaoNaoPermitida />
-        </View>      
+      return(<LocalizacaoNaoPermitida 
+        screenName={this.state.screenName}
+        navigation={this.props.navigation}
+        userId={this.state.userId} />
       );
     } else {
       return(
@@ -46,21 +46,7 @@ class HomeVendedor extends Component {
 }
 
 const styles = StyleSheet.create({  
-  button: {
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: "#50a1e0",
-    alignSelf: 'stretch',
-  },
-  font: {
-    fontWeight: 'bold',
-    fontSize: 25,
-    color:'white',
-    alignSelf: 'center',
-  }
+
 });
 
 HomeVendedor.defaultProps = { ...HomeVendedor };
