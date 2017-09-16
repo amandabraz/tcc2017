@@ -61,7 +61,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public Produto deletaProduto(Long idVendedor, Long idProduto) {
+    public Produto deletaProduto(Long idVendedor, Long idProduto) throws IOException {
         try {
             Produto produtoADeletar = produtoDAO.findOne(idProduto);
             if (idVendedor == produtoADeletar.getVendedor().getId()) {
@@ -74,7 +74,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public Produto alteraQuantidadeProduto(Long idVendedor, Long idProduto, int novaQtd) {
+    public Produto alteraQuantidadeProduto(Long idVendedor, Long idProduto, int novaQtd) throws IOException {
         try {
             Produto produtoAAlterar = produtoDAO.findOne(idProduto);
             if (produtoAAlterar != null

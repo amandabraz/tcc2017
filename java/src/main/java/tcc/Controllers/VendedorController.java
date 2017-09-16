@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,11 +16,7 @@ import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 import tcc.Services.VendedorService;
 
-import java.util.List;
 import javax.transaction.Transactional;
-
-import java.util.Date;
-import java.util.Set;
 import java.util.List;
 
 @RestController
@@ -48,7 +44,7 @@ public class VendedorController {
         } catch (Exception ex) {
             return new ResponseEntity<>(new CustomError("Erro ao salvar Vendedor"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(novoVendedor.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(novoVendedor, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
