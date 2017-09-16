@@ -16,6 +16,9 @@ import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
+
+import ExibeComprovante from '../screens/produto/ExibeComprovante';
+
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
 import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
 import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
@@ -45,6 +48,25 @@ export const GerenciaCliente = StackNavigator({
   headerMode: 'none',
 });
 
+export const BuscaPro = StackNavigator({
+  BuscaProduto: {
+    screen: BuscaProduto
+  },
+  ExibeProduto: {
+    screen: ExibeProduto
+  },
+  ExibeComprovante: {
+    screen: ExibeComprovante
+  },
+  ExibeVendedor: {
+    screen: ExibeVendedor
+  },
+ },
+ {
+  mode: 'card',
+  headerMode: 'none',
+});
+
 export const TabsCliente = TabNavigator({
     PerfilCliente: {
       screen: GerenciaCliente,
@@ -55,7 +77,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Busca: {
-      screen: BuscaProduto,
+      screen: BuscaPro,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />

@@ -3,6 +3,9 @@ import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollVie
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
@@ -13,34 +16,35 @@ export default class ExibeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectUserId: this.props.navigation.state.params.selectUserId,
+      vendedorId: this.props.navigation.state.params.vendedorId,
       nomeText: '',
-      nomeFantasiaText: '',
-      dataNascimentoText: '',
-      emailText: '',
-      meiosPagamentoText: "Nenhum Meio de Pagamento Escolhido",
+      nomeFantasiaText: '----',
+      meiosPagamentoText: '',
       pagamentoEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
       },
-      CPFText: '',
-      celularText: ''
+      celularText: '',
+      resultadoProduto: [],
+      imagemPerfil: require('./img/camera11.jpg')
     };
     this.buscaDadosVendedor();
+    this.buscaProdutos();
   }
 
   buscaDadosVendedor() {
-    fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.userId)
+    fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.selectUserId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
+            if (responseJson.usuario.imagemPerfil) {
+              this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
+            }
           this.setState({nomeText: responseJson.usuario.nome});
           this.setState({nomeFantasiaText: responseJson.nomeFantasia});
-          var dataNormal = new Date(responseJson.usuario.dataNasc);
-          var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-          this.setState({dataNascimentoText: dataNasc});
-          this.setState({emailText: responseJson.usuario.email});
-          this.setState({CPFText: responseJson.usuario.cpf});
-          this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
+          this.setState({celularText: "(" + responseJson.usuario.ddd + ") " + responseJson.usuario.telefone});
+
           if (responseJson.meiosPagamentos.length > 0) {
             this.setState({pagamentoEstilo: styles.listText})
             var pagamentos = "";
@@ -54,80 +58,91 @@ export default class ExibeVendedor extends Component {
       });
   };
 
+  buscaProdutos() {
+    fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto", {method: 'GET'})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({resultadoProduto: responseJson});
+      }
+    });
+  };
+
+  mostraProduto() {
+    var views = [];
+    if(this.state.resultadoProduto.length > 0){
+    for(i in this.state.resultadoProduto) {
+      let produto = this.state.resultadoProduto[i];
+      views.push (
+        <View key={i}>
+        <TouchableOpacity onPress={this.onButtonOpenProduct}>
+          <View style={styles.oneResult}>
+              <Image source={{ uri: produto.imagemPrincipal }}
+                     style={styles.imageResultSearch}
+                     justifyContent='flex-start'/>
+
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.categoria.descricao}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>Preço: {produto.preco}</Text>
+
+          </View>
+            <Text>{'\n'}</Text>
+        </TouchableOpacity>
+        </View>
+        );
+    }
+  } else {
+    views.push(
+      <View key={0} style={{alignItems: 'center'}}>
+      <Text style={{marginTop: 12,fontSize: 18, justifyContent: 'center'}}>
+        Esse vendedor não tem produtos cadastrados!
+      </Text>
+      </View>
+    )
+  }
+      return views;
+}
+
+onButtonOpenProduct = () => {
+  this.props.navigation.navigate('ExibeProduto');
+};
+
   render () {
     return (
-        <Image style={styles.headerBackground}
-               source={require('./img/fundo2.png')}>
+      <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.profilepicWrap}>
           <Image
             style={styles.profilepic}
-            source={require('./img/sabrina-copy.jpg')}/>
+            source={this.state.imagemPerfil}/>
+          </View>
+          <View style={{alignItems: 'center'}}>
+          <Text style={styles.titleText}>
+          {this.state.nomeText}
+          </Text>
           </View>
           </View>
 
         <ScrollView>
-          <Fumi
+        <Fumi
             style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-            label={'Nome'}
-            iconClass={FontAwesomeIcon}
-            iconSize={20}
-            iconName={'user'}
+            label={'Nome da loja'}
+            iconClass={MaterialsIcon}
+            iconName={'store'}
             iconColor={'darkslategrey'}
-            value={this.state.nomeText}
+            value={this.state.nomeFantasiaText}
             editable={false}
-            inputStyle={styles.titleText}/>
+            inputStyle={styles.baseText}/>
 
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'CPF'}
-              iconClass={FontAwesomeIcon}
-              iconName={'info'}
-              iconColor={'darkslategrey'}
-              value={this.state.CPFText}
-              editable={false}
-              inputStyle={styles.baseText}/>
-
-          <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'Celular'}
+              label={'Contato'}
               iconClass={FontAwesomeIcon}
               iconName={'mobile'}
               iconColor={'darkslategrey'}
               value={this.state.celularText}
               editable={false}
               inputStyle={styles.baseText}/>
-
-          <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'Data de Nascimento'}
-              iconClass={FontAwesomeIcon}
-              iconName={'calendar'}
-              iconColor={'darkslategrey'}
-              value={this.state.dataNascimentoText}
-              editable={false}
-              inputStyle={styles.baseText}/>
-
-          <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'Email'}
-              iconClass={FontAwesomeIcon}
-              iconName={'at'}
-              iconColor={'darkslategrey'}
-              value={this.state.emailText}
-              editable={false}
-              inputStyle={styles.baseText}/>
-
-              <Fumi
-                style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                label={'Nome da loja'}
-                iconClass={FontAwesomeIcon}
-                iconName={'user'}
-                iconColor={'darkslategrey'}
-                value={this.state.nomeFantasiaText}
-                editable={false}
-                inputStyle={styles.baseText}/>
-
 
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
@@ -139,8 +154,15 @@ export default class ExibeVendedor extends Component {
               multiline={true}
               editable={false}
               inputStyle={this.state.pagamentoEstilo}/>
+      
+      <View style={styles.results}>
+      <ScrollView horizontal={true}
+                  showsHorizontalScrollIndicator={true}>
+          {this.mostraProduto()}
       </ScrollView>
-      </Image>
+      </View>
+      </ScrollView>
+      </View>
     );
   }
 }
@@ -154,9 +176,7 @@ export default class ExibeVendedor extends Component {
   };
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      flex: 1
   },
   headerBackground: {
     flex: 1,
@@ -167,7 +187,7 @@ export default class ExibeVendedor extends Component {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'rgba(202, 203, 247, 0.58)',
   },
   profilepicWrap:{
     width: 180,
@@ -182,15 +202,37 @@ export default class ExibeVendedor extends Component {
     borderRadius: 100,
     borderWidth: 4
   },
-  bar:{
-    borderTopColor: '#fff',
-    borderTopWidth: 4,
-    backgroundColor: 'darkslategrey',
-    flexDirection: 'row'
+  oneResultfontTitle:{
+    color: '#1C1C1C',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
-  barItem:{
-    padding: 18,
-    alignItems: 'center'
+  oneResultfont:{
+    color: '#1C1C1C',
+    fontSize: 15,
+  },
+  imageResultSearch:{
+    width: 70,
+    height: 70,
+    alignItems:  'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+  },
+  results:{
+    flexDirection: 'row',
+    margin: 5
+  },
+  oneResult:{
+     height: 200,
+     width: 180,
+     alignItems:  'center',
+     justifyContent: 'center',
+     backgroundColor: 'rgba(255, 255, 255, 0.55)',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 3,
   },
   baseText: {
     fontFamily: 'Roboto',
@@ -201,12 +243,6 @@ export default class ExibeVendedor extends Component {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
     fontSize: 16,
-  },
-  barText: {
-    fontFamily: 'Roboto',
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 18,
   },
   titleText: {
     fontSize: 30,
