@@ -141,4 +141,27 @@ public class Localizacao implements Serializable {
                 ", usuario=" + usuario +
                 '}';
     }
+
+//    public int compareTo(Localizacao localizacao) {
+//        if (this.numero < localizacao.numero) {
+//            return -1;
+//        }
+//        if (this.numero > localizacao.numero) {
+//            return 1;
+//        }
+//        return 0;
+//    }
+
+    public int compareTo(Localizacao localizacaoToCompare) {
+        final int before = -1;
+        final int equal = 0;
+        final int after = 1;
+
+        if (this == localizacaoToCompare) return equal;
+
+        if(this.getId() < localizacaoToCompare.getId()) return before;
+        if(this.getId() > localizacaoToCompare.getId()) return after;
+
+        return this.getHorario().compareTo(localizacaoToCompare.getHorario());
+    }
 }

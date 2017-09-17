@@ -4,7 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.LocalizacaoDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
@@ -17,8 +22,12 @@ import tcc.Services.UsuarioService;
 import tcc.Services.VendedorService;
 import tcc.Utils.UploadUtil;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@RequestMapping(value = "/usuario")
 @RestController
 public class UsuarioController {
 
@@ -82,7 +91,7 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o e-mail.
      *          Erro    se o email não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity efetuaLogin(@RequestBody Usuario usuario) {
         try {
             Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
@@ -135,7 +144,7 @@ public class UsuarioController {
      * @return Character usuarioBd se um ou mais Usuários forem encontrados de acordo com o nome.
      *          Erro    se o nome não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/nome/{nome}", method = RequestMethod.GET)
+    @RequestMapping(value = "/nome/{nome}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaPerfilUsuarioPorNome(@PathVariable("nome") String nome){
         Character type;
@@ -151,17 +160,38 @@ public class UsuarioController {
      * @param novaLocalizacao localização a ser salva
      * @param idUsuario id do usuário a ter sua localização salva
      */
-    @RequestMapping(value = "/usuario/{id}/localizacao/", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/localizacao/", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity setLocalization(@RequestBody Localizacao novaLocalizacao, @PathVariable("id") Long idUsuario){
+    public ResponseEntity atualizaLocalizacao(@RequestBody Localizacao novaLocalizacao, @PathVariable("id") Long idUsuario){
         try{
             Usuario userToSetLocalization = usuarioDao.findUsuarioById(idUsuario);
+            removeLocalizacaoAntiga(userToSetLocalization);
             novaLocalizacao.setUsuario(userToSetLocalization);
             novaLocalizacao.setHorario(new Date());
             localizacaoDAO.save(novaLocalizacao);
             return ResponseEntity.ok("Localização salva com sucesso.");
         }catch(Exception e){
             return ResponseEntity.unprocessableEntity().body("Erro ao salvar a requisição:\n\t"+e.getMessage());
+        }
+    }
+
+    /**
+     * Verifica se é necessário limpar as localizações de determinado usuário no banco antes de salvar alguma nova.
+     * Isso é feito através da RN de que
+     * @param userToSearch usuário a ser buscado na tabela de localização.
+     */
+    private void removeLocalizacaoAntiga(Usuario userToSearch){
+        List<Localizacao> localizationsFromUser = localizacaoDAO.findByUsuario(userToSearch); //localizações do usuário
+
+        Calendar cal = Calendar.getInstance(); //hoje
+        cal.add(Calendar.MONTH, -1); //um mês atrás
+        Date dateToSearch = cal.getTime(); //data de um mês atrás
+
+        List<Localizacao> localizacoesAntigas =  localizationsFromUser.stream()
+                  .filter(loc -> loc.getHorario().before(dateToSearch)) //filtro pra caso exista alguma localização anterior
+                  .collect(Collectors.toList());
+        if(!localizacoesAntigas.isEmpty()){
+            localizacaoDAO.delete(localizacoesAntigas);
         }
     }
 }
