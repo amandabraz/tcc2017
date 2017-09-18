@@ -33,7 +33,8 @@ export default class BuscaProduto extends Component {
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: [],
       selectUserId: '',
-      vendedorId: ''
+      vendedorId: '',
+      produtoId: ''
     }
   }
 
@@ -52,12 +53,10 @@ export default class BuscaProduto extends Component {
         });
   }
 
-  //TODO: Implementar busca para tela do produto
   onButtonOpenProduct = () => {
-    this.props.navigation.navigate('ExibeProduto');//, {produto: produto});
+    this.props.navigation.navigate('ExibeProduto', {produtoId: this.state.produtoId});
   };
 
-  //TODO: Implementar busca para tela do vendedor
   onButtonOpenVendedor = () => {
     this.props.navigation.navigate('ExibeVendedor', {selectUserId: this.state.selectUserId, vendedorId: this.state.vendedorId });
   };
@@ -66,6 +65,7 @@ export default class BuscaProduto extends Component {
     var views = [];
     for(i in this.state.resultadoPesquisaProduto) {
       let produto = this.state.resultadoPesquisaProduto[i];
+      this.state.produtoId = produtoId.id;
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
@@ -82,7 +82,7 @@ export default class BuscaProduto extends Component {
                 name='shopping-cart'
                 type=' material-community'
                 color='#1C1C1C'
-                onPress={this.onButtonOpenProduct}//(produto)}
+                onPress={this.onButtonOpenProduct}
                 style={styles.imageResultSearch} />
             </View>
             <Text>{'\n'}</Text>

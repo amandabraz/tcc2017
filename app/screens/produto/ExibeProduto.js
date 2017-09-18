@@ -27,6 +27,7 @@ export default class ExibeProduto extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
+          produtoId: this.props.navigation.state.params.produtoId,
           nomeProdutoText: '',
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
