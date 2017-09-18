@@ -142,16 +142,6 @@ public class Localizacao implements Serializable {
                 '}';
     }
 
-//    public int compareTo(Localizacao localizacao) {
-//        if (this.numero < localizacao.numero) {
-//            return -1;
-//        }
-//        if (this.numero > localizacao.numero) {
-//            return 1;
-//        }
-//        return 0;
-//    }
-
     public int compareTo(Localizacao localizacaoToCompare) {
         final int before = -1;
         final int equal = 0;

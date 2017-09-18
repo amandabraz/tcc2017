@@ -14,18 +14,12 @@ import tcc.DAOs.LocalizacaoDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Cliente;
-import tcc.Models.Localizacao;
 import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 import tcc.Services.ClienteService;
 import tcc.Services.UsuarioService;
 import tcc.Services.VendedorService;
 import tcc.Utils.UploadUtil;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping(value = "/usuario")
 @RestController
@@ -155,43 +149,4 @@ public class UsuarioController {
         }
     }
 
-    /**
-     * Atualiza localização de um Usuário.
-     * @param novaLocalizacao localização a ser salva
-     * @param idUsuario id do usuário a ter sua localização salva
-     */
-    @RequestMapping(value = "/{id}/localizacao/", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity atualizaLocalizacao(@RequestBody Localizacao novaLocalizacao, @PathVariable("id") Long idUsuario){
-        try{
-            Usuario userToSetLocalization = usuarioDao.findUsuarioById(idUsuario);
-            removeLocalizacaoAntiga(userToSetLocalization);
-            novaLocalizacao.setUsuario(userToSetLocalization);
-            novaLocalizacao.setHorario(new Date());
-            localizacaoDAO.save(novaLocalizacao);
-            return ResponseEntity.ok("Localização salva com sucesso.");
-        }catch(Exception e){
-            return ResponseEntity.unprocessableEntity().body("Erro ao salvar a requisição:\n\t"+e.getMessage());
-        }
-    }
-
-    /**
-     * Verifica se é necessário limpar as localizações de determinado usuário no banco antes de salvar alguma nova.
-     * Isso é feito através da RN de que
-     * @param userToSearch usuário a ser buscado na tabela de localização.
-     */
-    private void removeLocalizacaoAntiga(Usuario userToSearch){
-        List<Localizacao> localizationsFromUser = localizacaoDAO.findByUsuario(userToSearch); //localizações do usuário
-
-        Calendar cal = Calendar.getInstance(); //hoje
-        cal.add(Calendar.MONTH, -1); //um mês atrás
-        Date dateToSearch = cal.getTime(); //data de um mês atrás
-
-        List<Localizacao> localizacoesAntigas =  localizationsFromUser.stream()
-                  .filter(loc -> loc.getHorario().before(dateToSearch)) //filtro pra caso exista alguma localização anterior
-                  .collect(Collectors.toList());
-        if(!localizacoesAntigas.isEmpty()){
-            localizacaoDAO.delete(localizacoesAntigas);
-        }
-    }
 }
