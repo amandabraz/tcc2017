@@ -12,9 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,13 +39,11 @@ public class Pedido implements Serializable {
     private String status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "DATA_FINALIZACAO",
-            nullable = false)
+    @Column(name = "DATA_FINALIZACAO")
     private Date dataFinalizacao;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "DATA_CONFIRMACAO",
-            nullable = false)
+    @Column(name = "DATA_CONFIRMACAO")
     private Date dataConfirmacao;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -63,41 +63,14 @@ public class Pedido implements Serializable {
             nullable = false)
     private boolean deletado = false;
 
-
-    private static String stringHexa(byte[] bytes) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            int parteAlta = ((bytes[i] >> 4) & 0xf) << 4;
-            int parteBaixa = bytes[i] & 0xf;
-            if (parteAlta == 0) s.append('0');
-            s.append(Integer.toHexString(parteAlta | parteBaixa));
-        }
-        return s.toString();
-    }
-
-    public static byte[] gerarHash(String frase, String algoritmo) {
-        try {
-            MessageDigest md = MessageDigest.getInstance(algoritmo);
-            md.update(frase.getBytes());
-            return md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            return null;
-        }
-    }
-
-    @JsonIgnore
-    String frase = "Quero gerar códigos hash desta mensagem.";
-
     @Column(name = "TOKEN", nullable = false)
-    private String token = (stringHexa(gerarHash(frase, "MD5")));
+    private String token;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="PEDIDO_PRODUTO", joinColumns =
-            {@JoinColumn(name="ID_PEDIDO", referencedColumnName = "ID_PEDIDO")}, inverseJoinColumns =
-            {@JoinColumn(name="ID_PRODUTO", referencedColumnName = "ID_PRODUTO")})
-    private Set<Produto> produtos;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "FK_PRODUTO", nullable = false)
+    private Produto produto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_CLIENTE", nullable = false)
     public Cliente cliente;
 
@@ -177,12 +150,12 @@ public class Pedido implements Serializable {
         this.token = token;
     }
 
-    public Set<Produto> getProdutos() {
-        return produtos;
+    public Produto getProduto() {
+        return produto;
     }
 
-    public void setProdutos(Set<Produto> produtos) {
-        this.produtos = produtos;
+    public void setProduto(Produto produto) {
+        this.produto = produto;
     }
 
     public Cliente getCliente() {
@@ -215,14 +188,14 @@ public class Pedido implements Serializable {
                 Objects.equals(dataConfirmacao, pedido.dataConfirmacao) &&
                 Objects.equals(dataSolicitada, pedido.dataSolicitada) &&
                 Objects.equals(token, pedido.token) &&
-                Objects.equals(produtos, pedido.produtos) &&
+                Objects.equals(produto, pedido.produto) &&
                 Objects.equals(cliente, pedido.cliente) &&
                 Objects.equals(pagamento, pedido.pagamento);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produtos, cliente, pagamento);
+        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento);
     }
 
     @Override
@@ -237,7 +210,7 @@ public class Pedido implements Serializable {
                 ", valorCompra=" + valorCompra +
                 ", deletado=" + deletado +
                 ", token=" + token +
-                ", produtos=" + produtos +
+                ", produto=" + produto +
                 ", cliente=" + cliente +
                 ", pagamento=" + pagamento +
                 '}';

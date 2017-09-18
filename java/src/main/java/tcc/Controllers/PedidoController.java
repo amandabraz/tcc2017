@@ -12,24 +12,29 @@ import tcc.ErrorHandling.CustomError;
 import tcc.Models.Pedido;
 import tcc.Services.PedidoService;
 
+import java.util.Objects;
+
 @RequestMapping(value = "/pedido")
 @RestController
 public class PedidoController {
 
     @Autowired
     private PedidoDAO pedidoDAO;
+
+    @Autowired
     private PedidoService pedidoService;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity registraPedido(@RequestBody Pedido pedido) {
         try {
             Pedido novoPedido = pedidoService.salvaPedido(pedido);
-            if (novoPedido != null) {
-                return new ResponseEntity<>(novoPedido.getId(), HttpStatus.OK);
+            if (Objects.nonNull(novoPedido)) {
+                return new ResponseEntity<>(novoPedido, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new CustomError("Erro ao registrar o pedido"), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(new CustomError("Erro ao registrar o pedido"), HttpStatus.BAD_REQUEST);
         }
     }
