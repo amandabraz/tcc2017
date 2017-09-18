@@ -3,7 +3,9 @@ import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollVie
 import Modal from 'react-native-modal';
 import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
@@ -42,6 +44,7 @@ export default class ExibeVendedor extends Component {
           this.setState({nomeText: responseJson.usuario.nome});
           this.setState({nomeFantasiaText: responseJson.nomeFantasia});
           this.setState({celularText: "(" + responseJson.usuario.ddd + ") " + responseJson.usuario.telefone});
+
           if (responseJson.meiosPagamentos.length > 0) {
             this.setState({pagamentoEstilo: styles.listText})
             var pagamentos = "";
@@ -151,7 +154,7 @@ onButtonOpenProduct = () => {
               multiline={true}
               editable={false}
               inputStyle={this.state.pagamentoEstilo}/>
-
+      
       <View style={styles.results}>
       <ScrollView horizontal={true}
                   showsHorizontalScrollIndicator={true}>
