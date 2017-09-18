@@ -116,4 +116,15 @@ public class ProdutoController {
             return new ResponseEntity<>(new CustomError("Erro ao alterar quantidade do Produto"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "/produto/{idProduto}", method = RequestMethod.GET)
+    public ResponseEntity encontraProduto(@PathVariable("idProduto") Long idProduto) {
+        try {
+            Produto produtoEncontrado = produtoService.buscaProduto(idProduto);
+            return new ResponseEntity<Produto>(produtoEncontrado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar o produto"), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

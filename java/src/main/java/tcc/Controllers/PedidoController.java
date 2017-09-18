@@ -34,7 +34,6 @@ public class PedidoController {
                 return new ResponseEntity<>(new CustomError("Erro ao registrar o pedido"), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>(new CustomError("Erro ao registrar o pedido"), HttpStatus.BAD_REQUEST);
         }
     }
