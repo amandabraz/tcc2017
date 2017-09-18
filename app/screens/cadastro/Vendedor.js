@@ -59,7 +59,7 @@ class Vendedor extends Component {
           meiosPagamentos
         }
       } = this;
-      // TODO: receber o parametro usuario da tela CADASTRO basico, ainda em desenvolvimento
+
       vendedor = {
         "usuario": userId,
         "nomeFantasia": nomeLoja,
@@ -67,7 +67,7 @@ class Vendedor extends Component {
       }
 
       //  TODO: restante dos parametros. alterar url abaixo para o servidor (enfiar essa constante em algum buraco)
-       fetch('http://10.0.3.2:8080/vendedor', {
+       fetch('http://10.0.2.2:8080/vendedor', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
@@ -79,7 +79,7 @@ class Vendedor extends Component {
             .then((responseJson) => {
               if (!responseJson.errorMessage) {
                 ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('TabsVendedor', {userId: this.state.userId, vendedorId: this.state.vendedorId });
+                this.props.navigation.navigate('TabsVendedor', {userId: responseJson.usuario.id, vendedorId: responseJson.id });
               } else {
                 Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
               }

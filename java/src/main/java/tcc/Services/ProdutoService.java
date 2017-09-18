@@ -35,12 +35,12 @@ public class ProdutoService {
     public List<Produto> encontraProduto(String filtro) {
         try {
             List<Produto> listaProdutos = new ArrayList<>();
-            listaProdutos.addAll(produtoDAO.findByNomeIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByTagsDescricaoIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByIngredientesItemIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByRestricoesDieteticasDescricaoIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByCategoriaDescricaoIgnoreCaseContaining(filtro));
-            listaProdutos.addAll(produtoDAO.findByVendedorNomeFantasiaIgnoreCaseContaining(filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndNomeIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndTagsDescricaoIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndIngredientesItemIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndRestricoesDieteticasDescricaoIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndCategoriaDescricaoIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContaining(false, filtro));
 
             // remove resultados duplicados
             List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
@@ -49,5 +49,52 @@ public class ProdutoService {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Transactional
+    public List<Produto> buscaProdutosPorVendedor(Long idVendedor) {
+        try {
+            return produtoDAO.findByDeletadoAndVendedorIdOrderByDataPreparacaoDesc(false, idVendedor);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Produto deletaProduto(Long idVendedor, Long idProduto) throws IOException {
+        try {
+            Produto produtoADeletar = produtoDAO.findOne(idProduto);
+            if (idVendedor == produtoADeletar.getVendedor().getId()) {
+                produtoADeletar.setDeletado(true);
+            }
+            return this.salvaProduto(produtoADeletar);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Produto alteraQuantidadeProduto(Long idVendedor, Long idProduto, int novaQtd) throws IOException {
+        try {
+            Produto produtoAAlterar = produtoDAO.findOne(idProduto);
+            if (produtoAAlterar != null
+                    && idVendedor == produtoAAlterar.getVendedor().getId()
+                    && produtoAAlterar.getQuantidade() != novaQtd) {
+                produtoAAlterar.setQuantidade(novaQtd);
+            }
+            return this.salvaProduto(produtoAAlterar);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Produto buscaProduto(Long id) {
+        try {
+            return produtoDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 }

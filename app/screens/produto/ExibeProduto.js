@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+import React, {
+  Component
+} from 'react';
 import {
     AppRegistry,
     Dimensions,
@@ -21,12 +23,11 @@ import {
 } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 
-//TODO: Pegar dados do produto certo, o que o clique foi feito
-
 export default class ExibeProduto extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
+          produtoId: this.props.navigation.state.params.produtoId,
           nomeProdutoText: '',
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
@@ -84,14 +85,6 @@ export default class ExibeProduto extends Component {
 
     buscaDadosProduto() {
       //TODO: Fazer busca de dados do produto
-    }
-
-    quebraEmLinhas(lista) {
-      var listaQuebrada = "";
-      for(item in lista) {
-        listaQuebrada += lista[item] + "\n";
-      }
-      return listaQuebrada.trim();
     }
 
     render() {
