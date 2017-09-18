@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "31794812197",
+    "firebase_url": "https://amora-79224.firebaseio.com",
+    "project_id": "amora-79224",
+    "storage_bucket": "amora-79224.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31794812197:android:2ea9501a3b85a852",
+        "android_client_info": {
+          "package_name": "com.tcc2017"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31794812197-fpgqdclkn70bnh7p0fgmb6etfcn3kibl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiWr3MUOmnY6Dw05F9gAgtc9uOMM1w6MA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
