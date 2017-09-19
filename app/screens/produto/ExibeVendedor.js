@@ -37,7 +37,7 @@ export default class ExibeVendedor extends Component {
     fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.selectUserId)
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMssage) {
+          if (!responseJson.errorMessage) {
             if (responseJson.usuario.imagemPerfil) {
               this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
             }

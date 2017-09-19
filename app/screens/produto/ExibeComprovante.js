@@ -47,7 +47,7 @@ export default class ExibeComprovante extends Component {
     fetch('http://10.0.2.2:8080/pedido/' + this.state.pedidoId)
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMssage) {
+          if (!responseJson.errorMessage) {
             if (responseJson.produto.imagemPrincipal) {
               this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
             }
