@@ -259,7 +259,7 @@ export default class ExibeProduto extends Component {
                         <FontAwesomeIcon name="minus" size={40} color={'pink'}/>
                       </TouchableOpacity>
                         <TextInput style={styles.baseText} 
-                          defaultValue={1}
+                          value={this.state.quantidadeSelecionada}
                           onChangeText={(qtd) => this.setState({quantidadeSelecionada: qtd})} />
                       <TouchableOpacity onPress={() => {
                         if (this.state.quantidadeSelecionada < this.state.produto.quantidade) {
