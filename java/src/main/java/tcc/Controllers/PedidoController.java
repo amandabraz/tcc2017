@@ -3,6 +3,7 @@ package tcc.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import tcc.ErrorHandling.CustomError;
 import tcc.Models.Pedido;
 import tcc.Services.PedidoService;
 
+import javax.transaction.Transactional;
 import java.util.Objects;
 
 @RequestMapping(value = "/pedido")
@@ -35,6 +37,17 @@ public class PedidoController {
             }
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao registrar o pedido"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{idPedido}", method = RequestMethod.GET)
+    public ResponseEntity encontraPedido(@PathVariable("idPedido") Long idPedido) {
+        try {
+            Pedido pedidoEncontrado = pedidoService.buscaPedido(idPedido);
+            return new ResponseEntity<Pedido>(pedidoEncontrado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar o pedido"), HttpStatus.BAD_REQUEST);
         }
     }
 }
