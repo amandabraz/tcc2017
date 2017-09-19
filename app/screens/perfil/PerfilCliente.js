@@ -34,7 +34,7 @@ export default class PerfilCliente extends Component {
   }
 
   buscaDadosCliente() {
-    fetch('http://10.0.3.2:8080/cliente/usuario/' + this.state.userId)
+    fetch('http://10.0.2.2:8080/cliente/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {

@@ -16,9 +16,7 @@ import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
-
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
-
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
 import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
 import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
@@ -220,9 +218,6 @@ export const TabsVendedor = TabNavigator({
 
 // TODO: Creio que aqui colocamos uma logica pra dizer: se usuario está logado, carregar dashboard, senão, carregar tela de login
 export const Root = StackNavigator({
-  ExibeComprovante: {
-    screen: ExibeComprovante
-  },
   Login: {
     screen: Login,
   },
