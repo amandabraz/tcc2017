@@ -1,0 +1,46 @@
+const RowProduto = (props) => (
+  <View style={styleProduto.container}>
+//    <Image source={{ uri: props.picture.large}} style={styleProduto.photo} />
+    <Text style={styleProduto.text}>
+      {`${props.name}`}
+    </Text>
+  </View>
+);
+
+
+mostrarCheckboxesDieta() {
+  var views = [];
+  for(i in this.state.dietasArray) {
+    var descricao = this.state.dietasArray[i];
+    views.push (
+      <View key={i} style={styles.item}>
+        <CheckBox
+          style={{flex: 1, padding: 10}}
+          isChecked={descricao.checked}
+          leftText={descricao.descricao}
+          />
+      </View>
+    );
+  }
+  return views;
+};
+
+
+<ScrollView>
+      {this.mostrarCheckboxesDieta()}
+</ScrollView>
+
+
+
+var tags = "";
+for(i in responseJson.tags) {
+  tags += "#" + responseJson.tags[i].descricao + "  ";
+}
+tags = tags.slice(0, -3);
+this.setState({tagsText: tags});
+var restricoes = "";
+for(i in responseJson.restricoesDieteticas) {
+  restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
+}
+restricoes = restricoes.slice(0, -3);
+this.setState({restricoesDieteticasText: restricoes});

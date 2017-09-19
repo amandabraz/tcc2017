@@ -1,0 +1,500 @@
+    2  git push
+    3  git checkout cadastro-produto 
+    4  git checkout -b subtask/359-interface-cadastro-produto
+    5  git push
+    6      git push --set-upstream origin subtask/359-interface-cadastro-produto
+    7  react-native run-android
+    8  git add -p
+    9  git commit -m "[120][359] Início da refatoração da tela de Cadastrar produto. Ainda em andamento"
+   10  git push
+   11  git status
+   12  git add -p
+   13  git commit -m "[120][359] Ajustando detalhes da tela"
+   14  git push
+   15  git checkout perfilCliente
+   16  git pull
+   17  git pull
+   18  git checkout subtask/359-interface-cadastro-produto
+   19  git checkout cadastro-produto 
+   20  git status
+   21  git add -p
+   22  npm install --save react-native-material-dropdown
+   23  npm i react-native-modal-picker --save
+   24  git add -p
+   25  git commit -m "[120][359] Mais ajustes na tela cadastro de produto"
+   26  git push
+   27  git status
+   28  git checkout package.json
+   29  npm install
+   30  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+   31  cd workspace/tcc2017/
+   32  android avd
+   33  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+   34  cd workspace/tcc2017/
+   35  git status
+   36  git checkout bug/351-configuracoes-rest-login 
+   37  git pull
+   38  react-native run-android
+   39  git checkout master
+   40  git status
+   41  git diff
+   42  git stash
+   43  git checkout master
+   44  git pu
+   45  git pull
+   46  git checkout bug/351-configuracoes-rest-login 
+   47  git merge master
+   48  git diff
+   49  git commit
+   50  git status
+   51  git add java/src/main/java/tcc/Controllers/UsuarioController.java
+   52  git commit
+   53  git push
+   54  git stash apply
+   55  git status
+   56  git stash apply
+   57  git diff
+   58  git diff
+   59  git add -p
+   60  git status
+   61  git add  java/src/main/java/tcc/Controllers/UsuarioController.java
+   62  git status
+   63  git commit -m "[351] Conserta acesso basico de login"
+   64  git push
+   65  git add -p
+   66  git commit -m "[351] Tratamento de erro no login"
+   67  git push
+   68  git diff
+   69  git status
+   70  git checkout .
+   71  git status
+   72  git checkout master
+   73  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+   74  react-native run-android
+   75  git add -p
+   76  git commit -m "[120][364] Adiciona categorias via rest e muda para Picker do react native"
+   77  git push
+   78  git checkout cadastro-produto 
+   79  git checkout -b subtask/379-rest-get-restricoes
+   80  git push
+   81      git push --set-upstream origin subtask/379-rest-get-restricoes
+   82  git checkout master
+   83  git pull
+   84  git checkout .
+   85  git checkout master
+   86  git pull 
+   87  git checkout cadastro-produto
+   88  git merge master
+   89  git push
+   90  git checkout subtask/379-rest-get-restricoes 
+   91  git merge cadastro-produto 
+   92  git push
+   93  git checkout perfilVendedor 
+   94  git merge master; git push
+   95  git checkout subtask/379-rest-get-restricoes 
+   96  react-native run-android
+   97  git add -p
+   98  git commit -m "[120][379] Adiciona campo de restrições na tela assim como rest pra buscar dados do endpoint"
+   99  git push
+  100  git checkout subtask/364-rest-get-categorias 
+  101  git status
+  102  git diff
+  103  git checkout .
+  104  git checkout cadastro-produto 
+  105  git pull
+  106  git checkout subtask/364-rest-get-categorias 
+  107  git merge cadastro-produto 
+  108  react-native run-android
+  109  git diff
+  110  git add -p
+  111  git status 
+  112  git add app/screens/cadastro_produto/CadastroProduto.js
+  113  git commit
+  114  git push
+  115  git checkout cadastro-produto 
+  116  git pull
+  117  git fetch -p
+  118  git checkout -b subtask/366-rest-post-produto
+  119  git push
+  120  git status
+  121      git push --set-upstream origin subtask/366-rest-post-produto
+  122  git merge master
+  123  cd workspace/tcc2017/
+  124  git checkout cadastro-produto
+  125  git checkout -b subtask/364-rest-get-categorias
+  126  git push
+  127      git push --set-upstream origin subtask/364-rest-get-categorias
+  128  git merge subtask/359-interface-cadastro-produto 
+  129  git push
+  130  android avd
+  131  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  132  cd java
+  133  ./gradlew bootRun
+  134  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  135  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  136  cd workspace/tcc2017/;react-native run-android
+  137  git stash
+  138  git checkout-cadastro
+  139  git checkout cadastro-produto 
+  140  git pull
+  141  git checkout subtask/366-rest-post-produto
+  142  git merge cadastro-produto
+  143  git push
+  144  git stash apply
+  145  android avd
+  146  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  147  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  148  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  149  cd workspace/tcc2017/
+  150  git fetch
+  151  git fetch
+  152  git checkout subtask/287-backend 
+  153  git diff
+  154  git checkout .
+  155  git diff
+  156  git checkout subtask/287-backend 
+  157  git add -p
+  158  git add -p
+  159  git commit -m "[119][285] Consertando rotas para vendedor e produto"
+  160  git push
+  161  git checkout story/133-busca-de-produtos 
+  162  git pull
+  163  git checkout subtask/373-rest-receber-dados-buscas
+  164  git checkout -b subtask/373-rest-receber-dados-buscas
+  165  git push
+  166      git push --set-upstream origin subtask/373-rest-receber-dados-buscas
+  167  android avd
+  168  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  169  git diff
+  170  git add -p
+  171  git commit -m "[133][373] Conserta rest"
+  172  git push
+  173  git pull
+  174  git push
+  175  git pull
+  176  git status
+  177  git commit 
+  178  git push
+  179  git status
+  180  cd workspace/tcc2017/
+  181  git checkout master
+  182  git pull
+  183  git checkout -b task/382-inserir-reg-mod-date-user-tabelas
+  184  git push
+  185      git push --set-upstream origin task/382-inserir-reg-mod-date-user-tabelas
+  186  react-native run-android
+  187  cd workspace/tcc2017/
+  188  git add -p
+  189  git reset -p
+  190  git add -p
+  191  git commit -m "[382] Adicionando campos REG e MOD date e user em todas as tabelas, assim como setando eles ao registrar/editar"
+  192  git push
+  193  git checkout gerenciaprodutos 
+  194  git status
+  195  git diff
+  196  git checkout .
+  197  git checkout gerenciaprodutos 
+  198  git pull
+  199  git checkout -b subtask/418-interface-gerencia-produto
+  200  git push
+  201      git push --set-upstream origin subtask/418-interface-gerencia-produto
+  202  android avd
+  203  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  204  android avd
+  205  cd workspace/tcc2017/
+  206  react-native run-android
+  207  git add -p
+  208  git status
+  209  git commit -m  "[127][418] Finaliza interface da gerencia do produto (pendendo OK das meninas)"
+  210  git push
+  211  git add -p
+  212  git commit -m  "[127][418] Retira dados mockados"
+  213  git push
+  214  git checkout gerenciaproduto
+  215  git checkout gerenciaprodutos 
+  216  git pull
+  217  git checkout -b subtask/419-bancod-de-dados
+  218  git push
+  219  git checkout -b subtask/419-banco-de-dados
+  220  git push
+  221      git push --set-upstream origin subtask/419-banco-de-dados
+  222  git add -p
+  223  git add -p
+  224  git commit -m  "[127][419] Altera metodos existentes de busca pra considerar flag deletada como falsa, e adiciona novo metodo de busca pra tela Gerencia Produto"
+  225  git push
+  226  git checkout -b subtask/420-backend-gerencia-produtos
+  227  git push
+  228      git push --set-upstream origin subtask/420-backend-gerencia-produtos
+  229  git add -p
+  230  git commit -m  "[127][420] Adiciona metodo pra buscar produtos do vendedor"
+  231  git push
+  232  git add -p
+  233  git commit -m  "[127][420] Adiciona metodos para deletar (logicamente) o produto e alterar a quantidade dos produtos"
+  234  git add -p
+  235  git commit -m  "[127][420] Adiciona validação de que o produto é realmente do vendedor logado, apenas por garantia"
+  236  git push
+  237  git add -p
+  238  git commit -m  "[127][420] Usando os metodos do service para salvar ao efetuar update em produto"
+  239  git push
+  240  git checkout gerenciaprodutos 
+  241  git pull
+  242  git checkout -b subtask/421-rest-endpoints-gerencia-produto
+  243  git push
+  244      git push --set-upstream origin subtask/421-rest-endpoints-gerencia-produto
+  245  git branch
+  246  git merge   subtask/418-interface-gerencia-produto
+  247  git push
+  248  git merge   subtask/419-banco-de-dados
+  249  git push
+  250  git merge   subtask/420-backend-gerencia-produtos
+  251  git push
+  252  git checkout subtask/418-interface-gerencia-produto
+  253  git add -p
+  254  git add -p
+  255  git commit -m "[127][418] Acertando CSS, adicionando um header e a informação de data de preparação"
+  256  git push
+  257  git branch
+  258  git checkout subtask/421-rest-endpoints-gerencia-produto
+  259  git merge subtask/418-interface-gerencia-produto
+  260  git push
+  261  git add -p
+  262  git commit -m "[127][421] Adiciona chamada aos endpoints para consultar, deletar e alterar quantidade dos produtos"
+  263  git push
+  264  git checkout bug/343-Salvar-foto-no-cadastro-de-usuario 
+  265  git pull
+  266  react-native run-android
+  267  git checkout master
+  268  git checkout .
+  269  git status
+  270  git reset HEAD .
+  271  git status
+  272  git checkout .
+  273  git status
+  274  git diff
+  275  rm java/src/main/java/tcc/Services/GaleriaService.java
+  276  git status
+  277  git checkout master
+  278  git pull
+  279  git checkout -n bug/343-salvar-foto-tentativa-2
+  280  git checkout -b bug/343-salvar-foto-tentativa-2
+  281  git push
+  282      git push --set-upstream origin bug/343-salvar-foto-tentativa-2
+  283  react-native run-android
+  284  git add- p
+  285  git add -p
+  286  git add -p
+  287  git add -p
+  288  git commit -m "[343] Solução para salvar foto via servidor"
+  289  git push
+  290  git status
+  291  git checkout app/screens/produto/GerenciaProduto.js
+  292  git add -p
+  293  git commit -
+  294  git status
+  295  git add app/screens/perfil/img/camera2.jpg
+  296  git commit -m "[343] Adiciona foto aos Perfis Cliente e Vendedor"
+  297  git push
+  298  git add -p
+  299  git commit -m "[343] Adiciona foto ao Cadastro de Produto"
+  300  git push
+  301  git add -p
+  302  git commit -m "[343] Adiciona foto a Busca de Produtos - ainda precisa de tratamento quando nao houver foto cadastrada"
+  303  git push
+  304  git status
+  305  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  306  cd workspace/tcc2017/
+  307  git status
+  308  git checkout master
+  309  git checkout story/128-localizacao 
+  310  git pull
+  311  git pull
+  312  git checkout -b subtask/437-interface-validar-localizacao-permitida
+  313  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  314  react-native run-android
+  315  react-native run-android
+  316  git status
+  317  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  318  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  319  git status
+  320  git add java/lib/
+  321  git add java/build.gradle
+  322  git commit -m "[127][451] Adiciona libs restantes no projeto para salvar foto" 
+  323  git push
+  324  git checkout subtask/437-interface-validar-localizacao-permitida 
+  325  react-native run-android
+  326  https://res.cloudinary.com/foodertcc/image/upload/v1504753136/gtivuvswxoschka7njjr.jpg
+  327  lsof -i tcp:8081
+  328  cd workspace/tcc2017/
+  329  git status
+  330  cd java
+  331  gradle --help
+  332  gradle --settings-file
+  333  cd ..
+  334  android avd
+  335  git checkout subtask/451-adicionar-foto-produto 
+  336  git checkout .
+  337  git status
+  338  rm -rf java/lib/
+  339  git status
+  340  git checkout subtask/451-adicionar-foto-produto 
+  341  git pull
+  342  cd java/
+  343  cd lib/
+  344  ls
+  345  cd ..
+  346  ./gradlew bootRun
+  347  ./gradlew bootRun
+  348  ./gradlew bootRun
+  349  git add -p
+  350  git status
+  351  git add java/lib/cloudinary-core-1.15.0.jar
+  352  git status
+  353  git add java/.gitignore
+  354  git add java/build.gradle
+  355  react-native run-android
+  356  git commit -m "[127][451] Adiciona a lib do Cloudinary diretamente ao projeto"
+  357  git status
+  358  git push
+  359  git add -p
+  360  git commit -m "[127][451] Adiciona imagem do produto ao Gerencia Produto e conserta minor issues"
+  361  git push
+  362  cd java
+  363  ./gradlew bootRun
+  364  ./gradlew bootRun
+  365  ./gradlew bootRun
+  366  ./gradlew bootRun
+  367  git checkout compraProduto 
+  368  git pull
+  369  git checkout story/128-localizacao 
+  370  git pull
+  371  git checkout subtask/437-interface-validar-localizacao-permitida 
+  372  git merge story/128-localizacao 
+  373  git status
+  374  git add ../app/screens/produto/BuscaProduto.js
+  375  git status
+  376  git commit
+  377  git push
+  378  android avd
+  379  android avd
+  380  android avd
+  381  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  382  cd java
+  383  ./gradlew bootRun
+  384  git add -p
+  385  git status
+  386  git commit -m "[128][437] Adiciona codigo validando GPS ligado para Vendedor"
+  387  git push
+  388  git checkout master
+  389  git pull
+  390  git checkout subtask/437-interface-validar-localizacao-permitida
+  391  git merge master
+  392  git status
+  393  git add ../app/screens/produto/GerenciaProduto.js
+  394  git status
+  395  git commit
+  396  git push
+  397  ./gradlew bootRun
+  398  cd workspace/tcc2017/
+  399  react-native run-android
+  400  git add -p
+  401  git commit -m "[128][437] Detalhe na Home do vendedor" 
+  402  git push
+  403  android avd
+  404  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  405  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  406  cd java
+  407  ./gradlew bootRun
+  408  cd java
+  409  ./gradlew bootRun
+  410  ifconfig
+  411  git stash apply
+  412  ifconfig
+  413  git add -p
+  414  git add -p
+  415  n
+  416  git commit -m "[128][437] Alterando validacao de GPS ligado"
+  417  git push
+  418  git checkout subtask/428-
+  419  git checkout subtask/428-banco-de-dados 
+  420  git stash
+  421  git checkout subtask/428-banco-de-dados 
+  422  git pull
+  423  git checkout master
+  424  git pull
+  425  git checkout subtask/428-banco-de-dados
+  426  git merge master
+  427  git push
+  428  git checkout subtask/437-interface-validar-localizacao-permitida
+  429  git checkout compraProduto 
+  430  git merge master
+  431  git push
+  432  git checkout compraProduto 
+  433  git checkout subtask/437-interface-validar-localizacao-permitida
+  434  adb devices
+  435  adb devics
+  436  adb devices
+  437  cd workspace/tcc2017/
+  438  react-native run-android
+  439  react-native run-android
+  440  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  441  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  442  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  443  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  444  /Users/amanda/workspace/tcc2017/node_modules/react-native/packager/launchPackager.command ; exit;
+  445  react-native run-android
+  446  yes | sudo sdkmanager --licenses
+  447  android update sdk --no-ui --filter build-tools-24.0.0,android-24,extra-android-m2repository
+  448  android update sdk --no-ui --filter build-tools-26.0.1,android-26,extra-android-m2repository
+  449  react-native run-android
+  450  android update sdk --no-ui
+  451  react-native run-android
+  452  cd ~/Library/Android/sdk/tools/bin && ./sdkmanager
+  453  sdkmanager
+  454  ls
+  455  ./sdkmanager
+  456  ./sdkmanager --licenses
+  457  ./sdkmanager --update
+  458  ./sdkmanager --licenses
+  459  pwd
+  460  cd
+  461  cd /usr
+  462  cd loca
+  463  cd local
+  464  ls
+  465  cd share
+  466  ls
+  467  locate android
+  468  cd  /usr/local/Cellar/android-sdk/
+  469  ls
+  470  cd 24.4/
+  471  ls
+  472  cd docs
+  473  ls
+  474  cd ;;
+  475  cd ..
+  476  ls
+  477  cd tools/
+  478  ls
+  479  cd ..
+  480  ls
+  481  cd ~/Library/Android/sdk/tools/bin
+  482  ls
+  483  locate licenses
+  484  cd  /usr/local/Cellar/android-sdk/
+  485  ls
+  486  cd 24.4/
+  487  cp /Applications/Android Studio.app/Contents/plugins/android/lib/licenses .
+  488  cd /Applications/Android Studio.app/Contents/plugins/android/lib/licenses
+  489  echo $ANDROID_HOME
+  490  export ANDROID_HOME='/usr/local/share/android-sdk'
+  491  echo $ANDROID_HOME
+  492  cd ../../
+  493  cd ../share/
+  494  ls
+  495  export ANDROID_HOME='/usr/local/Cellar/android-sdk'
+  496  vi ~./bash_rc
+  497  locate bash_rc
+  498  ls
+  499  ll
+  500  vi ~./bash.rc
+  501  history > bashhistory.txt

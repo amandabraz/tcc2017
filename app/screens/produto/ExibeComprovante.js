@@ -19,7 +19,7 @@ import {
   Icon,
   Button
 } from 'react-native-elements';
-
+import Barcode from 'react-native-barcode-builder';
 import NavigationBar from 'react-native-navbar';
 
 //dimensão da janela
@@ -31,14 +31,21 @@ export default class ExibeComprovante extends Component {
    super(props);
 
    this.state = {
-     nomeProdutoText: '',
-     quantidadeText: '',
-     precoText: '',
-     tokenText: ''
-   }
+     nomeProdutoText: 'Nome exemplo',
+     quantidadeText: '01',
+     precoText: '1.00',
+     meioPagamentoText: 'dinheiro',
+     tokenText: 'dd8f61bec1a49f29bc82a75',
+     nomeVendedorText: 'Nome vendedor exemplo',
+     imagemProduto: require('./img/camera11.jpg')
+   };
+   this.buscaDadosPedido();
   }
 
-  //TODO: Implementar busca para tela do comprovante
+  buscaDadosPedido() {
+      //TODO: Implementar busca de pedido para tela do comprovante
+  }
+
   onButtonVoltar = () => {
     this.props.navigation.navigate('ExibeComprovante');
   };
@@ -47,139 +54,93 @@ export default class ExibeComprovante extends Component {
   render() {
     //retorno
     return (
+      <View style={{flex: 1}}>
+        <NavigationBar
+          title={titleConfig}
+          tintColor="skyblue"/>
 
-      <ScrollView>
       <View style={styles.container}>
-        <Image source={require('./img/fundo2.png')} style={styles.background}>
-            <View style={styles.centralView}>
-              <Text style={styles.title}>Bem-Vindo(a)!{'\n'}{'\n'}</Text>
-
-              <TextInput
-                style={styles.input}
-                onChangeText = {
-                  (email) => {
-                    this.setState({email: email});
-                  }
-                }
-                underlineColorAndroid={'#e2b1a3'}
-                maxLength={40}
-                placeholder = "seu_email@provedorbacana.com"
-                placeholderTextColor = "#e2b1a3"
-                keyboardType={'email-address'}
-              />
-
-              <TextInput
-                style={styles.input}
-                onChangeText = {
-                  (senha) => this.setState({
-                    senha: senha
-                  })
-                }
-                underlineColorAndroid={'#e2b1a3'}
-                maxLength={10}
-                secureTextEntry={true}
-                placeholder = "Senha"
-                placeholderTextColor = "#e2b1a3"
-              />
-
-              <TouchableOpacity
-              style={styles.button}
-              onPress={this.eventLogin}
-              accessibilityLabel={'Botão de login'}>
-                  <Text style={styles.font}>{'Entrar'}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-              style={styles.button}
-              onPress={this.cadastrar}
-              accessibilityLabel={'Botão de cadastro'}>
-                  <Text style={styles.font}>{'Cadastre-se!'}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-              style={styles.buttonEsqueceuSenha}
-              onPress={this.esqueceuSenha}
-              accessibilityLabel={'Esqueceu sua senha'}>
-                  <Text style={styles.fontEsqueciSenha}>{'\n'}{'Esqueci minha senha'}</Text>
-              </TouchableOpacity>
+            <View style={styles.oneResult}>
+             <View style = {{ flexDirection: 'row'}}>
+              <Image source={this.state.imagemProduto}
+                     style={styles.imageResultSearch}/>
+                <Text style={styles.oneResultfontTitle}>{this.state.nomeProdutoText}</Text>
+                <Text>{'\n'}{'\n'}{'\n'}</Text>
+                </View>
+                <View style={{paddingTop: 20}}>
+                <Text style={styles.oneResultfont}>Quantidade solicitada:
+                  <Text style={styles.totalFont}> {this.state.quantidadeText}</Text>
+                </Text>
+                <Text>{'\n'}{'\n'}</Text>
+                <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
+                  <Text style={styles.totalFont}> R$ {this.state.precoText}</Text>
+                </Text>
+                <Text>{'\n'}{'\n'}</Text>
+                <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com
+                  <Text style={styles.totalFont}> {this.state.nomeVendedorText}</Text>:
+                </Text>
+                <Barcode value="dd8f61bec1a49f29bc82a75" format="CODE128"
+                         width={1}/>
+                <Text style={styles.tokenfont}> {this.state.tokenText}</Text>
+              </View>
 
             </View>
-        </Image>
-      </View>
-      </ScrollView>
+            </View>
+          </View>
+
     );
   }
 }
 
+const titleConfig = {
+  title: 'Comprovante de Compra',
+  tintColor: "#1C1C1C",
+  fontFamily: 'Roboto',
+};
+
 //css
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
-  },
-  title: {
-    fontFamily: 'Roboto',
-    color: '#95c9db',
-    fontWeight: 'bold',
-    fontSize: 40,
-  },
-  background: { //tornando a imagem do tamanho da tela
-    width,
-    height,
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-    resizeMode: 'cover',
+    alignItems: 'center'
   },
-  centralView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(100, 108, 122, 0.7)',
+  oneResult:{
+     backgroundColor: 'rgba(255, 255, 255, 0.55)',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 5,
+     width: '90%'
   },
-  buttonEsqueceuSenha: {
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  input:{
-    width: 300,
-    height: 60,
-    borderColor: 'gray',
-    fontFamily: 'Roboto',
-    color: '#e2b1a3',
-    fontWeight: 'bold',
-    fontSize: 18,
-    textAlign: 'center',
-  },
-  button: {
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: "#50a1e0",
-    alignSelf: 'stretch',
-  },
-  font: {
+  oneResultfontTitle:{
+    color: '#1C1C1C',
     fontWeight: 'bold',
     fontSize: 25,
-    color:'white',
     alignSelf: 'center',
+    paddingLeft: 20
   },
-  fontEsqueciSenha: {
-    width: 300,
-    height: 60,
-    borderColor: 'gray',
-    fontFamily: 'Roboto',
-    color: 'white',
-    fontSize: 13,
+  oneResultfont:{
+    color: '#1C1C1C',
+    fontSize: 18,
+    textAlign: 'left',
+  },
+  tokenfont:{
+    color: 'gray',
+    fontSize: 15,
     textAlign: 'center',
-    textDecorationLine: 'underline',
+  },
+  totalFont:{
+    color: '#1C1C1C',
+    fontSize: 18,
+    textAlign: 'left',
+    fontWeight: 'bold',
+  },
+  imageResultSearch:{
+    width: 100,
+    height: 100,
+    borderRadius: 100,
   },
 });
