@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
 
-import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;

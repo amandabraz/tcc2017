@@ -63,14 +63,15 @@ export default class ExibeProduto extends Component {
           precoText: '',
           observacaoText: '',
           precoTotalText: "0,00",
-          image: './img/camera11.jpg'
+          image: './img/camera11.jpg',
+          quantidadeSelecionada: 1
         };
         this.buscaProduto();
     }
 
   buscaProduto() {
     if (this.state.produtoId > 0) {
-      fetch("http://192.168.0.100:8080/produto/" + this.state.produtoId)
+      fetch("http://172.16.244.171:8080/produto/" + this.state.produtoId)
       .then((response) => response.json())
       .then((rJson) => {
         if (!rJson.errorMessage) {
@@ -247,18 +248,26 @@ export default class ExibeProduto extends Component {
                   <View style={styles.baseQuantidadeText}>
                     <Text style={styles.baseText}>   Quantidade:  </Text>
                       <TouchableOpacity onPress={() => {
-                        if (produto.quantidade > 0) {
-                          produto.quantidade -= 1;
-                          this.alteraQuantidade(produto);
+                        if (this.state.quantidadeSelecionada > 0) {
+                          var novaQtd = this.state.quantidadeSelecionada - 1;
+                          this.setState({quantidadeSelecionada: novaQtd});
+                          var precoCalculado = this.state.produto.preco * novaQtd;
+                          this.setState({precoTotalText: precoCalculado});
                         }
-                        }}>
+                      }}>
                         <FontAwesomeIcon name="minus" size={40} color={'pink'}/>
                       </TouchableOpacity>
-                        <Text style={styles.baseText}> 01 </Text>
+                        <TextInput style={styles.baseText} 
+                          defaultValue={1}
+                          onChangeText={(qtd) => this.setState({quantidadeSelecionada: qtd})} />
                       <TouchableOpacity onPress={() => {
-                          produto.quantidade += 1;
-                          this.alteraQuantidade(produto);
-                          }}>
+                        if (this.state.quantidadeSelecionada < this.produto.quantidade) {
+                          var novaQtd = this.state.quantidadeSelecionada + 1;
+                          this.setState({quantidadeSelecionada: novaQtd});
+                          var precoCalculado = this.state.produto.preco * novaQtd;
+                          this.setState({precoTotalText: precoCalculado});
+                        }
+                      }}>
                           <FontAwesomeIcon name="plus" size={40} color={'pink'}/>
                       </TouchableOpacity>
                    </View>
