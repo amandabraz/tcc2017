@@ -51,12 +51,6 @@ public class Usuario  implements Serializable {
     @Column(name = "TELEFONE", nullable = false, length = 9)
     private String telefone;
 
-    @Column(name = "LOCALIZACAO", nullable = false)
-    private boolean localizacao;
-
-    @Column(name = "NOTIFICACAO", nullable = false)
-    private boolean notificacao;
-
     @Column(name = "BLOQUEADO", nullable = false)
     private boolean bloqueado;
 
@@ -77,8 +71,6 @@ public class Usuario  implements Serializable {
         this.cpf = cpf;
         this.ddd = ddd;
         this.telefone = telefone;
-        this.localizacao = localizacao;
-        this.notificacao = notificacao;
         this.bloqueado = bloqueado;
     }
 
@@ -102,12 +94,10 @@ public class Usuario  implements Serializable {
      * @param cpf
      * @param ddd
      * @param telefone
-     * @param localizacao
-     * @param notificacao
      * @param bloqueado
      */
     public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   String cpf, String ddd, String telefone, boolean localizacao, boolean notificacao, boolean bloqueado) {
+                   String cpf, String ddd, String telefone, boolean bloqueado) {
         this.senha = senha;
         this.deletado = deletado;
         this.perfil = perfil;
@@ -117,8 +107,6 @@ public class Usuario  implements Serializable {
         this.cpf = cpf;
         this.ddd = ddd;
         this.telefone = telefone;
-        this.localizacao = localizacao;
-        this.notificacao = notificacao;
         this.bloqueado = bloqueado;
     }
 
@@ -194,22 +182,6 @@ public class Usuario  implements Serializable {
         this.telefone = telefone;
     }
 
-    public boolean isLocalizacao() {
-        return localizacao;
-    }
-
-    public void setLocalizacao(boolean localizacao) {
-        this.localizacao = localizacao;
-    }
-
-    public boolean isNotificacao() {
-        return notificacao;
-    }
-
-    public void setNotificacao(boolean notificacao) {
-        this.notificacao = notificacao;
-    }
-
     public String getSenha() {
         return senha;
     }
@@ -247,8 +219,6 @@ public class Usuario  implements Serializable {
                 ", cpf='" + cpf + '\'' +
                 ", ddd='" + ddd + '\'' +
                 ", telefone='" + telefone + '\'' +
-                ", localizacao=" + localizacao +
-                ", notificacao=" + notificacao +
                 ", bloqueado=" + bloqueado +
                 '}';
     }
@@ -260,8 +230,6 @@ public class Usuario  implements Serializable {
         Usuario usuario = (Usuario) o;
         return deletado == usuario.deletado &&
                 perfil == usuario.perfil &&
-                localizacao == usuario.localizacao &&
-                notificacao == usuario.notificacao &&
                 bloqueado == usuario.bloqueado &&
                 Objects.equals(id, usuario.id) &&
                 Objects.equals(senha, usuario.senha) &&
@@ -275,6 +243,6 @@ public class Usuario  implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, localizacao, notificacao, bloqueado);
+        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, bloqueado);
     }
 }

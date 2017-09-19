@@ -175,7 +175,6 @@ class GerenciaProduto extends Component {
         </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
