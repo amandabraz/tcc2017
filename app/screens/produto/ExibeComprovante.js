@@ -19,7 +19,7 @@ import {
   Icon,
   Button
 } from 'react-native-elements';
-
+import Barcode from 'react-native-barcode-builder';
 import NavigationBar from 'react-native-navbar';
 
 //dimensão da janela
@@ -35,7 +35,7 @@ export default class ExibeComprovante extends Component {
      quantidadeText: '01',
      precoText: '1.00',
      meioPagamentoText: 'dinheiro',
-     tokenText: 'BLABLA123',
+     tokenText: 'dd8f61bec1a49f29bc82a75',
      nomeVendedorText: 'Nome vendedor exemplo',
      imagemProduto: require('./img/camera11.jpg')
    };
@@ -54,8 +54,12 @@ export default class ExibeComprovante extends Component {
   render() {
     //retorno
     return (
+      <View style={{flex: 1}}>
+        <NavigationBar
+          title={titleConfig}
+          tintColor="skyblue"/>
+
       <View style={styles.container}>
-       <View style={styles.centralView}>
             <View style={styles.oneResult}>
              <View style = {{ flexDirection: 'row'}}>
               <Image source={this.state.imagemProduto}
@@ -64,29 +68,43 @@ export default class ExibeComprovante extends Component {
                 <Text>{'\n'}{'\n'}{'\n'}</Text>
                 </View>
                 <View style={{paddingTop: 20}}>
-                <Text style={styles.oneResultfont}>Quantidade solicitada:    {this.state.quantidadeText}</Text>
+                <Text style={styles.oneResultfont}>Quantidade solicitada:
+                  <Text style={styles.totalFont}> {this.state.quantidadeText}</Text>
+                </Text>
                 <Text>{'\n'}{'\n'}</Text>
-                <View style = {{ flexDirection: 'row'}}>
-                <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:</Text>
-                <Text style={styles.totalFont}>  R$ {this.state.precoText}</Text>
-                </View>
+                <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
+                  <Text style={styles.totalFont}> R$ {this.state.precoText}</Text>
+                </Text>
                 <Text>{'\n'}{'\n'}</Text>
-                <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com {this.state.nomeVendedorText}:</Text>
-                <Text style={styles.oneResultfont}> {this.state.tokenText}</Text>
+                <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com
+                  <Text style={styles.totalFont}> {this.state.nomeVendedorText}</Text>:
+                </Text>
+                <Barcode value="dd8f61bec1a49f29bc82a75" format="CODE128"
+                         width={1}/>
+                <Text style={styles.tokenfont}> {this.state.tokenText}</Text>
               </View>
 
             </View>
             </View>
-            </View>
+          </View>
 
     );
   }
 }
 
+const titleConfig = {
+  title: 'Comprovante de Compra',
+  tintColor: "#1C1C1C",
+  fontFamily: 'Roboto',
+};
+
 //css
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   oneResult:{
      backgroundColor: 'rgba(255, 255, 255, 0.55)',
@@ -94,7 +112,8 @@ const styles = StyleSheet.create({
      borderRadius: 10,
      borderColor: '#fff',
      padding: 10,
-     margin: 5
+     margin: 5,
+     width: '90%'
   },
   oneResultfontTitle:{
     color: '#1C1C1C',
@@ -105,19 +124,19 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'left',
+  },
+  tokenfont:{
+    color: 'gray',
+    fontSize: 15,
+    textAlign: 'center',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'left',
     fontWeight: 'bold',
-  },
-  centralView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute'
   },
   imageResultSearch:{
     width: 100,

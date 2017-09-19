@@ -169,11 +169,6 @@ onButtonOpenProduct = () => {
 
 
   //CSS
-  const titleConfig = {
-    title: 'Perfil Vendedor',
-    tintColor: "#dc143c",
-    fontFamily: 'Roboto',
-  };
   const styles = StyleSheet.create({
     container: {
       flex: 1
