@@ -28,7 +28,15 @@ export default class ExibeProduto extends Component {
         super(props, context);
         this.state = {
           produtoId: this.props.navigation.state.params.produtoId,
-          nomeProdutoText: '',
+          imagemPrincipal: require('./img/camera11.jpg'),          
+          produto: {
+            nome: '',
+            preco: '',
+            categoria: {
+              descricao: ''
+            },
+            quantidade: ''
+          },
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
             color: '#CCCCCC',
@@ -55,10 +63,55 @@ export default class ExibeProduto extends Component {
           precoText: '',
           observacaoText: '',
           precoTotalText: "0,00",
-          image: require('./img/camera11.jpg')
+          image: './img/camera11.jpg'
         };
-        this.buscaDadosProduto();
+        this.buscaProduto();
     }
+
+  buscaProduto() {
+    if (this.state.produtoId > 0) {
+      fetch("http://192.168.0.100:8080/produto/" + this.state.produtoId)
+      .then((response) => response.json())
+      .then((rJson) => {
+        if (!rJson.errorMessage) {
+          this.setState({produto: rJson});
+          if (rJson.imagemPrincipal) {
+            this.setState({imagemPrincipal: { uri: rJson.imagemPrincipal }});            
+          }
+          if (rJson.restricoesDieteticas.length > 0) {
+            this.setState({restricaoEstilo: styles.listText});
+            var restricoes = "";
+            for(i in rJson.restricoesDieteticas) {
+              restricoes += rJson.restricoesDieteticas[i].descricao + " - ";
+            }
+            restricoes = restricoes.slice(0, -3);
+            this.setState({dietaProdutoText: restricoes});
+          }
+          if (rJson.tags.length > 0) {
+            this.setState({tagEstilo: styles.listText})
+            var tags = "";
+            for(i in rJson.tags) {
+              tags += "#" + rJson.tags[i].descricao + "  ";
+            }
+            tags = tags.slice(0, -2);
+            this.setState({tagsText: tags});
+          }
+          if (rJson.ingredientes.length > 0) {
+            this.setState({ingredientesEstilo: styles.listText})
+            var ingredientes = "";
+            for(i in rJson.ingredientes) {
+              ingredientes += rJson.ingredientes[i].item + ", ";
+            }
+            ingredientes = ingredientes.slice(0, -2);
+            this.setState({ingredientesText: ingredientes});
+          }
+          var dataNormal = new Date(rJson.dataPreparacao);
+          var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+          this.setState({dateText: dataPrep});
+        }
+      });
+    }
+  }
 
     _confirmTest() {
         this.popup.confirm({
@@ -71,7 +124,7 @@ export default class ExibeProduto extends Component {
                     fontWeight: 'bold'
                 },
                 callback: () => {
-                    this.props.navigation.navigate('ExibeComprovante');
+                    this.props.navigation.navigate('ExibeComprovante', {pedidoId: this.state.pedido});
                 }
             },
             cancel: {
@@ -83,10 +136,6 @@ export default class ExibeProduto extends Component {
         });
     }
 
-    buscaDadosProduto() {
-      //TODO: Fazer busca de dados do produto
-    }
-
     render() {
         return (
           <Image style={styles.headerBackground}
@@ -95,8 +144,7 @@ export default class ExibeProduto extends Component {
                   <View style={styles.profilepicWrap}>
                     <Image
                       style={styles.profilepic}
-                      //TODO: TROCAR POR IMAGEM DO PRODUTO
-                      source={require('./img/sabrina-copy.jpg')}/>
+                      source={this.state.imagemPrincipal}/>
                   </View>
                 </View>
                 <ScrollView>
@@ -107,7 +155,7 @@ export default class ExibeProduto extends Component {
                     iconSize={20}
                     iconName={'user'}
                     iconColor={'darkslategrey'}
-                    value={this.state.nomeProdutoText}
+                    value={this.state.produto.nome}
                     editable={false}
                     inputStyle={styles.titleText}/>
 
@@ -117,7 +165,7 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'check-square-o'}
                     iconColor={'darkslategrey'}
-                    value={this.state.categoriaText}
+                    value={this.state.produto.categoria.descricao}
                     editable={false}
                     inputStyle={styles.baseText}/>
 
@@ -181,7 +229,7 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'money'}
                     iconColor={'darkslategrey'}
-                    value={this.state.precoText}
+                    value={this.state.produto.preco.toString()}
                     editable={false}
                     inputStyle={styles.baseText}/>
 
@@ -192,7 +240,7 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'info'}
                     iconColor={'darkslategrey'}
-                    value={this.state.observacaoText}
+                    value={this.state.produto.observacao}
                     editable={false}
                     inputStyle={styles.baseText}/>
 
@@ -234,15 +282,13 @@ export default class ExibeProduto extends Component {
 
                 <Popup ref={popup => this.popup = popup }/>
           </Image>
-
-
         );
     }
 };
 
 //CSS
 const titleConfig = {
-  title: 'Perfil Vendedor',
+  title: 'Comprar produto',
   tintColor: "#dc143c",
   fontFamily: 'Roboto',
 };
@@ -323,12 +369,7 @@ let styles = StyleSheet.create({
       fontWeight: 'bold',
       color: 'darkslategrey',
       fontFamily: 'Roboto',
-    },
-    baseText: {
-      fontFamily: 'Roboto',
-      color: 'darkslategrey',
-      fontSize: 20,
-    },
+    }
 });
 
 AppRegistry.registerComponent('tcc2017', () => tcc2017);
