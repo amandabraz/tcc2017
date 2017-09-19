@@ -154,7 +154,7 @@ onButtonOpenProduct = () => {
               multiline={true}
               editable={false}
               inputStyle={this.state.pagamentoEstilo}/>
-      
+
       <View style={styles.results}>
       <ScrollView horizontal={true}
                   showsHorizontalScrollIndicator={true}>
@@ -169,11 +169,6 @@ onButtonOpenProduct = () => {
 
 
   //CSS
-  const titleConfig = {
-    title: 'Perfil Vendedor',
-    tintColor: "#dc143c",
-    fontFamily: 'Roboto',
-  };
   const styles = StyleSheet.create({
     container: {
       flex: 1
