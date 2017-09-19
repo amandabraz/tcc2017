@@ -19,7 +19,7 @@ import {
   Icon,
   Button
 } from 'react-native-elements';
-import Barcode from 'react-native-barcode-builder';
+import QRCode from 'react-native-qrcode';
 import NavigationBar from 'react-native-navbar';
 
 //dimensão da janela
@@ -31,20 +31,35 @@ export default class ExibeComprovante extends Component {
    super(props);
 
    this.state = {
-     nomeProdutoText: 'Nome exemplo',
-     quantidadeText: '01',
-     precoText: '1.00',
-     meioPagamentoText: 'dinheiro',
-     tokenText: 'dd8f61bec1a49f29bc82a75',
-     nomeVendedorText: 'Nome vendedor exemplo',
+     pedidoId: this.props.navigation.state.params.pedidoId,
+     nomeProdutoText: '',
+     quantidadeText: '',
+     precoText: '',
+     meioPagamentoText: '',
+     tokenText: 'token',
+     nomeVendedorText: '',
      imagemProduto: require('./img/camera11.jpg')
    };
    this.buscaDadosPedido();
   }
 
   buscaDadosPedido() {
-      //TODO: Implementar busca de pedido para tela do comprovante
-  }
+    fetch('http://10.0.2.2:8080/pedido/' + this.state.pedidoId)
+    .then((response) => response.json())
+      .then((responseJson) => {
+          if (!responseJson.errorMssage) {
+            if (responseJson.produto.imagemPrincipal) {
+              this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
+            }
+          this.setState({nomeProdutoText: responseJson.produto.nome});
+          this.setState({quantidadeText: responseJson.quantidade});
+          this.setState({precoText: responseJson.valorCompra});
+          this.setState({meioPagamentoText: responseJson.pagamento.descricao});
+          this.setState({tokenText: responseJson.token});
+          this.setState({nomeVendedorText: responseJson.produto.vendedor.usuario.nome});
+        }
+      });
+  };
 
   onButtonVoltar = () => {
     this.props.navigation.navigate('ExibeComprovante');
@@ -59,6 +74,7 @@ export default class ExibeComprovante extends Component {
           title={titleConfig}
           tintColor="skyblue"/>
 
+      <ScrollView>
       <View style={styles.container}>
             <View style={styles.oneResult}>
              <View style = {{ flexDirection: 'row'}}>
@@ -79,14 +95,21 @@ export default class ExibeComprovante extends Component {
                 <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com
                   <Text style={styles.totalFont}> {this.state.nomeVendedorText}</Text>:
                 </Text>
-                <Barcode value="dd8f61bec1a49f29bc82a75" format="CODE128"
-                         width={1}/>
+                <Text>{'\n'}</Text>
+                <View style = {{ alignItems: 'center'}}>
+                <QRCode
+                  value={this.state.tokenText}
+                  size={200}
+                  bgColor='black'
+                  fgColor='white'/>
+                  </View>
                 <Text style={styles.tokenfont}> {this.state.tokenText}</Text>
               </View>
 
             </View>
             </View>
-          </View>
+          </ScrollView>
+        </View>
 
     );
   }

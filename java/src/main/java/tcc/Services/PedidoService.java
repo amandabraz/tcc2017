@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
-
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -30,7 +29,7 @@ public class PedidoService {
             String cliente = clienteService.buscaCliente(pedido.getCliente().getId()).getUsuario().getCpf();
             String produto = produtoService.buscaProduto(pedido.getProduto().getId()).getNome();
             String frase = dataSolicitada.toString() + produto + cliente;
-            String token = (stringHexa(gerarHash(frase, "MD5"))).substring(0,23);
+            String token = (stringHexa(gerarHash(frase, "MD5")));
             pedido.setToken(token);
             pedido.setDataSolicitada(dataSolicitada);
             return pedidoDAO.save(pedido);
@@ -58,6 +57,16 @@ public class PedidoService {
         } catch (NoSuchAlgorithmException e) {
             return null;
         }
+    }
+
+    @Transactional
+    public Pedido buscaPedido(Long id) {
+        try {
+            return pedidoDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 
 }
