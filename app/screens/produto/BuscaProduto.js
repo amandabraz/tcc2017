@@ -40,12 +40,12 @@ export default class BuscaProduto extends Component {
 
   setSearchText(searchText) {
     if (searchText){
-      fetch("http://192.168.0.100:8080/produto?filtro=" + searchText)
+      fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
       .then((response) => response.json())
         .then((responseJson) => {
               this.setState({resultadoPesquisaProduto: responseJson});
           });
-      fetch("http://192.168.0.100:8080/vendedor?filtro=" + searchText)
+      fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
       .then((response) => response.json())
         .then((responseJson) => {
               this.setState({resultadoPesquisaVendedor: responseJson});

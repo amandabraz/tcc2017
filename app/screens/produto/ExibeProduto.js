@@ -9,7 +9,8 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    TextInput
 } from 'react-native';
 import Popup from 'react-native-popup';
 import Modal from 'react-native-modal';
@@ -125,7 +126,7 @@ export default class ExibeProduto extends Component {
                     fontWeight: 'bold'
                 },
                 callback: () => {
-                    this.props.navigation.navigate('ExibeComprovante', {pedidoId: this.state.pedido});
+                    this.props.navigation.navigate('ExibeComprovante', {pedidoId: this.state.pedidoId});
                 }
             },
             cancel: {
@@ -261,7 +262,7 @@ export default class ExibeProduto extends Component {
                           defaultValue={1}
                           onChangeText={(qtd) => this.setState({quantidadeSelecionada: qtd})} />
                       <TouchableOpacity onPress={() => {
-                        if (this.state.quantidadeSelecionada < this.produto.quantidade) {
+                        if (this.state.quantidadeSelecionada < this.state.produto.quantidade) {
                           var novaQtd = this.state.quantidadeSelecionada + 1;
                           this.setState({quantidadeSelecionada: novaQtd});
                           var precoCalculado = this.state.produto.preco * novaQtd;
