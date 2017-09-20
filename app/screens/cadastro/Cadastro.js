@@ -17,6 +17,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import ImagePicker from 'react-native-image-picker';
 import { Icon } from 'react-native-elements';
+import * as constante from '../../constantes';
 
 class Cadastro extends Component {
   constructor(props) {
@@ -177,7 +178,7 @@ class Cadastro extends Component {
     let continuar = this.validaCampos(usuario);
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario', {
+      fetch(constante.ENDPOINT + 'usuario', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
@@ -219,7 +220,7 @@ class Cadastro extends Component {
     let continuar = this.validaCampos(usuario);
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario', {
+      fetch(constante.ENDPOINT + 'usuario', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',

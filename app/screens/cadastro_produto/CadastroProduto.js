@@ -1,14 +1,8 @@
-/**
-* Interface de Cadastro de Produto.
-*/
-
 import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
     View,
-    Button,
-    CameraRoll,
     TextInput,
     ScrollView,
     Alert,
@@ -19,7 +13,6 @@ import {
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import DatePicker from 'react-native-datepicker';
-import CameraRollPicker from 'react-native-camera-roll-picker';
 import Camera from 'react-native-camera';
 import ImagePicker from 'react-native-image-picker';
 import TagInput from 'react-native-tag-input';
@@ -27,6 +20,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
+import * as constante from '../../constantes';
 
 
 export default class CadastroProduto extends Component {
@@ -56,7 +50,7 @@ export default class CadastroProduto extends Component {
  };
 
   preencherDietasArray() {
-   fetch('http://10.0.2.2:8080/restricaodietetica')
+   fetch(constante.ENDPOINT + 'restricaodietetica')
      .then((response) => response.json())
        .then((responseJson) => {
          var dietasBuscadas = [];
@@ -68,7 +62,7 @@ export default class CadastroProduto extends Component {
   };
 
   carregarCategoriasArray() {
-    fetch('http://10.0.2.2:8080/categoria')
+    fetch(constante.ENDPOINT + 'categoria')
       .then((response) => response.json())
         .then((responseJson) => {
           var categoriasBuscadas = [];
@@ -232,7 +226,7 @@ selecionarFoto() {
     let continuar = this.validaCampos(produto);
 
     if (continuar){
-    fetch('http://10.0.2.2:8080/produto', {
+    fetch(constante.ENDPOINT + 'produto', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

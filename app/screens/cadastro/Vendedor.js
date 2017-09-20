@@ -1,14 +1,11 @@
-/**
-* Campos da tela de cadastro específico de Vendedor:
-* Palavras Chave de identificação do produto, Nome fantasia da Empresa, e Meios de Pagamentos aceitos na compra
-*/
 import React, { Component } from 'react';
 import { TextInput, ScrollView, StyleSheet, View, Alert, ToastAndroid, Text, Dimensions } from 'react-native';
-import { Tile, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import NavigationBar from 'react-native-navbar';
+import * as constante from '../../constantes';
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,7 +22,7 @@ class Vendedor extends Component {
   }
 
   preencherPagamentosArray() {
-    fetch('http://10.0.2.2:8080/meiopagamento')
+    fetch(constante.ENDPOINT + 'meiopagamento')
       .then((response) => response.json())
         .then((responseJson) => {
           var pagamentosBuscados = [];
@@ -66,7 +63,7 @@ class Vendedor extends Component {
         "meiosPagamentos": meiosPagamentos
       }
 
-       fetch('http://10.0.2.2:8080/vendedor', {
+       fetch(constante.ENDPOINT + 'vendedor', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
