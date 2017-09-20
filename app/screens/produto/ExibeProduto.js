@@ -43,13 +43,8 @@ export default class ExibeProduto extends Component {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
-          restricoesDieteticasText: "Nenhuma restrição cadastrada",
-          restricaoEstilo: {
-            color: '#CCCCCC',
-            fontStyle: 'italic'
-          },
           dietaProdutoText: "Nenhuma dieta cadastrada",
-          dietaEstilo: {
+          restricaoEstilo: {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
@@ -72,7 +67,7 @@ export default class ExibeProduto extends Component {
 
   buscaProduto() {
     if (this.state.produtoId > 0) {
-      fetch("http://172.16.244.171:8080/produto/" + this.state.produtoId)
+      fetch("http://10.0.2.2:8080/produto/" + this.state.produtoId)
       .then((response) => response.json())
       .then((rJson) => {
         if (!rJson.errorMessage) {
@@ -81,7 +76,7 @@ export default class ExibeProduto extends Component {
             this.setState({imagemPrincipal: { uri: rJson.imagemPrincipal }});            
           }
           if (rJson.restricoesDieteticas.length > 0) {
-            this.setState({restricaoEstilo: styles.listText});
+            this.setState({dietaEstilo: styles.listText});
             var restricoes = "";
             for(i in rJson.restricoesDieteticas) {
               restricoes += rJson.restricoesDieteticas[i].descricao + " - ";
@@ -194,17 +189,6 @@ export default class ExibeProduto extends Component {
 
                   <Fumi
                     style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
-                    label={'Restrições dietéticas'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'asterisk'}
-                    iconColor={'darkslategrey'}
-                    value={this.state.restricoesDieteticasText}
-                    multiline={true}
-                    editable={false}
-                    inputStyle={this.state.restricaoEstilo}/>
-
-                  <Fumi
-                    style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
                     label={'Ingredientes'}
                     iconClass={FontAwesomeIcon}
                     iconName={'file-text-o'}
@@ -216,7 +200,7 @@ export default class ExibeProduto extends Component {
 
                   <Fumi
                     style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                    label={'Data'}
+                    label={'Data de preparo'}
                     iconClass={FontAwesomeIcon}
                     iconName={'calendar'}
                     iconColor={'darkslategrey'}
@@ -253,23 +237,23 @@ export default class ExibeProduto extends Component {
                           var novaQtd = this.state.quantidadeSelecionada - 1;
                           this.setState({quantidadeSelecionada: novaQtd});
                           var precoCalculado = this.state.produto.preco * novaQtd;
-                          this.setState({precoTotalText: precoCalculado});
+                          this.setState({precoTotalText: precoCalculado.toFixed(2)});
                         }
                       }}>
-                        <FontAwesomeIcon name="minus" size={40} color={'pink'}/>
+                        <FontAwesomeIcon name="minus" size={30} color={'pink'}/>
                       </TouchableOpacity>
                         <TextInput style={styles.baseText} 
-                          value={this.state.quantidadeSelecionada}
+                          value={this.state.quantidadeSelecionada.toString()}
                           onChangeText={(qtd) => this.setState({quantidadeSelecionada: qtd})} />
                       <TouchableOpacity onPress={() => {
                         if (this.state.quantidadeSelecionada < this.state.produto.quantidade) {
                           var novaQtd = this.state.quantidadeSelecionada + 1;
                           this.setState({quantidadeSelecionada: novaQtd});
                           var precoCalculado = this.state.produto.preco * novaQtd;
-                          this.setState({precoTotalText: precoCalculado});
+                          this.setState({precoTotalText: precoCalculado.toFixed(2)});
                         }
                       }}>
-                          <FontAwesomeIcon name="plus" size={40} color={'pink'}/>
+                          <FontAwesomeIcon name="plus" size={30} color={'pink'}/>
                       </TouchableOpacity>
                    </View>
 
@@ -280,10 +264,9 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'money'}
                     iconColor={'darkslategrey'}
-                    value={this.state.precoTotalText}
+                    value={this.state.precoTotalText.toString()}
                     editable={false}
                     inputStyle={styles.baseText}
-                    // Fazer multiplicação da quantidade pelo preço unitário onChangeText={(text) => { this.setState({textValue: text})
                   />
                 </ScrollView>
                 <TouchableOpacity style={styles.EvenBtn} onPress={this._confirmTest.bind(this)}>
