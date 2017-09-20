@@ -12,6 +12,7 @@ export default class PerfilCliente extends Component {
     super(props);
     this.state = {
       userId: this.props.navigation.state.params.userId,
+      clienteId: this.props.navigation.state.params.clienteId,      
       nomeText: '',
       dataNascimentoText: '',
       emailText: '',
@@ -42,7 +43,6 @@ export default class PerfilCliente extends Component {
               this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
             }
             this.setState({nomeText: responseJson.usuario.nome});
-            this.setState({})
             var dataNormal = new Date(responseJson.usuario.dataNasc);
             var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
             this.setState({dataNascimentoText: dataNasc});

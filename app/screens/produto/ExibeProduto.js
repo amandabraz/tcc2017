@@ -9,7 +9,8 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    TextInput
 } from 'react-native';
 import Popup from 'react-native-popup';
 import Modal from 'react-native-modal';
@@ -28,19 +29,22 @@ export default class ExibeProduto extends Component {
         super(props, context);
         this.state = {
           produtoId: this.props.navigation.state.params.produtoId,
-          nomeProdutoText: '',
+          imagemPrincipal: require('./img/camera11.jpg'),          
+          produto: {
+            nome: '',
+            preco: '',
+            categoria: {
+              descricao: ''
+            },
+            quantidade: ''
+          },
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
-          restricoesDieteticasText: "Nenhuma restrição cadastrada",
-          restricaoEstilo: {
-            color: '#CCCCCC',
-            fontStyle: 'italic'
-          },
           dietaProdutoText: "Nenhuma dieta cadastrada",
-          dietaEstilo: {
+          restricaoEstilo: {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
@@ -55,10 +59,56 @@ export default class ExibeProduto extends Component {
           precoText: '',
           observacaoText: '',
           precoTotalText: "0,00",
-          image: require('./img/camera11.jpg')
+          image: './img/camera11.jpg',
+          quantidadeSelecionada: 1
         };
-        this.buscaDadosProduto();
+        this.buscaProduto();
     }
+
+  buscaProduto() {
+    if (this.state.produtoId > 0) {
+      fetch("http://10.0.2.2:8080/produto/" + this.state.produtoId)
+      .then((response) => response.json())
+      .then((rJson) => {
+        if (!rJson.errorMessage) {
+          this.setState({produto: rJson});
+          if (rJson.imagemPrincipal) {
+            this.setState({imagemPrincipal: { uri: rJson.imagemPrincipal }});            
+          }
+          if (rJson.restricoesDieteticas.length > 0) {
+            this.setState({dietaEstilo: styles.listText});
+            var restricoes = "";
+            for(i in rJson.restricoesDieteticas) {
+              restricoes += rJson.restricoesDieteticas[i].descricao + " - ";
+            }
+            restricoes = restricoes.slice(0, -3);
+            this.setState({dietaProdutoText: restricoes});
+          }
+          if (rJson.tags.length > 0) {
+            this.setState({tagEstilo: styles.listText})
+            var tags = "";
+            for(i in rJson.tags) {
+              tags += "#" + rJson.tags[i].descricao + "  ";
+            }
+            tags = tags.slice(0, -2);
+            this.setState({tagsText: tags});
+          }
+          if (rJson.ingredientes.length > 0) {
+            this.setState({ingredientesEstilo: styles.listText})
+            var ingredientes = "";
+            for(i in rJson.ingredientes) {
+              ingredientes += rJson.ingredientes[i].item + ", ";
+            }
+            ingredientes = ingredientes.slice(0, -2);
+            this.setState({ingredientesText: ingredientes});
+          }
+          var dataNormal = new Date(rJson.dataPreparacao);
+          var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+          this.setState({dateText: dataPrep});
+        }
+      });
+    }
+  }
 
     _confirmTest() {
         this.popup.confirm({
@@ -71,7 +121,7 @@ export default class ExibeProduto extends Component {
                     fontWeight: 'bold'
                 },
                 callback: () => {
-                    this.props.navigation.navigate('ExibeComprovante');
+                    this.props.navigation.navigate('ExibeComprovante', {pedidoId: this.state.pedidoId});
                 }
             },
             cancel: {
@@ -83,10 +133,6 @@ export default class ExibeProduto extends Component {
         });
     }
 
-    buscaDadosProduto() {
-      //TODO: Fazer busca de dados do produto
-    }
-
     render() {
         return (
           <Image style={styles.headerBackground}
@@ -95,8 +141,7 @@ export default class ExibeProduto extends Component {
                   <View style={styles.profilepicWrap}>
                     <Image
                       style={styles.profilepic}
-                      //TODO: TROCAR POR IMAGEM DO PRODUTO
-                      source={require('./img/sabrina-copy.jpg')}/>
+                      source={this.state.imagemPrincipal}/>
                   </View>
                 </View>
                 <ScrollView>
@@ -107,7 +152,7 @@ export default class ExibeProduto extends Component {
                     iconSize={20}
                     iconName={'user'}
                     iconColor={'darkslategrey'}
-                    value={this.state.nomeProdutoText}
+                    value={this.state.produto.nome}
                     editable={false}
                     inputStyle={styles.titleText}/>
 
@@ -117,7 +162,7 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'check-square-o'}
                     iconColor={'darkslategrey'}
-                    value={this.state.categoriaText}
+                    value={this.state.produto.categoria.descricao}
                     editable={false}
                     inputStyle={styles.baseText}/>
 
@@ -144,17 +189,6 @@ export default class ExibeProduto extends Component {
 
                   <Fumi
                     style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
-                    label={'Restrições dietéticas'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'asterisk'}
-                    iconColor={'darkslategrey'}
-                    value={this.state.restricoesDieteticasText}
-                    multiline={true}
-                    editable={false}
-                    inputStyle={this.state.restricaoEstilo}/>
-
-                  <Fumi
-                    style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
                     label={'Ingredientes'}
                     iconClass={FontAwesomeIcon}
                     iconName={'file-text-o'}
@@ -166,7 +200,7 @@ export default class ExibeProduto extends Component {
 
                   <Fumi
                     style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                    label={'Data'}
+                    label={'Data de preparo'}
                     iconClass={FontAwesomeIcon}
                     iconName={'calendar'}
                     iconColor={'darkslategrey'}
@@ -181,7 +215,7 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'money'}
                     iconColor={'darkslategrey'}
-                    value={this.state.precoText}
+                    value={this.state.produto.preco.toString()}
                     editable={false}
                     inputStyle={styles.baseText}/>
 
@@ -192,26 +226,34 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'info'}
                     iconColor={'darkslategrey'}
-                    value={this.state.observacaoText}
+                    value={this.state.produto.observacao}
                     editable={false}
                     inputStyle={styles.baseText}/>
 
                   <View style={styles.baseQuantidadeText}>
                     <Text style={styles.baseText}>   Quantidade:  </Text>
                       <TouchableOpacity onPress={() => {
-                        if (produto.quantidade > 0) {
-                          produto.quantidade -= 1;
-                          this.alteraQuantidade(produto);
+                        if (this.state.quantidadeSelecionada > 0) {
+                          var novaQtd = this.state.quantidadeSelecionada - 1;
+                          this.setState({quantidadeSelecionada: novaQtd});
+                          var precoCalculado = this.state.produto.preco * novaQtd;
+                          this.setState({precoTotalText: precoCalculado.toFixed(2)});
                         }
-                        }}>
-                        <FontAwesomeIcon name="minus" size={40} color={'pink'}/>
+                      }}>
+                        <FontAwesomeIcon name="minus" size={30} color={'pink'}/>
                       </TouchableOpacity>
-                        <Text style={styles.baseText}> 01 </Text>
+                        <TextInput style={styles.baseText} 
+                          value={this.state.quantidadeSelecionada.toString()}
+                          onChangeText={(qtd) => this.setState({quantidadeSelecionada: qtd})} />
                       <TouchableOpacity onPress={() => {
-                          produto.quantidade += 1;
-                          this.alteraQuantidade(produto);
-                          }}>
-                          <FontAwesomeIcon name="plus" size={40} color={'pink'}/>
+                        if (this.state.quantidadeSelecionada < this.state.produto.quantidade) {
+                          var novaQtd = this.state.quantidadeSelecionada + 1;
+                          this.setState({quantidadeSelecionada: novaQtd});
+                          var precoCalculado = this.state.produto.preco * novaQtd;
+                          this.setState({precoTotalText: precoCalculado.toFixed(2)});
+                        }
+                      }}>
+                          <FontAwesomeIcon name="plus" size={30} color={'pink'}/>
                       </TouchableOpacity>
                    </View>
 
@@ -222,10 +264,9 @@ export default class ExibeProduto extends Component {
                     iconClass={FontAwesomeIcon}
                     iconName={'money'}
                     iconColor={'darkslategrey'}
-                    value={this.state.precoTotalText}
+                    value={this.state.precoTotalText.toString()}
                     editable={false}
                     inputStyle={styles.baseText}
-                    // Fazer multiplicação da quantidade pelo preço unitário onChangeText={(text) => { this.setState({textValue: text})
                   />
                 </ScrollView>
                 <TouchableOpacity style={styles.EvenBtn} onPress={this._confirmTest.bind(this)}>
@@ -234,15 +275,13 @@ export default class ExibeProduto extends Component {
 
                 <Popup ref={popup => this.popup = popup }/>
           </Image>
-
-
         );
     }
 };
 
 //CSS
 const titleConfig = {
-  title: 'Perfil Vendedor',
+  title: 'Comprar produto',
   tintColor: "#dc143c",
   fontFamily: 'Roboto',
 };
@@ -323,12 +362,7 @@ let styles = StyleSheet.create({
       fontWeight: 'bold',
       color: 'darkslategrey',
       fontFamily: 'Roboto',
-    },
-    baseText: {
-      fontFamily: 'Roboto',
-      color: 'darkslategrey',
-      fontSize: 20,
-    },
+    }
 });
 
 AppRegistry.registerComponent('tcc2017', () => tcc2017);

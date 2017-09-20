@@ -43,6 +43,7 @@ export const GerenciaCliente = StackNavigator({
   }
  }, {
   mode: 'card',
+  lazy: true,
   headerMode: 'none',
 });
 
@@ -62,6 +63,7 @@ export const BuscaPro = StackNavigator({
  },
  {
   mode: 'card',
+  lazy: true,
   headerMode: 'none',
 });
 
@@ -108,6 +110,7 @@ export const TabsCliente = TabNavigator({
     }
   },{
     tabBarComponent: TabView.TabBarBottom,
+    lazy: true,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
@@ -125,31 +128,34 @@ export const TabsCliente = TabNavigator({
     }
   });
 
-  export const GerenciaVendedor = StackNavigator({
-      PerfilVendedor: {
-        screen: PerfilVendedor
-      },
-      ConfiguracaoVendedor: {
-        screen: ConfiguracaoVendedor
-      } }, {
-      mode: 'card',
-      headerMode: 'none',
-    });
+export const GerenciaVendedor = StackNavigator({
+    PerfilVendedor: {
+      screen: PerfilVendedor
+    },
+    ConfiguracaoVendedor: {
+      screen: ConfiguracaoVendedor
+    } 
+  }, {
+    mode: 'card',
+    headerMode: 'none',
+    lazy: true
+  });
 
-    export const GerenciaProdutos = StackNavigator({
-      GerenciaProduto: {
-          screen: GerenciaProduto,
-        },
-      CadastroProduto: {
-          screen: CadastroProduto,
-          navigationOptions: {
-            title: 'Novo Produto'
-          },
-        }
-    }, {
-      mode: 'card',
-      headerMode: 'none'
-    });
+export const GerenciaProdutos = StackNavigator({
+  GerenciaProduto: {
+      screen: GerenciaProduto,
+    },
+  CadastroProduto: {
+      screen: CadastroProduto,
+      navigationOptions: {
+        title: 'Novo Produto'
+      },
+    }
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
 
 /**
 MENU SOMENTE PARA VENDEDORES
@@ -199,6 +205,7 @@ export const TabsVendedor = TabNavigator({
   },{
     tabBarComponent: TabView.TabBarBottom,
     tabBarPosition: 'bottom',
+    lazy: true,
     swipeEnabled: false,
     animationEnabled: false,
     backBehavior: 'none',
@@ -238,5 +245,6 @@ export const Root = StackNavigator({
   }
 }, {
   mode: 'card',
+  lazy: true,
   headerMode: 'none',
 });

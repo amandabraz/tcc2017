@@ -17,12 +17,12 @@ import {
   ScrollView
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {
   Icon,
   Button
 } from 'react-native-elements';
-import { Fumi } from 'react-native-textinput-effects';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Hideo } from 'react-native-textinput-effects';
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,42 +30,41 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.navigation.state.params.userId,
+      clienteId: this.props.navigation.state.params.clienteId,
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: [],
-      selectUserId: '',
-      vendedorId: '',
-      produtoId: ''
+      textoBusca: ''
     }
   }
 
-  setSearchText(event) {
-    let searchText = event.nativeEvent.text;
-    this.setState({searchText});
-    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
-     .then((response) => response.json())
-      .then((responseJson) => {
-            this.setState({resultadoPesquisaProduto: responseJson});
-        });
-    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
-     .then((response) => response.json())
-      .then((responseJson) => {
-            this.setState({resultadoPesquisaVendedor: responseJson});
-        });
+  setSearchText(searchText) {
+    if (searchText){
+      fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
+      .then((response) => response.json())
+        .then((responseJson) => {
+              this.setState({resultadoPesquisaProduto: responseJson});
+          });
+      fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
+      .then((response) => response.json())
+        .then((responseJson) => {
+              this.setState({resultadoPesquisaVendedor: responseJson});
+          });
+    }
   }
 
-  onButtonOpenProduct = () => {
-    this.props.navigation.navigate('ExibeProduto', {produtoId: this.state.produtoId});
+  onButtonOpenProduct = (produtoIdSelecionado) => {
+    this.props.navigation.navigate('ExibeProduto', {produtoId: produtoIdSelecionado});
   };
 
-  onButtonOpenVendedor = () => {
-    this.props.navigation.navigate('ExibeVendedor', {selectUserId: this.state.selectUserId, vendedorId: this.state.vendedorId });
+  onButtonOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
+    this.props.navigation.navigate('ExibeVendedor', {selectUserId: usuarioSelecionado, vendedorId: vendedorIdSelecionado });
   };
 
   buscaProduto() {
     var views = [];
     for(i in this.state.resultadoPesquisaProduto) {
       let produto = this.state.resultadoPesquisaProduto[i];
-      this.state.produtoId = produtoId.id;
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
@@ -82,7 +81,7 @@ export default class BuscaProduto extends Component {
                 name='shopping-cart'
                 type=' material-community'
                 color='#1C1C1C'
-                onPress={this.onButtonOpenProduct}
+                onPress={() => this.onButtonOpenProduct(produto.id)}
                 style={styles.imageResultSearch} />
             </View>
             <Text>{'\n'}</Text>
@@ -96,8 +95,6 @@ export default class BuscaProduto extends Component {
     var views = [];
     for(i in this.state.resultadoPesquisaVendedor) {
       let vendedor = this.state.resultadoPesquisaVendedor[i];
-      this.state.vendedorId = vendedor.id;
-      this.state.selectUserId = vendedor.usuario.id;
       views.push (
         <View key={i}>
         <View style={styles.oneResult}>
@@ -113,7 +110,7 @@ export default class BuscaProduto extends Component {
             name='person'
             type=' material-community'
             color='#1C1C1C'
-            onPress={this.onButtonOpenVendedor}
+            onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
             style={styles.imageResultSearch}
              />
         </View>
@@ -134,12 +131,16 @@ export default class BuscaProduto extends Component {
           tintColor="#023329"
         />
        <View style={styles.container}>
-         <TextInput
-           onSubmitEditing={this.setSearchText.bind(this)}
-           returnKeyType={'search'}
-           style={styles.searchBar}
-           value={this.state.searchText}
-           placeholder={'Search'} />
+       <Hideo
+          iconClass={FontAwesomeIcon}
+          iconName={'search'}
+          iconColor={'white'}
+          iconBackgroundColor={'#f2a59d'}
+          inputStyle={{ color: '#464949' }}
+          onChangeText={(textoBusca) => this.setState({textoBusca})}                    
+          onSubmitEditing={() => this.setSearchText(this.state.textoBusca)}
+          returnKeyType={'search'}
+          />
         </View>
 
         <ScrollView>
