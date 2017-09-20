@@ -1,8 +1,3 @@
-
-/**
-  Interface de Login para o usuário.
-*/
-
 import React, { Component } from 'react';
 import {
   Alert,
@@ -22,6 +17,7 @@ import {
 
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
+import * as constante from '../../constantes';
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
@@ -85,7 +81,7 @@ export default class Login extends Component {
     //Link de exemplo, item Signing up Users and Acquiring a JWT
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario/login', {
+      fetch(constante.ENDPOINT + 'usuario/login', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
