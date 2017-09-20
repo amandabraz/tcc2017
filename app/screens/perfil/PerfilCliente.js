@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
-import Modal from 'react-native-modal';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
-import CheckBox from 'react-native-check-box';
+import * as constante from '../../constantes';
 
 export default class PerfilCliente extends Component {
   constructor(props) {
@@ -34,7 +32,7 @@ export default class PerfilCliente extends Component {
   }
 
   buscaDadosCliente() {
-    fetch('http://10.0.2.2:8080/cliente/usuario/' + this.state.userId)
+    fetch(constante.ENDPOINT + 'cliente/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
@@ -173,13 +171,6 @@ export default class PerfilCliente extends Component {
   }
 }
 
-
-  //CSS
-  const titleConfig = {
-    title: 'Perfil Cliente',
-    tintColor: "#dc143c",
-    fontFamily: 'Roboto',
-  };
   const styles = StyleSheet.create({
     container: {
       flex: 1,
