@@ -25,9 +25,7 @@ export default class BuscaProduto extends Component {
     }
   }
 
-  setSearchText(event) {
-    let searchText = event.nativeEvent.text;
-    this.setState({searchText});
+  setSearchText(searchText) {
     fetch(constante.ENDPOINT + 'produto?filtro=' + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
