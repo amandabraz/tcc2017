@@ -22,7 +22,6 @@ import {
     Icon,
     Button
 } from 'react-native-elements';
-import CheckBox from 'react-native-check-box';
 
 export default class ExibeProduto extends Component {
     constructor(props, context) {
@@ -109,29 +108,6 @@ export default class ExibeProduto extends Component {
       });
     }
   }
-
-    _confirmTest() {
-        this.popup.confirm({
-            title: 'Confirmar Compra',
-            content: ['Deseja efetuar a compra deste produto?'],
-            ok: {
-                text: 'Confirmar',
-                style: {
-                    color: 'green',
-                    fontWeight: 'bold'
-                },
-                callback: () => {
-                    this.props.navigation.navigate('ExibeComprovante', {pedidoId: this.state.pedidoId});
-                }
-            },
-            cancel: {
-                text: 'Cancelar',
-                style: {
-                    color: 'red'
-                }
-            }
-        });
-    }
 
     render() {
         return (
