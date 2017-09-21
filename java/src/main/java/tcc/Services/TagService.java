@@ -6,6 +6,7 @@ import tcc.DAOs.TagDAO;
 import tcc.Models.Tag;
 
 import javax.transaction.Transactional;
+import java.util.Objects;
 
 @Service
 public class TagService {
@@ -16,7 +17,7 @@ public class TagService {
     public Tag verificarTag(Tag tag) {
         try {
             Tag tagEncontrada = tagDAO.findByDescricao(tag.getDescricao());
-            if (tagEncontrada != null) return tagEncontrada;
+            if (Objects.nonNull(tagEncontrada)) return tagEncontrada;
             return cadastraTag(tag);
         } catch (Exception e) {
             throw e;

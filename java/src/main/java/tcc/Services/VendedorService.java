@@ -72,7 +72,7 @@ public class VendedorService {
         }
     }
 
-    public Object editaVendedor(Vendedor vendedor) {
+    public Vendedor editaVendedor(Vendedor vendedor) {
         try {
             Vendedor vendedorEditado = null;
             if (Objects.isNull(buscaVendedor(vendedor.getId()))) {
