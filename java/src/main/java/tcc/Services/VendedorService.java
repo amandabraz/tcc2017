@@ -7,16 +7,19 @@ import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 
 import javax.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class VendedorService {
 
     @Autowired
     private VendedorDAO vendedorDAO;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Transactional
     public Vendedor salvaVendedor(Vendedor vendedor) {
@@ -65,6 +68,25 @@ public class VendedorService {
         try {
             return vendedorDAO.findByUsuario(usuario);
         } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Object editaVendedor(Vendedor vendedor) {
+        try {
+            Vendedor vendedorEditado = null;
+            if (Objects.isNull(buscaVendedor(vendedor.getId()))) {
+                return null;
+            }
+            Usuario usuarioEditado = usuarioService.editaUsuario(vendedor.getUsuario());
+            if (Objects.isNull(usuarioEditado)) {
+                return null;
+            }
+            vendedor.setUsuario(usuarioEditado);
+            vendedorEditado = this.salvaVendedor(vendedor);
+            return vendedorEditado;
+        } catch (Exception e) {
+            e.printStackTrace();
             throw e;
         }
     }
