@@ -11,14 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Cliente;
-import tcc.Models.Tag;
 import tcc.Models.Usuario;
 import tcc.Services.ClienteService;
-import tcc.Services.TagService;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value="/cliente")
@@ -26,10 +23,6 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
-
-    @Autowired
-    private TagService tagService;
-
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
@@ -41,23 +34,14 @@ public class ClienteController {
     public ResponseEntity cadastraCliente(@RequestBody Cliente cliente) {
         Cliente novoCliente = null;
         try {
-            Set<Tag> tagsSalvas = new HashSet<>();
-            Tag tagSalva;
-            for (Tag tagProposta : cliente.getTags()) {
-                tagSalva = tagService.verificarTag(tagProposta);
-                if (tagSalva != null) {
-                    tagsSalvas.add(tagSalva);
-                }
-            }
-            if (!tagsSalvas.isEmpty()) {
-                cliente.setTags(tagsSalvas);
-            }
             novoCliente = clienteService.salvaCliente(cliente);
         } catch (Exception ex) {
             return new ResponseEntity<>(new CustomError("Erro ao salvar Cliente"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(novoCliente.getId(), HttpStatus.OK);
     }
+
+
 
     @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity buscaClientePorUsuario(@PathVariable("id") Long usuarioId) {
@@ -67,6 +51,20 @@ public class ClienteController {
             return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao carregar dados do cliente"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity editaCliente(@RequestBody Cliente cliente) {
+        try {
+            Cliente clienteEditado = clienteService.editaCliente(cliente);
+            if (Objects.isNull(clienteEditado)) {
+                return new ResponseEntity<>(new CustomError("Erro ao salvar Cliente"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity(clienteEditado, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
         }
     }
 }
