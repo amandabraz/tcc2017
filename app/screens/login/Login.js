@@ -23,11 +23,18 @@ import {
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 
+import StartTimerLocation from '../localizacao/Timer.js';
+
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
+
+  componentDidMount(){
+    StartTimerLocation.start(3000, "hello darkness my old friend", 4);
+  }
+
   constructor(props) {
    super(props);
 
@@ -85,7 +92,7 @@ export default class Login extends Component {
     //Link de exemplo, item Signing up Users and Acquiring a JWT
 
     if (continuar) {
-      fetch('http://10.0.2.2:8080/usuario/login', {
+      fetch('http://10.0.3.2:8080/usuario/login', {
           method: 'POST',
           headers: {
           'Accept': 'application/json',
