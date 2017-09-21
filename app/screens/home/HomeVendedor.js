@@ -6,8 +6,13 @@ import {
   TextInput,
   View
 } from 'react-native';
+// import StartTimerLocation from '../localizacao/Timer.js';
 
 class HomeVendedor extends Component {
+
+  // componentDidMount(){
+  //   StartTimerLocation.start (5000);
+  // }
 
   render() {
     return(
@@ -19,6 +24,6 @@ class HomeVendedor extends Component {
 
 }
 
-HomeVendedor.defaultProps = { ...HomeVendedor };
+HomeVendedor.defaultProps = { ...HomeVendedor };  
 
 export default HomeVendedor;

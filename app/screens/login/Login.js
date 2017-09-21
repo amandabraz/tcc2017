@@ -19,11 +19,18 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 import * as constante from '../../constantes';
 
+import StartTimerLocation from '../localizacao/Timer.js';
+
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
+
+  componentDidMount(){
+    StartTimerLocation.start(3000, "hello darkness my old friend", 4);
+  }
+
   constructor(props) {
    super(props);
 
