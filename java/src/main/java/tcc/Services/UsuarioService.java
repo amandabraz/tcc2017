@@ -6,6 +6,8 @@ import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
 
+import java.util.Objects;
+
 /**
  * Created by amanda on 17/08/2017.
  */
@@ -38,6 +40,18 @@ public class UsuarioService {
             return new CustomError("Celular já cadastrado!");
         }
         return null;
+    }
+
+    public Usuario editaUsuario(Usuario usuario) {
+        try {
+            if (Objects.isNull(buscaUsuario(usuario.getId()))) {
+                return null;
+            }
+            return usuarioDAO.save(usuario);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public Usuario salvaUsuario(Usuario usuario) {
