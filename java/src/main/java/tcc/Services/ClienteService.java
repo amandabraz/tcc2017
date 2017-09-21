@@ -66,7 +66,6 @@ public class ClienteService {
             clienteEditado = this.salvaCliente(cliente);
             return clienteEditado;
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         }
     }
@@ -75,7 +74,6 @@ public class ClienteService {
         try {
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         }
     }

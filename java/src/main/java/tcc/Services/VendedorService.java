@@ -86,7 +86,6 @@ public class VendedorService {
             vendedorEditado = this.salvaVendedor(vendedor);
             return vendedorEditado;
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         }
     }
