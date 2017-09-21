@@ -72,13 +72,12 @@ public class VendedorController {
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity editaVendedor(@RequestBody Vendedor vendedor) {
         try {
-            Vendedor vendedorEditado = (Vendedor) vendedorService.editaVendedor(vendedor);
+            Vendedor vendedorEditado = vendedorService.editaVendedor(vendedor);
             if (Objects.isNull(vendedorEditado)) {
                 return new ResponseEntity<>(new CustomError("Erro ao salvar Vendedor"), HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity(vendedorEditado, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
         }
     }

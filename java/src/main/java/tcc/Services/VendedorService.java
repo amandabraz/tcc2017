@@ -72,7 +72,7 @@ public class VendedorService {
         }
     }
 
-    public Object editaVendedor(Vendedor vendedor) {
+    public Vendedor editaVendedor(Vendedor vendedor) {
         try {
             Vendedor vendedorEditado = null;
             if (Objects.isNull(buscaVendedor(vendedor.getId()))) {
@@ -86,7 +86,6 @@ public class VendedorService {
             vendedorEditado = this.salvaVendedor(vendedor);
             return vendedorEditado;
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         }
     }
