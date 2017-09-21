@@ -78,7 +78,6 @@ public class VendedorController {
             }
             return new ResponseEntity(vendedorEditado, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
         }
     }

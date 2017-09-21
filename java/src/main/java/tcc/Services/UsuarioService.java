@@ -49,7 +49,6 @@ public class UsuarioService {
             }
             return usuarioDAO.save(usuario);
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         }
     }
