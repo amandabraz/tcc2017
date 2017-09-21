@@ -47,14 +47,4 @@ public class UsuarioService {
             throw e;
         }
     }
-
-    public Usuario ativaLocalizacao(Long id) {
-        try {
-            Usuario usuario = this.buscaUsuario(id);
-            usuario.setLocalizacao(true);
-            return this.salvaUsuario(usuario);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
 }
