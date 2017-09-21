@@ -1,8 +1,3 @@
-/**
-* Interface de Busca de Produtos.
-* by https://github.com/maiarar
-*/
-
 import React, { Component } from 'react';
 import {
   Alert,
@@ -17,6 +12,7 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
+import * as constante from '../../constantes';
 
 const { width, height } = Dimensions.get("window");
 
@@ -32,12 +28,12 @@ export default class BuscaProduto extends Component {
   setSearchText(event) {
     let searchText = event.nativeEvent.text;
     this.setState({searchText});
-    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
+    fetch(constante.ENDPOINT + 'produto?filtro=' + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaProduto: responseJson});
         });
-    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
+    fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaVendedor: responseJson});
