@@ -41,7 +41,6 @@ class Vendedor extends Component {
        ToastAndroid.showWithGravity('Escolha ao menos um meio de pagamento', ToastAndroid.LONG, ToastAndroid.CENTER);
        return false;
      }
-
  }
 
 
