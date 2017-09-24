@@ -227,6 +227,87 @@ class GerenciaProduto extends Component {
     return views;
  };
 
+  editarProduto(produto) {
+   // TODO: navigate pra tela de edição do produto (sprint 13)
+ };
+
+  alteraQuantidade(produto) {
+   fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto/" + produto.id + "/qtd/" + produto.quantidade, {method: 'PUT'})
+     .then((response) => response.json())
+     .then((responseJson) => {
+       if (!responseJson.errorMessage) {
+         this.buscaProdutos();
+         this.mostraProdutos();
+       }
+     });
+  };
+
+  mostraProdutos() {
+    var views = [];
+    if(this.state.listaProdutos.length > 0){
+      for (i in this.state.listaProdutos) {
+        let produto = this.state.listaProdutos[i];
+        var dataNormal = new Date(produto.dataPreparacao);
+        var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+        produto.dataPreparacao = dataPrep;
+        views.push(
+          <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>
+            <View style={styles.oneResult}>
+              <View style={styles.parteEsquerda}>
+              <TouchableOpacity onPress={() => this.deletarProduto(produto)}>
+                <FontAwesomeIcon name="trash" size={20} color={'#ccc'} />
+              </TouchableOpacity>
+                <Image source={this.state.imagemProduto}
+                     style={styles.photo}
+                     justifyContent='flex-start'/>
+                <View style={{width: '65%', marginLeft: 12, marginRight: 12}}>
+                  <Text style={styles.textNome}> {produto.nome} </Text>
+                </View>
+              </View>
+              <View style={styles.parteDireita}>
+                <View style={styles.qtd}>
+                  <TouchableOpacity onPress={() => {
+                    produto.quantidade += 1;
+                    this.alteraQuantidade(produto);
+                  }}>
+                    <FontAwesomeIcon name="plus" size={20} color={'darkblue'}/>
+                  </TouchableOpacity>
+                  <Text style={styles.text}> {produto.quantidade} </Text>
+                  <TouchableOpacity onPress={() => {
+                    if (produto.quantidade > 0) {
+                      produto.quantidade -= 1;
+                      this.alteraQuantidade(produto);
+                    }
+                  }}>
+                    <FontAwesomeIcon name="minus" size={20} color={'darkblue'}/>
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={() => this.editarProduto(produto)}>
+                  <FontAwesomeIcon name="pencil" size={20} color={'#ccc'} />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{alignSelf: 'flex-start', paddingLeft: 40}}>
+              <Text style={styles.textoMenor}>
+                Preparado no dia {produto.dataPreparacao}
+                {'\n'}{'\n'}
+              </Text>
+            </View>
+          </View>
+        );
+     }
+   } else {
+     views.push(
+       <View key={0} style={{alignItems: 'center'}}>
+       <Text style={styles.texto}>
+         Você não tem produtos cadastrados! :(
+       </Text>
+       </View>
+     )
+   }
+    return views;
+ };
+
   render() {
     const titleConfig = {
       title: 'Gerência de Produtos',
