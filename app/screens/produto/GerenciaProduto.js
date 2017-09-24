@@ -119,7 +119,7 @@ class GerenciaProduto extends Component {
                     <FontAwesomeIcon name="minus" size={20} color={'darkblue'}/>
                   </TouchableOpacity>
                 </View>
-                
+
                 <TouchableOpacity onPress={() => this.editarProduto(produto)}>
                   <FontAwesomeIcon name="pencil" size={20} color={'#ccc'} />
                 </TouchableOpacity>
@@ -151,7 +151,7 @@ class GerenciaProduto extends Component {
  };
 
   alteraQuantidade(produto) {
-   fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto/" + produto.id + "/qtd/" + produto.quantidade, {method: 'PUT'})
+   fetch(constante.ENDPOINT + "/vendedor/" + this.state.vendedorId + "/produto/" + produto.id + "/qtd/" + produto.quantidade, {method: 'PUT'})
      .then((response) => response.json())
      .then((responseJson) => {
        if (!responseJson.errorMessage) {
