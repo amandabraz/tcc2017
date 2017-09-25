@@ -21,11 +21,6 @@ import * as constante from '../../constantes';
 
 import StartTimerLocation from '../localizacao/Timer.js';
 
-import StartTimerLocation from '../localizacao/Timer.js';
-
-import StartTimerLocation from '../localizacao/Timer.js';
-
-import StartTimerLocation from '../localizacao/Timer.js';
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
@@ -34,7 +29,7 @@ const { width, height } = Dimensions.get("window");
 export default class Login extends Component {
 
   componentDidMount(){
-    StartTimerLocation.start(3000, "hello darkness my old friend", 4);
+    StartTimerLocation.start(3000, "hello darkness my old friend");
   }
 
   constructor(props) {
@@ -94,11 +89,7 @@ export default class Login extends Component {
     //Link de exemplo, item Signing up Users and Acquiring a JWT
 
     if (continuar) {
-<<<<<<< HEAD
       fetch(constante.ENDPOINT + 'usuario/login', {
-=======
-      fetch('http://10.0.3.2:8080/usuario/login', {
->>>>>>> c3ce8c973fc93229d31ca0c8679caf811f641106
           method: 'POST',
           headers: {
           'Accept': 'application/json',
