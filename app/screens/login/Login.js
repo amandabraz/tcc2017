@@ -155,6 +155,7 @@ export default class Login extends Component {
                 secureTextEntry={true}
                 placeholder = "Senha"
                 placeholderTextColor = "#e2b1a3"
+                onSubmitEditing={this.eventLogin}
               />
 
               <TouchableOpacity
