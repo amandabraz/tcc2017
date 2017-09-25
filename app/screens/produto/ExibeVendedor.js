@@ -34,7 +34,7 @@ export default class ExibeVendedor extends Component {
   }
 
   buscaDadosVendedor() {
-    fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.selectUserId)
+    fetch(constante.ENDPOINT+'vendedor/usuario/' + this.state.selectUserId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {

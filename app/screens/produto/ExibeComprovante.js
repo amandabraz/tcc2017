@@ -44,7 +44,7 @@ export default class ExibeComprovante extends Component {
   }
 
   buscaDadosPedido() {
-    fetch('http://10.0.2.2:8080/pedido/' + this.state.pedidoId)
+    fetch(constante.ENDPOINT+'pedido/' + this.state.pedidoId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
