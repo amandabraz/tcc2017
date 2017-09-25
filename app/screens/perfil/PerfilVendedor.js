@@ -32,7 +32,9 @@ export default class PerfilVendedor extends Component {
       editavel: false,
       meiosPagamentoVendedor: {},
       vendedor: {},
-      imagemPerfilUrl: ''
+      titleTextClass: styles.titleText,
+      baseTextClass: styles.baseText,
+      pencilColor: '#fff'      
     };
     this.buscaDadosVendedor();
   }
@@ -73,23 +75,39 @@ export default class PerfilVendedor extends Component {
   }
   
   habilitaEdicao() {
-    this.setState({editavel: true});
+    if (this.state.editavel == false) {
+      this.setState({editavel: true, 
+        titleTextClass: styles.titleTextEdit, 
+        baseTextClass: styles.baseTextEdit,
+        pencilColor: '#ccc'});
+    } else {
+      this.setState({editavel: false, 
+        titleTextClass: styles.titleText, 
+        baseTextClass: styles.baseText,
+        pencilColor: '#fff'});
+    }
+    
   }
 
   mostraBotaoSalvar() {
     if (this.state.editavel == true) {
       return(
         <View style={{alignSelf: 'center'}}>
-          <Button title="Salvar"
-            color="#ffa07a"
-            onPress={() => this.salvaEdicaoVendedor()}
-            style={{justifyContent: 'stretch'}} />
+          <TouchableOpacity
+            style={styles.button}          
+            onPress={() => this.salvaEdicaoVendedor()}>
+            <Text style={styles.buttonText}>SALVAR</Text> 
+          </TouchableOpacity>
+
+
         </View>
       );
     }
   }
 
   salvaEdicaoVendedor() {
+    this.pagamentoEscolhido;
+
     const {
       state: {
         vendedorId,
@@ -99,7 +117,8 @@ export default class PerfilVendedor extends Component {
         vendedor,
         celularText,
         nomeFantasiaText,
-        imagemPerfilUrl
+        imagemPerfil,
+        meiosPagamentoVendedor
       }
     } = this;
 
@@ -111,18 +130,18 @@ export default class PerfilVendedor extends Component {
           "deletado": false,
           "perfil": "V",
           "nome": nomeText,
-          "email": "m@m.m",
-          "dataNasc": 871430400000,
-          "cpf": "61536393134",
+          "email": vendedor.usuario.email,
+          "dataNasc": vendedor.usuario.dataNasc,
+          "cpf": vendedor.usuario.cpf,
           "ddd": celularText.substr(0,2),
           "telefone": celularText.substr(2,10),
           "notificacao": false,
           "bloqueado": false,
-          "imagemPerfil": imagemPerfilUrl
+          "imagemPerfil": imagemPerfil.uri
       },
       "nomeFantasia": nomeFantasiaText,
       "meiosPagamentos": meiosPagamentoVendedor
-  }
+    }
 
     fetch(constante.ENDPOINT + 'vendedor', {
       method: 'PUT',
@@ -152,9 +171,9 @@ export default class PerfilVendedor extends Component {
         editable={false}
         inputStyle={this.state.pagamentoEstilo}/>
       );
+    } else {
+      return this.mostrarCheckboxesPagamento();
     }
-    this.preencherPagamentosArray()
-    return this.mostrarCheckboxesPagamento();
   }
 
   onClick(descricao) {
@@ -177,6 +196,7 @@ export default class PerfilVendedor extends Component {
   }
 
   mostrarCheckboxesPagamento() {
+    this.preencherPagamentosArray()    
     var views = [];
     for(i in this.state.pagamentosArray) {
       let meioPagamento = this.state.pagamentosArray[i];  
@@ -190,7 +210,7 @@ export default class PerfilVendedor extends Component {
         <View key={i} style={styles.item}>
           <CheckBox
             style={{flex: 1, padding: 10}}
-            onClick={()=>this.onClick(meioPagamento)}
+            onClick={() => this.onClick(meioPagamento)}
             isChecked={meioPagamento.checked}
             leftText={meioPagamento.descricao}
             />
@@ -224,16 +244,17 @@ export default class PerfilVendedor extends Component {
           </View>
         </View>
 
-        <View style={[styles.bar, styles.barItem]}>
-          <TouchableOpacity onPress={this.openConfiguracao}>
-            <Icon name="settings" size={25} color={'#fff'}/>
-            <Text style={styles.barText}>
-              {this.state.confText}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{alignSelf: 'flex-end'}} onPress={() => this.habilitaEdicao()}>
-            <FontAwesomeIcon name="pencil" size={20} color={'#fff'} />
-          </TouchableOpacity>    
+        <View style={styles.bar}>
+          <View style={{alignItems: 'flex-start', width: '80%'}}>
+            <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
+              <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{alignItems: 'flex-end', width: '20%'}}>          
+            <TouchableOpacity onPress={() => this.habilitaEdicao()}>
+              <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
+            </TouchableOpacity>    
+          </View>
         </View>
 
         <ScrollView>
@@ -246,49 +267,50 @@ export default class PerfilVendedor extends Component {
             iconColor={'darkslategrey'}
             value={this.state.nomeText}
             editable={this.state.editavel}
-            inputStyle={styles.titleText}
+            inputStyle={this.state.titleTextClass}
             onChangeText={(nome) => this.setState({nomeText: nome})}/>
 
           <Fumi
-              style={styles.inputDimensions}
-              label={'CPF'}
-              iconClass={FontAwesomeIcon}
-              iconName={'info'}
-              iconColor={'darkslategrey'}
-              value={this.state.CPFText}
-              editable={false}
-              inputStyle={styles.baseText}/>
+            style={styles.inputDimensions}
+            label={'CPF'}
+            iconClass={FontAwesomeIcon}
+            iconName={'info'}
+            iconColor={'darkslategrey'}
+            value={this.state.CPFText}
+            editable={false}
+            inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
 
           <Fumi
-              style={styles.inputDimensions}
-              label={'Celular'}
-              iconClass={FontAwesomeIcon}
-              iconName={'mobile'}
-              iconColor={'darkslategrey'}
-              value={this.state.celularText}
-              editable={this.state.editavel}
-              inputStyle={styles.baseText}
-              onChangeText={(celular) => this.setState({celularText: celular})}/>
+            style={styles.inputDimensions}
+            label={'Data de Nascimento'}
+            iconClass={FontAwesomeIcon}
+            iconName={'calendar'}
+            iconColor={'darkslategrey'}
+            value={this.state.dataNascimentoText}
+            editable={false}
+            inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
 
           <Fumi
-              style={styles.inputDimensions}
-              label={'Data de Nascimento'}
-              iconClass={FontAwesomeIcon}
-              iconName={'calendar'}
-              iconColor={'darkslategrey'}
-              value={this.state.dataNascimentoText}
-              editable={false}
-              inputStyle={styles.baseText}/>
+            style={styles.inputDimensions}
+            label={'Email'}
+            iconClass={FontAwesomeIcon}
+            iconName={'at'}
+            iconColor={'darkslategrey'}
+            value={this.state.emailText}
+            editable={false}
+            inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
 
           <Fumi
-              style={styles.inputDimensions}
-              label={'Email'}
-              iconClass={FontAwesomeIcon}
-              iconName={'at'}
-              iconColor={'darkslategrey'}
-              value={this.state.emailText}
-              editable={false}
-              inputStyle={styles.baseText}/>
+            style={styles.inputDimensions}
+            label={'Celular'}
+            iconClass={FontAwesomeIcon}
+            iconName={'mobile'}
+            iconColor={'darkslategrey'}
+            value={this.state.celularText}
+            editable={this.state.editavel}
+            inputStyle={this.state.baseTextClass}
+            maxLength={11}              
+            onChangeText={(celular) => this.setState({celularText: celular})}/>
 
           <Fumi
             style={styles.inputDimensions}
@@ -298,7 +320,7 @@ export default class PerfilVendedor extends Component {
             iconColor={'darkslategrey'}
             value={this.state.nomeFantasiaText}
             editable={this.state.editavel}
-            inputStyle={styles.baseText}
+            inputStyle={this.state.baseTextClass}
             onChangeText={(nomeFantasia) => this.setState({nomeFantasiaText: nomeFantasia})}/>
 
           {this.meiosPagamento()}
@@ -346,19 +368,25 @@ export default class PerfilVendedor extends Component {
   },
   bar:{
     width,
-    borderTopColor: '#fff',
-    borderTopWidth: 4,
+    padding: '5%',
     backgroundColor: 'darkslategrey',
     flexDirection: 'row'
-  },
-  barItem:{
-    padding: 18,
-    alignItems: 'center'
   },
   baseText: {
     fontFamily: 'Roboto',
     color: 'darkslategrey',
     fontSize: 20,
+  },
+  baseTextEdit: {
+    fontFamily: 'Roboto',
+    color: '#333d47',
+    fontSize: 20,
+  },
+  baseTextNaoEditavel: {
+    fontFamily: 'Roboto',
+    color: '#808080',
+    fontStyle: 'italic',
+    fontSize: 16,
   },
   listText: {
     fontFamily: 'Roboto',
@@ -367,7 +395,6 @@ export default class PerfilVendedor extends Component {
   },
   barText: {
     fontFamily: 'Roboto',
-    textAlign: 'center',
     color: '#fff',
     fontSize: 18,
   },
@@ -377,6 +404,27 @@ export default class PerfilVendedor extends Component {
     color: 'darkslategrey',
     fontFamily: 'Roboto',
   },
+  titleTextEdit: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#333d47',
+    fontFamily: 'Roboto',
+  },
+  button: {
+    borderRadius: 5,    
+    justifyContent: 'center',
+    height: 35,
+    width: 200,
+    backgroundColor: "darkslategrey",
+    alignSelf: 'stretch',
+    marginBottom: 20
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color:'white',
+    alignSelf: 'center',
+  }
 });
 
 AppRegistry.registerComponent('tcc2017', () => tcc2017);
