@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
-import { AppRegistry, Button, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView, Dimensions } from 'react-native';
+import { AppRegistry, 
+  Button, 
+  Text, 
+  StyleSheet, 
+  StatusBar, 
+  TouchableOpacity, 
+  View, 
+  Image, 
+  ScrollView, 
+  Dimensions,
+  ToastAndroid } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import * as constante from '../../constantes';
 import CheckBox from 'react-native-check-box';
+import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
+import * as Animatable from 'react-native-animatable';
 
 const { width, height } = Dimensions.get("window");
 
+const MAX_HEIGHT = 250;
 
 export default class PerfilVendedor extends Component {
   constructor(props) {
@@ -30,13 +43,15 @@ export default class PerfilVendedor extends Component {
       celularText: '',
       confText: '  Configuração',
       editavel: false,
-      meiosPagamentoVendedor: {},
+      meiosPagamentoVendedor: [],
       vendedor: {},
       titleTextClass: styles.titleText,
       baseTextClass: styles.baseText,
-      pencilColor: '#fff'      
+      pencilColor: '#fff',
+      meiosPagamento: [] 
     };
     this.buscaDadosVendedor();
+    this.buscaMeiosPagamento();
   }
 
   buscaDadosVendedor() {
@@ -49,6 +64,15 @@ export default class PerfilVendedor extends Component {
       });
   };
 
+  buscaMeiosPagamento() {
+    fetch(constante.ENDPOINT + 'meiopagamento')
+    .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({meiosPagamento: responseJson});
+        }
+      });
+  }
   prepararVendedor(responseJson) {
     this.setState({vendedor: responseJson});
     if (responseJson.usuario.imagemPerfil) {
@@ -70,7 +94,11 @@ export default class PerfilVendedor extends Component {
       }
       pagamentos = pagamentos.slice(0, -3);
       this.setState({meiosPagamentoText: pagamentos});
-      this.setState({meiosPagamentoVendedor: responseJson.meiosPagamentos});            
+      var meioPagVendedor = [];
+      for (j in responseJson.meiosPagamentos) {
+        meioPagVendedor.push(responseJson.meiosPagamentos[j]);
+      }
+      this.setState({meiosPagamentoVendedor: meioPagVendedor});            
     }
   }
   
@@ -154,6 +182,8 @@ export default class PerfilVendedor extends Component {
       .then((rJson) => {
         if (!rJson.errorMessage) {
           this.prepararVendedor(rJson);
+          this.setState({editavel: false});
+          ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);          
         }
       });
   }
@@ -176,48 +206,46 @@ export default class PerfilVendedor extends Component {
     }
   }
 
-  onClick(descricao) {
-    descricao.checked = !descricao.checked;
-    var pagamentos = this.state.meiosPagamentoVendedor;
-    pagamentos.push(descricao);
+  onCheckMeioPagamento(meioPag) {
+    meioPag.checked = !meioPag.checked;    
+    var objMeioPag = {
+      "id": meioPag.id,
+      "descricao": meioPag.descricao
+    };
+    var pagamentos = this.state.meiosPagamentoVendedor;    
+    if (meioPag.checked) {
+      pagamentos.push(objMeioPag);
+    } else {
+      pagamentos.pop(objMeioPag);
+    }
     this.setState({ meiosPagamentoVendedor: pagamentos });
   }
 
-  preencherPagamentosArray() {
-    fetch(constante.ENDPOINT + 'meiopagamento')
-      .then((response) => response.json())
-        .then((responseJson) => {
-          var pagamentosBuscados = [];
-          for (i in responseJson) {
-              pagamentosBuscados.push(responseJson[i]);
-          }
-          this.setState({pagamentosArray: pagamentosBuscados});
-        });
-  }
-
   mostrarCheckboxesPagamento() {
-    this.preencherPagamentosArray()    
-    var views = [];
-    for(i in this.state.pagamentosArray) {
-      let meioPagamento = this.state.pagamentosArray[i];  
-      meioPagamento.checked = false;                
-      for(j in this.state.meiosPagamentoVendedor) {
-        if (meioPagamento.id == this.state.meiosPagamentoVendedor[j].id) {
-          meioPagamento.checked = true;
+    var pagamentosVendedor = this.state.meiosPagamento;
+    if (pagamentosVendedor) {
+      var views = [];
+      for (i in pagamentosVendedor) {
+        let meioPagamento = pagamentosVendedor[i];  
+        meioPagamento.checked = false;                
+        for (j in this.state.meiosPagamentoVendedor) {
+          if (meioPagamento.id === this.state.meiosPagamentoVendedor[j].id) {
+            meioPagamento.checked = true;
+          }
         }
+        views.push (
+          <View key={i} style={styles.item}>
+            <CheckBox
+              style={{flex: 1, padding: 10}}
+              onClick={() => this.onCheckMeioPagamento(meioPagamento)}
+              isChecked={meioPagamento.checked}
+              leftText={meioPagamento.descricao}
+              />
+          </View>
+        );
       }
-      views.push (
-        <View key={i} style={styles.item}>
-          <CheckBox
-            style={{flex: 1, padding: 10}}
-            onClick={() => this.onClick(meioPagamento)}
-            isChecked={meioPagamento.checked}
-            leftText={meioPagamento.descricao}
-            />
-        </View>
-      );
-    }
-    return views;
+      return views;  
+    } 
   }
 
  pagamentoEscolhido = () => {
@@ -234,99 +262,127 @@ export default class PerfilVendedor extends Component {
 
   render () {
     return (
-        <Image style={styles.headerBackground}
-               source={require('./img/fundo2.png')}>
-        <View style={styles.header}>
-          <View style={styles.profilepicWrap}>
-            <Image
-              style={styles.profilepic}
-              source={this.state.imagemPerfil}/>
+      <View style={{ flex: 1 }}>      
+        <StatusBar barStyle="light-content" />
+        <HeaderImageScrollView
+          maxHeight={MAX_HEIGHT}
+          minHeight={1}
+          maxOverlayOpacity={0.6}
+          minOverlayOpacity={0.3}
+          fadeOutForeground
+          renderHeader={() => <Image source={this.state.imagemPerfil} style={styles.image} />}
+
+          renderForeground={() =>
+            <Animatable.View
+            style={styles.navTitleView}
+            ref={navTitleView => {
+              this.navTitleView = navTitleView;
+            }}>
+            <View style={styles.bar}>
+            <View style={{alignItems: 'flex-start', width: '80%'}}>
+              <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
+                <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{alignItems: 'flex-end', width: '20%'}}>          
+              <TouchableOpacity onPress={() => this.habilitaEdicao()}>
+                <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
+              </TouchableOpacity>    
+            </View>
           </View>
-        </View>
+          </Animatable.View>
+          }>
+          <TriggeringView
+            style={styles.section}
+            onHide={() => this.navTitleView.fadeInUp(200)}
+            onDisplay={() => this.navTitleView.fadeOut(100)
+            }>
+            <View style={styles.bar}>
+              <View style={{alignItems: 'flex-start', width: '80%'}}>
+                <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
+                  <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{alignItems: 'flex-end', width: '20%'}}>          
+                <TouchableOpacity onPress={() => this.habilitaEdicao()}>
+                  <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
+                </TouchableOpacity>    
+              </View>
+            </View>
+          </TriggeringView>
 
-        <View style={styles.bar}>
-          <View style={{alignItems: 'flex-start', width: '80%'}}>
-            <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-              <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{alignItems: 'flex-end', width: '20%'}}>          
-            <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-              <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-            </TouchableOpacity>    
-          </View>
-        </View>
 
-        <ScrollView>
-          <Fumi
-            style={styles.inputDimensions}
-            label={'Nome'}
-            iconClass={FontAwesomeIcon}
-            iconSize={20}
-            iconName={'user'}
-            iconColor={'darkslategrey'}
-            value={this.state.nomeText}
-            editable={this.state.editavel}
-            inputStyle={this.state.titleTextClass}
-            onChangeText={(nome) => this.setState({nomeText: nome})}/>
+            <ScrollView >
+              <Fumi
+                style={styles.inputDimensions}
+                label={'Nome'}
+                iconClass={FontAwesomeIcon}
+                iconSize={20}
+                iconName={'user'}
+                iconColor={'darkslategrey'}
+                value={this.state.nomeText}
+                editable={this.state.editavel}
+                inputStyle={this.state.titleTextClass}
+                onChangeText={(nome) => this.setState({nomeText: nome})}/>
 
-          <Fumi
-            style={styles.inputDimensions}
-            label={'CPF'}
-            iconClass={FontAwesomeIcon}
-            iconName={'info'}
-            iconColor={'darkslategrey'}
-            value={this.state.CPFText}
-            editable={false}
-            inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
+              <Fumi
+                style={styles.inputDimensions}
+                label={'CPF'}
+                iconClass={FontAwesomeIcon}
+                iconName={'info'}
+                iconColor={'darkslategrey'}
+                value={this.state.CPFText}
+                editable={false}
+                inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
 
-          <Fumi
-            style={styles.inputDimensions}
-            label={'Data de Nascimento'}
-            iconClass={FontAwesomeIcon}
-            iconName={'calendar'}
-            iconColor={'darkslategrey'}
-            value={this.state.dataNascimentoText}
-            editable={false}
-            inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
+              <Fumi
+                style={styles.inputDimensions}
+                label={'Data de Nascimento'}
+                iconClass={FontAwesomeIcon}
+                iconName={'calendar'}
+                iconColor={'darkslategrey'}
+                value={this.state.dataNascimentoText}
+                editable={false}
+                inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
 
-          <Fumi
-            style={styles.inputDimensions}
-            label={'Email'}
-            iconClass={FontAwesomeIcon}
-            iconName={'at'}
-            iconColor={'darkslategrey'}
-            value={this.state.emailText}
-            editable={false}
-            inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
+              <Fumi
+                style={styles.inputDimensions}
+                label={'Email'}
+                iconClass={FontAwesomeIcon}
+                iconName={'at'}
+                iconColor={'darkslategrey'}
+                value={this.state.emailText}
+                editable={false}
+                inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
 
-          <Fumi
-            style={styles.inputDimensions}
-            label={'Celular'}
-            iconClass={FontAwesomeIcon}
-            iconName={'mobile'}
-            iconColor={'darkslategrey'}
-            value={this.state.celularText}
-            editable={this.state.editavel}
-            inputStyle={this.state.baseTextClass}
-            maxLength={11}              
-            onChangeText={(celular) => this.setState({celularText: celular})}/>
+              <Fumi
+                style={styles.inputDimensions}
+                label={'Celular'}
+                iconClass={FontAwesomeIcon}
+                iconName={'mobile'}
+                iconColor={'darkslategrey'}
+                value={this.state.celularText}
+                editable={this.state.editavel}
+                inputStyle={this.state.baseTextClass}
+                maxLength={11}              
+                onChangeText={(celular) => this.setState({celularText: celular})}/>
 
-          <Fumi
-            style={styles.inputDimensions}
-            label={'Nome da loja'}
+              <Fumi
+                style={styles.inputDimensions}
+                label={'Nome da loja'}
                 iconClass={MaterialsIcon}
                 iconName={'store'}
-            iconColor={'darkslategrey'}
-            value={this.state.nomeFantasiaText}
-            editable={this.state.editavel}
-            inputStyle={this.state.baseTextClass}
-            onChangeText={(nomeFantasia) => this.setState({nomeFantasiaText: nomeFantasia})}/>
+                iconColor={'darkslategrey'}
+                value={this.state.nomeFantasiaText}
+                editable={this.state.editavel}
+                inputStyle={this.state.baseTextClass}
+                onChangeText={(nomeFantasia) => this.setState({nomeFantasiaText: nomeFantasia})}/>
 
-          {this.meiosPagamento()}
-          {this.mostraBotaoSalvar()}
-      </ScrollView>
-      </Image>
+              {this.meiosPagamento()}
+              {this.mostraBotaoSalvar()}
+          </ScrollView>
+        </HeaderImageScrollView>
+      </View>     
     );
   }
 }
@@ -424,6 +480,22 @@ export default class PerfilVendedor extends Component {
     fontSize: 16,
     color:'white',
     alignSelf: 'center',
+  },
+  image: {
+    height: MAX_HEIGHT,
+    width,
+    alignSelf: 'stretch',
+    resizeMode: 'cover',
+  },navTitleView: {
+    height: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 16,
+    opacity: 0,
+  },section: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#cccccc',
+    backgroundColor: 'white',
   }
 });
 
