@@ -16,6 +16,7 @@ import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
+import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
 import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
@@ -53,6 +54,9 @@ export const BuscaPro = StackNavigator({
   },
   ExibeProduto: {
     screen: ExibeProduto
+  },
+  ExibeComprar: {
+    screen: ExibeComprar
   },
   ExibeComprovante: {
     screen: ExibeComprovante
@@ -134,7 +138,7 @@ export const GerenciaVendedor = StackNavigator({
     },
     ConfiguracaoVendedor: {
       screen: ConfiguracaoVendedor
-    } 
+    }
   }, {
     mode: 'card',
     headerMode: 'none',

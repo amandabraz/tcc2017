@@ -25,6 +25,7 @@ export default class ExibeProduto extends Component {
         super(props, context);
         this.state = {
           produtoId: this.props.navigation.state.params.produtoId,
+          clienteId: this.props.navigation.state.params.clienteId,
           imagemPrincipal: require('./img/camera11.jpg'),
           imagemVendedor: require('./img/camera11.jpg'),
           produto: {
@@ -107,68 +108,16 @@ export default class ExibeProduto extends Component {
     }
   }
 
-<<<<<<< HEAD
-    render() {
-        return (
-          <Image style={styles.headerBackground}
-                 source={require('./img/fundo2.png')}>
-                 <View style={styles.header}>
-                  <View style={styles.profilepicWrap}>
-                    <Image
-                      style={styles.profilepic}
-                      source={this.state.imagemPrincipal}/>
-                  </View>
-                </View>
-                <ScrollView>
-                  <Fumi
-                    style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                    label={'Nome'}
-                    iconClass={FontAwesomeIcon}
-                    iconSize={20}
-                    iconName={'user'}
-                    iconColor={'darkslategrey'}
-                    value={this.state.produto.nome}
-                    editable={false}
-                    inputStyle={styles.titleText}/>
+  onButtonOpenProduct = (produtoIdSelecionado) => {
+    this.props.navigation.navigate('ExibeComprar', {produtoId: this.state.produtoId, clienteId: this.state.clienteId});
+  };
 
-                  <Fumi
-                    style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                    label={'Categoria'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'check-square-o'}
-                    iconColor={'darkslategrey'}
-                    value={this.state.produto.categoria.descricao}
-                    editable={false}
-                    inputStyle={styles.baseText}/>
-
-                  <Fumi
-                    style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                    label={'Dieta'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'cutlery'}
-                    iconColor={'darkslategrey'}
-                    value={this.state.dietaProdutoText}
-                    editable={false}
-                    inputStyle={this.state.dietaEstilo}/>
-
-                  <Fumi
-                    style={{ backgroundColor: 'transparent', width: 375, height: 110 }}
-                    label={'Tags'}
-                    iconClass={FontAwesomeIcon}
-                    iconName={'hashtag'}
-                    iconColor={'darkslategrey'}
-                    value={this.state.tagsText}
-                    editable={false}
-                    multiline={true}
-                    inputStyle={this.state.tagEstilo}/>
-=======
 render() {
   return (
     <View style={styles.container}>
       <HeaderImageScrollView
         maxHeight={300}
         minHeight ={100}
->>>>>>> compraProduto
 
      renderHeader={() => (
        <Image style={styles.profilepic}
@@ -300,7 +249,7 @@ render() {
     </View>
     </TriggeringView>
     </HeaderImageScrollView>
-      <TouchableOpacity style={styles.EvenBtn}>
+      <TouchableOpacity style={styles.EvenBtn} onPress={this.onButtonOpenProduct.bind(this)}>
         <Text style={styles.EvenBtnText}>Comprar</Text>
       </TouchableOpacity>
   </View>
