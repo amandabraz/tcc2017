@@ -11,6 +11,7 @@ import { AppRegistry,
   Dimensions,
   ToastAndroid } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import * as constante from '../../constantes';
@@ -402,8 +403,8 @@ export default class PerfilVendedor extends Component {
               <Fumi
                 style={styles.inputDimensions}
                 label={'Nome da loja'}
-                iconClass={FontAwesomeIcon}
-                iconName={'user'}
+                iconClass={MaterialsIcon}
+                iconName={'store'}
                 iconColor={'darkslategrey'}
                 value={this.state.nomeFantasiaText}
                 editable={this.state.editavel}

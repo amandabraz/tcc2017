@@ -87,4 +87,14 @@ public class ProdutoService {
             throw e;
         }
     }
+
+    @Transactional
+    public Produto buscaProduto(Long id) {
+        try {
+            return produtoDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
 }
