@@ -21,6 +21,7 @@ import {
 } from 'react-native-elements';
 import QRCode from 'react-native-qrcode';
 import NavigationBar from 'react-native-navbar';
+import * as constante from '../../constantes';
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");

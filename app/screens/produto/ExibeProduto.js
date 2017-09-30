@@ -25,6 +25,7 @@ export default class ExibeProduto extends Component {
         super(props, context);
         this.state = {
           produtoId: this.props.navigation.state.params.produtoId,
+          clienteId: this.props.navigation.state.params.clienteId,
           imagemPrincipal: require('./img/camera11.jpg'),
           imagemVendedor: require('./img/camera11.jpg'),
           produto: {
@@ -106,6 +107,10 @@ export default class ExibeProduto extends Component {
       });
     }
   }
+
+  onButtonOpenProduct = (produtoIdSelecionado) => {
+    this.props.navigation.navigate('ExibeComprar', {produtoId: this.state.produtoId, clienteId: this.state.clienteId});
+  };
 
 render() {
   return (
@@ -244,7 +249,7 @@ render() {
     </View>
     </TriggeringView>
     </HeaderImageScrollView>
-      <TouchableOpacity style={styles.EvenBtn}>
+      <TouchableOpacity style={styles.EvenBtn} onPress={this.onButtonOpenProduct.bind(this)}>
         <Text style={styles.EvenBtnText}>Comprar</Text>
       </TouchableOpacity>
   </View>
