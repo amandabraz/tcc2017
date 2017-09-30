@@ -7,11 +7,8 @@ import {
   View,
   Alert
 } from 'react-native';
-<<<<<<< HEAD
-// import StartTimerLocation from '../localizacao/Timer.js';
-=======
+import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
->>>>>>> 0d9eeba30e1d7b804cd6e46703abe138a450b033
 
 class HomeVendedor extends Component {
   constructor(props) {
@@ -24,13 +21,11 @@ class HomeVendedor extends Component {
     };
   };
 
-  // componentDidMount(){
-  //   StartTimerLocation.start (5000);
-  // }
-
   componentWillMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
+      // timer ajustado para cada 10 minutos
+      StartTimerLocation.start(600000, this.state.userId);
     }, (error) => {
       this.setState({gps: 0});
     });

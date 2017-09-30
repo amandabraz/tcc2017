@@ -19,22 +19,12 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
 import * as constante from '../../constantes';
 
-import startTimerLocation from '../localizacao/TimerGeolocation.js';
-import MyGeolocation from '../localizacao/MyGeolocation.js';
-
-
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
-
-  componentDidMount(){
-    MyGeolocation.returnPosition();
-    // let loc = Geolocation.returnPosition();
-    // Alert.alert(loc.latitude);
-  }
-
+  
   constructor(props) {
    super(props);
 
