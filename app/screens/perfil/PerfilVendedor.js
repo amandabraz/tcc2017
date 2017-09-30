@@ -17,6 +17,7 @@ import * as constante from '../../constantes';
 import CheckBox from 'react-native-check-box';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
+import ImagePicker from 'react-native-image-picker';
 
 const { width, height } = Dimensions.get("window");
 
@@ -259,6 +260,32 @@ export default class PerfilVendedor extends Component {
 
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoVendedor');}
 
+  trocaImagemPerfil() {
+    var options = {
+      title: 'Selecione sua foto',
+      takePhotoButtonTitle: 'Tirar uma foto',
+      chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+      cancelButtonTitle: 'Cancelar',
+      storageOptions: {
+        skipBackup: false,
+        path: 'images'
+      }
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+        //do nothing
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        let source = 'data:image/jpeg;base64,' + response.data;
+        this.setState({
+          image: {uri: response.uri, width: 200, height: 200, changed: true}
+        });
+        this.setState({imagemPerfil: source});
+      }
+    });
+  }
+
   render () {
     return (
       <View style={{ flex: 1 }}>      
@@ -269,8 +296,14 @@ export default class PerfilVendedor extends Component {
           maxOverlayOpacity={0.6}
           minOverlayOpacity={0.3}
           fadeOutForeground
-          renderHeader={() => <Image source={this.state.imagemPerfil} style={styles.image} />}
-
+          renderHeader={() => 
+              <Image source={this.state.imagemPerfil} style={styles.image}>
+                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}  
+                    onPress={this.trocaImagemPerfil.bind(this)}>            
+                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>     
+                </TouchableOpacity>
+              </Image>
+          }
           renderForeground={() =>
             <Animatable.View
             style={styles.navTitleView}
