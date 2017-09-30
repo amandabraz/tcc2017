@@ -9,6 +9,8 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
+import * as constante from '../../constantes';
+
 
 //TODO: Pegar dados do vendedor certo, o que o clique foi feito
 
@@ -16,6 +18,7 @@ export default class ExibeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      clienteId: this.props.navigation.state.params.clienteId,      
       selectUserId: this.props.navigation.state.params.selectUserId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       nomeText: '',
@@ -75,7 +78,7 @@ export default class ExibeVendedor extends Component {
       let produto = this.state.resultadoProduto[i];
       views.push (
         <View key={i}>
-        <TouchableOpacity onPress={this.onButtonOpenProduct}>
+        <TouchableOpacity onPress={() => this.onButtonOpenProduct(produto)}>
           <View style={styles.oneResult}>
               <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
@@ -103,8 +106,8 @@ export default class ExibeVendedor extends Component {
       return views;
 }
 
-onButtonOpenProduct = () => {
-  this.props.navigation.navigate('ExibeProduto');
+onButtonOpenProduct = (produto) => {
+  this.props.navigation.navigate('ExibeProduto', {produtoId: produto.id, clienteId: this.state.clienteId});
 };
 
   render () {
@@ -133,16 +136,6 @@ onButtonOpenProduct = () => {
             value={this.state.nomeFantasiaText}
             editable={false}
             inputStyle={styles.baseText}/>
-
-          <Fumi
-              style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-              label={'Contato'}
-              iconClass={FontAwesomeIcon}
-              iconName={'mobile'}
-              iconColor={'darkslategrey'}
-              value={this.state.celularText}
-              editable={false}
-              inputStyle={styles.baseText}/>
 
           <Fumi
               style={{ backgroundColor: 'transparent', width: 375, height: 70 }}

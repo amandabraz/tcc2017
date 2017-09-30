@@ -215,7 +215,7 @@ export default class ExibeComprar extends Component {
               <View style={{width: '40%'}}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableOpacity onPress={() => {
-                  if (this.state.quantidadeSelecionada > 0) {
+                  if (this.state.quantidadeSelecionada > 1) {
                           var novaQtd = this.state.quantidadeSelecionada - 1;
                           this.setState({quantidadeSelecionada: novaQtd.toString()});
                           var precoCalculado = this.state.produto.preco * novaQtd;

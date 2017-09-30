@@ -48,11 +48,18 @@ export default class BuscaProduto extends Component {
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeProduto', {produtoId: produtoIdSelecionado, clienteId: this.state.clienteId});
+    this.props.navigation.navigate('ExibeProduto', 
+          {produtoId: produtoIdSelecionado, 
+            clienteId: this.state.clienteId
+          });
   };
 
   onButtonOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
-    this.props.navigation.navigate('ExibeVendedor', {selectUserId: usuarioSelecionado, vendedorId: vendedorIdSelecionado });
+    this.props.navigation.navigate('ExibeVendedor', 
+          {selectUserId: usuarioSelecionado, 
+            vendedorId: vendedorIdSelecionado,
+            clienteId: this.state.clienteId 
+          });
   };
 
   buscaProduto() {
