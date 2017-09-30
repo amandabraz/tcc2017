@@ -68,7 +68,7 @@ public class ProdutoService {
                 produtoADeletar.setDeletado(true);
             }
             return this.salvaProduto(produtoADeletar);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw e;
         }
     }
@@ -83,7 +83,7 @@ public class ProdutoService {
                 produtoAAlterar.setQuantidade(novaQtd);
             }
             return this.salvaProduto(produtoAAlterar);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw e;
         }
     }

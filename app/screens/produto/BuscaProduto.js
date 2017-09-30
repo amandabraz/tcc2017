@@ -13,6 +13,7 @@ import {
 import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,6 +21,12 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      screenName: 'TabsCliente',      
+      gps: 0,      
+      userId: this.props.navigation.state.params.userId,
+      clienteId: this.props.navigation.state.params.clienteId,
+      imagemProduto: require('./img/pacoca.jpg'),
+      imagemVendedor: require('./img/sabrina-copy.jpg'),
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: []
     }
@@ -96,35 +103,41 @@ export default class BuscaProduto extends Component {
   return views;
 }
 
-
-
   render() {
-    return (
-      <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="#023329"
-        />
-       <View style={styles.container}>
-         <TextInput
-           onSubmitEditing={this.setSearchText.bind(this)}
-           returnKeyType={'search'}
-           style={styles.searchBar}
-           value={this.state.searchText}
-           placeholder={'Search'} />
-        </View>
-
-        <ScrollView>
-          <View style={styles.centralView}>
-            <View style={styles.results}>
-              {this.buscaProduto()}
-              {this.buscaVendedor()}
-
-            </View>
+    if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
+      return(<LocalizacaoNaoPermitida 
+        screenName={this.state.screenName}
+        navigation={this.props.navigation}
+        userId={this.state.userId} />
+      );
+    } else {
+      return (
+        <View style={{flex: 1}}>
+          <NavigationBar
+            title={titleConfig}
+            tintColor="#023329"
+          />
+        <View style={styles.container}>
+          <TextInput
+            onSubmitEditing={this.setSearchText.bind(this)}
+            returnKeyType={'search'}
+            style={styles.searchBar}
+            value={this.state.searchText}
+            placeholder={'Search'} />
           </View>
-        </ScrollView>
-      </View>
-    );
+
+          <ScrollView>
+            <View style={styles.centralView}>
+              <View style={styles.results}>
+                {this.buscaProduto()}
+                {this.buscaVendedor()}
+
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
 
