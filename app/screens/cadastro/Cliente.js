@@ -70,7 +70,7 @@ class Cliente extends Component {
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
             ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            this.props.navigation.navigate('TabsCliente', {userId: this.state.userId});
+            this.props.navigation.navigate('TabsCliente', {userId: responseJson.usuario.id, clienteId: responseJson.id});
           } else {
             Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
           }
