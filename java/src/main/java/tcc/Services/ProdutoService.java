@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProdutoService {
@@ -96,5 +97,19 @@ public class ProdutoService {
             throw e;
         }
 
+    }
+
+    public Produto editaProduto(Produto produto) throws IOException {
+        try {
+            Produto produtoEditado = null;
+            if (Objects.isNull(buscaProduto(produto.getId()))) {
+                return null;
+            }
+
+            produtoEditado = this.salvaProduto(produto);
+            return produtoEditado;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
