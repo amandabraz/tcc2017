@@ -40,6 +40,10 @@ public class Pagamento implements Serializable {
         super();
     }
 
+    public Pagamento(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
