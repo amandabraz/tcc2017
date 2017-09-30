@@ -21,6 +21,7 @@ import tcc.Services.TagService;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -125,6 +126,19 @@ public class ProdutoController {
             return new ResponseEntity<Produto>(produtoEncontrado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar o produto"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/produto", method = RequestMethod.PUT)
+    public ResponseEntity editaProduto(@RequestBody Produto produto) {
+        try {
+            Produto produtoEditado = produtoService.editaProduto(produto);
+            if (Objects.isNull(produtoEditado)) {
+                return new ResponseEntity<>(new CustomError("Erro ao salvar o produto"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity(produtoEditado, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do produto! Tente novamente");
         }
     }
 }
