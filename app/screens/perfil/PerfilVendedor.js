@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import * as constante from '../../constantes';
@@ -31,7 +32,7 @@ export default class PerfilVendedor extends Component {
     fetch(constante.ENDPOINT + 'vendedor/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMssage) {
+          if (!responseJson.errorMessage) {
             if (responseJson.usuario.imagemPerfil) {
               this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
             }
@@ -135,8 +136,8 @@ export default class PerfilVendedor extends Component {
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome da loja'}
-                iconClass={FontAwesomeIcon}
-                iconName={'user'}
+                iconClass={MaterialsIcon}
+                iconName={'store'}
                 iconColor={'darkslategrey'}
                 value={this.state.nomeFantasiaText}
                 editable={false}
