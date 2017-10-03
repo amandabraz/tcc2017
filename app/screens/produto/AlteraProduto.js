@@ -22,13 +22,13 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
 
-export default class CadastroProduto extends Component {
+export default class AlteraProduto extends Component {
   constructor(props) {
   super(props);
 
   this.state = {
-     produtoId: 11,
-     vendedorId: 1,
+     produtoId: this.props.navigation.state.params.produtoId,
+     vendedorId: this.props.navigation.state.params.vendedorId,
      dataPreparacao: '',
      tags: [],
      ingredientes: [],
