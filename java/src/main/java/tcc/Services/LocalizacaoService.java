@@ -11,9 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by amanda on 18/09/17.
- */
 @Service
 public class LocalizacaoService {
 
@@ -39,10 +36,9 @@ public class LocalizacaoService {
     /**
      * Salva uma nova localizacao de acordo com o usuário.
      * @param novaLocalizacao
-     * @param userToSetLocalization
      */
-    public void salvaNovaLocalizacao(Localizacao novaLocalizacao, Usuario userToSetLocalization) {
-        localizacaoDAO.save(novaLocalizacao);
+    public Localizacao salvaNovaLocalizacao(Localizacao novaLocalizacao) {
+        return localizacaoDAO.save(novaLocalizacao);
     }
 
     /**

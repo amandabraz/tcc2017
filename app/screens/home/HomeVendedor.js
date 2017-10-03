@@ -7,6 +7,7 @@ import {
   View,
   Alert
 } from 'react-native';
+import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 
 class HomeVendedor extends Component {
@@ -23,6 +24,8 @@ class HomeVendedor extends Component {
   componentWillMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
+      // timer ajustado para cada 10 minutos
+      StartTimerLocation.start(600000, this.state.userId);
     }, (error) => {
       this.setState({gps: 0});
     });
