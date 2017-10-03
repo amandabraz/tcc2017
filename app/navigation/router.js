@@ -16,6 +16,7 @@ import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
+import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
@@ -153,8 +154,11 @@ export const GerenciaProdutos = StackNavigator({
       screen: CadastroProduto,
       navigationOptions: {
         title: 'Novo Produto'
+      }
+    },
+  AlteraProduto: {
+        screen: AlteraProduto,
       },
-    }
 }, {
   mode: 'card',
   headerMode: 'none',
