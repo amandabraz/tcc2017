@@ -22,7 +22,6 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
 
-
 export default class CadastroProduto extends Component {
   constructor(props) {
   super(props);
@@ -83,15 +82,17 @@ export default class CadastroProduto extends Component {
 
          if (rJson.tags.length > 0) {
            var tags = [];
-           for(i in rJson.tags) {
-             this.onChangeTags(rJson.tags[i].descricao)
+           var tagEncontrada = rJson.tags;
+           for(i in tagEncontrada) {
+             tags.push(tagEncontrada[i].descricao);
            }
            this.setState({tags: tags});
          }
          if (rJson.ingredientes.length > 0) {
            var ingredientes = [];
-           for(i in rJson.ingredientes) {
-             this.onChangeIngredientes(rJson.ingredientes[i].item);
+           var ingredienteEncontrado = rJson.ingredientes;
+           for(i in ingredienteEncontrado) {
+             ingredientes.push(ingredienteEncontrado[i].item);
            }
            this.setState({ingredientes: ingredientes});
          }
@@ -136,7 +137,6 @@ onClickRestricao(restricao) {
    } else {
      restricoes.pop(objRestricoes);
    }
-   restricoes.push(descricao);
    this.setState({restricoesProdutos: restricoes});
  };
 
@@ -199,8 +199,7 @@ carregarCategoriasArray() {
      if(dataAlterada!=dataNormal){
        dataSalvar = dataAlterada;
      } else {
-       dataSalvar = dataNormal;
-     }
+       dataSalvar = dataNormal;}
         const {
           state: {
             produtoId,
@@ -246,6 +245,8 @@ carregarCategoriasArray() {
             if (!rJson.errorMessage) {
               this.buscaProduto(rJson);
               ToastAndroid.showWithGravity('Produto atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+            } else {
+                ToastAndroid.showWithGravity(rJson.errorMessage, ToastAndroid.LONG, ToastAndroid.CENTER);
             }
           });
     }
@@ -253,7 +254,7 @@ carregarCategoriasArray() {
 render() {
     const {goBack} = this.props.navigation;
     const inputIngredientes = {
-      placeholder: 'ex: farinha, leite em pó',
+      placeholder: 'insira mais ingredientes',
       placeholderTextColor: '#CCCCCC',
       fontSize: 16,
       fontFamily: 'Roboto',
@@ -262,7 +263,7 @@ render() {
     };
 
   const inputTags = {
-     placeholder: 'ex: brigadeiro, paçoca, bolo',
+     placeholder: 'insira mais tags',
      placeholderTextColor: '#CCCCCC',
      fontSize: 16,
      fontFamily: 'Roboto',
@@ -369,23 +370,41 @@ return (
                 </ScrollView>
             </View>
 
-            <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 100 }}
-                  label={'Ingredientes'}
-                  iconClass={MaterialsIcon}
-                  value={this.state.ingredientes.toString()}
-                  onChangeText={(ingredientes) => this.setState({ingredientes: ingredientes})}
-                  iconName={'list'}
-                  iconColor={'#8B636C'}
-                  multiline={true}/>
+            <View style={styles.linhaTitulo}>
+              <MaterialsIcon name="list" size={23} color={'#9fa1a3'} /><Text style={styles.titulo}>
+                Ingredientes:
+              </Text>
+            </View>
+            <View style={{ width: 378, height: 86, alignItems: 'center'}}>
+              <TagInput
+                value={this.state.ingredientes}
+                onChange={this.onChangeIngredientes}
+                tagColor="#8B636C"
+                tagTextColor="white"
+                tagAlign="center"
+                tagContainerStyle={{height: 24}}
+                tagTextStyle = {{fontSize: 18}}
+                inputProps={inputIngredientes}
+                numberOfLines={15}/>
+              </View>
 
-           <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 100 }}
-                 label={'Tags'}
-                 iconClass={FontAwesomeIcon}
-                 value={this.state.tags.toString()}
-                 onChangeText={(tags) => this.setState({tags: tags})}
-                 iconName={'hashtag'}
-                 iconColor={'#8B636C'}
-                 multiline={true}/>
+            <View style={styles.linhaTitulo}>
+              <FontAwesomeIcon name="hashtag" size={17} color={'#9fa1a3'} /><Text style={styles.titulo}>
+                Tags relacionadas:
+              </Text>
+            </View>
+            <View style={{ width: 378, height: 86, alignItems: 'center'}}>
+             <TagInput
+                value={this.state.tags}
+                onChange={this.onChangeTags}
+                tagColor="#8B636C"
+                tagTextColor="white"
+                tagAlign="center"
+                tagContainerStyle={{height: 24}}
+                tagTextStyle = {{fontSize: 18}}
+                inputProps={inputTags}
+                numberOfLines={15}/>
+              </View>
 
             </View>
             <View style={styles.container}>
