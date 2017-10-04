@@ -10,7 +10,6 @@ import tcc.Models.Vendedor;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,15 +63,9 @@ public class LocalizacaoService {
 
     public Localizacao encontraLocalizacaoRecenteVendedor(Vendedor vendedor) {
         try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.HOUR_OF_DAY, -6);
-            Date seisHorasAtras = calendar.getTime();
             Localizacao localizacaoMaisRecente = localizacaoDAO.findFirstByUsuarioOrderByHorarioDesc(vendedor.getUsuario());
-            if (Objects.nonNull(localizacaoMaisRecente)
-                    && localizacaoMaisRecente.getHorario().after(seisHorasAtras)) {
-                return localizacaoMaisRecente;
-            }
-            return null;
+
+            return localizacaoMaisRecente;
         } catch (Exception e) {
             throw e;
         }

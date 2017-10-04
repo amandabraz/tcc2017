@@ -25,7 +25,7 @@ class HomeVendedor extends Component {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
       // timer ajustado para cada 10 minutos
-      StartTimerLocation.start(600000, this.state.userId);
+      StartTimerLocation.start(60000, this.state.userId);
     }, (error) => {
       this.setState({gps: 0});
     });

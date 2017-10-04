@@ -11,7 +11,9 @@ import tcc.Utils.UploadUtil;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -59,15 +61,30 @@ public class ProdutoService {
     }
 
     private void organizaPorDistancia(List<Produto> listaProdutosFiltrada, double latCliente, double lngCliente, double altCliente) {
-        for (Produto produto : listaProdutosFiltrada) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -6);
+        Date seisHorasAtras = calendar.getTime();
+
+        List<Produto> listaProdutos = listaProdutosFiltrada;
+
+        for (Produto produto : listaProdutos) {
             Localizacao localizacaoVendedor = localizacaoService.encontraLocalizacaoRecenteVendedor(produto.getVendedor());
+
             if (Objects.nonNull(localizacaoVendedor)) {
-                produto.setDistancia(localizacaoService.calcularDistancia(latCliente, lngCliente, altCliente,
-                    localizacaoVendedor.getLatitude(), localizacaoVendedor.getLongitude(), localizacaoVendedor.getAltitude()));
-            } else {
-                // Setando um valor impossivel pra identificar que não há localizacao recente no banco
-                produto.setDistancia(-1);
+                double distancia = localizacaoService.calcularDistancia(latCliente, lngCliente, altCliente,
+                        localizacaoVendedor.getLatitude(), localizacaoVendedor.getLongitude(), localizacaoVendedor.getAltitude());
+                if (distancia < 10001) {
+                    if (localizacaoVendedor.getHorario().after(seisHorasAtras)) {
+                        produto.setDistancia(distancia);
+                        continue;
+                    } else {
+                        // Setando um valor impossivel pra identificar que não há localizacao recente no banco
+                        produto.setDistancia(-1);
+                        continue;
+                    }
+                }
             }
+            listaProdutosFiltrada.remove(produto);
         }
         Collections.sort(listaProdutosFiltrada);
     }

@@ -95,23 +95,23 @@ export default class BuscaProduto extends Component {
       if (distancia > 0) {
         if (distancia > 1000) {
           let convert = (distancia/1000).toString().split('.');
-          distancia = convert[0] + ' KM';
+          distancia = convert[0] + ' km';
         } else {
-          distancia = distancia.toString() + ' M';          
+          distancia = distancia.toString() + ' m';          
         }
       } else {
-        distanciaEstilo.fontSize = 12;
-        distancia = "OFFLINE HÁ MAIS DE 6H";
+        distanciaEstilo.fontSize = 13;
+        distancia = "offline há mais de 6h";
       }
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
-            <View style={{width: "30%"}}>          
+            <View style={{width: "25%"}}>          
               <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
             </View>                     
-            <View style={{width: "40%"}}>
+            <View style={{width: "45%"}}>
               <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
               <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
               <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
