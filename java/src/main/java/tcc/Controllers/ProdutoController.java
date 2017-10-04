@@ -21,6 +21,7 @@ import tcc.Services.TagService;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -39,28 +40,8 @@ public class ProdutoController {
     @RequestMapping(value = "/produto", method = RequestMethod.POST)
     public ResponseEntity cadastraProduto(@RequestBody Produto produto) {
         try {
-            Set<Tag> tagsSalvas = new HashSet<>();
-            Tag tagSalva;
-            for (Tag tagProposta : produto.getTags()) {
-                tagSalva = tagService.verificarTag(tagProposta);
-                if (tagSalva != null) {
-                    tagsSalvas.add(tagSalva);
-                }
-            }
-            if (!tagsSalvas.isEmpty()) {
-                produto.setTags(tagsSalvas);
-            }
-            Set<Ingrediente> ingredientesSalvos = new HashSet<>();
-            Ingrediente ingredienteSalvo;
-            for (Ingrediente ingredienteProposto : produto.getIngredientes()) {
-                ingredienteSalvo = ingredienteService.verificarIngrediente(ingredienteProposto);
-                if (ingredienteSalvo != null) {
-                    ingredientesSalvos.add(ingredienteSalvo);
-                }
-            }
-            if (!ingredientesSalvos.isEmpty()) {
-                produto.setIngredientes(ingredientesSalvos);
-            }
+            verificarTags(produto);
+            verificarIngredientes(produto);
             Produto novoProduto = produtoService.salvaProduto(produto);
             if (novoProduto != null) {
                 return new ResponseEntity<>(novoProduto.getId(), HttpStatus.OK);
@@ -69,6 +50,34 @@ public class ProdutoController {
             }
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao salvar Produto"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void verificarIngredientes(@RequestBody Produto produto) {
+        Set<Ingrediente> ingredientesSalvos = new HashSet<>();
+        Ingrediente ingredienteSalvo;
+        for (Ingrediente ingredienteProposto : produto.getIngredientes()) {
+            ingredienteSalvo = ingredienteService.verificarIngrediente(ingredienteProposto);
+            if (ingredienteSalvo != null) {
+                ingredientesSalvos.add(ingredienteSalvo);
+            }
+        }
+        if (!ingredientesSalvos.isEmpty()) {
+            produto.setIngredientes(ingredientesSalvos);
+        }
+    }
+
+    private void verificarTags(@RequestBody Produto produto) {
+        Set<Tag> tagsSalvas = new HashSet<>();
+        Tag tagSalva;
+        for (Tag tagProposta : produto.getTags()) {
+            tagSalva = tagService.verificarTag(tagProposta);
+            if (tagSalva != null) {
+                tagsSalvas.add(tagSalva);
+            }
+        }
+        if (!tagsSalvas.isEmpty()) {
+            produto.setTags(tagsSalvas);
         }
     }
 
@@ -125,6 +134,21 @@ public class ProdutoController {
             return new ResponseEntity<Produto>(produtoEncontrado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar o produto"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/produto", method = RequestMethod.PUT)
+    public ResponseEntity editaProduto(@RequestBody Produto produto) {
+        try {
+            verificarTags(produto);
+            verificarIngredientes(produto);
+            Produto produtoEditado = produtoService.editaProduto(produto);
+            if (Objects.isNull(produtoEditado)) {
+                return new ResponseEntity<>(new CustomError("Erro ao salvar o produto"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity(produtoEditado, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do produto! Tente novamente");
         }
     }
 }
