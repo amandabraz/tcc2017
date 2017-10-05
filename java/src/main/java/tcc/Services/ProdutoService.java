@@ -4,20 +4,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tcc.DAOs.ProdutoDAO;
+import tcc.Models.Localizacao;
 import tcc.Models.Produto;
 import tcc.Utils.UploadUtil;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProdutoService {
 
     @Autowired
     private ProdutoDAO produtoDAO;
+
+    @Autowired
+    private LocalizacaoService localizacaoService;
 
     @Transactional
     public Produto salvaProduto(Produto produto) throws IOException {
@@ -32,7 +40,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public List<Produto> encontraProduto(String filtro) {
+    public List<Produto> encontraProduto(String filtro, double lat, double lng, double alt) {
         try {
             List<Produto> listaProdutos = new ArrayList<>();
             listaProdutos.addAll(produtoDAO.findByDeletadoAndNomeIgnoreCaseContaining(false, filtro));
@@ -44,11 +52,41 @@ public class ProdutoService {
 
             // remove resultados duplicados
             List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
+            organizaPorDistancia(listaProdutosFiltrada, lat, lng, alt);
 
             return listaProdutosFiltrada;
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    private void organizaPorDistancia(List<Produto> listaProdutosFiltrada, double latCliente, double lngCliente, double altCliente) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -6);
+        Date seisHorasAtras = calendar.getTime();
+
+        List<Produto> listaProdutos = listaProdutosFiltrada;
+
+        for (Produto produto : listaProdutos) {
+            Localizacao localizacaoVendedor = localizacaoService.encontraLocalizacaoRecenteVendedor(produto.getVendedor());
+
+            if (Objects.nonNull(localizacaoVendedor)) {
+                double distancia = localizacaoService.calcularDistancia(latCliente, lngCliente, altCliente,
+                        localizacaoVendedor.getLatitude(), localizacaoVendedor.getLongitude(), localizacaoVendedor.getAltitude());
+                if (distancia < 10001) {
+                    if (localizacaoVendedor.getHorario().after(seisHorasAtras)) {
+                        produto.setDistancia(distancia);
+                        continue;
+                    } else {
+                        // Setando um valor impossivel pra identificar que não há localizacao recente no banco
+                        produto.setDistancia(-1);
+                        continue;
+                    }
+                }
+            }
+            listaProdutosFiltrada.remove(produto);
+        }
+        Collections.sort(listaProdutosFiltrada);
     }
 
     @Transactional
