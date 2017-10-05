@@ -66,7 +66,8 @@ class GerenciaProduto extends Component {
 
   editarProduto(produto) {
     this.props.navigation.navigate('AlteraProduto',
-          {produtoId: produto.id,
+          {userId: this.state.userId,
+            produtoId: produto.id,
             vendedorId: this.state.vendedorId
           });
  };

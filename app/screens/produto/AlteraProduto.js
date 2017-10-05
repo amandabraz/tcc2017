@@ -29,6 +29,7 @@ export default class AlteraProduto extends Component {
   this.state = {
      produtoId: this.props.navigation.state.params.produtoId,
      vendedorId: this.props.navigation.state.params.vendedorId,
+     userId: this.props.navigation.state.params.userId,
      dataPreparacao: '',
      tags: [],
      ingredientes: [],
@@ -112,6 +113,51 @@ export default class AlteraProduto extends Component {
      ingredientes,
    });
 };
+
+validaCampos = (produto) => {
+  let camposVazios = [];
+  let erros = [];
+  //validar nome
+  if (!produto.nome) {
+      camposVazios.push("nome");
+  }
+  //validar preco
+  if (!produto.preco) {
+    camposVazios.push("preço");
+  }
+  //validar data de preparo
+  if (!produto.dataPreparacao) {
+    camposVazios.push("data de preparo");
+  }
+
+  // validar quantidade
+  if (!produto.quantidade) {
+    camposVazios.push("quantidade disponível");
+  }
+
+  // validar categoria
+  if (!produto.categoria) {
+    camposVazios.push("categoria");
+  }
+
+  if (camposVazios.length) {
+    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    return false;
+  }
+  if (erros.length) {
+    ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+    return false;
+  }
+  return true;
+}
+
+quebraEmLinhas(lista) {
+  var listaQuebrada = "";
+  for(item in lista) {
+    listaQuebrada += lista[item] + "\n";
+  }
+  return listaQuebrada.trim();
+}
 
  preencherDietasArray() {
   fetch(constante.ENDPOINT + 'restricaodietetica')
@@ -233,6 +279,9 @@ carregarCategoriasArray() {
           "score": 0,
         }
 
+        let continuar = this.validaCampos(produtoEditado);
+
+      if (continuar){
         fetch(constante.ENDPOINT + 'produto', {
           method: 'PUT',
           headers: {
@@ -245,10 +294,12 @@ carregarCategoriasArray() {
             if (!rJson.errorMessage) {
               this.buscaProduto(rJson);
               ToastAndroid.showWithGravity('Produto atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              this.props.navigation.navigate('GerenciaProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
             } else {
                 ToastAndroid.showWithGravity(rJson.errorMessage, ToastAndroid.LONG, ToastAndroid.CENTER);
             }
           });
+      }
     }
 
 render() {
