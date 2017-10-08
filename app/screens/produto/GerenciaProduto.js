@@ -13,6 +13,7 @@ import {
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import * as constante from '../../constantes';
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,7 +29,7 @@ class GerenciaProduto extends Component {
   };
 
   buscaProdutos() {
-    fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto", {method: 'GET'})
+    fetch(constante.ENDPOINT + 'vendedor/' + this.state.vendedorId + '/produto', {method: 'GET'})
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
@@ -48,7 +49,7 @@ class GerenciaProduto extends Component {
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'OK', onPress: () => {
-          fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto/" + produto.id, {method: 'DELETE'})
+          fetch(constante.ENDPOINT + 'vendedor/' + this.state.vendedorId + '/produto/' + produto.id, {method: 'DELETE'})
             .then((response) => response.json())
             .then((responseJson) => {
               if (!responseJson.errorMessage) {
@@ -64,11 +65,15 @@ class GerenciaProduto extends Component {
   };
 
   editarProduto(produto) {
-   // TODO: navigate pra tela de edição do produto (sprint 13)
+    this.props.navigation.navigate('AlteraProduto',
+          {userId: this.state.userId,
+            produtoId: produto.id,
+            vendedorId: this.state.vendedorId
+          });
  };
 
   alteraQuantidade(produto) {
-   fetch("http://10.0.2.2:8080/vendedor/" + this.state.vendedorId + "/produto/" + produto.id + "/qtd/" + produto.quantidade, {method: 'PUT'})
+   fetch(constante.ENDPOINT + 'vendedor/' + this.state.vendedorId + '/produto/' + produto.id + '/qtd/' + produto.quantidade, {method: 'PUT'})
      .then((response) => response.json())
      .then((responseJson) => {
        if (!responseJson.errorMessage) {
@@ -93,7 +98,7 @@ class GerenciaProduto extends Component {
               <TouchableOpacity onPress={() => this.deletarProduto(produto)}>
                 <FontAwesomeIcon name="trash" size={20} color={'#ccc'} />
               </TouchableOpacity>
-                <Image source={this.state.imagemProduto}
+                <Image source={{uri: produto.imagemPrincipal}}
                      style={styles.photo}
                      justifyContent='flex-start'/>
                 <View style={{width: '65%', marginLeft: 12, marginRight: 12}}>
@@ -118,6 +123,7 @@ class GerenciaProduto extends Component {
                     <FontAwesomeIcon name="minus" size={20} color={'darkblue'}/>
                   </TouchableOpacity>
                 </View>
+
                 <TouchableOpacity onPress={() => this.editarProduto(produto)}>
                   <FontAwesomeIcon name="pencil" size={20} color={'#ccc'} />
                 </TouchableOpacity>

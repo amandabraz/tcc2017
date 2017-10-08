@@ -22,94 +22,97 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
 
-
-export default class CadastroProduto extends Component {
+export default class AlteraProduto extends Component {
   constructor(props) {
   super(props);
 
   this.state = {
-     userId: this.props.navigation.state.params.userId,
+     produtoId: this.props.navigation.state.params.produtoId,
      vendedorId: this.props.navigation.state.params.vendedorId,
-     date: '',
+     userId: this.props.navigation.state.params.userId,
+     dataPreparacao: '',
      tags: [],
      ingredientes: [],
      restricoesDieteticas: [],
      dietasArray: [],
      quantidade: '',
-     categoria: '',
+     categoria: {
+       descricao: ''
+     },
      categoriasArray: [],
      nome: '',
      preco: '',
      observacao: '',
-     image: require('./img/camera11.jpg'),
-     imagemProduto: '',
-     backgroundColorPreco: "transparent"
+     imagemPrincipal: require('./img/camera11.jpg'),
+     backgroundColorPreco: "transparent",
+     restricoesProdutos: [],
+     dataOriginal: ''
     }
-    this.preencherDietasArray();
+    this.buscaProduto();
     this.carregarCategoriasArray();
+    this.preencherDietasArray();
  };
 
-  preencherDietasArray() {
-   fetch(constante.ENDPOINT + 'restricaodietetica')
+ buscaProduto() {
+   if (this.state.produtoId > 0) {
+     fetch(constante.ENDPOINT+'produto/' + this.state.produtoId)
      .then((response) => response.json())
-       .then((responseJson) => {
-         var dietasBuscadas = [];
-           for (i in responseJson) {
-             dietasBuscadas.push(responseJson[i]);
+     .then((rJson) => {
+       if (!rJson.errorMessage) {
+         this.setState({produto: rJson});
+
+         if (rJson.imagemPrincipal) {
+           this.setState({imagemPrincipal: { uri: rJson.imagemPrincipal }});
+         }
+         this.setState({nome: rJson.nome});
+         this.setState({preco: rJson.preco.toString()});
+         this.setState({quantidade: rJson.quantidade.toString()});
+         this.setState({categoria: rJson.categoria});
+         this.setState({observacao: rJson.observacao});
+         var dataNormal = new Date(rJson.dataPreparacao);
+         var dataPrep = dataNormal.getFullYear() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getDate() ;
+         this.setState({dataOriginal: rJson.dataPreparacao});
+         this.setState({dataPreparacao: dataPrep});
+         if (rJson.restricoesDieteticas.length > 0) {
+           var restricoes = [];
+           for(i in rJson.restricoesDieteticas) {
+             restricoes.push(rJson.restricoesDieteticas[i]);
            }
-           this.setState({dietasArray: dietasBuscadas});
-       });
-  };
+           this.setState({restricoesProdutos: restricoes});
+         }
 
-  carregarCategoriasArray() {
-    fetch(constante.ENDPOINT + 'categoria')
-      .then((response) => response.json())
-        .then((responseJson) => {
-          var categoriasBuscadas = [];
-          categoriasBuscadas.push({descricao: '-----'})
-            for (i in responseJson) {
-              categoriasBuscadas.push(responseJson[i]);
-            }
-            this.setState({categoriasArray: categoriasBuscadas});
-        });
-  }
-  onChangeTags = (tags) => {
-    this.setState({
-      tags,
-    });
+         if (rJson.tags.length > 0) {
+           var tags = [];
+           var tagEncontrada = rJson.tags;
+           for(i in tagEncontrada) {
+             tags.push(tagEncontrada[i].descricao);
+           }
+           this.setState({tags: tags});
+         }
+         if (rJson.ingredientes.length > 0) {
+           var ingredientes = [];
+           var ingredienteEncontrado = rJson.ingredientes;
+           for(i in ingredienteEncontrado) {
+             ingredientes.push(ingredienteEncontrado[i].item);
+           }
+           this.setState({ingredientes: ingredientes});
+         }
+       }
+     });
+   }
+ }
+
+ onChangeTags = (tags) => {
+   this.setState({
+     tags,
+   });
 };
 
-  onChangeIngredientes = (ingredientes) => {
-    this.setState({
-      ingredientes,
-    });
+ onChangeIngredientes = (ingredientes) => {
+   this.setState({
+     ingredientes,
+   });
 };
-
-onClickRestricao(descricao) {
-  descricao.checked = !descricao.checked;
-  var restricoes = this.state.restricoesDieteticas;
-  restricoes.push(descricao);
-  this.setState({restricoesDieteticas: restricoes});
-};
-
-mostrarCheckboxesDieta() {
-  var views = [];
-  for(i in this.state.dietasArray) {
-    let dieta = this.state.dietasArray[i];
-    views.push (
-      <View key={i} style={styles.item}>
-        <CheckBox
-          style={{flex: 1, padding: 10}}
-          onClick={()=>this.onClickRestricao(dieta)}
-          isChecked={dieta.checked}
-          leftText={dieta.descricao}
-          />
-      </View>
-    );
-  }
-  return views;
-};
-
 
 validaCampos = (produto) => {
   let camposVazios = [];
@@ -156,101 +159,153 @@ quebraEmLinhas(lista) {
   return listaQuebrada.trim();
 }
 
-selecionarFoto() {
-  var options = {
-    title: 'Selecione sua foto',
-    takePhotoButtonTitle: 'Tirar uma foto',
-    chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
-    cancelButtonTitle: 'Cancelar',
-    storageOptions: {
-      skipBackup: false,
-      path: 'images'
-    }
-  };
-  ImagePicker.showImagePicker(options, (response) => {
-    if (response.didCancel) {
-      //do nothing
-    } else if (response.error) {
-      console.log('ImagePicker Error: ', response.error);
-    } else {
-      let source = 'data:image/jpeg;base64,' + response.data;
-      this.setState({
-        image: {uri: response.uri, width: 200, height: 200, changed: true}
+ preencherDietasArray() {
+  fetch(constante.ENDPOINT + 'restricaodietetica')
+    .then((response) => response.json())
+      .then((responseJson) => {
+        var dietasBuscadas = [];
+          for (i in responseJson) {
+            dietasBuscadas.push(responseJson[i]);
+          }
+          this.setState({dietasArray: dietasBuscadas});
       });
-      this.setState({imagemProduto: source})
-    }
-  });
+ };
+
+onClickRestricao(restricao) {
+   restricao.checked = !restricao.checked;
+   var objRestricoes = {
+     "id": restricao.id,
+     "descricao": restricao.descricao
+   }
+   var restricoes = this.state.restricoesProdutos;
+   if (restricao.checked) {
+     restricoes.push(objRestricoes);
+   } else {
+     restricoes.pop(objRestricoes);
+   }
+   this.setState({restricoesProdutos: restricoes});
+ };
+
+ mostrarCheckboxesDieta() {
+   var dietasProduto = this.state.dietasArray
+   if (dietasProduto) {
+     var views = [];
+     for (i in dietasProduto) {
+       let dieta = dietasProduto[i];
+       dieta.checked = false;
+       for (j in this.state.restricoesProdutos) {
+         if (dieta.id === this.state.restricoesProdutos[j].id) {
+           dieta.checked = true;
+         }
+       }
+     views.push (
+       <View key={i} style={styles.item}>
+         <CheckBox
+           style={{flex: 1, padding: 10}}
+           onClick={()=>this.onClickRestricao(dieta)}
+           isChecked={dieta.checked}
+           leftText={dieta.descricao}
+           />
+       </View>
+     );
+   }
+   return views;
+ };
+}
+
+carregarCategoriasArray() {
+  fetch(constante.ENDPOINT + 'categoria')
+    .then((response) => response.json())
+      .then((responseJson) => {
+        var categoriasBuscadas = [];
+        categoriasBuscadas.push({descricao: this.state.categoria.descricao})
+          for (i in responseJson) {
+            if(responseJson[i].descricao!=this.state.categoria){
+              categoriasBuscadas.push(responseJson[i]);
+            }
+        }
+        this.setState({categoriasArray: categoriasBuscadas});
+      });
 }
     mostrarCategorias() {
       var pickerItems = [];
       for(i in this.state.categoriasArray) {
         let opcao = this.state.categoriasArray[i];
-        pickerItems.push(
-          <Picker.Item key={i} label={opcao.descricao} value={opcao} />
-        );
+         pickerItems.push(
+            <Picker.Item key={i} label={opcao.descricao} value={opcao} />
+          );
       }
       return pickerItems;
     };
 
-  salvaProduto() {
+  salvaEdicaoProduto() {
+     var dataNormal = new Date(this.state.dataOriginal);
+     var dataAlterada = new Date(this.state.dataPreparacao);
+     var dataSalvar = '';
+     if(dataAlterada!=dataNormal){
+       dataSalvar = dataAlterada;
+     } else {
+       dataSalvar = dataNormal;}
+        const {
+          state: {
+            produtoId,
+            vendedorId,
+            nome,
+            quantidade,
+            preco,
+            observacao,
+            categoria,
+            ingredientes,
+            tags,
+            restricoesDieteticas,
+            imagemPrincipal
+          }
+        } = this;
 
-    const {
-      state: {
-        vendedorId,
-        date,
-        tags,
-        ingredientes,
-        restricoesDieteticas,
-        quantidade,
-        categoria,
-        nome,
-        preco,
-        observacao,
-        imagemProduto
-      }
-    } = this;
-
-    produto = {
-      "nome": nome,
-      "dataPreparacao": date,
-      "quantidade": quantidade,
-      "preco": preco,
-      "vendedor": vendedorId,
-      "tags": tags,
-      "restricoesDieteticas": restricoesDieteticas,
-      "ingredientes": ingredientes,
-      "categoria": categoria,
-      "observacao": observacao,
-      "imagemPrincipal": imagemProduto
-    }
-    let continuar = this.validaCampos(produto);
-
-    if (continuar){
-    fetch(constante.ENDPOINT + 'produto', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(produto)
-    }).then((response) => response.json())
-      .then((responseJson) => {
-        if (responseJson.errorMessage) {
-          Alert.alert("Houve um erro ao cadastrar produto! Por favor, tente novamente.");
-        } else {
-          ToastAndroid.showWithGravity('Produto cadastrado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
-          this.props.navigation.navigate('GerenciaProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
+        produtoEditado = {
+          "id": produtoId,
+          "vendedor": vendedorId,
+          "nome": nome,
+          "dataPreparacao": dataSalvar,
+          "quantidade": quantidade,
+          "preco": preco,
+          "observacao": observacao,
+          "categoria": categoria,
+          "ingredientes": ingredientes,
+          "tags": tags,
+          "restricoesDieteticas": restricoesDieteticas,
+          "imagemPrincipal": imagemPrincipal.uri,
+          "deletado": false,
+          "score": 0,
         }
-      }).catch((error) => {
-        console.error(error);
-      });
-  }
-  };
+
+        let continuar = this.validaCampos(produtoEditado);
+
+      if (continuar){
+        fetch(constante.ENDPOINT + 'produto', {
+          method: 'PUT',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(produtoEditado)})
+          .then((response) => response.json())
+          .then((rJson) => {
+            if (!rJson.errorMessage) {
+              this.buscaProduto(rJson);
+              ToastAndroid.showWithGravity('Produto atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              this.props.navigation.navigate('GerenciaProduto', {userId: this.state.userId, vendedorId: this.state.vendedorId });
+            } else {
+                ToastAndroid.showWithGravity(rJson.errorMessage, ToastAndroid.LONG, ToastAndroid.CENTER);
+            }
+          });
+      }
+    }
 
 render() {
     const {goBack} = this.props.navigation;
     const inputIngredientes = {
-      placeholder: 'ex: farinha, leite em pó',
+      placeholder: 'insira mais ingredientes',
       placeholderTextColor: '#CCCCCC',
       fontSize: 16,
       fontFamily: 'Roboto',
@@ -259,7 +314,7 @@ render() {
     };
 
   const inputTags = {
-     placeholder: 'ex: brigadeiro, paçoca, bolo',
+     placeholder: 'insira mais tags',
      placeholderTextColor: '#CCCCCC',
      fontSize: 16,
      fontFamily: 'Roboto',
@@ -273,26 +328,28 @@ return (
         title={titleConfig}
         leftButton={
           <TouchableOpacity onPress={() => goBack()}>
-            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+            <MaterialsIcon name="arrow-back" size={34} color={'#8B636C'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }
         rightButton={
-          <TouchableOpacity onPress={() => this.salvaProduto()}>
+          <TouchableOpacity onPress={() => this.salvaEdicaoProduto()}>
             <MaterialsIcon name="check" size={34} color={'#8B636C'} style={{ padding: 5 }} />
           </TouchableOpacity>
         } />
       <ScrollView>
         <View style={styles.container}>
         <View style={{ alignItems: 'center'}}>
-          <TouchableOpacity onPress={this.selecionarFoto.bind(this)}>
-            <Image source={this.state.image}/>
-          </TouchableOpacity>
+        <View style={styles.profilepicWrap}>
+            <Image style={styles.profilepic}
+                   source={this.state.imagemPrincipal}/>
+        </View>
         </View>
 
           <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Nome'}
                   iconClass={FontAwesomeIcon}
                   maxLength={50}
+                  value={this.state.nome}
                   onChangeText={(nome) => this.setState({nome: nome})}
                   iconName={'cutlery'}
                   iconColor={'#8B636C'}/>
@@ -301,6 +358,7 @@ return (
                   label={'Preço'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
+                  value={this.state.preco}
                   onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
@@ -310,38 +368,33 @@ return (
                     label={'Quantidade disponível'}
                     maxLength={4}
                     iconClass={FontAwesomeIcon}
+                    value={this.state.quantidade}
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
                     iconName={'shopping-cart'}
                     iconColor={'#8B636C'}/>
 
-      <View style={{ alignItems: 'center'}}>
+      <View style={{flexDirection:'row', padding: 18, alignItems: 'center'}}>
+        <FontAwesomeIcon
+          name='calendar'
+          color='#8B636C'
+          size = {18}/>
         <DatePicker
-              style={{width: 352, height: 50}}
-              date={this.state.date}
+              style={{width: 300}}
+              date={this.state.dataPreparacao}
+              showIcon={false}
               mode="date"
-              placeholder="Data de Preparação"
               format="YYYY-MM-DD"
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               customStyles={{
                   dateInput: { borderWidth: 0 },
-                   dateIcon: {
-                       position: 'absolute',
-                       left: 0,
-                       top: 4,
-                       marginLeft: 0},
-                   placeholderText: {
-                      fontFamily: 'Roboto',
-                      fontWeight: 'bold',
-                      color: 'gray',
-                      fontSize: 16},
                    dateText: {
                        fontFamily: 'Roboto',
                        fontSize: 16,
                        color: '#8B636C'}
                        }}
-              onDateChange={(date) => {this.setState({date: date});}}/>
+              onDateChange={(dataPreparacao) => {this.setState({dataPreparacao: dataPreparacao});}}/>
         </View>
 
             <View style={styles.linhaTitulo}>
@@ -350,8 +403,8 @@ return (
               </Text>
             </View>
             <View style={{paddingLeft: 16, justifyContent:'space-around', width: 340, height: 50, backgroundColor: 'white'}}>
-              <Picker onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}
-                      selectedValue={this.state.categoria}
+              <Picker selectedValue={this.state.categoria}
+                      onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}
                       mode = 'dropdown'>
                   {this.mostrarCategorias()}
               </Picker>
@@ -380,6 +433,8 @@ return (
                 tagColor="#8B636C"
                 tagTextColor="white"
                 tagAlign="center"
+                tagContainerStyle={{height: 24}}
+                tagTextStyle = {{fontSize: 18}}
                 inputProps={inputIngredientes}
                 numberOfLines={15}/>
               </View>
@@ -396,6 +451,8 @@ return (
                 tagColor="#8B636C"
                 tagTextColor="white"
                 tagAlign="center"
+                tagContainerStyle={{height: 24}}
+                tagTextStyle = {{fontSize: 18}}
                 inputProps={inputTags}
                 numberOfLines={15}/>
               </View>
@@ -407,6 +464,7 @@ return (
                       placeholder={'campo opcional'}
                       placeholderTextColor={'#ccc'}
                       iconClass={FontAwesomeIcon}
+                      value={this.state.observacao}
                       onChangeText={(observacao) => this.setState({observacao: observacao})}
                       iconName={'pencil-square-o'}
                       iconColor={'#8B636C'}
@@ -421,7 +479,7 @@ return (
 }
 
 const titleConfig = {
-  title: 'Novo Produto',
+  title: 'Editar Produto',
   tintColor: '#8B636C',
   fontFamily: 'Roboto',
 };
@@ -480,5 +538,15 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: 'rgba(0, 0, 0, 0.87)',
 },
+profilepicWrap:{
+  width: 180,
+  height: 180,
+  borderColor: 'rgba(0,0,0,0.4)',
+},
+profilepic:{
+  flex: 1,
+  alignSelf: 'stretch',
+  borderWidth: 4
+}
 
 });

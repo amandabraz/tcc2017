@@ -51,6 +51,10 @@ public class Cliente implements Serializable {
         this.restricoesDieteticas = restricoesDieteticas;
     }
 
+    public Cliente(Long id) {
+        this.id = id;
+    }
+
     public Cliente(Usuario usuario, Set<Tag> tags, Set<RestricaoDietetica> restricaoDieteticas) {
         this.usuario = usuario;
         this.tags = tags;

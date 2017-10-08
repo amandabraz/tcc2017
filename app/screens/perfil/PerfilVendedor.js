@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
-import Modal from 'react-native-modal';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
-import CheckBox from 'react-native-check-box';
+import * as constante from '../../constantes';
 
 export default class PerfilVendedor extends Component {
   constructor(props) {
@@ -30,10 +29,10 @@ export default class PerfilVendedor extends Component {
   }
 
   buscaDadosVendedor() {
-    fetch('http://10.0.2.2:8080/vendedor/usuario/' + this.state.userId)
+    fetch(constante.ENDPOINT + 'vendedor/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMssage) {
+          if (!responseJson.errorMessage) {
             if (responseJson.usuario.imagemPerfil) {
               this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
             }
@@ -137,8 +136,8 @@ export default class PerfilVendedor extends Component {
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome da loja'}
-                iconClass={FontAwesomeIcon}
-                iconName={'user'}
+                iconClass={MaterialsIcon}
+                iconName={'store'}
                 iconColor={'darkslategrey'}
                 value={this.state.nomeFantasiaText}
                 editable={false}
@@ -161,13 +160,6 @@ export default class PerfilVendedor extends Component {
   }
 }
 
-
-  //CSS
-  const titleConfig = {
-    title: 'Perfil Vendedor',
-    tintColor: "#dc143c",
-    fontFamily: 'Roboto',
-  };
   const styles = StyleSheet.create({
     container: {
       flex: 1,

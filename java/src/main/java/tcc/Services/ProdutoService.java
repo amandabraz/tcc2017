@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProdutoService {
@@ -83,6 +84,30 @@ public class ProdutoService {
                 produtoAAlterar.setQuantidade(novaQtd);
             }
             return this.salvaProduto(produtoAAlterar);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Produto buscaProduto(Long id) {
+        try {
+            return produtoDAO.findOne(id);
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
+
+    public Produto editaProduto(Produto produto) throws IOException {
+        try {
+            Produto produtoEditado = null;
+            if (Objects.isNull(buscaProduto(produto.getId()))) {
+                return null;
+            }
+
+            produtoEditado = this.salvaProduto(produto);
+            return produtoEditado;
         } catch (Exception e) {
             throw e;
         }

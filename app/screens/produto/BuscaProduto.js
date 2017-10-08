@@ -1,11 +1,7 @@
-/**
-* Interface de Busca de Produtos.
-* by https://github.com/maiarar
-*/
-
 import React, { Component } from 'react';
 import {
   Alert,
+  AppRegistry,
   Dimensions,
   Image,
   StyleSheet,
@@ -15,8 +11,14 @@ import {
   View,
   ScrollView
 } from 'react-native';
-import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
+import {
+  Icon,
+  Button
+} from 'react-native-elements';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Hideo } from 'react-native-textinput-effects';
+import * as constante from '../../constantes';
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,25 +26,41 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.navigation.state.params.userId,
+      clienteId: this.props.navigation.state.params.clienteId,
       resultadoPesquisaProduto: [],
-      resultadoPesquisaVendedor: []
+      resultadoPesquisaVendedor: [],
+      textoBusca: ''
     }
   }
 
-  setSearchText(event) {
-    let searchText = event.nativeEvent.text;
-    this.setState({searchText});
-    fetch("http://10.0.2.2:8080/produto?filtro=" + searchText)
+  setSearchText(searchText) {
+    fetch(constante.ENDPOINT + 'produto?filtro=' + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaProduto: responseJson});
         });
-    fetch("http://10.0.2.2:8080/vendedor?filtro=" + searchText)
+    fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
      .then((response) => response.json())
       .then((responseJson) => {
             this.setState({resultadoPesquisaVendedor: responseJson});
         });
   }
+
+  onButtonOpenProduct = (produtoIdSelecionado) => {
+    this.props.navigation.navigate('ExibeProduto', 
+          {produtoId: produtoIdSelecionado, 
+            clienteId: this.state.clienteId
+          });
+  };
+
+  onButtonOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
+    this.props.navigation.navigate('ExibeVendedor', 
+          {selectUserId: usuarioSelecionado, 
+            vendedorId: vendedorIdSelecionado,
+            clienteId: this.state.clienteId 
+          });
+  };
 
   buscaProduto() {
     var views = [];
@@ -61,9 +79,10 @@ export default class BuscaProduto extends Component {
                 <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
               </View>
               <Icon
-                name='arrow-forward'
+                name='shopping-cart'
                 type=' material-community'
                 color='#1C1C1C'
+                onPress={() => this.onButtonOpenProduct(produto.id)}
                 style={styles.imageResultSearch} />
             </View>
             <Text>{'\n'}</Text>
@@ -89,9 +108,10 @@ export default class BuscaProduto extends Component {
             <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
           </View>
           <Icon
-            name='arrow-forward'
+            name='person'
             type=' material-community'
             color='#1C1C1C'
+            onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
             style={styles.imageResultSearch}
              />
         </View>
@@ -112,12 +132,16 @@ export default class BuscaProduto extends Component {
           tintColor="#023329"
         />
        <View style={styles.container}>
-         <TextInput
-           onSubmitEditing={this.setSearchText.bind(this)}
-           returnKeyType={'search'}
-           style={styles.searchBar}
-           value={this.state.searchText}
-           placeholder={'Search'} />
+       <Hideo
+          iconClass={FontAwesomeIcon}
+          iconName={'search'}
+          iconColor={'white'}
+          iconBackgroundColor={'#f2a59d'}
+          inputStyle={{ color: '#464949' }}
+          onChangeText={(textoBusca) => this.setState({textoBusca})}
+          onSubmitEditing={() => this.setSearchText(this.state.textoBusca)}
+          returnKeyType={'search'}
+          />
         </View>
 
         <ScrollView>

@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
-import Modal from 'react-native-modal';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
-import CheckBox from 'react-native-check-box';
+import * as constante from '../../constantes';
 
 export default class PerfilCliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userId: this.props.navigation.state.params.userId,
+      clienteId: this.props.navigation.state.params.clienteId,      
       nomeText: '',
       dataNascimentoText: '',
       emailText: '',
@@ -34,15 +33,14 @@ export default class PerfilCliente extends Component {
   }
 
   buscaDadosCliente() {
-    fetch('http://10.0.2.2:8080/cliente/usuario/' + this.state.userId)
+    fetch(constante.ENDPOINT + 'cliente/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMssage) {
+          if (!responseJson.errorMessage) {
             if (responseJson.usuario.imagemPerfil) {
               this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
             }
             this.setState({nomeText: responseJson.usuario.nome});
-            this.setState({})
             var dataNormal = new Date(responseJson.usuario.dataNasc);
             var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
             this.setState({dataNascimentoText: dataNasc});
@@ -173,13 +171,6 @@ export default class PerfilCliente extends Component {
   }
 }
 
-
-  //CSS
-  const titleConfig = {
-    title: 'Perfil Cliente',
-    tintColor: "#dc143c",
-    fontFamily: 'Roboto',
-  };
   const styles = StyleSheet.create({
     container: {
       flex: 1,

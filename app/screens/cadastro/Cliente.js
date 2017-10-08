@@ -10,10 +10,11 @@ import {
   ToastAndroid,
   ScrollView
 } from 'react-native';
-import { Tile, List, ListItem, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 import TagInput from 'react-native-tag-input';
 import CheckBox from 'react-native-check-box';
+import * as constante from '../../constantes';
 
 const {width, height} = Dimensions.get("window");
 
@@ -30,7 +31,7 @@ class Cliente extends Component {
   };
 
   preencherDietasArray() {
-    fetch('http://10.0.2.2:8080/restricaodietetica')
+    fetch(constante.ENDPOINT + 'restricaodietetica')
       .then((response) => response.json())
         .then((responseJson) => {
           var dietasBuscadas = [];
@@ -57,7 +58,7 @@ class Cliente extends Component {
       "tags": tags,
       "restricoesDieteticas": restricoesDieteticas
     }
-      fetch('http://10.0.2.2:8080/cliente', {
+      fetch(constante.ENDPOINT + 'cliente', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -69,7 +70,7 @@ class Cliente extends Component {
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
             ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            this.props.navigation.navigate('TabsCliente', {userId: this.state.userId});
+            this.props.navigation.navigate('TabsCliente', {userId: responseJson.usuario.id, clienteId: responseJson.id});
           } else {
             Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
           }
