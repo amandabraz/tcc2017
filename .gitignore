@@ -57,6 +57,8 @@ fastlane/screenshots
 android/.metadata/
 android/RemoteSystemsTempFiles/
 
+java/classes/*
+java/lib/*
 #Arquivo de constante, alteravel pra cada uma e nao commitavel
 app/constantes.js
 

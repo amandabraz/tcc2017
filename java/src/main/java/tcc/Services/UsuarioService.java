@@ -39,4 +39,12 @@ public class UsuarioService {
         }
         return null;
     }
+
+    public Usuario salvaUsuario(Usuario usuario) {
+        try {
+            return usuarioDAO.save(usuario);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
