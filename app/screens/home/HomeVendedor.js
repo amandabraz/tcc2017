@@ -35,7 +35,9 @@ class HomeVendedor extends Component {
       nomeClienteText: '',
       imagemProduto: require('./img/camera2.jpg'),
       imagemCliente: require('./img/camera2.jpg'),
-      gps: 0
+      gps: 0,
+      userId: this.props.navigation.state.params.userId,
+      vendedorId: this.props.navigation.state.params.vendedorId
     };
     this.buscaDadosPedido();
   };
@@ -133,14 +135,14 @@ class HomeVendedor extends Component {
                       <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
 
                       <Button title ="Recusar"
-                              color="#DCD5B6"
+                              color="#fff"
                               backgroundColor="#88557B"
                               borderRadius={10}
                               large={true}
                               onPress={this.cancelarPedido.bind(this)}/>
 
                       <Button title="Aceitar"
-                              color="#DCD5B6"
+                              color="#fff"
                               backgroundColor="#768888"
                               borderRadius={10}
                               large={true}/>
@@ -155,11 +157,12 @@ class HomeVendedor extends Component {
         </View>
       )
   }
+ }
 }
 
 const titleConfig = {
   title: 'Home',
-  tintColor: "#DCD5B6",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 
