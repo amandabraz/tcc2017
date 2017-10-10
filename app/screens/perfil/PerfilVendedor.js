@@ -70,18 +70,10 @@ export default class PerfilVendedor extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
-<<<<<<< HEAD
-            this.prepararVendedor(responseJson);
-        }
-      });
-  };
-
-=======
           this.setState({meiosPagamento: responseJson});
         }
       });
   }
->>>>>>> bc9451f7487cabc8cec994bc849a2f4e333c9ea7
   prepararVendedor(responseJson) {
     this.setState({vendedor: responseJson});
     if (responseJson.usuario.imagemPerfil) {
