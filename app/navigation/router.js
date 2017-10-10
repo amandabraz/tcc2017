@@ -20,8 +20,8 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
-import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
+import PedidosCliente from '../screens/configuracao/PedidosCliente';
+import PedidosVendedor from '../screens/configuracao/PedidosVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
@@ -41,8 +41,8 @@ export const GerenciaCliente = StackNavigator({
   ExibeVendedor: {
     screen: ExibeVendedor
   },
-  ConfiguracaoCliente: {
-    screen: ConfiguracaoCliente
+  PedidosCliente: {
+    screen: PedidosCliente
   }
  }, {
   mode: 'card',
@@ -139,8 +139,8 @@ export const GerenciaVendedor = StackNavigator({
     PerfilVendedor: {
       screen: PerfilVendedor
     },
-    ConfiguracaoVendedor: {
-      screen: ConfiguracaoVendedor
+    PedidosVendedor: {
+      screen: PedidosVendedor
     }
   }, {
     mode: 'card',
@@ -205,7 +205,7 @@ export const TabsVendedor = TabNavigator({
     },
     // TODO: colocar outra rota no lugar de configuracao já que ele foi pra dentro de GerenciaVendedor
     Configuração: {
-      screen: ConfiguracaoVendedor,
+      screen: PedidosVendedor,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
