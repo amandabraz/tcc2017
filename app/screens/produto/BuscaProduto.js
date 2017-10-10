@@ -19,6 +19,7 @@ import {
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Hideo } from 'react-native-textinput-effects';
 import * as constante from '../../constantes';
+import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,6 +27,8 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      screenName: 'TabsCliente',      
+      gps: 0,      
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       resultadoPesquisaProduto: [],
@@ -35,16 +38,27 @@ export default class BuscaProduto extends Component {
   }
 
   setSearchText(searchText) {
-    fetch(constante.ENDPOINT + 'produto?filtro=' + searchText)
-     .then((response) => response.json())
-      .then((responseJson) => {
-            this.setState({resultadoPesquisaProduto: responseJson});
-        });
-    fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
-     .then((response) => response.json())
-      .then((responseJson) => {
-            this.setState({resultadoPesquisaVendedor: responseJson});
-        });
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({gps: position});
+    }, (error) => {
+      this.setState({gps: false});
+    });
+    if (this.state.gps) {
+      fetch(constante.ENDPOINT + 'produto?filtro=' + searchText 
+                               + '&latitude=' + this.state.gps.coords.latitude
+                               + '&longitude=' + this.state.gps.coords.longitude
+                               + '&altitude=' + this.state.gps.coords.altitude)
+                               
+       .then((response) => response.json())
+        .then((responseJson) => {
+              this.setState({resultadoPesquisaProduto: responseJson});
+          });
+      fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
+       .then((response) => response.json())
+        .then((responseJson) => {
+              this.setState({resultadoPesquisaVendedor: responseJson});
+          });
+    }
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
@@ -66,18 +80,46 @@ export default class BuscaProduto extends Component {
     var views = [];
     for(i in this.state.resultadoPesquisaProduto) {
       let produto = this.state.resultadoPesquisaProduto[i];
+      let distancia = parseInt(produto.distancia);
+      let distanciaEstilo = {
+        fontWeight: 'bold',
+        fontSize: 18,
+        padding: 4,    
+        color: '#fff',
+        backgroundColor: '#f2a59d', 
+        borderColor: '#f2a59d', 
+        borderStyle: 'solid', 
+        borderRadius: 100,
+        textAlign: 'center'
+      };
+      if (distancia > 0) {
+        if (distancia > 1000) {
+          let convert = (distancia/1000).toString().split('.');
+          distancia = convert[0] + ' km';
+        } else {
+          distancia = distancia.toString() + ' m';          
+        }
+      } else {
+        distanciaEstilo.fontSize = 13;
+        distancia = "offline há mais de 6h";
+      }
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
+            <View style={{width: "25%"}}>          
               <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
-
-              <View style={{width: 210, margin: 10}}>
-                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
-              </View>
+            </View>                     
+            <View style={{width: "45%"}}>
+              <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+              <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+              <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+            </View>
+            <View style={{width: "15%"}} justifyContent='center'>
+              <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
+            </View>
+            <View style={{width: "15%"}}>
               <Icon
                 name='shopping-cart'
                 type=' material-community'
@@ -85,9 +127,10 @@ export default class BuscaProduto extends Component {
                 onPress={() => this.onButtonOpenProduct(produto.id)}
                 style={styles.imageResultSearch} />
             </View>
-            <Text>{'\n'}</Text>
           </View>
-        );
+          <Text>{'\n'}</Text>
+        </View>
+      );
     }
       return views;
   }
@@ -122,39 +165,54 @@ export default class BuscaProduto extends Component {
   return views;
 }
 
+componentWillMount() {
+  navigator.geolocation.getCurrentPosition((position) => {
+    this.setState({gps: position});
+  }, (error) => {
+    this.setState({gps: 0});
+  });
+}
 
 
   render() {
-    return (
-      <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="#023329"
-        />
-       <View style={styles.container}>
-       <Hideo
-          iconClass={FontAwesomeIcon}
-          iconName={'search'}
-          iconColor={'white'}
-          iconBackgroundColor={'#f2a59d'}
-          inputStyle={{ color: '#464949' }}
-          onChangeText={(textoBusca) => this.setState({textoBusca})}
-          onSubmitEditing={() => this.setSearchText(this.state.textoBusca)}
-          returnKeyType={'search'}
+    if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
+      return(<LocalizacaoNaoPermitida 
+        screenName={this.state.screenName}
+        navigation={this.props.navigation}
+        userId={this.state.userId} />
+      );
+    } else {
+      return (
+        <View style={{flex: 1}}>
+          <NavigationBar
+            title={titleConfig}
+            tintColor="#023329"
           />
-        </View>
-
-        <ScrollView>
-          <View style={styles.centralView}>
-            <View style={styles.results}>
-              {this.buscaProduto()}
-              {this.buscaVendedor()}
-
-            </View>
+        <View style={styles.container}>
+        <Hideo
+            iconClass={FontAwesomeIcon}
+            iconName={'search'}
+            iconColor={'white'}
+            iconBackgroundColor={'#f2a59d'}
+            inputStyle={{ color: '#464949' }}
+            onChangeText={(textoBusca) => this.setState({textoBusca})}
+            onSubmitEditing={() => this.setSearchText(this.state.textoBusca)}
+            returnKeyType={'search'}
+            />
           </View>
-        </ScrollView>
-      </View>
-    );
+
+          <ScrollView>
+            <View style={styles.centralView}>
+              <View style={styles.results}>
+                {this.buscaProduto()}
+                {this.buscaVendedor()}
+
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
 
@@ -167,7 +225,7 @@ const titleConfig = {
 //css
 const styles = StyleSheet.create({
   oneResult:{
-     width: 370,
+     width: '97%',
      flexDirection: 'row',
      backgroundColor: 'rgba(255, 255, 255, 0.55)',
      borderWidth: 1,
@@ -188,7 +246,6 @@ const styles = StyleSheet.create({
   results:{
     justifyContent: 'center',
     alignItems: 'center',
-    width: 370,
   },
   search:{
     flexDirection: 'row',

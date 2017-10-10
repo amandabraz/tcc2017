@@ -26,6 +26,7 @@ import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
+import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
 
 /**
 MENU SOMENTE PARA CLIENTE
@@ -114,6 +115,7 @@ export const TabsCliente = TabNavigator({
       },
     }
   },{
+    initialRouteName: 'Home',    
     tabBarComponent: TabView.TabBarBottom,
     lazy: true,
     tabBarPosition: 'bottom',
@@ -211,6 +213,7 @@ export const TabsVendedor = TabNavigator({
       },
     }
   },{
+    initialRouteName: 'Home',
     tabBarComponent: TabView.TabBarBottom,
     tabBarPosition: 'bottom',
     lazy: true,
@@ -219,7 +222,7 @@ export const TabsVendedor = TabNavigator({
     backBehavior: 'none',
     tabBarOptions: {
       showLabel: false,
-      activeTintColor: '#8fbc8f',
+      activeTintColor: '#333333',
       inactiveTintColor: '#fff',
       labelStyle: {
         fontSize: 12,
@@ -230,8 +233,6 @@ export const TabsVendedor = TabNavigator({
     }
 });
 
-
-// TODO: Creio que aqui colocamos uma logica pra dizer: se usuario está logado, carregar dashboard, senão, carregar tela de login
 export const Root = StackNavigator({
   Login: {
     screen: Login,
@@ -246,11 +247,14 @@ export const Root = StackNavigator({
     screen: Cliente,
   },
   TabsCliente: {
-    screen: TabsCliente
+    screen: TabsCliente,
   },
   TabsVendedor: {
-    screen: TabsVendedor
-  }
+    screen: TabsVendedor,
+  },
+  LocalizacaoNaoPermitida: {
+    screen: LocalizacaoNaoPermitida,
+  },
 }, {
   mode: 'card',
   lazy: true,

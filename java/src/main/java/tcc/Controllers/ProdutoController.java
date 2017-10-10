@@ -83,9 +83,13 @@ public class ProdutoController {
 
     @Transactional
     @RequestMapping(value = "/produto", method = RequestMethod.GET)
-    public ResponseEntity buscaProdutos(@RequestParam(value = "filtro") String filtro) {
+    public ResponseEntity buscaProdutos(@RequestParam(value = "filtro") String filtro,
+                                        @RequestParam(value = "latitude") double latitude,
+                                        @RequestParam(value = "longitude") double longitude,
+                                        @RequestParam(value = "altitude") double altitude) {
         try {
-            return new ResponseEntity<List<Produto>>(produtoService.encontraProduto(filtro), HttpStatus.OK);
+
+            return new ResponseEntity<List<Produto>>(produtoService.encontraProduto(filtro, latitude, longitude, altitude), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }

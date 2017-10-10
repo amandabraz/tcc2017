@@ -38,8 +38,9 @@
     "react-native-tag-input": "0.0.14",
     "react-native-tags": "^0.2.0",
     "react-native-textinput-effects": "^0.3.1",
-    "react-native-vector-icons": "^4.3.0",
-    "react-navigation": "git+https://github.com/react-community/react-navigation.git#7edd9a7"
+    "react-navigation": "git+https://github.com/react-community/react-navigation.git#7edd9a7",
+    "react-timer-mixin": "^0.13.3",
+    "react-native-vector-icons": "^4.3.0"
   },
   "devDependencies": {
     "babel-jest": "19.0.0",
