@@ -7,7 +7,7 @@ import {
   View
 } from 'react-native';
 
-class ConfiguracaoVendedor extends Component {
+class PedidosVendedor extends Component {
 
   render() {
     return(
@@ -19,6 +19,6 @@ class ConfiguracaoVendedor extends Component {
 
 }
 
-ConfiguracaoVendedor.defaultProps = { ...ConfiguracaoVendedor };
+PedidosVendedor.defaultProps = { ...PedidosVendedor };
 
-export default ConfiguracaoVendedor;
+export default PedidosVendedor;

@@ -57,7 +57,7 @@ export default class PerfilVendedor extends Component {
       });
   };
 
-  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoVendedor');}
+  openConfiguracao = () => {this.props.navigation.navigate('PedidosVendedor');}
 
   render () {
     return (
