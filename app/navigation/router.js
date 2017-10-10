@@ -83,7 +83,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Busca: {
-      screen: BuscaPro,
+      screen: PedidosCliente,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
