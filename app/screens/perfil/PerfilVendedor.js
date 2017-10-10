@@ -59,7 +59,7 @@ export default class PerfilVendedor extends Component {
     fetch(constante.ENDPOINT + 'vendedor/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMessage) {
+          if (!responseJson.errorMssage) {
             this.prepararVendedor(responseJson);
         }
       });
@@ -70,10 +70,11 @@ export default class PerfilVendedor extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
-          this.setState({meiosPagamento: responseJson});
+            this.prepararVendedor(responseJson);
         }
       });
-  }
+  };
+
   prepararVendedor(responseJson) {
     this.setState({vendedor: responseJson});
     if (responseJson.usuario.imagemPerfil) {
