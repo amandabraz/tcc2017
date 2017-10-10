@@ -86,7 +86,7 @@ export const TabsCliente = TabNavigator({
       screen: BuscaPro,
       navigationOptions: {
         tabBar: {
-          icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
+          icon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
         },
       },
     },
