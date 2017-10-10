@@ -52,6 +52,7 @@ public class UsuarioService {
             throw e;
         }
     }
+<<<<<<< HEAD
 
     public Usuario salvaUsuario(Usuario usuario) {
         try {
@@ -60,4 +61,6 @@ public class UsuarioService {
             throw e;
         }
     }
+=======
+>>>>>>> bc9451f7487cabc8cec994bc849a2f4e333c9ea7
 }
