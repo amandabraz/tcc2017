@@ -20,8 +20,8 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import PedidosCliente from '../screens/configuracao/PedidosCliente';
-import PedidosVendedor from '../screens/configuracao/PedidosVendedor';
+import PedidosCliente from '../screens/pedido/PedidosCliente';
+import PedidosVendedor from '../screens/pedido/PedidosVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
@@ -115,7 +115,7 @@ export const TabsCliente = TabNavigator({
       },
     }
   },{
-    initialRouteName: 'Home',    
+    initialRouteName: 'Home',
     tabBarComponent: TabView.TabBarBottom,
     lazy: true,
     tabBarPosition: 'bottom',
