@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
+
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PedidoService {
@@ -66,7 +69,16 @@ public class PedidoService {
         } catch (Exception e) {
             throw e;
         }
+    }
 
+    public List<Pedido> buscaPedidosVendedor(Long vendedorId) {
+        try {
+            List<Pedido> pedidos = pedidoDAO.findByProdutoVendedorId(vendedorId);
+            Collections.sort(pedidos);
+            return pedidos;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 }

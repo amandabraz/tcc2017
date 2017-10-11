@@ -11,5 +11,6 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
     List<Pedido> findById(Long id);
     List<Pedido> findByStatus(String status);
     List<Pedido> findByCliente(Cliente cliente);
+    List<Pedido> findByProdutoVendedorId(long vendedorId);
 
 }
