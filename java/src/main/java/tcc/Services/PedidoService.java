@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -73,9 +72,7 @@ public class PedidoService {
 
     public List<Pedido> buscaPedidosVendedor(Long vendedorId) {
         try {
-            List<Pedido> pedidos = pedidoDAO.findByProdutoVendedorId(vendedorId);
-            Collections.sort(pedidos);
-            return pedidos;
+            return pedidoDAO.findByProdutoVendedorIdOrderByStatus(vendedorId);
         } catch (Exception e) {
             throw e;
         }

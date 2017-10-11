@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "PEDIDO")
-public class Pedido implements Serializable, Comparable<Pedido> {
+public class Pedido implements Serializable {
 
     public static final Long serialVersionUID = 1L;
 
@@ -217,15 +217,4 @@ public class Pedido implements Serializable, Comparable<Pedido> {
         super();
     }
 
-    @Override
-    public int compareTo(Pedido o) {
-        if (this.getStatus().equals("Solicitado")) {
-            return 1;
-        } else if (this.getStatus().equals("Confirmado")) {
-            return 2;
-        } else if (this.getStatus().equals("Finalizado")) {
-            return 3;
-        }
-        return 4;
-    }
 }
