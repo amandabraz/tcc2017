@@ -27,8 +27,8 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      screenName: 'TabsCliente',      
-      gps: 0,      
+      screenName: 'TabsCliente',
+      gps: 0,
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       resultadoPesquisaProduto: [],
@@ -44,11 +44,11 @@ export default class BuscaProduto extends Component {
       this.setState({gps: false});
     });
     if (this.state.gps) {
-      fetch(constante.ENDPOINT + 'produto?filtro=' + searchText 
+      fetch(constante.ENDPOINT + 'produto?filtro=' + searchText
                                + '&latitude=' + this.state.gps.coords.latitude
                                + '&longitude=' + this.state.gps.coords.longitude
                                + '&altitude=' + this.state.gps.coords.altitude)
-                               
+
        .then((response) => response.json())
         .then((responseJson) => {
               this.setState({resultadoPesquisaProduto: responseJson});
@@ -62,70 +62,84 @@ export default class BuscaProduto extends Component {
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeProduto', 
-          {produtoId: produtoIdSelecionado, 
+    this.props.navigation.navigate('ExibeProduto',
+          {produtoId: produtoIdSelecionado,
             clienteId: this.state.clienteId
           });
   };
 
   onButtonOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
-    this.props.navigation.navigate('ExibeVendedor', 
-          {selectUserId: usuarioSelecionado, 
+    this.props.navigation.navigate('ExibeVendedor',
+          {selectUserId: usuarioSelecionado,
             vendedorId: vendedorIdSelecionado,
-            clienteId: this.state.clienteId 
+            clienteId: this.state.clienteId
           });
   };
 
   buscaProduto() {
     var views = [];
-    for(i in this.state.resultadoPesquisaProduto) {
-      let produto = this.state.resultadoPesquisaProduto[i];
-      let distancia = parseInt(produto.distancia);
-      let distanciaEstilo = {
-        fontWeight: 'bold',
-        fontSize: 18,
-        padding: 4,    
-        color: '#fff',
-        backgroundColor: '#f2a59d', 
-        borderColor: '#f2a59d', 
-        borderStyle: 'solid', 
-        borderRadius: 100,
-        textAlign: 'center'
-      };
-      if (distancia > 0) {
-        if (distancia > 1000) {
-          let convert = (distancia/1000).toString().split('.');
-          distancia = convert[0] + ' km';
+    if (this.state.resultadoPesquisaProduto.length > 0) {
+      for(i in this.state.resultadoPesquisaProduto) {
+        let produto = this.state.resultadoPesquisaProduto[i];
+        let distancia = parseInt(produto.distancia);
+        let distanciaEstilo = {
+          fontWeight: 'bold',
+          fontSize: 18,
+          padding: 4,
+          color: '#fff',
+          backgroundColor: '#f2a59d',
+          borderColor: '#f2a59d',
+          borderStyle: 'solid',
+          borderRadius: 100,
+          textAlign: 'center'
+        };
+        if (distancia > 0) {
+          if (distancia > 1000) {
+            let convert = (distancia/1000).toString().split('.');
+            distancia = convert[0] + ' km';
+          } else {
+            distancia = distancia.toString() + ' m';
+          }
         } else {
-          distancia = distancia.toString() + ' m';          
+          distanciaEstilo.fontSize = 13;
+          distancia = "offline há mais de 6h";
         }
-      } else {
-        distanciaEstilo.fontSize = 13;
-        distancia = "offline há mais de 6h";
+        views.push (
+          <View key={i}>
+            <View style={styles.oneResult}>
+              <View style={{width: "25%"}}>
+                <Image source={{ uri: produto.imagemPrincipal }}
+                       style={styles.imageResultSearch}
+                       justifyContent='flex-start'/>
+              </View>
+              <View style={{width: "45%"}}>
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+              </View>
+              <View style={{width: "15%"}} justifyContent='center'>
+                <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
+              </View>
+              <View style={{width: "15%"}}>
+                <Icon
+                  name='shopping-cart'
+                  type=' material-community'
+                  color='#1C1C1C'
+                  onPress={() => this.onButtonOpenProduct(produto.id)}
+                  style={styles.imageResultSearch} />
+              </View>
+            </View>
+            <Text>{'\n'}</Text>
+          </View>
+        );
       }
+    }
+    else {
       views.push (
-        <View key={i}>
+        <View key={0}>
           <View style={styles.oneResult}>
-            <View style={{width: "25%"}}>          
-              <Image source={{ uri: produto.imagemPrincipal }}
-                     style={styles.imageResultSearch}
-                     justifyContent='flex-start'/>
-            </View>                     
             <View style={{width: "45%"}}>
-              <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
-            </View>
-            <View style={{width: "15%"}} justifyContent='center'>
-              <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
-            </View>
-            <View style={{width: "15%"}}>
-              <Icon
-                name='shopping-cart'
-                type=' material-community'
-                color='#1C1C1C'
-                onPress={() => this.onButtonOpenProduct(produto.id)}
-                style={styles.imageResultSearch} />
+              <Text style={styles.oneResultfontTitle} justifyContent='center'>Não há produtos cadastrados.</Text>
             </View>
           </View>
           <Text>{'\n'}</Text>
@@ -176,7 +190,7 @@ componentWillMount() {
 
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
-      return(<LocalizacaoNaoPermitida 
+      return(<LocalizacaoNaoPermitida
         screenName={this.state.screenName}
         navigation={this.props.navigation}
         userId={this.state.userId} />
