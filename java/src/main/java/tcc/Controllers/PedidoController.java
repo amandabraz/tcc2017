@@ -14,6 +14,7 @@ import tcc.Models.Pedido;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 
 @RequestMapping(value = "/pedido")
@@ -48,6 +49,17 @@ public class PedidoController {
             return new ResponseEntity<Pedido>(pedidoEncontrado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar o pedido"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/vendedor/{vendedorId}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidosVendedor(@PathVariable("vendedorId") Long vendedorId) {
+        try {
+            List<Pedido> pedidos = pedidoService.buscaPedidosVendedor(vendedorId);
+            return new ResponseEntity<List<Pedido>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);
         }
     }
 }
