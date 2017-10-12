@@ -37,6 +37,7 @@ class PedidoCliente extends Component {
         nomeProdutoText: '',
         quantidadeText: '',
         precoText: '',
+        dataSolicitacaoText: '',
         meioPagamentoText: '',
         nomeVendedorText: '',
         imagemProduto: require('./img/camera2.jpg'),
@@ -57,15 +58,16 @@ class PedidoCliente extends Component {
               if (responseJson.produto.imagemPrincipal) {
                 this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
               }
-              if (responseJson.vendedor.usuario.imagemPerfil) {
-                this.setState({imagemVendedor: { uri: responseJson.vendedor.usuario.imagemPerfil } })
+              if (responseJson.produto.vendedor.usuario.imagemPerfil) {
+                this.setState({imagemVendedor: { uri: responseJson.produto.vendedor.usuario.imagemPerfil } })
               }
             this.setState({nomeProdutoText: responseJson.produto.nome});
             this.setState({quantidadeText: responseJson.quantidade});
             this.setState({precoText: responseJson.valorCompra});
             this.setState({statusPedidoText: responseJson.status});
             this.setState({meioPagamentoText: responseJson.pagamento.descricao});
-            this.setState({nomeVendedorText: responseJson.vendededor.usuario.nome});
+            this.setState({nomeVendedorText: responseJson.produto.vendedor.usuario.nome});
+            this.setState({dataSolicitacaoText: responseJson.dataSolicitada});
           }
         });
     };
@@ -125,9 +127,8 @@ class PedidoCliente extends Component {
                               style={styles.imagemVendedor}/>
                      </View>
                      <View style={{width: '70%'}}>
+                       <Text style={styles.oneResultfont}>Seu pedido</Text>
                        <Text style={styles.totalFont}> {this.state.nomeVendedorText}</Text>
-                       <Text style={styles.oneResultfont}>Seu pedido
-                       </Text>
                      </View>
                    </View>
                      <View style={{paddingTop:10}}>
@@ -137,6 +138,9 @@ class PedidoCliente extends Component {
                       <Text style={styles.oneResultfont}>Status da compra: {this.state.statusPedidoText}
                       </Text>
                       <Text style={styles.totalFont}> R$ {this.state.precoText}{'\n'}</Text>
+                      <Text style={styles.oneResultfont}>Solicitado em:
+                        <Text style={styles.totalFont}> {this.state.dataSolicitacaoText}{'\n'}</Text>
+                      </Text>
                       <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
 
                       <Button title ="Cancelar"
@@ -160,7 +164,7 @@ class PedidoCliente extends Component {
 }
 
 const titleConfig = {
-  title: 'Home',
+  title: 'Pedidos',
   tintColor: "#fff",
   fontFamily: 'Roboto',
 };
