@@ -155,4 +155,14 @@ public class ProdutoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do produto! Tente novamente");
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "/produto/cliente/{clienteId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity buscaProdutosPorPreferenciasCliente(@PathVariable("clienteId") Long clienteId) {
+        try {
+            return new ResponseEntity<List<Produto>>(produtoService.buscaProdutosPorPreferenciasCliente(clienteId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
