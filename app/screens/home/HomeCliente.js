@@ -20,6 +20,7 @@ import {
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import BuscaProduto from '../produto/BuscaProduto';
 
 const { width, height } = Dimensions.get("window");
 

@@ -69,7 +69,7 @@ export default class PerfilCliente extends Component {
       });
   };
 
-  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
+  openConfiguracao = () => {this.props.navigation.navigate('PedidosCliente');}
 
   render () {
     return (
