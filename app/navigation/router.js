@@ -20,7 +20,7 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import PedidosCliente from '../screens/pedido/PedidosCliente';
+import PedidoCliente from '../screens/pedido/PedidoCliente';
 import PedidosVendedor from '../screens/pedido/PedidosVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
@@ -41,8 +41,8 @@ export const GerenciaCliente = StackNavigator({
   ExibeVendedor: {
     screen: ExibeVendedor
   },
-  PedidosCliente: {
-    screen: PedidosCliente
+  PedidoCliente: {
+    screen: PedidoCliente
   }
  }, {
   mode: 'card',
@@ -83,7 +83,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Busca: {
-      screen: PedidosCliente,
+      screen: PedidoCliente,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
