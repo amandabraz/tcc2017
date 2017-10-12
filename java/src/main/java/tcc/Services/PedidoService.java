@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
+import tcc.Models.Produto;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -78,4 +79,25 @@ public class PedidoService {
         }
     }
 
+    public Pedido alterarStatus(Long idPedido, String status) throws IOException {
+        try {
+            Pedido alterarPedido = pedidoDAO.findOne(idPedido);
+            Date data = new Date();
+            if (alterarPedido != null
+                    && alterarPedido.getStatus() != status) {
+                if(status.equals("Confirmado")){
+                    alterarPedido.setDataConfirmacao(data);
+                } else if(status.equals("Finalizado")){
+                    alterarPedido.setDataFinalizacao(data);
+                }
+
+             alterarPedido.setStatus(status);
+
+            }
+            return this.salvaPedido(alterarPedido);
+
+        } catch (IOException e) {
+            throw e;
+        }
+    }
 }
