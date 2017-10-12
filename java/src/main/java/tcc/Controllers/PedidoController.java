@@ -62,16 +62,4 @@ public class PedidoController {
             return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);
         }
     }
-
-    @Transactional
-    @RequestMapping(value = "/{idPedido}/status/{status}", method = RequestMethod.PUT)
-    public ResponseEntity alteraStatus(@PathVariable("idPedido") Long idPedido,
-                                       @PathVariable("status") String status) {
-        try {
-            Pedido pedidoAtualizado = pedidoService.alterarStatus(idPedido,status);
-            return new ResponseEntity<Pedido>(pedidoAtualizado, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError("Erro ao alterar status do pedido"), HttpStatus.BAD_REQUEST);
-        }
-    }
 }
