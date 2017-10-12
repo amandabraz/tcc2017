@@ -20,8 +20,8 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
-import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
+import PedidoCliente from '../screens/pedido/PedidoCliente';
+import PedidosVendedor from '../screens/pedido/PedidosVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
@@ -41,8 +41,8 @@ export const GerenciaCliente = StackNavigator({
   ExibeVendedor: {
     screen: ExibeVendedor
   },
-  ConfiguracaoCliente: {
-    screen: ConfiguracaoCliente
+  PedidoCliente: {
+    screen: PedidoCliente
   }
  }, {
   mode: 'card',
@@ -83,10 +83,10 @@ export const TabsCliente = TabNavigator({
       },
     },
     Busca: {
-      screen: BuscaPro,
+      screen: PedidoCliente,
       navigationOptions: {
         tabBar: {
-          icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
+          icon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
         },
       },
     },
@@ -115,7 +115,7 @@ export const TabsCliente = TabNavigator({
       },
     }
   },{
-    initialRouteName: 'Home',    
+    initialRouteName: 'Home',
     tabBarComponent: TabView.TabBarBottom,
     lazy: true,
     tabBarPosition: 'bottom',
@@ -139,8 +139,8 @@ export const GerenciaVendedor = StackNavigator({
     PerfilVendedor: {
       screen: PerfilVendedor
     },
-    ConfiguracaoVendedor: {
-      screen: ConfiguracaoVendedor
+    PedidosVendedor: {
+      screen: PedidosVendedor
     }
   }, {
     mode: 'card',
@@ -205,7 +205,7 @@ export const TabsVendedor = TabNavigator({
     },
     // TODO: colocar outra rota no lugar de configuracao já que ele foi pra dentro de GerenciaVendedor
     Configuração: {
-      screen: ConfiguracaoVendedor,
+      screen: PedidosVendedor,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
