@@ -33,6 +33,7 @@ export default class PerfilCliente extends Component {
       dataNascimentoText: '',
       imagemPerfil: require('./img/camera2.jpg'),
       tags: [],
+      nomeText: '',
       tagsText: "Nenhuma tag inserida",
       tagEstilo: {
         color: '#CCCCCC',
@@ -121,7 +122,11 @@ export default class PerfilCliente extends Component {
         height:300
       };
       return (
-        <View style={{ width: 378, height: 86, alignItems: 'center'}}>
+        <View style={{ margin: 15, height: 150}}>
+          <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
+            <FontAwesomeIcon name="hashtag" size={17} color={'#9fa1a3'} />
+            <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Tags</Text>
+          </View>
           <TagInput
             value={this.state.tags}
             onChange={this.onChangeTags}
@@ -155,6 +160,12 @@ export default class PerfilCliente extends Component {
       var listaRestricoes = this.state.restricoesDieteticas;
       if (listaRestricoes) {
         var views = [];
+        views.push(
+          <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
+            <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
+            <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Restrições dietéticas</Text>
+          </View>        
+        );
         for (i in listaRestricoes) {
           let dieta = listaRestricoes[i];
           dieta.checked = false;
@@ -164,7 +175,7 @@ export default class PerfilCliente extends Component {
             }
           }
           views.push (
-            <View key={i} style={styles.item}>
+            <View key={i} style={{ marginRight: 15, marginLeft: 15 }}>
               <CheckBox
                 style={{flex: 1, padding: 10}}
                 onClick={()=>this.onClickRestricao(dieta)}
@@ -222,10 +233,12 @@ export default class PerfilCliente extends Component {
     if (responseJson.usuario.imagemPerfil) {
       this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
     }
+
     var dataNormal = new Date(responseJson.usuario.dataNasc);
     var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-    this.setState({dataNascimentoText: dataNasc});
-    this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
+    this.setState({nomeText: responseJson.usuario.nome,
+                  dataNascimentoText: dataNasc,
+                  celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
     if (responseJson.tags.length > 0) {
       this.setState({tagEstilo: styles.listText})
       var tags = "";
@@ -251,9 +264,55 @@ export default class PerfilCliente extends Component {
   }
 
   salvaEdicaoCliente() {
-    //TODO: montar objeto cliente editado & chamar endpoint pra atualizar cliente
-    //usar restricoesAtualizadas
+    const {
+      state: {
+        clienteId,
+        userId,
+        cliente,
+        nomeText,
+        celularText,
+        imagemPerfil,
+        tags,
+        restricoesCliente
+      }
+    } = this;
+    clienteEditado = {
+      "id": clienteId,
+      "usuario": {
+        "id": userId,
+        "senha": cliente.usuario.senha,
+        "deletado": false,
+        "perfil": cliente.usuario.perfil,
+        "nome": nomeText,
+        "email": cliente.usuario.email,
+        "dataNasc": cliente.usuario.dataNasc,
+        "cpf": cliente.usuario.cpf,
+        "ddd": celularText.substr(0,2),
+        "telefone": celularText.substr(2,10),
+        "notificacao": false,
+        "bloqueado": false,
+        "imagemPerfil": imagemPerfil.uri
+      },
+      "restricoesDieteticas": restricoesCliente,
+      "tags": tags
+    };
+    fetch(constante.ENDPOINT + 'cliente', {
+      method: 'PUT',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(clienteEditado)})
+      .then((response) => response.json())
+      .then((rJson) => {
+        if (!rJson.errorMessage) {
+          this.preparaCliente(rJson);
+          this.setState({editavel: false});
+          ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);          
+        }
+      });
   }
+
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
 
   trocaImagemPerfil() {
@@ -347,9 +406,10 @@ export default class PerfilCliente extends Component {
                 iconSize={20}
                 iconName={'user'}
                 iconColor={'darkslategrey'}
-                value={this.state.cliente.usuario.nome}
+                value={this.state.nomeText}
+                onChangeText={(nome) => this.setState({nomeText: nome})}
                 editable={this.state.editavel}
-                inputStyle={styles.titleText}/>
+                inputStyle={this.state.titleTextClass}/>
 
               <Fumi
                   style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
@@ -368,8 +428,9 @@ export default class PerfilCliente extends Component {
                   iconName={'mobile'}
                   iconColor={'darkslategrey'}
                   value={this.state.celularText}
+                  onChange={(celular) => this.setState({celularText: celular})}                  
                   editable={this.state.editavel}
-                  inputStyle={styles.baseText}/>
+                  inputStyle={this.state.baseTextClass}/>
 
               <Fumi
                   style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
