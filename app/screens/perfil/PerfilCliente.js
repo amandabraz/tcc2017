@@ -18,6 +18,7 @@ import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import CheckBox from 'react-native-check-box';
+import TagInput from 'react-native-tag-input';
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,6 +32,7 @@ export default class PerfilCliente extends Component {
       clienteId: this.props.navigation.state.params.clienteId,      
       dataNascimentoText: '',
       imagemPerfil: require('./img/camera2.jpg'),
+      tags: [],
       tagsText: "Nenhuma tag inserida",
       tagEstilo: {
         color: '#CCCCCC',
@@ -48,7 +50,14 @@ export default class PerfilCliente extends Component {
       titleTextClass: styles.titleText,
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
-      editavel: false,      
+      editavel: false,
+      cliente: {
+        usuario: {
+          nome: '',
+          cpf: '',
+          email: '',
+        },
+      }  
     };
     this.buscaDadosCliente();
     this.preencherDietasArray();  
@@ -58,7 +67,9 @@ export default class PerfilCliente extends Component {
     fetch(constante.ENDPOINT + 'restricaodietetica')
       .then((response) => response.json())
         .then((responseJson) => {
+          if (!responseJson.errorMessage) {
             this.setState({restricoesDieteticas: responseJson});
+          }
         });
    };
 
@@ -101,7 +112,28 @@ export default class PerfilCliente extends Component {
         inputStyle={this.state.tagEstilo}/>
       );
     } else {
-      // TODO: montar objeto de tags já preenchido com as tags do Cliente
+      const inputTags = {
+        placeholder: 'insira mais tags',
+        placeholderTextColor: '#CCCCCC',
+        fontSize: 16,
+        fontFamily: 'Roboto',
+        fontWeight: 'bold',
+        height:300
+      };
+      return (
+        <View style={{ width: 378, height: 86, alignItems: 'center'}}>
+          <TagInput
+            value={this.state.tags}
+            onChange={this.onChangeTags}
+            tagColor="#8B636C"
+            tagTextColor="white"
+            tagAlign="center"
+            tagContainerStyle={{height: 24}}
+            tagTextStyle = {{fontSize: 18}}
+            inputProps={inputTags}
+            numberOfLines={15}/>
+        </View>
+      );
     }
   }
 
@@ -144,9 +176,14 @@ export default class PerfilCliente extends Component {
         }
         return views;
       }
-      // TODO: montar checkboxes com restrições dieteticas, com as que são do cliente já checadas (ver tela perfil vendedor, meios pagamento)
     }
   }
+
+  onChangeTags = (tags) => {
+    this.setState({
+      tags,
+    });
+ };
 
   onClickRestricao(restricao) {
     restricao.checked = !restricao.checked;
@@ -185,7 +222,6 @@ export default class PerfilCliente extends Component {
     if (responseJson.usuario.imagemPerfil) {
       this.setState({imagemPerfil: { uri: responseJson.usuario.imagemPerfil } })
     }
-    this.setState({nomeText: responseJson.usuario.nome});
     var dataNormal = new Date(responseJson.usuario.dataNasc);
     var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
     this.setState({dataNascimentoText: dataNasc});
@@ -193,11 +229,14 @@ export default class PerfilCliente extends Component {
     if (responseJson.tags.length > 0) {
       this.setState({tagEstilo: styles.listText})
       var tags = "";
+      var tagsArray = [];
       for(i in responseJson.tags) {
         tags += "#" + responseJson.tags[i].descricao + "  ";
+        tagsArray.push(responseJson.tags[i].descricao);
       }
       tags = tags.slice(0, -2);
-      this.setState({tagsText: tags});
+      this.setState({tagsText: tags,
+                    tags: tagsArray});
     }
     if (responseJson.restricoesDieteticas.length > 0) {
       this.setState({restricaoEstilo: styles.listText})
@@ -206,8 +245,8 @@ export default class PerfilCliente extends Component {
         restricoes += responseJson.restricoesDieteticas[i].descricao + " - ";
       }
       restricoes = restricoes.slice(0, -3);
-      this.setState({restricoesDieteticasText: restricoes});
-      this.setState({restricoesCliente: responseJson.restricoesDieteticas});      
+      this.setState({restricoesDieteticasText: restricoes,
+                     restricoesCliente: responseJson.restricoesDieteticas});      
     }
   }
 
