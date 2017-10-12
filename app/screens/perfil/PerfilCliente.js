@@ -17,6 +17,7 @@ import * as constante from '../../constantes';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
+import CheckBox from 'react-native-check-box';
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,21 +29,20 @@ export default class PerfilCliente extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,      
-      nomeText: '',
       dataNascimentoText: '',
-      emailText: '',
       imagemPerfil: require('./img/camera2.jpg'),
       tagsText: "Nenhuma tag inserida",
       tagEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
       },
+      restricoesDieteticas: [],
+      restricoesCliente: [],
       restricoesDieteticasText: "Nenhuma restrição escolhida",
       restricaoEstilo: {
         color: '#CCCCCC',
         fontStyle: 'italic'
       },
-      CPFText: '',
       celularText: '',
       confText: '  Configuração',
       titleTextClass: styles.titleText,
@@ -51,7 +51,16 @@ export default class PerfilCliente extends Component {
       editavel: false,      
     };
     this.buscaDadosCliente();
+    this.preencherDietasArray();  
   }
+
+  preencherDietasArray() {
+    fetch(constante.ENDPOINT + 'restricaodietetica')
+      .then((response) => response.json())
+        .then((responseJson) => {
+            this.setState({restricoesDieteticas: responseJson});
+        });
+   };
 
   buscaDadosCliente() {
     fetch(constante.ENDPOINT + 'cliente/usuario/' + this.state.userId)
@@ -111,10 +120,50 @@ export default class PerfilCliente extends Component {
         inputStyle={this.state.restricaoEstilo}/>
       );
     } else {
+      var listaRestricoes = this.state.restricoesDieteticas;
+      if (listaRestricoes) {
+        var views = [];
+        for (i in listaRestricoes) {
+          let dieta = listaRestricoes[i];
+          dieta.checked = false;
+          for (j in this.state.restricoesCliente) {
+            if (dieta.id === this.state.restricoesCliente[j].id) {
+              dieta.checked = true;
+            }
+          }
+          views.push (
+            <View key={i} style={styles.item}>
+              <CheckBox
+                style={{flex: 1, padding: 10}}
+                onClick={()=>this.onClickRestricao(dieta)}
+                isChecked={dieta.checked}
+                leftText={dieta.descricao}
+                />
+            </View>
+          );
+        }
+        return views;
+      }
       // TODO: montar checkboxes com restrições dieteticas, com as que são do cliente já checadas (ver tela perfil vendedor, meios pagamento)
     }
   }
 
+  onClickRestricao(restricao) {
+    restricao.checked = !restricao.checked;
+    var objRestricoes = {
+      "id": restricao.id,
+      "descricao": restricao.descricao
+    }
+    var restricoes = this.state.restricoesCliente;
+    if (restricao.checked) {
+      restricoes.push(objRestricoes);
+    } else {
+      restricoes.pop(objRestricoes);
+    }
+    this.setState({restricoesCliente: restricoes});
+  };
+
+  
   mostraBotaoSalvar() {
     if (this.state.editavel == true) {
       return(
@@ -140,8 +189,6 @@ export default class PerfilCliente extends Component {
     var dataNormal = new Date(responseJson.usuario.dataNasc);
     var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
     this.setState({dataNascimentoText: dataNasc});
-    this.setState({emailText: responseJson.usuario.email});
-    this.setState({CPFText: responseJson.usuario.cpf});
     this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
     if (responseJson.tags.length > 0) {
       this.setState({tagEstilo: styles.listText})
@@ -160,11 +207,13 @@ export default class PerfilCliente extends Component {
       }
       restricoes = restricoes.slice(0, -3);
       this.setState({restricoesDieteticasText: restricoes});
+      this.setState({restricoesCliente: responseJson.restricoesDieteticas});      
     }
   }
 
   salvaEdicaoCliente() {
     //TODO: montar objeto cliente editado & chamar endpoint pra atualizar cliente
+    //usar restricoesAtualizadas
   }
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
 
@@ -259,7 +308,7 @@ export default class PerfilCliente extends Component {
                 iconSize={20}
                 iconName={'user'}
                 iconColor={'darkslategrey'}
-                value={this.state.nomeText}
+                value={this.state.cliente.usuario.nome}
                 editable={this.state.editavel}
                 inputStyle={styles.titleText}/>
 
@@ -269,7 +318,7 @@ export default class PerfilCliente extends Component {
                   iconClass={FontAwesomeIcon}
                   iconName={'info'}
                   iconColor={'darkslategrey'}
-                  value={this.state.CPFText}
+                  value={this.state.cliente.usuario.cpf}
                   editable={false}
                   inputStyle={styles.baseText}/>
 
@@ -299,7 +348,7 @@ export default class PerfilCliente extends Component {
                   iconClass={FontAwesomeIcon}
                   iconName={'at'}
                   iconColor={'darkslategrey'}
-                  value={this.state.emailText}
+                  value={this.state.cliente.usuario.email}
                   editable={false}
                   inputStyle={styles.baseText}/>
 
