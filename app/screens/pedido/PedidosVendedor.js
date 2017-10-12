@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
-import {Button} from 'react-native-elements';
+import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -44,9 +44,15 @@ class PedidosVendedor extends Component {
       });
   };
 
+  onSuccess(e) {
+      Linking
+        .openURL(e.data)
+        .catch(err => console.error('An error occured', err));
+  }
+
   cancelarPedido() {
       this.popup.confirm({
-          title: 'Recusar Pedido',
+          title: 'Cancelar Pedido',
           content: ['Deseja realmente cancelar esse pedido?'],
           ok: {
               text: 'Confirmar',
@@ -62,6 +68,10 @@ class PedidosVendedor extends Component {
               }
           }
       });
+  }
+
+  atualizaStatus(pedido) {
+
   }
 
 pedidos(){
@@ -82,9 +92,12 @@ pedidos(){
             <Image source={{uri: pedido.cliente.usuario.imagemPerfil}}
                    style={styles.imagemPrincipal}/>
             </View>
-          <View style={{width: '65%', alignSelf:'center'}}>
+          <View style={{width: '60%', alignSelf:'center'}}>
             <Text style={styles.totalFont}> {pedido.cliente.usuario.nome}</Text>
             <Text style={styles.oneResultfont}>Fez um pedido!</Text>
+          </View>
+          <View style={{width: '5%',justifyContent: 'center'}}>
+          <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
           </View>
       </View>
       </View>
@@ -100,12 +113,12 @@ pedidos(){
           <Text style={styles.oneResultfont}>Quantidade:
           <Text style={styles.totalFont}> {pedido.quantidade}{'\n'}</Text>
           </Text>
-          <Text style={styles.oneResultfont}>Total a pagar em {pedido.pagamento.descricao}:</Text>
+          <Text style={styles.oneResultfont}>Total a pagar {pedido.pagamento.descricao}:</Text>
           <Text style={styles.totalFont}> R$ {pedido.valorCompra}{'\n'}</Text>
           </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
-            <Button title ="Recusar"
+            <Button title ="Cancelar"
                     color="#fff"
                     backgroundColor="#88557B"
                     borderRadius={10}
@@ -114,7 +127,11 @@ pedidos(){
             <Button title="Aceitar"
                     color="#fff"
                     backgroundColor="#768888"
-                    borderRadius={10}/>
+                    borderRadius={10}
+                    onPress={() => {
+                      pedido.status = "Confirmado";
+                      this.atualizaStatus(pedido);
+                    }}/>
         </View>
           </View>
           }/>
@@ -129,20 +146,37 @@ if(pedido.status == "Confirmado"){
         Pedido Confirmado
       </Text>
       <View style={{flexDirection: 'row'}}>
-      <View style = {{ width: '25%'}}>
+      <View style = {{ width: '20%'}}>
       <Image source={{uri: pedido.cliente.usuario.imagemPerfil}}
              style={styles.imagemPrincipal}/>
       </View>
     <View style={{width: '65%', alignSelf:'center'}}>
       <Text style={styles.totalFont}> {pedido.cliente.usuario.nome}</Text>
+       <Text style={styles.oneResultfont}> Entregar:
+       <Text style={styles.totalFont}> {pedido.quantidade}</Text>
+       </Text>
+       <Text style={styles.oneResultfont}> Produto:
        <Text style={styles.totalFont}> {pedido.produto.nome}</Text>
+       </Text>
+       <Text style={styles.oneResultfont}> Receber {pedido.pagamento.descricao}:
+       <Text style={styles.totalFont}> R$  {pedido.valorCompra}</Text>
+       </Text>
+    </View>
+    <View style={{width: '5%',justifyContent: 'center'}}>
+    <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
     </View>
 </View>
 </View>
     } content={
       <View style={{paddingTop: 15}}>
       <QRCodeScanner
-      onRead = {() => {(console.log('QR code scanned!'))}}/>
+      onRead = () => {
+        pedido.status = "Finalizado";
+        this.atualizaStatus(pedido);
+      }}
+      topContent={(
+          <Text style={{fontSize: 18, justifyContent: 'center'}}>
+            Leia o toker para finalizar o pedido</Text>)}/>
     </View>
     }/>
 </View>
@@ -164,9 +198,12 @@ if(pedido.status == "Confirmado"){
                  <Image source={{uri: pedido.produto.imagemPrincipal}}
                          style={styles.imagemPrincipal}/>
                 </View>
-              <View style={{width: '65%', alignSelf:'center'}}>
+              <View style={{width: '60%', alignSelf:'center'}}>
                <Text style={styles.totalFont}> {pedido.produto.nome}</Text>
                <Text style={{fontSize: 18}}> {pedido.dataFinalizacao}</Text>
+              </View>
+              <View style={{width: '5%',justifyContent: 'center'}}>
+              <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
               </View>
           </View>
           </View>
@@ -182,7 +219,7 @@ if(pedido.status == "Confirmado"){
                 <Text style={styles.oneResultfont}>Quantidade vendida:
                 <Text style={styles.totalFont}> {pedido.quantidade}{'\n'}</Text>
                 </Text>
-                <Text style={styles.oneResultfont}>Total pago em {pedido.pagamento.descricao}:
+                <Text style={styles.oneResultfont}>Total pago {pedido.pagamento.descricao}:
                 <Text style={styles.totalFont}> R$ {pedido.valorCompra}{'\n'}</Text>
                 </Text>
               </View>
@@ -192,6 +229,14 @@ if(pedido.status == "Confirmado"){
             </View>
           )}
         }
+      } else {
+        views.push(
+          <View key={0} style={{alignItems: 'center'}}>
+          <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center'}}>
+            Você não tem pedidos! :(
+          </Text>
+          </View>
+        )
       }
         return views;
     }
