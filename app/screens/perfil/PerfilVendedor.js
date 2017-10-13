@@ -142,7 +142,6 @@ export default class PerfilVendedor extends Component {
         vendedorId,
         userId,
         nomeText,
-        meiosPagamentos,
         vendedor,
         celularText,
         nomeFantasiaText,
@@ -157,7 +156,7 @@ export default class PerfilVendedor extends Component {
           "id": userId,
           "senha": vendedor.usuario.senha,
           "deletado": false,
-          "perfil": "V",
+          "perfil": vendedor.usuario.perfil,
           "nome": nomeText,
           "email": vendedor.usuario.email,
           "dataNasc": vendedor.usuario.dataNasc,
@@ -226,6 +225,12 @@ export default class PerfilVendedor extends Component {
     var pagamentosVendedor = this.state.meiosPagamento;
     if (pagamentosVendedor) {
       var views = [];
+      views.push(
+        <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
+          <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
+          <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
+        </View>        
+      );
       for (i in pagamentosVendedor) {
         let meioPagamento = pagamentosVendedor[i];  
         meioPagamento.checked = false;                
