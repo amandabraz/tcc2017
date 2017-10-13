@@ -32,7 +32,8 @@ class PedidosVendedor extends Component {
       listaPedidos:[],
       pedidosSolicitados: [],
       pedidosConfirmados: [],
-      pedidosFinalizados: []
+      pedidosFinalizados: [],
+      tokenOK: 's'
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -53,6 +54,9 @@ class PedidosVendedor extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.buscaDadosPedidosVendedor();
+          this.setState({pedidosSolicitados: []})
+          this.setState({pedidosConfirmados: []})
+          this.setState({pedidosFinalizados: []})
           this.pedidos();
           this.pedidoSolicitado();
           this.pedidoConfirmado();
@@ -130,7 +134,7 @@ pedidoSolicitado(){
         </View>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Button buttonStyle={{width: 80}}
+          <Button buttonStyle={{width: 90}}
                   title ="Cancelar"
                   color="#fff"
                   backgroundColor="#88557B"
@@ -140,7 +144,7 @@ pedidoSolicitado(){
                     this.atualizaStatus(pedidoS);
                   }}/>
 
-          <Button buttonStyle={{width: 80}}
+          <Button buttonStyle={{width: 90}}
                   title="Aceitar"
                   color="#fff"
                   backgroundColor="#768888"
@@ -166,6 +170,16 @@ pedidoSolicitado(){
     )
   }
   return views;
+}
+
+tokenInvalido() {
+    this.popup.confirm({
+        title: 'Token Inválido',
+        content: ['Esse Token é inválido'],
+        ok: {
+            text: 'Ok'
+        }
+    });
 }
 
 pedidoConfirmado(){
@@ -199,25 +213,15 @@ pedidoConfirmado(){
     </View>
         } content={
           <View style={{margin: 15, alignItems:'center'}}>
-          <QRCodeScanner
-            reactivate={true}
-            showMarker={true}
-            cameraStyle={{width: '90%', alignSelf:'center'}}
-            onRead = {(tokenLido) => {
-                if(tokenLido === pedidoC.token){
-                  pedidoC.status = "Finalizado";
-                  this.atualizaStatus(pedidoC);
-                } else {
-                  <Text style={{fontSize: 18, justifyContent: 'center'}}>
-                    Token Inválido!</Text>
-                }
-              }}
-          topContent={(
-              <Text style={{fontSize: 18, justifyContent: 'center'}}>
-                Leia o token para finalizar o pedido</Text>)}
-                />
-        </View>
-        }
+          <Button buttonStyle={{width: 150}}
+                  title="Ler Token"
+                  color="#fff"
+                  backgroundColor="#768888"
+                  borderRadius={10}
+                  onPress={() => {this.props.navigation.navigate('LerTokenPedido', {token: pedidoC.token, pedidoId: pedidoC.id})}}/>
+            </View>
+
+            }
         underlayColor="white"
         easing="easeOutCubic"/>
     </View>

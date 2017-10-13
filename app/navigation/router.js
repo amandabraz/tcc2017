@@ -22,6 +22,7 @@ import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
 import PedidosCliente from '../screens/pedido/PedidosCliente';
 import PedidosVendedor from '../screens/pedido/PedidosVendedor';
+import LerTokenPedido from '../screens/pedido/LerTokenPedido';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
@@ -236,6 +237,9 @@ export const TabsVendedor = TabNavigator({
 export const Root = StackNavigator({
   PedidosVendedor: {
     screen: PedidosVendedor
+  },
+  LerTokenPedido:{
+    screen: LerTokenPedido
   },
   Login: {
     screen: Login,
