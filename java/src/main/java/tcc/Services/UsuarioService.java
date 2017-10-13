@@ -6,9 +6,7 @@ import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
 
-/**
- * Created by amanda on 17/08/2017.
- */
+import java.util.Objects;
 
 @Service
 public class UsuarioService {
@@ -40,8 +38,11 @@ public class UsuarioService {
         return null;
     }
 
-    public Usuario salvaUsuario(Usuario usuario) {
+    public Usuario editaUsuario(Usuario usuario) {
         try {
+            if (Objects.isNull(buscaUsuario(usuario.getId()))) {
+                return null;
+            }
             return usuarioDAO.save(usuario);
         } catch (Exception e) {
             throw e;
