@@ -61,6 +61,8 @@ class PedidosVendedor extends Component {
           this.pedidoSolicitado();
           this.pedidoConfirmado();
           this.pedidoFinalizado();
+        } else {
+          Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
       });
   }
