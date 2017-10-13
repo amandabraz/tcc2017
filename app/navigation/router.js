@@ -228,7 +228,7 @@ export const TabsVendedor = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#6DA1A1',
+        backgroundColor: '#4FA19D',
       },
     }
 });
