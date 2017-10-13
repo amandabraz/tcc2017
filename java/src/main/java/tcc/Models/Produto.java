@@ -14,13 +14,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "PRODUTO")
-public class Produto implements Serializable {
+public class Produto implements Serializable, Comparable<Produto> {
 
     public static final Long serialVersionUID = 1L;
 
@@ -90,6 +91,10 @@ public class Produto implements Serializable {
     //Adicionada imagem como principal, o restante pode ir para a galeria
     @Column(name = "imagem_principal", nullable = true)
     private String imagemPrincipal;
+
+    //Distancia em METROS, apenas usada na busca, não é salvo no banco
+    @Transient
+    private double distancia;
 
     public Produto() {
         super();
@@ -216,6 +221,14 @@ public class Produto implements Serializable {
         this.imagemPrincipal = imagemPrincipal;
     }
 
+    public double getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
+    }
+
     @Override
     public String toString() {
         return "Produto{" +
@@ -233,5 +246,14 @@ public class Produto implements Serializable {
                 ", observacao='" + observacao + '\'' +
                 ", score=" + score +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Produto o) {
+        if (this.getDistancia() < o.getDistancia()) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

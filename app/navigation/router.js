@@ -16,6 +16,7 @@ import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
+import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
@@ -25,6 +26,7 @@ import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
+import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
 
 /**
 MENU SOMENTE PARA CLIENTE
@@ -113,6 +115,7 @@ export const TabsCliente = TabNavigator({
       },
     }
   },{
+    initialRouteName: 'Home',    
     tabBarComponent: TabView.TabBarBottom,
     lazy: true,
     tabBarPosition: 'bottom',
@@ -153,8 +156,11 @@ export const GerenciaProdutos = StackNavigator({
       screen: CadastroProduto,
       navigationOptions: {
         title: 'Novo Produto'
+      }
+    },
+  AlteraProduto: {
+        screen: AlteraProduto,
       },
-    }
 }, {
   mode: 'card',
   headerMode: 'none',
@@ -207,6 +213,7 @@ export const TabsVendedor = TabNavigator({
       },
     }
   },{
+    initialRouteName: 'Home',
     tabBarComponent: TabView.TabBarBottom,
     tabBarPosition: 'bottom',
     lazy: true,
@@ -215,7 +222,7 @@ export const TabsVendedor = TabNavigator({
     backBehavior: 'none',
     tabBarOptions: {
       showLabel: false,
-      activeTintColor: '#8fbc8f',
+      activeTintColor: '#333333',
       inactiveTintColor: '#fff',
       labelStyle: {
         fontSize: 12,
@@ -226,8 +233,6 @@ export const TabsVendedor = TabNavigator({
     }
 });
 
-
-// TODO: Creio que aqui colocamos uma logica pra dizer: se usuario está logado, carregar dashboard, senão, carregar tela de login
 export const Root = StackNavigator({
   Login: {
     screen: Login,
@@ -242,11 +247,14 @@ export const Root = StackNavigator({
     screen: Cliente,
   },
   TabsCliente: {
-    screen: TabsCliente
+    screen: TabsCliente,
   },
   TabsVendedor: {
-    screen: TabsVendedor
-  }
+    screen: TabsVendedor,
+  },
+  LocalizacaoNaoPermitida: {
+    screen: LocalizacaoNaoPermitida,
+  },
 }, {
   mode: 'card',
   lazy: true,

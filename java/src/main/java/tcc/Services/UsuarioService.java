@@ -8,10 +8,6 @@ import tcc.Models.Usuario;
 
 import java.util.Objects;
 
-/**
- * Created by amanda on 17/08/2017.
- */
-
 @Service
 public class UsuarioService {
 

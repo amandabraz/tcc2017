@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import tcc.DAOs.LocalizacaoDAO;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Cliente;
@@ -26,6 +27,9 @@ public class UsuarioController {
 
     private char VENDEDOR = 'V';
     private char CLIENTE = 'C';
+
+    @Autowired
+    private LocalizacaoDAO localizacaoDAO;
 
     @Autowired
     private UsuarioDAO usuarioDao;
@@ -114,7 +118,7 @@ public class UsuarioController {
      * @return Character usuarioBd se o usuário for encontrado de acordo com o id.
      *          Erro    se o id não estiver cadastrado.
      */
-    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity buscaUsuario(@PathVariable("id") Long id){
         Character type;
@@ -145,4 +149,3 @@ public class UsuarioController {
         }
     }
 }
-

@@ -24,6 +24,7 @@ const { width, height } = Dimensions.get("window");
 
 //Exporto essa classe pra que na minha "Main"
 export default class Login extends Component {
+  
   constructor(props) {
    super(props);
 
