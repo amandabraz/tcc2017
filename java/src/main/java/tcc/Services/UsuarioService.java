@@ -8,10 +8,6 @@ import tcc.Models.Usuario;
 
 import java.util.Objects;
 
-/**
- * Created by amanda on 17/08/2017.
- */
-
 @Service
 public class UsuarioService {
 
@@ -47,14 +43,6 @@ public class UsuarioService {
             if (Objects.isNull(buscaUsuario(usuario.getId()))) {
                 return null;
             }
-            return usuarioDAO.save(usuario);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public Usuario salvaUsuario(Usuario usuario) {
-        try {
             return usuarioDAO.save(usuario);
         } catch (Exception e) {
             throw e;
