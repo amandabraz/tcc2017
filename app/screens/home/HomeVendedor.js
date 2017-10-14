@@ -27,7 +27,6 @@ class HomeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        pedidoId: 23,
         nomeProdutoText: '',
         quantidadeText: '',
         precoText: '',
@@ -39,16 +38,18 @@ class HomeVendedor extends Component {
         dataSolicitada:'',
         gps: 0,
         userId: this.props.navigation.state.params.userId,
-        vendedorId: this.props.navigation.state.params.vendedorId
+        vendedorId: this.props.navigation.state.params.vendedorId,
+        pedidoSolicitado: ''
 
     };
     this.buscaDadosPedido();
   };
 
   buscaDadosPedido() {
-    fetch(constante.ENDPOINT+'pedido/' + this.state.pedidoId)
+    fetch(constante.ENDPOINT+'pedido/data/vendedor/' + this.state.vendedorId)
     .then((response) => response.json())
       .then((responseJson) => {
+        this.setState({pedidoSolicitado: responseJson});
           if (!responseJson.errorMessage) {
               if (responseJson.produto.imagemPrincipal) {
              this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
@@ -59,6 +60,7 @@ class HomeVendedor extends Component {
          this.setState({nomeProdutoText: responseJson.produto.nome});
          this.setState({quantidadeText: responseJson.quantidade});
          this.setState({precoText: responseJson.valorCompra});
+         this.setState({pedidoSolicitado: 'ok'})
          this.setState({meioPagamentoText: responseJson.pagamento.descricao});
          this.setState({nomeClienteText: responseJson.cliente.usuario.nome});
          var dataNormal = new Date(responseJson.dataSolicitada);
@@ -100,6 +102,7 @@ class HomeVendedor extends Component {
 
   pedidoSolicitado(){
     var views = [];
+    if(this.state.pedidoSolicitado=='ok'){
     views.push(
     <View key={0} style={styles.oneResult}>
       <View style={{flexDirection: 'row'}}>
@@ -150,7 +153,15 @@ class HomeVendedor extends Component {
 
      </View>
    </View>
- )
+ )} else {
+   views.push(
+     <View key={0} style={{alignItems: 'center'}}>
+     <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+       Você não tem nova solicitação! :(
+     </Text>
+     </View>
+   )
+ }
    return views;
 }
 
