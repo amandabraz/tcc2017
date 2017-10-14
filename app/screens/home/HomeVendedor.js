@@ -19,6 +19,7 @@ import {Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import Chart from 'react-native-chart';
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,40 +27,44 @@ class HomeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidoId: 23,
-      nomeProdutoText: '',
-      quantidadeText: '',
-      precoText: '',
-      meioPagamentoText: '',
-      screenName: 'TabsVendedor',
-      nomeClienteText: '',
-      imagemProduto: require('./img/camera2.jpg'),
-      imagemCliente: require('./img/camera2.jpg'),
-      gps: 0,
-      userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId
+        pedidoId: 23,
+        nomeProdutoText: '',
+        quantidadeText: '',
+        precoText: '',
+        meioPagamentoText: '',
+        screenName: 'TabsVendedor',
+        nomeClienteText: '',
+        imagemProduto: require('./img/camera2.jpg'),
+        imagemCliente: require('./img/camera2.jpg'),
+        dataSolicitada:'',
+        gps: 0,
+        userId: this.props.navigation.state.params.userId,
+        vendedorId: this.props.navigation.state.params.vendedorId
+
     };
     this.buscaDadosPedido();
   };
 
   buscaDadosPedido() {
-    //TODO: Trazer apenas dados dos pedidos solicitados
     fetch(constante.ENDPOINT+'pedido/' + this.state.pedidoId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
-            if (responseJson.produto.imagemPrincipal) {
-              this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
-            }
-            if (responseJson.cliente.usuario.imagemPerfil) {
-              this.setState({imagemCliente: { uri: responseJson.cliente.usuario.imagemPerfil } })
-            }
-          this.setState({nomeProdutoText: responseJson.produto.nome});
-          this.setState({quantidadeText: responseJson.quantidade});
-          this.setState({precoText: responseJson.valorCompra});
-          this.setState({meioPagamentoText: responseJson.pagamento.descricao});
-          this.setState({nomeClienteText: responseJson.cliente.usuario.nome});
-        }
+              if (responseJson.produto.imagemPrincipal) {
+             this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
+           }
+           if (responseJson.cliente.usuario.imagemPerfil) {
+             this.setState({imagemCliente: { uri: responseJson.cliente.usuario.imagemPerfil } })
+           }
+         this.setState({nomeProdutoText: responseJson.produto.nome});
+         this.setState({quantidadeText: responseJson.quantidade});
+         this.setState({precoText: responseJson.valorCompra});
+         this.setState({meioPagamentoText: responseJson.pagamento.descricao});
+         this.setState({nomeClienteText: responseJson.cliente.usuario.nome});
+         var dataNormal = new Date(responseJson.dataSolicitada);
+         var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+         this.setState({dataSolicitada: dataS});
+       }
       });
   };
 
@@ -93,6 +98,62 @@ class HomeVendedor extends Component {
       });
   }
 
+  pedidoSolicitado(){
+    var views = [];
+    views.push(
+    <View key={0} style={styles.oneResult}>
+      <View style={{flexDirection: 'row'}}>
+        <View style = {{ width: '30%'}}>
+          <Image source={this.state.imagemProduto}
+                 style={styles.imagemProduto}/>
+        </View>
+        <View style={{width: '68%', paddingLeft: 5}}>
+          <View style={{flexDirection: 'row'}}>
+           <View style = {{ width: '30%'}}>
+             <Image source={this.state.imagemCliente}
+                    style={styles.imagemCliente}/>
+           </View>
+           <View style={{width: '70%'}}>
+             <Text style={styles.totalFont}> {this.state.nomeClienteText}</Text>
+             <Text style={styles.oneResultfont}>Fez um pedido!</Text>
+             <Text style={{fontSize:18}}>{this.state.dataSolicitada}</Text>
+           </View>
+         </View>
+           <View style={{paddingTop:10}}>
+           <Text style={styles.oneResultfont}>Produto:
+             <Text style={styles.totalFont}> {this.state.nomeProdutoText}{'\n'}</Text>
+           </Text>
+            <Text style={styles.oneResultfont}>Quantidade:
+              <Text style={styles.totalFont}> {this.state.quantidadeText}{'\n'}</Text>
+            </Text>
+            <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
+            </Text>
+            <Text style={styles.totalFont}> R$ {this.state.precoText}{'\n'}</Text>
+
+          </View>
+        </View>
+     </View>
+     <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
+
+     <Button title ="Recusar"
+             color="#fff"
+             backgroundColor="#88557B"
+             borderRadius={10}
+             onPress={this.cancelarPedido.bind(this)}
+             buttonStyle={{width: 80}}/>
+
+     <Button title="Aceitar"
+             color="#fff"
+             backgroundColor="#768888"
+             borderRadius={10}
+             buttonStyle={{width: 80}}/>
+
+     </View>
+   </View>
+ )
+   return views;
+}
+
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(<LocalizacaoNaoPermitida
@@ -107,53 +168,9 @@ class HomeVendedor extends Component {
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
-              <View style={styles.oneResult}>
-                <View style={{flexDirection: 'row'}}>
-                  <View style = {{ width: '30%'}}>
-                    <Image source={this.state.imagemProduto}
-                           style={styles.imagemProduto}/>
-                  </View>
-                  <View style={{width: '68%', paddingLeft: 5}}>
-                    <View style={{flexDirection: 'row'}}>
-                     <View style = {{ width: '30%'}}>
-                       <Image source={this.state.imagemCliente}
-                              style={styles.imagemCliente}/>
-                     </View>
-                     <View style={{width: '70%'}}>
-                       <Text style={styles.totalFont}> {this.state.nomeClienteText}</Text>
-                       <Text style={styles.oneResultfont}>Fez um pedido!
-                       </Text>
-                     </View>
-                   </View>
-                     <View style={{paddingTop:10}}>
-                      <Text style={styles.oneResultfont}>Quantidade:
-                        <Text style={styles.totalFont}> {this.state.quantidadeText}{'\n'}</Text>
-                      </Text>
-                      <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
-                      </Text>
-                      <Text style={styles.totalFont}> R$ {this.state.precoText}{'\n'}</Text>
-                      <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
-
-                      <Button title ="Recusar"
-                              color="#fff"
-                              backgroundColor="#88557B"
-                              borderRadius={10}
-                              large={true}
-                              onPress={this.cancelarPedido.bind(this)}/>
-
-                      <Button title="Aceitar"
-                              color="#fff"
-                              backgroundColor="#768888"
-                              borderRadius={10}
-                              large={true}/>
-
-                      </View>
-                    </View>
-                  </View>
-               </View>
-             </View>
-             <Popup ref={popup => this.popup = popup }/>
-          </View>
+              {this.pedidoSolicitado()}
+            </View>
+           <Popup ref={popup => this.popup = popup }/>
         </View>
       )
   }
@@ -204,7 +221,7 @@ const styles = StyleSheet.create({
   },
   imagemProduto:{
     width: '98%',
-    height: 250,
+    height: 190,
     borderRadius: 10
   }
 });
