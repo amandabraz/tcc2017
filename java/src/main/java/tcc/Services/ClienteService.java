@@ -5,21 +5,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tcc.DAOs.ClienteDAO;
 import tcc.Models.Cliente;
+import tcc.Models.Tag;
 import tcc.Models.Usuario;
 
-/**
- * Created by amanda on 17/08/2017.
- */
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 @Service
 public class ClienteService {
 
     @Autowired
     private ClienteDAO clienteDAO;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private TagService tagService;
+
     @Transactional
     public Cliente salvaCliente(Cliente cliente) {
         Cliente clienteResolvido;
         try {
+            salvaTags(cliente);
             clienteResolvido = clienteDAO.save(cliente);
         } catch (Exception e) {
             throw e;
@@ -40,6 +49,46 @@ public class ClienteService {
            return clienteDAO.findByUsuario(usuario);
         } catch (Exception e) {
             throw e;
+        }
+    }
+
+    public Cliente editaCliente(Cliente cliente) {
+        try {
+            Cliente clienteEditado = null;
+            if (Objects.isNull(buscaCliente(cliente.getId()))) {
+                return null;
+            }
+            Usuario usuarioEditado = usuarioService.editaUsuario(cliente.getUsuario());
+            if (Objects.isNull(usuarioEditado)) {
+                return null;
+            }
+            cliente.setUsuario(usuarioEditado);
+            clienteEditado = this.salvaCliente(cliente);
+            return clienteEditado;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public boolean editaTagsDoCliente(Cliente cliente) {
+        try {
+            return false;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public void salvaTags(Cliente cliente) {
+        Set<Tag> tagsSalvas = new HashSet<>();
+        Tag tagSalva;
+        for (Tag tagProposta : cliente.getTags()) {
+            tagSalva = tagService.verificarTag(tagProposta);
+            if (tagSalva != null) {
+                tagsSalvas.add(tagSalva);
+            }
+        }
+        if (!tagsSalvas.isEmpty()) {
+            cliente.setTags(tagsSalvas);
         }
     }
 }

@@ -12,6 +12,7 @@
     "react-native": "0.43.4",
     "react-native-accordion": "^1.0.1",
     "react-native-action-button": "^2.6.9",
+    "react-native-animatable": "^1.2.4",
     "react-native-alerts": "^0.1.8",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-camera-roll-picker": "^1.1.9",
