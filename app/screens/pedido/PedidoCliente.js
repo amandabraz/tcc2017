@@ -1,73 +1,80 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
   Alert,
+  AppRegistry,
   Dimensions,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
   ToastAndroid,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from 'react-native';
-import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
-import {Button} from 'react-native-elements';
+import {
+  Button
+} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import BuscaProduto from '../produto/BuscaProduto';
 
 const { width, height } = Dimensions.get("window");
 
-class HomeVendedor extends Component {
+class PedidoCliente extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      pedidoId: 23,
-      nomeProdutoText: '',
-      quantidadeText: '',
-      precoText: '',
-      meioPagamentoText: '',
-      screenName: 'TabsVendedor',
-      nomeClienteText: '',
-      imagemProduto: require('./img/camera2.jpg'),
-      imagemCliente: require('./img/camera2.jpg'),
-      gps: 0,
-      userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId
+        pedidoId: 23, //TODO: Inserir id exato do produto
+        screenName: 'TabsCliente',
+        userId: this.props.navigation.state.params.userId,
+        clienteId: this.props.navigation.state.params.clienteId,
+        gps: 0,
+        nomeProdutoText: '',
+        quantidadeText: '',
+        precoText: '',
+        dataSolicitacaoText: '',
+        meioPagamentoText: '',
+        nomeVendedorText: '',
+        imagemProduto: require('./img/camera2.jpg'),
+        imagemVendedor: require('./img/camera2.jpg'),
+        statusPedido: 'Pendente de aprovação',
+        userId: this.props.navigation.state.params.userId,
+        clienteId: this.props.navigation.state.params.clienteId
+      };
+      this.buscaDadosPedido();
     };
-    this.buscaDadosPedido();
-  };
 
-  buscaDadosPedido() {
-    //TODO: Trazer apenas dados dos pedidos solicitados
-    fetch(constante.ENDPOINT+'pedido/' + this.state.pedidoId)
-    .then((response) => response.json())
-      .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-            if (responseJson.produto.imagemPrincipal) {
-              this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
-            }
-            if (responseJson.cliente.usuario.imagemPerfil) {
-              this.setState({imagemCliente: { uri: responseJson.cliente.usuario.imagemPerfil } })
-            }
-          this.setState({nomeProdutoText: responseJson.produto.nome});
-          this.setState({quantidadeText: responseJson.quantidade});
-          this.setState({precoText: responseJson.valorCompra});
-          this.setState({meioPagamentoText: responseJson.pagamento.descricao});
-          this.setState({nomeClienteText: responseJson.cliente.usuario.nome});
-        }
-      });
-  };
+    buscaDadosPedido() {
+      //TODO: Trazer apenas dados dos pedidos solicitados
+      fetch(constante.ENDPOINT+'pedido/' + this.state.pedidoId)
+      .then((response) => response.json())
+        .then((responseJson) => {
+            if (!responseJson.errorMessage) {
+              if (responseJson.produto.imagemPrincipal) {
+                this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
+              }
+              if (responseJson.produto.vendedor.usuario.imagemPerfil) {
+                this.setState({imagemVendedor: { uri: responseJson.produto.vendedor.usuario.imagemPerfil } })
+              }
+            this.setState({nomeProdutoText: responseJson.produto.nome});
+            this.setState({quantidadeText: responseJson.quantidade});
+            this.setState({precoText: responseJson.valorCompra});
+            this.setState({statusPedidoText: responseJson.status});
+            this.setState({meioPagamentoText: responseJson.pagamento.descricao});
+            this.setState({nomeVendedorText: responseJson.produto.vendedor.usuario.nome});
+            this.setState({dataSolicitacaoText: responseJson.dataSolicitada});
+          }
+        });
+    };
 
   componentWillMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
-      // timer ajustado para cada 10 minutos
-      StartTimerLocation.start(60000, this.state.userId);
     }, (error) => {
       this.setState({gps: 0});
     });
@@ -75,7 +82,7 @@ class HomeVendedor extends Component {
 
   cancelarPedido() {
       this.popup.confirm({
-          title: 'Recusar Pedido',
+          title: 'Cancelar Pedido',
           content: ['Deseja realmente cancelar esse pedido?'],
           ok: {
               text: 'Confirmar',
@@ -96,9 +103,9 @@ class HomeVendedor extends Component {
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(<LocalizacaoNaoPermitida
-        screenName={this.state.screenName}
-        navigation={this.props.navigation}
-        userId={this.state.userId} />
+          screenName={this.state.screenName}
+          navigation={this.props.navigation}
+          userId={this.state.userId}/>
       );
     } else {
       return(
@@ -116,36 +123,32 @@ class HomeVendedor extends Component {
                   <View style={{width: '68%', paddingLeft: 5}}>
                     <View style={{flexDirection: 'row'}}>
                      <View style = {{ width: '30%'}}>
-                       <Image source={this.state.imagemCliente}
-                              style={styles.imagemCliente}/>
+                       <Image source={this.state.imagemVendedor}
+                              style={styles.imagemVendedor}/>
                      </View>
                      <View style={{width: '70%'}}>
-                       <Text style={styles.totalFont}> {this.state.nomeClienteText}</Text>
-                       <Text style={styles.oneResultfont}>Fez um pedido!
-                       </Text>
+                       <Text style={styles.oneResultfont}>Seu pedido</Text>
+                       <Text style={styles.totalFont}> {this.state.nomeVendedorText}</Text>
                      </View>
                    </View>
                      <View style={{paddingTop:10}}>
                       <Text style={styles.oneResultfont}>Quantidade:
                         <Text style={styles.totalFont}> {this.state.quantidadeText}{'\n'}</Text>
                       </Text>
-                      <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
+                      <Text style={styles.oneResultfont}>Status da compra: {this.state.statusPedidoText}
                       </Text>
                       <Text style={styles.totalFont}> R$ {this.state.precoText}{'\n'}</Text>
+                      <Text style={styles.oneResultfont}>Solicitado em:
+                        <Text style={styles.totalFont}> {this.state.dataSolicitacaoText}{'\n'}</Text>
+                      </Text>
                       <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
 
-                      <Button title ="Recusar"
+                      <Button title ="Cancelar"
                               color="#fff"
                               backgroundColor="#88557B"
                               borderRadius={10}
                               large={true}
                               onPress={this.cancelarPedido.bind(this)}/>
-
-                      <Button title="Aceitar"
-                              color="#fff"
-                              backgroundColor="#768888"
-                              borderRadius={10}
-                              large={true}/>
 
                       </View>
                     </View>
@@ -155,13 +158,13 @@ class HomeVendedor extends Component {
              <Popup ref={popup => this.popup = popup }/>
           </View>
         </View>
-      )
+      );
+    }
   }
- }
 }
 
 const titleConfig = {
-  title: 'Home',
+  title: 'Pedidos',
   tintColor: "#fff",
   fontFamily: 'Roboto',
 };
@@ -209,6 +212,6 @@ const styles = StyleSheet.create({
   }
 });
 
-HomeVendedor.defaultProps = { ...HomeVendedor };
+PedidoCliente.defaultProps = { ...PedidoCliente };
 
-export default HomeVendedor;
+export default PedidoCliente;
