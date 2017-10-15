@@ -92,7 +92,7 @@ export const TabsCliente = TabNavigator({
     Home: {
       screen: HomeCliente,
       navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
       },
     },
     Favoritos: {
@@ -125,6 +125,9 @@ export const TabsCliente = TabNavigator({
       style: {
         backgroundColor: '#2f4f4f',
       },
+      indicatorStyle: { 
+        backgroundColor: 'white',
+      }
     }
   });
 
@@ -154,7 +157,10 @@ export const GerenciaPedidos = TabNavigator({
       style: {
         backgroundColor: '#4682b4',
       },
-  }
+      indicatorStyle: { 
+        backgroundColor: 'white',
+      }
+    }
 });
 
 export const GerenciaProdutos = StackNavigator({
@@ -195,7 +201,7 @@ export const TabsVendedor = TabNavigator({
     Home: {
       screen: HomeVendedor,
       navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
       },
     },
     PerfilVendedor: {
@@ -228,6 +234,9 @@ export const TabsVendedor = TabNavigator({
       style: {
         backgroundColor: '#4682b4',
       },
+      indicatorStyle: { 
+        backgroundColor: 'white',
+       }
     }
 });
 
