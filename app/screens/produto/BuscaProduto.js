@@ -27,15 +27,17 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      screenName: 'TabsCliente',      
-      gps: 0,      
+      screenName: 'TabsCliente',
+      gps: 0,
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: [],
-      textoBusca: ''
+      textoBusca: '',
+      semProdutos: false
     }
   }
+
 
   setSearchText(searchText) {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -44,37 +46,67 @@ export default class BuscaProduto extends Component {
       this.setState({gps: false});
     });
     if (this.state.gps) {
-      fetch(constante.ENDPOINT + 'produto?filtro=' + searchText 
+      fetch(constante.ENDPOINT + 'produto?filtro=' + searchText
                                + '&latitude=' + this.state.gps.coords.latitude
                                + '&longitude=' + this.state.gps.coords.longitude
                                + '&altitude=' + this.state.gps.coords.altitude)
-                               
+
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaProduto: responseJson});
+              if (!responseJson.errorMessage) {
+                this.setState({resultadoPesquisaProduto: responseJson});
+              }
+              else {
+                this.setState({semProdutos:true});
+                {this.buscaRegistros()}
+              }
           });
       fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaVendedor: responseJson});
+              if (!responseJson.errorMessage) {
+                this.setState({resultadoPesquisaVendedor: responseJson});
+              }
+              else {
+                this.setState({semProdutos:true});
+                {this.buscaRegistros()}
+              }
           });
+    }
+    if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1) {
+      this.setState({semProdutos:true});
     }
   }
 
+
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeProduto', 
-          {produtoId: produtoIdSelecionado, 
+    this.props.navigation.navigate('ExibeProduto',
+          {produtoId: produtoIdSelecionado,
             clienteId: this.state.clienteId
           });
   };
 
   onButtonOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
-    this.props.navigation.navigate('ExibeVendedor', 
-          {selectUserId: usuarioSelecionado, 
+    this.props.navigation.navigate('ExibeVendedor',
+          {selectUserId: usuarioSelecionado,
             vendedorId: vendedorIdSelecionado,
-            clienteId: this.state.clienteId 
+            clienteId: this.state.clienteId
           });
   };
+
+  buscaRegistros() {
+    if (this.state.semProdutos == true) {
+      if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1){
+        return (
+          <View key={0} style={{alignItems: 'center'}}>
+          <Text style={styles.texto}>
+            Não há produtos cadastrados, tente outro nome!
+          </Text>
+          </View>
+        )
+      }
+    }
+  }
 
   buscaProduto() {
     var views = [];
@@ -84,11 +116,11 @@ export default class BuscaProduto extends Component {
       let distanciaEstilo = {
         fontWeight: 'bold',
         fontSize: 18,
-        padding: 4,    
+        padding: 4,
         color: '#fff',
-        backgroundColor: '#f2a59d', 
-        borderColor: '#f2a59d', 
-        borderStyle: 'solid', 
+        backgroundColor: '#f2a59d',
+        borderColor: '#f2a59d',
+        borderStyle: 'solid',
         borderRadius: 100,
         textAlign: 'center'
       };
@@ -97,7 +129,7 @@ export default class BuscaProduto extends Component {
           let convert = (distancia/1000).toString().split('.');
           distancia = convert[0] + ' km';
         } else {
-          distancia = distancia.toString() + ' m';          
+          distancia = distancia.toString() + ' m';
         }
       } else {
         distanciaEstilo.fontSize = 13;
@@ -106,11 +138,11 @@ export default class BuscaProduto extends Component {
       views.push (
         <View key={i}>
           <View style={styles.oneResult}>
-            <View style={{width: "25%"}}>          
+            <View style={{width: "25%"}}>
               <Image source={{ uri: produto.imagemPrincipal }}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
-            </View>                     
+            </View>
             <View style={{width: "45%"}}>
               <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
               <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
@@ -176,7 +208,7 @@ componentWillMount() {
 
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
-      return(<LocalizacaoNaoPermitida 
+      return(<LocalizacaoNaoPermitida
         screenName={this.state.screenName}
         navigation={this.props.navigation}
         userId={this.state.userId} />
@@ -206,7 +238,7 @@ componentWillMount() {
               <View style={styles.results}>
                 {this.buscaProduto()}
                 {this.buscaVendedor()}
-
+                {this.buscaRegistros()}
               </View>
             </View>
           </ScrollView>
@@ -265,6 +297,11 @@ const styles = StyleSheet.create({
     alignItems:  'center',
     justifyContent: 'center',
     borderRadius: 100,
+  },
+  texto: {
+    marginTop: 12,
+    fontSize: 18,
+    justifyContent: 'center'
   },
   searchBar: {
     paddingLeft: 30,

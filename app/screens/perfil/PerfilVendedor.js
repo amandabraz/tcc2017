@@ -65,7 +65,6 @@ export default class PerfilVendedor extends Component {
       });
   };
 
-
   buscaMeiosPagamento() {
     fetch(constante.ENDPOINT + 'meiopagamento')
     .then((response) => response.json())
@@ -265,7 +264,6 @@ export default class PerfilVendedor extends Component {
      }
  }
 
-  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoVendedor');}
 
 
   trocaImagemPerfil() {

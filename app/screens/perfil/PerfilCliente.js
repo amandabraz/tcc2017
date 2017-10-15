@@ -84,6 +84,7 @@ export default class PerfilCliente extends Component {
       });
   };
 
+
   habilitaEdicao() {
     if (this.state.editavel == false) {
       this.setState({editavel: true,

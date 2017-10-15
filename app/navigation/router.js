@@ -20,7 +20,7 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import PedidosCliente from '../screens/pedido/PedidosCliente';
+import PedidoCliente from '../screens/pedido/PedidoCliente';
 import PedidosVendedor from '../screens/pedido/PedidosVendedor';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
@@ -31,24 +31,6 @@ import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermit
 /**
 MENU SOMENTE PARA CLIENTE
 **/
-export const GerenciaCliente = StackNavigator({
-  PerfilCliente: {
-    screen: PerfilCliente
-  },
-  ExibeProduto: {
-    screen: ExibeProduto
-  },
-  ExibeVendedor: {
-    screen: ExibeVendedor
-  },
-  PedidosCliente: {
-    screen: PedidosCliente
-  }
- }, {
-  mode: 'card',
-  lazy: true,
-  headerMode: 'none',
-});
 
 export const BuscaPro = StackNavigator({
   BuscaProduto: {
@@ -75,15 +57,15 @@ export const BuscaPro = StackNavigator({
 
 export const TabsCliente = TabNavigator({
     PerfilCliente: {
-      screen: GerenciaCliente,
+      screen: PerfilCliente,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
         },
       },
     },
-    Busca: {
-      screen: PedidosCliente,
+    Pedido: {
+      screen: PedidoCliente,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
@@ -91,7 +73,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Home: {
-      screen: HomeCliente,
+      screen: BuscaPro,
       navigationOptions: {
         tabBar: {
           icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
