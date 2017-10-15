@@ -121,14 +121,4 @@ public class PedidoController {
         }
     }
 
-    @Transactional
-    @RequestMapping(value = "data/cliente/{clienteId}", method = RequestMethod.GET)
-    public ResponseEntity buscaPedidoCliente(@PathVariable("clienteId") Long clienteId) {
-        try {
-            Pedido pedido = pedidoService.buscaPedidoCliente(clienteId);
-            return new ResponseEntity <Pedido>(pedido, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError("Erro ao buscar pedido"), HttpStatus.BAD_REQUEST);
-        }
-    }
 }

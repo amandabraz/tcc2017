@@ -39,13 +39,6 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             nativeQuery = true)
     List<Pedido> findByProdutoClienteIdOrderByStatus(long clienteId);
 
-    @Query(value = "SELECT * FROM pedido\n" +
-            "JOIN produto on pedido.fk_produto = produto.id_produto\n" +
-            "WHERE pedido.fk_cliente = ?1 AND pedido.status = 'Solicitado' \n " +
-            "ORDER BY data_solicitada DESC",
-            nativeQuery = true)
-    List<Pedido> findByPedidoClienteIdOrderByDate(long clienteId);
-
-    List<Pedido> findByStatusAndProdutoClienteIdOrderByDataSolicitadaDesc(String status, long clienteId);
+    List<Pedido> findByStatusAndClienteIdOrderByDataSolicitadaDesc(String status, long clienteId);
 
 }

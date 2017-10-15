@@ -96,7 +96,7 @@ public class PedidoService {
 
     public List<Pedido> buscaPedidosPorStatusCliente(String status, Long clienteId) {
         try {
-            return pedidoDAO.findByStatusAndProdutoClienteIdOrderByDataSolicitadaDesc(status, clienteId);
+            return pedidoDAO.findByStatusAndClienteIdOrderByDataSolicitadaDesc(status, clienteId);
         } catch (Exception e) {
             throw e;
         }
@@ -133,12 +133,4 @@ public class PedidoService {
         }
     }
 
-    @Transactional
-    public Pedido buscaPedidoCliente(Long clienteId) {
-        try {
-            return pedidoDAO.findByPedidoClienteIdOrderByDate(clienteId).get(0);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
 }
