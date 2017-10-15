@@ -103,6 +103,7 @@ class HomeVendedor extends Component {
           this.setState({pedidoSolicitado: []})
           this.buscaDadosPedido();
           this.pedidoSolicitado();
+          this.produtosVendidos();
         } else {
           Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
