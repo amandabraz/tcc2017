@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
+import tcc.Models.Produto;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -29,11 +30,16 @@ public class PedidoService {
         try {
             Date dataSolicitada = new Date();
             String cliente = clienteService.buscaCliente(pedido.getCliente().getId()).getUsuario().getCpf();
-            String produto = produtoService.buscaProduto(pedido.getProduto().getId()).getNome();
-            String frase = dataSolicitada.toString() + produto + cliente;
+            Produto produto = produtoService.buscaProduto(pedido.getProduto().getId());
+            String frase = dataSolicitada.toString() + produto.getNome() + cliente;
             String token = (stringHexa(gerarHash(frase, "MD5")));
             pedido.setToken(token);
             pedido.setDataSolicitada(dataSolicitada);
+
+            // Decrementar quantidade disponível do produto
+            int novaQtd = produto.getQuantidade() - pedido.getQuantidade();
+            produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(), produto.getId(), novaQtd);
+
             return pedidoDAO.save(pedido);
         } catch (Exception e) {
             throw e;
@@ -88,20 +94,26 @@ public class PedidoService {
 
     public Pedido alterarStatus(Long idPedido, String status) throws IOException {
         try {
-            Pedido alterarPedido = pedidoDAO.findOne(idPedido);
+            Pedido pedidoAtualizado = pedidoDAO.findOne(idPedido);
             Date data = new Date();
-            if (alterarPedido != null
-                    && alterarPedido.getStatus() != status) {
-                if(status.equals("Confirmado")){
-                    alterarPedido.setDataConfirmacao(data);
-                } else if(status.equals("Finalizado")){
-                    alterarPedido.setDataFinalizacao(data);
+            if (pedidoAtualizado != null
+                    && pedidoAtualizado.getStatus() != status) {
+                if (status.equals("Confirmado")) {
+                    pedidoAtualizado.setDataConfirmacao(data);
+                } else if (status.equals("Finalizado")) {
+                    pedidoAtualizado.setDataFinalizacao(data);
+                } else if (status.equals("Recusado") || status.equals("Cancelado")) {
+                    // Incrementar quantidade disponível do produto
+                    Produto produto = pedidoAtualizado.getProduto();
+                    int novaQtd = produto.getQuantidade() - pedidoAtualizado.getQuantidade();
+                    produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(),
+                            produto.getId(), novaQtd);
                 }
 
-             alterarPedido.setStatus(status);
+             pedidoAtualizado.setStatus(status);
 
             }
-            return this.salvaPedido(alterarPedido);
+            return this.salvaPedido(pedidoAtualizado);
 
         } catch (IOException e) {
             throw e;
