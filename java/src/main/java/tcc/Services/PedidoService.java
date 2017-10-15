@@ -26,7 +26,7 @@ public class PedidoService {
     private ProdutoService produtoService;
 
     @Transactional
-    public Pedido salvaPedido(Pedido pedido) throws IOException {
+    public Pedido geraPedido(Pedido pedido) throws IOException {
         try {
             Date dataSolicitada = new Date();
             String cliente = clienteService.buscaCliente(pedido.getCliente().getId()).getUsuario().getCpf();
@@ -35,15 +35,23 @@ public class PedidoService {
             String token = (stringHexa(gerarHash(frase, "MD5")));
             pedido.setToken(token);
             pedido.setDataSolicitada(dataSolicitada);
+            decrementaProduto(pedido, produto);
 
-            // Decrementar quantidade disponível do produto
-            int novaQtd = produto.getQuantidade() - pedido.getQuantidade();
-            produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(), produto.getId(), novaQtd);
 
-            return pedidoDAO.save(pedido);
+            return salvarPedido(pedido);
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    public void decrementaProduto(Pedido pedido, Produto produto) throws IOException {
+        // Decrementar quantidade disponível do produto
+        int novaQtd = produto.getQuantidade() - pedido.getQuantidade();
+        produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(), produto.getId(), novaQtd);
+    }
+
+    public Pedido salvarPedido(Pedido pedido) {
+        return pedidoDAO.save(pedido);
     }
 
     private static String stringHexa(byte[] bytes) {
@@ -105,15 +113,13 @@ public class PedidoService {
                 } else if (status.equals("Recusado") || status.equals("Cancelado")) {
                     // Incrementar quantidade disponível do produto
                     Produto produto = pedidoAtualizado.getProduto();
-                    int novaQtd = produto.getQuantidade() - pedidoAtualizado.getQuantidade();
-                    produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(),
-                            produto.getId(), novaQtd);
+                    decrementaProduto(pedidoAtualizado, produto);
                 }
 
              pedidoAtualizado.setStatus(status);
 
             }
-            return this.salvaPedido(pedidoAtualizado);
+            return this.salvarPedido(pedidoAtualizado);
 
         } catch (IOException e) {
             throw e;

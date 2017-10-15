@@ -125,10 +125,20 @@ export const TabsCliente = TabNavigator({
       style: {
         backgroundColor: '#2f4f4f',
       },
-      indicatorStyle: { 
-        backgroundColor: 'white',
-      }
     }
+  });
+
+export const GerenciaPedidosConfirmados = StackNavigator({
+    Confirmados: {
+      screen: PedidosConfirmadosVendedor
+    },
+    LerToken: {
+      screen: LerTokenPedido
+    }
+  }, {
+      mode: 'card',
+      headerMode: 'none',
+      lazy: true
   });
 
 export const GerenciaPedidos = TabNavigator({
@@ -136,14 +146,14 @@ export const GerenciaPedidos = TabNavigator({
       screen: PedidosSolicitadosVendedor
     },
     Confirmados: {
-      screen: PedidosConfirmadosVendedor
+      screen: GerenciaPedidosConfirmados
     },
     Finalizados: {
       screen: PedidosFinalizadosVendedor
     }
   }, {
     tabBarPosition: 'top',
-    lazy: false,
+    lazy: true,
     swipeEnabled: false,
     animationEnabled: false,
     backBehavior: 'none',
@@ -159,7 +169,7 @@ export const GerenciaPedidos = TabNavigator({
       },
       indicatorStyle: { 
         backgroundColor: 'white',
-      }
+       }
     }
 });
 

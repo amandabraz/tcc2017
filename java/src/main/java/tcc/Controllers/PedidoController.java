@@ -30,7 +30,7 @@ public class PedidoController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity registraPedido(@RequestBody Pedido pedido) {
         try {
-            Pedido novoPedido = pedidoService.salvaPedido(pedido);
+            Pedido novoPedido = pedidoService.geraPedido(pedido);
             if (Objects.nonNull(novoPedido)) {
                 return new ResponseEntity<>(novoPedido, HttpStatus.OK);
             } else {

@@ -37,7 +37,7 @@ class PedidosFinalizadosVendedor extends Component {
   };
 
   buscaDadosPedidosVendedor() {
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Confirmado')
+    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Finalizado')
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {

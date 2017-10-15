@@ -75,7 +75,7 @@ pedidoSolicitado(){
           <View style={{width: '60%', alignSelf:'center'}}>
             <Text style={styles.totalFont}> {pedidoS.cliente.usuario.nome}</Text>
             <Text style={styles.oneResultfont}> fez um pedido!</Text>
-            <Text style={{fontSize: 18}}> {pedidoS.dataSolicitada}</Text>
+            <Text style={{fontSize: 14}}> {pedidoS.dataSolicitada}</Text>
           </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
             <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -169,12 +169,12 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
   },

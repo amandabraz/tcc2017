@@ -21,7 +21,6 @@ import NavigationBar from 'react-native-navbar';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
-import Camera from 'react-native-camera';
 
 const { width, height } = Dimensions.get("window");
 
@@ -46,99 +45,57 @@ class PedidosConfirmadosVendedor extends Component {
       });
   };
 
-  atualizaStatus(pedido) {
-    fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (!responseJson.errorMessage) {
-          this.buscaDadosPedidosVendedor();
-          this.setState({pedidosConfirmados: []});
-          this.pedidoConfirmado();
-          ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);          
-        } else {
-          Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
-        }
-      });
-  }
-
-  tokenInvalido() {
-    this.popup.tip({
-        title: 'Token Inválido',
-        content: 'Esse Token é inválido'
-    }
-  );
-}
-
-scanQrCode(pedido) {
-  return(
-    <View style={{flex: 1, margin: 15, alignItems:'center', width: '95%'}}>
-    <QRCodeScanner
-      reactivate={true}
-      showMarker={true}
-      fadeIn={true}
-      cameraStyle={{width: '90%', alignSelf:'center'}}
-      onRead = {(tokenLido) => {
-          if(tokenLido.data != pedido.token){
-            this.tokenInvalido();
-          } else {
-            pedido.status = "Finalizado";
-            this.atualizaStatus(pedido);
-          }
-        }}
-      topContent={(
-        <Text style={{fontSize: 18, justifyContent: 'center'}}>
-          Valide o token usando o scanner no QR Code do seu cliente para finalizar o pedido</Text>
-        )}
-      />
-          <Popup ref={popup => this.popup = popup }/>
-    </View>
-  );
-}
-
 pedidoConfirmado(){
   var views = [];
   if(this.state.pedidosConfirmados.length > 0){
     for (i in this.state.pedidosConfirmados){
       let pedidoC = this.state.pedidosConfirmados[i];
+      var data = new Date(pedidoC.dataConfirmacao);      
+      let dataConfirmado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();      
       views.push(
         <View key={i} style={styles.oneResult1}>
-        <Accordion header={
-          <View style={{flexDirection: 'row'}}>
-          <View style = {{ width: '20%'}}>
-          <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
-                 style={styles.imagemPrincipal}/>
+          <Accordion header={
+            <View style={{flexDirection: 'row'}}>
+            <View style = {{ width: '20%'}}>
+            <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
+                  style={styles.imagemPrincipal}/>
+            </View>
+            <View style={{width: '65%', alignSelf:'center'}}>
+              <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
+              <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>          
+              <Text style={styles.oneResultfont}> Entregar:
+              <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
+              </Text>
+              <Text style={styles.oneResultfont}> Produto:
+              <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
+              </Text>
+              <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
+              <Text style={styles.totalFont}> R$  {pedidoC.valorCompra}</Text>
+              </Text>
+            </View>
+            <View style={{width: '5%',justifyContent: 'center'}}>
+              <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
+            </View>
           </View>
-        <View style={{width: '65%', alignSelf:'center'}}>
-          <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
-           <Text style={styles.oneResultfont}> Entregar:
-           <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
-           </Text>
-           <Text style={styles.oneResultfont}> Produto:
-           <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
-           </Text>
-           <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
-           <Text style={styles.totalFont}> R$  {pedidoC.valorCompra}</Text>
-           </Text>
-        </View>
-        <View style={{width: '5%',justifyContent: 'center'}}>
-        <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
-        </View>
-    </View>
-        } content={
-          <View style={{margin: 15, alignItems:'center'}}>
-          <Button buttonStyle={{width: 150}}
-                  title="Ler Token"
+          } content={  
+            <View style={{margin: 15, alignItems:'center'}}>
+              <Button buttonStyle={{width: 150}}
+                  title="Validar Token"
                   color="#fff"
                   backgroundColor="#768888"
                   borderRadius={10}
-                  onPress={() => {
-                      this.scanQrCode(pedidoC);
-                  }}/>
+                  onPress={() => 
+                    {
+                      this.props.navigation.navigate('LerToken', {
+                        userId: this.state.userId,
+                        vendedorId: this.state.vendedorId,
+                        token: pedidoC.token, 
+                        pedidoId: pedidoC.id});
+                    }}/>
             </View>
-
-            }
-        underlayColor="white"
-        easing="easeOutCubic"/>
+          }
+          underlayColor="white"
+          easing="easeOutCubic"/>
     </View>
     )}
  } else {
@@ -186,12 +143,12 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
   },
