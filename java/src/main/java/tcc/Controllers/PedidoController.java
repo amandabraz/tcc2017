@@ -74,4 +74,15 @@ public class PedidoController {
             return new ResponseEntity<>(new CustomError("Erro ao alterar status do pedido"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "data/vendedor/{vendedorId}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidoVendedor(@PathVariable("vendedorId") Long vendedorId) {
+        try {
+            Pedido pedido = pedidoService.buscaPedidoVendedor(vendedorId);
+            return new ResponseEntity <Pedido>(pedido, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar pedido"), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

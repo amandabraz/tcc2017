@@ -100,4 +100,13 @@ public class PedidoService {
             throw e;
         }
     }
+
+    @Transactional
+    public Pedido buscaPedidoVendedor(Long vendedorId) {
+        try {
+            return pedidoDAO.findByPedidoVendedorIdOrderByDate(vendedorId).get(0);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
