@@ -26,14 +26,14 @@ class PedidosSolicitadosCliente extends Component {
     super(props);
     this.state = {
       userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId,
+      clienteId: this.props.navigation.state.params.clienteId,
       pedidosSolicitados: [],
     };
-    this.buscaDadosPedidosVendedor();
+    this.buscaDadosPedidosCliente();
   };
 
-  buscaDadosPedidosVendedor() {
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Solicitado')
+  buscaDadosPedidosCliente() {
+    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Solicitado')
     .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
@@ -42,12 +42,32 @@ class PedidosSolicitadosCliente extends Component {
       });
   };
 
+  cancelarPedido() {
+      this.popup.confirm({
+          title: 'Cancelar Pedido',
+          content: ['Deseja realmente cancelar esse pedido?'],
+          ok: {
+              text: 'Confirmar',
+              style: {
+                  color: 'green',
+                  fontWeight: 'bold'
+              },
+          },
+          cancel: {
+              text: 'Voltar',
+              style: {
+                  color: 'red'
+              }
+          }
+      });
+}
+
   atualizaStatus(pedido) {
     fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
-          this.buscaDadosPedidosVendedor();
+          this.buscaDadosPedidosCliente();
           this.setState({pedidosSolicitados: []});
           this.pedidoSolicitado();
         } else {
@@ -69,12 +89,12 @@ pedidoSolicitado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
-              <Image source={{uri: pedidoS.cliente.usuario.imagemPerfil}}
+              <Image source={{uri: pedidoS.produto.vendedor.usuario.imagemPerfil}}
                   style={styles.imagemPrincipal}/>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
-            <Text style={styles.totalFont}> {pedidoS.cliente.usuario.nome}</Text>
-            <Text style={styles.oneResultfont}> fez um pedido!</Text>
+            <Text style={styles.totalFont}> {pedidoS.produto.vendedor.usuario.nome}</Text>
+            <Text style={styles.oneResultfont}> Pedido feito!</Text>
             <Text style={{fontSize: 18}}> {pedidoS.dataSolicitada}</Text>
           </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
@@ -86,7 +106,7 @@ pedidoSolicitado(){
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
           <View style = {{ width: '20%'}}>
           <Image source={{uri: pedidoS.produto.imagemPrincipal}}
-                 style={styles.imagemCliente}/>
+                 style={styles.imagemVendedor}/>
           </View>
           <View style={{width: '80%'}}>
             <Text style={styles.totalFont}> {pedidoS.produto.nome}{'\n'}</Text>
@@ -107,16 +127,6 @@ pedidoSolicitado(){
                       pedidoS.status = "Recusado";
                       this.atualizaStatus(pedidoS);
                     }}/>
-
-            <Button buttonStyle={{width: 90}}
-                    title="Aceitar"
-                    color="#fff"
-                    backgroundColor="#768888"
-                    borderRadius={10}
-                    onPress={() => {
-                      pedidoS.status = "Confirmado";
-                      this.atualizaStatus(pedidoS);
-                    }}/>
           </View>
         </View>
         }
@@ -128,7 +138,7 @@ pedidoSolicitado(){
     views.push(
       <View key={0} style={{alignItems: 'center'}}>
       <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
-        Nenhum pedido solicitado
+        Nenhum pedido solicitado.
       </Text>
       </View>
     )
@@ -178,7 +188,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
   },
-  imagemCliente:{
+  imagemVendedor:{
     width: 60,
     height: 60,
     borderRadius: 100

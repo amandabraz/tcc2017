@@ -83,13 +83,13 @@ export const BuscaPro = StackNavigator({
 
 export const GerenciaPedidosClientes = TabNavigator({
   Solicitados: {
-    screen: PedidosSolicitadosVendedor
+    screen: PedidosSolicitadosCliente
   },
   Confirmados: {
-    screen: PedidosConfirmadosVendedor
+    screen: PedidosConfirmadosCliente
   },
   Finalizados: {
-    screen: PedidosFinalizadosVendedor
+    screen: PedidosFinalizadosCliente
   },
  },
  {
