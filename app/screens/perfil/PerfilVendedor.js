@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { AppRegistry, 
-  Button, 
-  Text, 
-  StyleSheet, 
-  StatusBar, 
-  TouchableOpacity, 
-  View, 
-  Image, 
-  ScrollView, 
+import { AppRegistry,
+  Button,
+  Text,
+  StyleSheet,
+  StatusBar,
+  TouchableOpacity,
+  View,
+  Image,
+  ScrollView,
   Dimensions,
   ToastAndroid } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -49,7 +49,7 @@ export default class PerfilVendedor extends Component {
       titleTextClass: styles.titleText,
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
-      meiosPagamento: [] 
+      meiosPagamento: []
     };
     this.buscaDadosVendedor();
     this.buscaMeiosPagamento();
@@ -99,23 +99,23 @@ export default class PerfilVendedor extends Component {
       for (j in responseJson.meiosPagamentos) {
         meioPagVendedor.push(responseJson.meiosPagamentos[j]);
       }
-      this.setState({meiosPagamentoVendedor: meioPagVendedor});            
+      this.setState({meiosPagamentoVendedor: meioPagVendedor});
     }
   }
-  
+
   habilitaEdicao() {
     if (this.state.editavel == false) {
-      this.setState({editavel: true, 
-        titleTextClass: styles.titleTextEdit, 
+      this.setState({editavel: true,
+        titleTextClass: styles.titleTextEdit,
         baseTextClass: styles.baseTextEdit,
         pencilColor: '#ccc'});
     } else {
-      this.setState({editavel: false, 
-        titleTextClass: styles.titleText, 
+      this.setState({editavel: false,
+        titleTextClass: styles.titleText,
         baseTextClass: styles.baseText,
         pencilColor: '#fff'});
     }
-    
+
   }
 
   mostraBotaoSalvar() {
@@ -123,9 +123,9 @@ export default class PerfilVendedor extends Component {
       return(
         <View style={{alignSelf: 'center'}}>
           <TouchableOpacity
-            style={styles.button}          
+            style={styles.button}
             onPress={() => this.salvaEdicaoVendedor()}>
-            <Text style={styles.buttonText}>SALVAR</Text> 
+            <Text style={styles.buttonText}>SALVAR</Text>
           </TouchableOpacity>
 
 
@@ -183,7 +183,7 @@ export default class PerfilVendedor extends Component {
         if (!rJson.errorMessage) {
           this.prepararVendedor(rJson);
           this.setState({editavel: false});
-          ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);          
+          ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
   }
@@ -207,12 +207,12 @@ export default class PerfilVendedor extends Component {
   }
 
   onCheckMeioPagamento(meioPag) {
-    meioPag.checked = !meioPag.checked;    
+    meioPag.checked = !meioPag.checked;
     var objMeioPag = {
       "id": meioPag.id,
       "descricao": meioPag.descricao
     };
-    var pagamentos = this.state.meiosPagamentoVendedor;    
+    var pagamentos = this.state.meiosPagamentoVendedor;
     if (meioPag.checked) {
       pagamentos.push(objMeioPag);
     } else {
@@ -229,11 +229,11 @@ export default class PerfilVendedor extends Component {
         <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
           <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
           <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
-        </View>        
+        </View>
       );
       for (i in pagamentosVendedor) {
-        let meioPagamento = pagamentosVendedor[i];  
-        meioPagamento.checked = false;                
+        let meioPagamento = pagamentosVendedor[i];
+        meioPagamento.checked = false;
         for (j in this.state.meiosPagamentoVendedor) {
           if (meioPagamento.id === this.state.meiosPagamentoVendedor[j].id) {
             meioPagamento.checked = true;
@@ -250,8 +250,8 @@ export default class PerfilVendedor extends Component {
           </View>
         );
       }
-      return views;  
-    } 
+      return views;
+    }
   }
 
  pagamentoEscolhido = () => {
@@ -264,7 +264,7 @@ export default class PerfilVendedor extends Component {
      }
  }
 
-  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoVendedor');}
+
 
   trocaImagemPerfil() {
     var options = {
@@ -294,7 +294,7 @@ export default class PerfilVendedor extends Component {
 
   render () {
     return (
-      <View style={{ flex: 1 }}>      
+      <View style={{ flex: 1 }}>
         <StatusBar barStyle="light-content" />
         <HeaderImageScrollView
           maxHeight={MAX_HEIGHT}
@@ -302,11 +302,11 @@ export default class PerfilVendedor extends Component {
           maxOverlayOpacity={0.6}
           minOverlayOpacity={0.3}
           fadeOutForeground
-          renderHeader={() => 
+          renderHeader={() =>
               <Image source={this.state.imagemPerfil} style={styles.image}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}  
-                    onPress={this.trocaImagemPerfil.bind(this)}>            
-                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>     
+                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+                    onPress={this.trocaImagemPerfil.bind(this)}>
+                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>
                 </TouchableOpacity>
               </Image>
           }
@@ -322,10 +322,10 @@ export default class PerfilVendedor extends Component {
                 <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
               </TouchableOpacity>
             </View>
-            <View style={{alignItems: 'flex-end', width: '20%'}}>          
+            <View style={{alignItems: 'flex-end', width: '20%'}}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                 <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-              </TouchableOpacity>    
+              </TouchableOpacity>
             </View>
           </View>
           </Animatable.View>
@@ -341,10 +341,10 @@ export default class PerfilVendedor extends Component {
                   <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{alignItems: 'flex-end', width: '20%'}}>          
+              <View style={{alignItems: 'flex-end', width: '20%'}}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                   <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-                </TouchableOpacity>    
+                </TouchableOpacity>
               </View>
             </View>
           </TriggeringView>
@@ -402,7 +402,7 @@ export default class PerfilVendedor extends Component {
                 value={this.state.celularText}
                 editable={this.state.editavel}
                 inputStyle={this.state.baseTextClass}
-                maxLength={11}              
+                maxLength={11}
                 onChangeText={(celular) => this.setState({celularText: celular})}/>
 
               <Fumi
@@ -420,7 +420,7 @@ export default class PerfilVendedor extends Component {
               {this.mostraBotaoSalvar()}
           </ScrollView>
         </HeaderImageScrollView>
-      </View>     
+      </View>
     );
   }
 }
@@ -432,8 +432,8 @@ export default class PerfilVendedor extends Component {
       alignItems: 'center',
   },
   inputDimensions: {
-    backgroundColor: 'transparent', 
-    width: 375, 
+    backgroundColor: 'transparent',
+    width: 375,
     height: 70
   },
   headerBackground: {
@@ -505,7 +505,7 @@ export default class PerfilVendedor extends Component {
     fontFamily: 'Roboto',
   },
   button: {
-    borderRadius: 5,    
+    borderRadius: 5,
     justifyContent: 'center',
     height: 35,
     width: 200,

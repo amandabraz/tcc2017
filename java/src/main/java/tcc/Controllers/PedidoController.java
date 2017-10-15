@@ -64,6 +64,41 @@ public class PedidoController {
     }
 
     @Transactional
+    @RequestMapping(value = "/cliente/{clienteId}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidosCliente(@PathVariable("clienteId") Long clienteId) {
+        try {
+            List<Pedido> pedidos = pedidoService.buscaPedidosCliente(clienteId);
+            return new ResponseEntity<List<Pedido>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/vendedor/{vendedorId}/status/{status}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidosPorStatusVendedor(@PathVariable("status") String status,
+                                                        @PathVariable("vendedorId") Long vendedorId) {
+        try {
+            List<Pedido> pedidos = pedidoService.buscaPedidosPorStatusVendedor(status, vendedorId);
+            return new ResponseEntity<List<Pedido>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/cliente/{clienteId}/status/{status}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidosPorStatusCliente(@PathVariable("status") String status,
+                                                        @PathVariable("clienteId") Long clienteId) {
+        try {
+            List<Pedido> pedidos = pedidoService.buscaPedidosPorStatusCliente(status, clienteId);
+            return new ResponseEntity<List<Pedido>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
     @RequestMapping(value = "/{idPedido}/status/{status}", method = RequestMethod.PUT)
     public ResponseEntity alteraStatus(@PathVariable("idPedido") Long idPedido,
                                        @PathVariable("status") String status) {
@@ -74,4 +109,16 @@ public class PedidoController {
             return new ResponseEntity<>(new CustomError("Erro ao alterar status do pedido"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "data/vendedor/{vendedorId}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidoVendedor(@PathVariable("vendedorId") Long vendedorId) {
+        try {
+            Pedido pedido = pedidoService.buscaPedidoVendedor(vendedorId);
+            return new ResponseEntity <Pedido>(pedido, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar pedido"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
