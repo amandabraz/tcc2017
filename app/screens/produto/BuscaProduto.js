@@ -46,7 +46,6 @@ export default class BuscaProduto extends Component {
       this.setState({gps: false});
     });
     if (this.state.gps) {
-      this.setState({semProdutos: false});
       fetch(constante.ENDPOINT + 'produto?filtro=' + searchText
                                + '&latitude=' + this.state.gps.coords.latitude
                                + '&longitude=' + this.state.gps.coords.longitude
@@ -54,12 +53,24 @@ export default class BuscaProduto extends Component {
 
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaProduto: responseJson});
+              if (!responseJson.errorMessage) {
+                this.setState({resultadoPesquisaProduto: responseJson});
+              }
+              else {
+                this.setState({semProdutos:true});
+                {this.buscaRegistros()}
+              }
           });
       fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaVendedor: responseJson});
+              if (!responseJson.errorMessage) {
+                this.setState({resultadoPesquisaVendedor: responseJson});
+              }
+              else {
+                this.setState({semProdutos:true});
+                {this.buscaRegistros()}
+              }
           });
     }
     if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1) {
@@ -84,10 +95,9 @@ export default class BuscaProduto extends Component {
   };
 
   buscaRegistros() {
-    var views = [];
     if (this.state.semProdutos == true) {
       if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1){
-        views.push(
+        return (
           <View key={0} style={{alignItems: 'center'}}>
           <Text style={styles.texto}>
             Não há produtos cadastrados, tente outro nome!
@@ -96,7 +106,6 @@ export default class BuscaProduto extends Component {
         )
       }
     }
-    return views;
   }
 
   buscaProduto() {
@@ -288,6 +297,11 @@ const styles = StyleSheet.create({
     alignItems:  'center',
     justifyContent: 'center',
     borderRadius: 100,
+  },
+  texto: {
+    marginTop: 12,
+    fontSize: 18,
+    justifyContent: 'center'
   },
   searchBar: {
     paddingLeft: 30,
