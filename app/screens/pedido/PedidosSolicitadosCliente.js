@@ -117,7 +117,7 @@ pedidoSolicitado(){
             <Text style={styles.totalFont}> R$ {pedidoS.valorCompra}{'\n'}</Text>
             </View>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <Button buttonStyle={{width: 90}}
                     title ="Cancelar"
                     color="#fff"

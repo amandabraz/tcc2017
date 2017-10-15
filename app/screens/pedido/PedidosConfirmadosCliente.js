@@ -112,7 +112,7 @@ pedidoConfirmado(){
    views.push(
      <View key={0} style={{alignItems: 'center'}}>
      <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
-       Nenhum pedido confirmado
+       Nenhum pedido confirmado.
      </Text>
      </View>
    )
