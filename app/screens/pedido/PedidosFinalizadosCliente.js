@@ -18,7 +18,7 @@ import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
-import QRCodeScanner from 'react-native-qrcode-scanner';
+import QRCode from 'react-native-qrcode';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
@@ -30,14 +30,14 @@ class PedidosFinalizadosCliente extends Component {
     super(props);
     this.state = {
       userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId,
+      clienteId: this.props.navigation.state.params.clienteId,
       pedidosFinalizados: [],
     };
-    this.buscaDadosPedidosVendedor();
+    this.buscaDadosPedidosCliente();
   };
 
-  buscaDadosPedidosVendedor() {
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Confirmado')
+  buscaDadosPedidosCliente() {
+    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Confirmado')
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -45,20 +45,6 @@ class PedidosFinalizadosCliente extends Component {
         }
       });
   };
-
-  atualizaStatus(pedido) {
-    fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (!responseJson.errorMessage) {
-          this.buscaDadosPedidosVendedor();
-          this.setState({pedidosFinalizados: []});
-          this.pedidoFinalizado();
-        } else {
-          Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
-        }
-      });
-  }
 
 
 pedidoFinalizado(){
@@ -89,15 +75,15 @@ pedidoFinalizado(){
             <View style={{paddingTop: 15}}>
             <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
             <View style = {{ width: '20%'}}>
-              <Image source={{uri: pedidoF.cliente.usuario.imagemPerfil}}
+              <Image source={{uri: pedidoF.produto.vendedor.usuario.imagemPerfil}}
                      style={styles.imagemCliente}/>
             </View>
           <View style={{width: '80%'}}>
-            <Text style={styles.totalFont}> {pedidoF.cliente.usuario.nome}</Text>
-            <Text style={styles.oneResultfont}>Quantidade vendida:
+            <Text style={styles.totalFont}> {pedidoF.produto.vendedor.usuario.nome}</Text>
+            <Text style={styles.oneResultfont}>Quantidade comprada:
             <Text style={styles.totalFont}> {pedidoF.quantidade}{'\n'}</Text>
             </Text>
-            <Text style={styles.oneResultfont}>Total pago {pedidoF.pagamento.descricao}:
+            <Text style={styles.oneResultfont}>Total pago com {pedidoF.pagamento.descricao}:
             <Text style={styles.totalFont}> R$ {pedidoF.valorCompra}{'\n'}</Text>
             </Text>
           </View>
@@ -112,7 +98,7 @@ pedidoFinalizado(){
         views.push(
           <View key={0} style={{alignItems: 'center'}}>
           <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
-            Nenhum pedido finalizado
+            Nenhum pedido finalizado.
           </Text>
           </View>
         )
