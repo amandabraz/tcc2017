@@ -18,7 +18,7 @@ import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
-import QRCodeScanner from 'react-native-qrcode-scanner';
+import QRCode from 'react-native-qrcode';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
@@ -30,14 +30,14 @@ class PedidosConfirmadosCliente extends Component {
     super(props);
     this.state = {
       userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId,
+      clienteId: this.props.navigation.state.params.clienteId,
       pedidosConfirmados: [],
     };
-    this.buscaDadosPedidosVendedor();
+    this.buscaDadosPedidosCliente();
   };
 
-  buscaDadosPedidosVendedor() {
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Confirmado')
+  buscaDadosPedidosCliente() {
+    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Confirmado')
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -51,7 +51,7 @@ class PedidosConfirmadosCliente extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
-          this.buscaDadosPedidosVendedor();
+          this.buscaDadosPedidosCliente();
           this.setState({pedidosConfirmados: []});
           this.pedidoConfirmado();
           ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -61,39 +61,6 @@ class PedidosConfirmadosCliente extends Component {
       });
   }
 
-  tokenInvalido() {
-    this.popup.tip({
-        title: 'Token Inválido',
-        content: 'Esse Token é inválido'
-    }
-  );
-}
-
-scanQrCode(pedido) {
-  return(
-    <View style={{flex: 1, margin: 15, alignItems:'center', width: '95%'}}>
-    <QRCodeScanner
-      reactivate={true}
-      showMarker={true}
-      fadeIn={true}
-      cameraStyle={{width: '90%', alignSelf:'center'}}
-      onRead = {(tokenLido) => {
-          if(tokenLido.data != pedido.token){
-            this.tokenInvalido();
-          } else {
-            pedido.status = "Finalizado";
-            this.atualizaStatus(pedido);
-          }
-        }}
-      topContent={(
-        <Text style={{fontSize: 18, justifyContent: 'center'}}>
-          Valide o token usando o scanner no QR Code do seu cliente para finalizar o pedido</Text>
-        )}
-      />
-          <Popup ref={popup => this.popup = popup }/>
-    </View>
-  );
-}
 
 pedidoConfirmado(){
   var views = [];
@@ -105,18 +72,18 @@ pedidoConfirmado(){
         <Accordion header={
           <View style={{flexDirection: 'row'}}>
           <View style = {{ width: '20%'}}>
-          <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
+          <Image source={{uri: pedidoC.produto.vendedor.usuario.imagemPerfil}}
                  style={styles.imagemPrincipal}/>
           </View>
         <View style={{width: '65%', alignSelf:'center'}}>
-          <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
-           <Text style={styles.oneResultfont}> Entregar:
+          <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
+           <Text style={styles.oneResultfont}> Receber:
            <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
            </Text>
            <Text style={styles.oneResultfont}> Produto:
            <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
            </Text>
-           <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
+           <Text style={styles.oneResultfont}> Pagar {pedidoC.pagamento.descricao}:
            <Text style={styles.totalFont}> R$  {pedidoC.valorCompra}</Text>
            </Text>
         </View>
@@ -126,15 +93,15 @@ pedidoConfirmado(){
     </View>
         } content={
           <View style={{margin: 15, alignItems:'center'}}>
-          <Button buttonStyle={{width: 150}}
-                  title="Ler Token"
-                  color="#fff"
-                  backgroundColor="#768888"
-                  borderRadius={10}
-                  onPress={() => {
-                      this.scanQrCode(pedidoC);
-                  }}/>
+          <View style = {{ alignItems: 'center'}}>
+          <QRCode
+            value={this.state.tokenText}
+            size={200}
+            bgColor='black'
+            fgColor='white'/>
             </View>
+          <Text style={styles.tokenfont}> {pedidoC.token}</Text>
+        </View>
 
             }
         underlayColor="white"
