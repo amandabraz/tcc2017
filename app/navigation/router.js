@@ -190,7 +190,7 @@ export const TabsVendedor = TabNavigator({
       screen: PedidosVendedor,
       navigationOptions: {
         tabBar: {
-          icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
+          icon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
         },
       },
     }
@@ -210,7 +210,7 @@ export const TabsVendedor = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#4682b4',
+        backgroundColor: '#4FA19D',
       },
     }
 });
