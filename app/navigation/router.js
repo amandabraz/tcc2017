@@ -31,6 +31,7 @@ import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermit
 /**
 MENU SOMENTE PARA CLIENTE
 **/
+
 export const BuscaPro = StackNavigator({
   BuscaProduto: {
     screen: BuscaProduto
