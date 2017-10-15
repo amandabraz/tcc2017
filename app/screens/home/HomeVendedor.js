@@ -27,20 +27,29 @@ class HomeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        nomeProdutoText: '',
-        quantidadeText: '',
-        precoText: '',
-        meioPagamentoText: '',
-        screenName: 'TabsVendedor',
-        nomeClienteText: '',
-        imagemProduto: require('./img/camera2.jpg'),
-        imagemCliente: require('./img/camera2.jpg'),
-        dataSolicitada:'',
         gps: 0,
         userId: this.props.navigation.state.params.userId,
         vendedorId: this.props.navigation.state.params.vendedorId,
-        pedidoSolicitado: ''
-
+        imagemProduto: require('./img/camera2.jpg'),
+        imagemCliente: require('./img/camera2.jpg'),
+        dataSolicitada:'',
+        pedidoSolicitado: {
+          id:'',
+          status:'',
+          quantidade:'',
+          valorCompra:'',
+          produto: {
+            nome:''
+          },
+          cliente: {
+            usuario: {
+              nome: ''
+            }
+          },
+          pagamento: {
+            descricao:''
+          }
+        }
     };
     this.buscaDadosPedido();
   };
@@ -49,25 +58,18 @@ class HomeVendedor extends Component {
     fetch(constante.ENDPOINT+'pedido/data/vendedor/' + this.state.vendedorId)
     .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({pedidoSolicitado: responseJson});
           if (!responseJson.errorMessage) {
-              if (responseJson.produto.imagemPrincipal) {
-             this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
-           }
-           if (responseJson.cliente.usuario.imagemPerfil) {
-             this.setState({imagemCliente: { uri: responseJson.cliente.usuario.imagemPerfil } })
-           }
-         this.setState({nomeProdutoText: responseJson.produto.nome});
-         this.setState({quantidadeText: responseJson.quantidade});
-         this.setState({precoText: responseJson.valorCompra});
-         this.setState({pedidoSolicitado: 'ok'})
-         this.setState({meioPagamentoText: responseJson.pagamento.descricao});
-         this.setState({nomeClienteText: responseJson.cliente.usuario.nome});
-         var dataNormal = new Date(responseJson.dataSolicitada);
-         var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-         this.setState({dataSolicitada: dataS});
-       }
-      });
+            this.setState({pedidoSolicitado: responseJson});
+            if (responseJson.cliente.usuario.imagemPerfil) {
+              this.setState({imagemCliente: {uri: responseJson.cliente.usuario.imagemPerfil }})
+          }
+            if (responseJson.produto.imagemPrincipal) {
+              this.setState({imagemProduto:{ uri: responseJson.produto.imagemPrincipal }})
+        }
+        var dataNormal = new Date(responseJson.dataSolicitada);
+        var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+        this.setState({dataSolicitada: dataS})
+      }});
   };
 
   componentWillMount() {
@@ -80,7 +82,21 @@ class HomeVendedor extends Component {
     });
   }
 
-  cancelarPedido() {
+  atualizaStatus(pedido) {
+    fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({pedidoSolicitado: []})
+          this.buscaDadosPedido();
+          this.pedidoSolicitado();
+        } else {
+          Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
+        }
+      });
+}
+
+  cancelarPedido(pedido) {
       this.popup.confirm({
           title: 'Recusar Pedido',
           content: ['Deseja realmente cancelar esse pedido?'],
@@ -90,6 +106,10 @@ class HomeVendedor extends Component {
                   color: 'green',
                   fontWeight: 'bold'
               },
+              callback: () => {
+                this.state.pedidoSolicitado.status = "Recusado";
+                this.atualizaStatus(this.state.pedidoSolicitado);
+                }
           },
           cancel: {
               text: 'Cancelar',
@@ -102,9 +122,9 @@ class HomeVendedor extends Component {
 
   pedidoSolicitado(){
     var views = [];
-    if(this.state.pedidoSolicitado=='ok'){
+    if(this.state.pedidoSolicitado.id){
     views.push(
-    <View key={0} style={styles.oneResult}>
+    <View key={1} style={styles.oneResult}>
       <View style={{flexDirection: 'row'}}>
         <View style = {{ width: '30%'}}>
           <Image source={this.state.imagemProduto}
@@ -117,21 +137,21 @@ class HomeVendedor extends Component {
                     style={styles.imagemCliente}/>
            </View>
            <View style={{width: '70%'}}>
-             <Text style={styles.totalFont}> {this.state.nomeClienteText}</Text>
+             <Text style={styles.totalFont}> {this.state.pedidoSolicitado.cliente.usuario.nome}</Text>
              <Text style={styles.oneResultfont}>Fez um pedido!</Text>
              <Text style={{fontSize:18}}>{this.state.dataSolicitada}</Text>
            </View>
          </View>
            <View style={{paddingTop:10}}>
            <Text style={styles.oneResultfont}>Produto:
-             <Text style={styles.totalFont}> {this.state.nomeProdutoText}{'\n'}</Text>
+             <Text style={styles.totalFont}> {this.state.pedidoSolicitado.produto.nome}{'\n'}</Text>
            </Text>
             <Text style={styles.oneResultfont}>Quantidade:
-              <Text style={styles.totalFont}> {this.state.quantidadeText}{'\n'}</Text>
+              <Text style={styles.totalFont}> {this.state.pedidoSolicitado.quantidade}{'\n'}</Text>
             </Text>
-            <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
+            <Text style={styles.oneResultfont}>Total a pagar em {this.state.pedidoSolicitado.pagamento.descricao}:
             </Text>
-            <Text style={styles.totalFont}> R$ {this.state.precoText}{'\n'}</Text>
+            <Text style={styles.totalFont}> R$ {this.state.pedidoSolicitado.valorCompra}{'\n'}</Text>
 
           </View>
         </View>
@@ -142,14 +162,18 @@ class HomeVendedor extends Component {
              color="#fff"
              backgroundColor="#88557B"
              borderRadius={10}
-             onPress={this.cancelarPedido.bind(this)}
+             onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}
              buttonStyle={{width: 80}}/>
 
      <Button title="Aceitar"
              color="#fff"
              backgroundColor="#768888"
              borderRadius={10}
-             buttonStyle={{width: 80}}/>
+             buttonStyle={{width: 80}}
+             onPress={() => {
+                    this.state.pedidoSolicitado.status = "Confirmado";
+                    this.atualizaStatus(this.state.pedidoSolicitado);
+                  }}/>
 
      </View>
    </View>
@@ -160,8 +184,8 @@ class HomeVendedor extends Component {
        Você não tem nova solicitação! :(
      </Text>
      </View>
-   )
- }
+   )}
+
    return views;
 }
 
