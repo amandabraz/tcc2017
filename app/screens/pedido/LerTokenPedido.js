@@ -29,13 +29,11 @@ class LerTokenPedido extends Component {
 
 
   tokenInvalido() {
-      this.popup.confirm({
+      this.popup.tip({
           title: 'Token Inválido',
-          content: ['Esse Token é inválido'],
-          ok: {
-              text: 'Ok'
-          }
-      });
+          content: 'Esse Token é inválido'
+      }
+    );
   }
 
 render() {
@@ -47,10 +45,11 @@ render() {
     fadeIn={true}
     cameraStyle={{width: '90%', alignSelf:'center'}}
     onRead = {(tokenLido) => {
-        if(tokenLido != this.state.token){
-          {this.tokenInvalido.bind(this)}
+        if(tokenLido.data != this.state.token){
+          this.tokenInvalido();
         } else {
-          {this.props.navigation.navigate('PedidosVendedor', {tokenOK: "ok"})}
+          ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+          this.props.navigation.navigate('PedidosVendedor', {tokenOK: "ok"});
         }
       }}
   topContent={(

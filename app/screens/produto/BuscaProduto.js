@@ -51,12 +51,16 @@ export default class BuscaProduto extends Component {
                                
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaProduto: responseJson});
+          if (!responseJson.errorMessage) {
+            this.setState({resultadoPesquisaProduto: responseJson});            
+          }
           });
       fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaVendedor: responseJson});
+              if (!responseJson.errorMessage) {            
+                this.setState({resultadoPesquisaVendedor: responseJson});
+              }
           });
     }
   }

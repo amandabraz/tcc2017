@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
-import tcc.Models.Produto;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -74,6 +73,14 @@ public class PedidoService {
     public List<Pedido> buscaPedidosVendedor(Long vendedorId) {
         try {
             return pedidoDAO.findByProdutoVendedorIdOrderByStatus(vendedorId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<Pedido> buscaPedidosPorStatusVendedor(String status, Long vendedorId) {
+        try {
+            return pedidoDAO.findByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(status, vendedorId);
         } catch (Exception e) {
             throw e;
         }
