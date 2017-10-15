@@ -78,9 +78,25 @@ public class PedidoService {
         }
     }
 
+    public List<Pedido> buscaPedidosCliente(Long clienteId) {
+        try {
+            return pedidoDAO.findByProdutoClienteIdOrderByStatus(clienteId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public List<Pedido> buscaPedidosPorStatusVendedor(String status, Long vendedorId) {
         try {
             return pedidoDAO.findByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(status, vendedorId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<Pedido> buscaPedidosPorStatusCliente(String status, Long clienteId) {
+        try {
+            return pedidoDAO.findByStatusAndProdutoClienteIdOrderByDataSolicitadaDesc(status, clienteId);
         } catch (Exception e) {
             throw e;
         }
@@ -112,6 +128,15 @@ public class PedidoService {
     public Pedido buscaPedidoVendedor(Long vendedorId) {
         try {
             return pedidoDAO.findByPedidoVendedorIdOrderByDate(vendedorId).get(0);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Pedido buscaPedidoCliente(Long clienteId) {
+        try {
+            return pedidoDAO.findByPedidoClienteIdOrderByDate(clienteId).get(0);
         } catch (Exception e) {
             throw e;
         }
