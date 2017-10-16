@@ -37,27 +37,6 @@ import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermit
 /**
 MENU SOMENTE PARA CLIENTE
 **/
-export const GerenciaCliente = StackNavigator({
-  PerfilCliente: {
-    screen: PerfilCliente
-  },
-  ExibeProduto: {
-    screen: ExibeProduto
-  },
-  ExibeVendedor: {
-    screen: ExibeVendedor
-  },
-  PedidoCliente: {
-    screen: PedidoCliente
-  }
- }, {
-  mode: 'card',
-  lazy: true,
-  headerMode: 'none',
-});
-
-
-
 export const BuscaPro = StackNavigator({
   BuscaProduto: {
     screen: BuscaProduto
@@ -94,7 +73,7 @@ export const GerenciaPedidosClientes = TabNavigator({
  },
  {
    tabBarPosition: 'top',
-   lazy: false,
+   lazy: true,
    swipeEnabled: false,
    animationEnabled: false,
    backBehavior: 'none',
@@ -116,7 +95,7 @@ export const GerenciaPedidosClientes = TabNavigator({
 
 export const TabsCliente = TabNavigator({
     PerfilCliente: {
-      screen: GerenciaCliente,
+      screen: PerfilCliente,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
       },
