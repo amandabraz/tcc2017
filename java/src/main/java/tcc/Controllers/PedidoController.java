@@ -3,6 +3,7 @@ package tcc.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Pedido;
+import tcc.QuantidadePedidos;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
@@ -111,14 +113,33 @@ public class PedidoController {
     }
 
     @Transactional
-    @RequestMapping(value = "data/vendedor/{vendedorId}", method = RequestMethod.GET)
-    public ResponseEntity buscaPedidoVendedor(@PathVariable("vendedorId") Long vendedorId) {
+    @RequestMapping(value = "{status}/vendedor/{vendedorId}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidoVendedor(@PathVariable("status") String status,
+                                              @PathVariable("vendedorId") Long vendedorId) {
         try {
-            Pedido pedido = pedidoService.buscaPedidoVendedor(vendedorId);
-            return new ResponseEntity <Pedido>(pedido, HttpStatus.OK);
+            Pedido pedido = pedidoService.buscaPedidoVendedor(status, vendedorId);
+            if(Objects.nonNull(pedido)) {
+                return new ResponseEntity <Pedido>(pedido, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Não existem pedidos solicitados"), HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar pedido"), HttpStatus.BAD_REQUEST);
         }
     }
 
+
+    @Transactional
+    @RequestMapping(value = "quantidade/vendedor/{vendedorId}", method = RequestMethod.GET)
+    public ResponseEntity quantidadeVendidaProduto(@PathVariable("vendedorId") Long vendedorId) {
+        try {
+            List<QuantidadePedidos> pedidos = pedidoService.quantidadeVendidaProduto(vendedorId);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<QuantidadePedidos>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
+import tcc.QuantidadePedidos;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -146,9 +147,18 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido buscaPedidoVendedor(Long vendedorId) {
+    public Pedido buscaPedidoVendedor(String status, Long vendedorId) {
         try {
-            return pedidoDAO.findByPedidoVendedorIdOrderByDate(vendedorId).get(0);
+            return pedidoDAO.findFirstByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(status, vendedorId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<QuantidadePedidos> quantidadeVendidaProduto(Long vendedorId) {
+        try {
+            return (List<QuantidadePedidos>) pedidoDAO.findByQuantidadeVendidaProduto(vendedorId);
         } catch (Exception e) {
             throw e;
         }
