@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
+
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PedidoService {
@@ -66,7 +68,69 @@ public class PedidoService {
         } catch (Exception e) {
             throw e;
         }
+    }
 
+    public List<Pedido> buscaPedidosVendedor(Long vendedorId) {
+        try {
+            return pedidoDAO.findByProdutoVendedorIdOrderByStatus(vendedorId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<Pedido> buscaPedidosCliente(Long clienteId) {
+        try {
+            return pedidoDAO.findByProdutoClienteIdOrderByStatus(clienteId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<Pedido> buscaPedidosPorStatusVendedor(String status, Long vendedorId) {
+        try {
+            return pedidoDAO.findByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(status, vendedorId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<Pedido> buscaPedidosPorStatusCliente(String status, Long clienteId) {
+        try {
+            return pedidoDAO.findByStatusAndClienteIdOrderByDataSolicitadaDesc(status, clienteId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Pedido alterarStatus(Long idPedido, String status) throws IOException {
+        try {
+            Pedido alterarPedido = pedidoDAO.findOne(idPedido);
+            Date data = new Date();
+            if (alterarPedido != null
+                    && alterarPedido.getStatus() != status) {
+                if(status.equals("Confirmado")){
+                    alterarPedido.setDataConfirmacao(data);
+                } else if(status.equals("Finalizado")){
+                    alterarPedido.setDataFinalizacao(data);
+                }
+
+             alterarPedido.setStatus(status);
+
+            }
+            return this.salvaPedido(alterarPedido);
+
+        } catch (IOException e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Pedido buscaPedidoVendedor(Long vendedorId) {
+        try {
+            return pedidoDAO.findByPedidoVendedorIdOrderByDate(vendedorId).get(0);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 }
