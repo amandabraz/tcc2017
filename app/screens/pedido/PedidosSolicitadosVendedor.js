@@ -146,8 +146,8 @@ cancelarPedido(pedido) {
                 fontWeight: 'bold'
             },
             callback: () => {
-              this.state.pedidoSolicitado.status = "Recusado";
-              this.atualizaStatus(pedidoS);
+              pedido.status = "Recusado";
+              this.atualizaStatus(pedido);
               }
         },
         cancel: {
