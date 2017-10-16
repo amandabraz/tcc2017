@@ -69,8 +69,8 @@ class PedidosSolicitadosCliente extends Component {
                     fontWeight: 'bold'
                 },
                 callback: () => {
-                  pedidoS.status = "Recusado";
-                  this.atualizaStatus(pedidoS);
+                  pedido.status = "Cancelado";
+                  this.atualizaStatus(pedido);
                   }
             },
             cancel: {
