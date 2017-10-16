@@ -11,7 +11,8 @@ import {
   ScrollView,
   ToastAndroid,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
@@ -49,26 +50,38 @@ class HomeVendedor extends Component {
           pagamento: {
             descricao:''
           }
-        }
+        },
+        quantidadeVendida: []
     };
     this.buscaDadosPedido();
+    this.buscaQuantidadeVendida();
   };
 
   buscaDadosPedido() {
-    fetch(constante.ENDPOINT+'pedido/data/vendedor/' + this.state.vendedorId)
+    fetch(constante.ENDPOINT+'pedido/'+ 'Solicitado' + '/vendedor/' + this.state.vendedorId, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
             this.setState({pedidoSolicitado: responseJson});
+
             if (responseJson.cliente.usuario.imagemPerfil) {
               this.setState({imagemCliente: {uri: responseJson.cliente.usuario.imagemPerfil }})
-          }
+            }
             if (responseJson.produto.imagemPrincipal) {
               this.setState({imagemProduto:{ uri: responseJson.produto.imagemPrincipal }})
-        }
-        var dataNormal = new Date(responseJson.dataSolicitada);
-        var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-        this.setState({dataSolicitada: dataS})
+            }
+            var dataNormal = new Date(responseJson.dataSolicitada);
+            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+            this.setState({dataSolicitada: dataS})
+      }});
+  };
+
+  buscaQuantidadeVendida() {
+    fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
+    .then((response) => response.json())
+      .then((responseJson) => {
+          if (!responseJson.errorMessage) {
+          this.setState({quantidadeVendida: responseJson});
       }});
   };
 
@@ -90,6 +103,7 @@ class HomeVendedor extends Component {
           this.setState({pedidoSolicitado: []})
           this.buscaDadosPedido();
           this.pedidoSolicitado();
+          this.produtosVendidos();
         } else {
           Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
@@ -107,8 +121,8 @@ class HomeVendedor extends Component {
                   fontWeight: 'bold'
               },
               callback: () => {
-                this.state.pedidoSolicitado.status = "Recusado";
-                this.atualizaStatus(this.state.pedidoSolicitado);
+                pedido.status = "Recusado";
+                this.atualizaStatus(pedido);
                 }
           },
           cancel: {
@@ -139,7 +153,7 @@ class HomeVendedor extends Component {
            <View style={{width: '70%'}}>
              <Text style={styles.totalFont}> {this.state.pedidoSolicitado.cliente.usuario.nome}</Text>
              <Text style={styles.oneResultfont}>Fez um pedido!</Text>
-             <Text style={{fontSize:18}}>{this.state.dataSolicitada}</Text>
+             <Text style={{fontSize:14}}>{this.state.dataSolicitada}</Text>
            </View>
          </View>
            <View style={{paddingTop:10}}>
@@ -150,36 +164,36 @@ class HomeVendedor extends Component {
               <Text style={styles.totalFont}> {this.state.pedidoSolicitado.quantidade}{'\n'}</Text>
             </Text>
             <Text style={styles.oneResultfont}>Total a pagar em {this.state.pedidoSolicitado.pagamento.descricao}:
-            </Text>
             <Text style={styles.totalFont}> R$ {this.state.pedidoSolicitado.valorCompra}{'\n'}</Text>
+            </Text>
+
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
+
+          <Button title ="Recusar"
+                  color="#fff"
+                  backgroundColor="#88557B"
+                  borderRadius={10}
+                  onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}
+                  buttonStyle={{width: 80}}/>
+
+          <Button title="Aceitar"
+                  color="#fff"
+                  backgroundColor="#768888"
+                  borderRadius={10}
+                  buttonStyle={{width: 80}}
+                  onPress={() => {
+                         this.state.pedidoSolicitado.status = "Confirmado";
+                         this.atualizaStatus(this.state.pedidoSolicitado);
+                       }}/>
 
           </View>
         </View>
      </View>
-     <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
-
-     <Button title ="Recusar"
-             color="#fff"
-             backgroundColor="#88557B"
-             borderRadius={10}
-             onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}
-             buttonStyle={{width: 80}}/>
-
-     <Button title="Aceitar"
-             color="#fff"
-             backgroundColor="#768888"
-             borderRadius={10}
-             buttonStyle={{width: 80}}
-             onPress={() => {
-                    this.state.pedidoSolicitado.status = "Confirmado";
-                    this.atualizaStatus(this.state.pedidoSolicitado);
-                  }}/>
-
-     </View>
    </View>
  )} else {
    views.push(
-     <View key={0} style={{alignItems: 'center'}}>
+     <View key={0} style={{padding: 10, margin: 10, height:80}}>
      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
        Você não tem nova solicitação! :(
      </Text>
@@ -188,6 +202,34 @@ class HomeVendedor extends Component {
 
    return views;
 }
+
+produtosVendidos(){
+  var views = [];
+  if(this.state.quantidadeVendida.length > 0){
+    for(i in this.state.quantidadeVendida){
+      let prodQtdVendido = this.state.quantidadeVendida[i];
+  views.push(
+  <View key={i} style={styles.produtosV}>
+    <Animated.View style={[styles.bar, styles.points, {width: prodQtdVendido[1]}]}/>
+    <Text style={{fontSize: 7, justifyContent: 'center'}}>
+      {prodQtdVendido[1]}
+    </Text>
+    <Text style={{fontSize: 12, justifyContent: 'center'}}>
+      {prodQtdVendido[0]}
+    </Text>
+ </View>
+)}} else {
+ views.push(
+   <View key={0} style={{alignItems: 'center'}}>
+   <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+     Você não tem produtos Vendidos! :(
+   </Text>
+   </View>
+ )}
+
+ return views;
+}
+
 
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
@@ -203,7 +245,17 @@ class HomeVendedor extends Component {
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
+            <ScrollView>
               {this.pedidoSolicitado()}
+            <View style={{paddingTop: 25}}>
+            <Text style={{marginLeft: 10, fontSize: 16}}>
+              Seus Produtos Vendidos:
+            </Text>
+            <ScrollView>
+              {this.produtosVendidos()}
+            </ScrollView>
+            </View>
+            </ScrollView>
             </View>
            <Popup ref={popup => this.popup = popup }/>
         </View>
@@ -220,7 +272,17 @@ const titleConfig = {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'column',
+    alignContent: 'space-between'
+  },
+  bar: {
+    borderRadius: 5,
+    height: 7,
+    marginRight: 5
+  },
+  points: {
+    backgroundColor: '#88557B'
   },
   oneResult:{
      backgroundColor: 'rgba(255, 255, 255, 0.55)',
@@ -231,6 +293,14 @@ const styles = StyleSheet.create({
      margin: 10,
      width: '98%'
   },
+  produtosV:{
+    margin: 6,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#fff',
+    width: '98%'
+  },
   oneResultfontTitle:{
     color: '#1C1C1C',
     fontWeight: 'bold',
@@ -240,12 +310,12 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
   },
