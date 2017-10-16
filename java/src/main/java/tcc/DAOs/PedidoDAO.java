@@ -40,5 +40,4 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
     List<Pedido> findByProdutoClienteIdOrderByStatus(long clienteId);
 
     List<Pedido> findByStatusAndClienteIdOrderByDataSolicitadaDesc(String status, long clienteId);
-
 }

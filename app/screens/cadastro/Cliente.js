@@ -143,7 +143,7 @@ class Cliente extends Component {
             numberOfLines={15}
           />
           </View>
-          <Button onPress={this.handleFinalizarPress} title="Finalizar" color="#dc143c" />
+          <Button onPress={() => this.handleFinalizarPress()} title="Finalizar" color="#dc143c" />
         </View>
       </View>
     );

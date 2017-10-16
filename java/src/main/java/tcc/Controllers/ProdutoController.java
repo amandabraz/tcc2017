@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,8 +89,11 @@ public class ProdutoController {
                                         @RequestParam(value = "longitude") double longitude,
                                         @RequestParam(value = "altitude") double altitude) {
         try {
-
-            return new ResponseEntity<List<Produto>>(produtoService.encontraProduto(filtro, latitude, longitude, altitude), HttpStatus.OK);
+            List<Produto> produtosEncontrados = produtoService.encontraProduto(filtro, latitude, longitude, altitude);
+            if (CollectionUtils.isEmpty(produtosEncontrados)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<List<Produto>>(produtosEncontrados, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }
