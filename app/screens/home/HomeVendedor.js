@@ -193,7 +193,7 @@ class HomeVendedor extends Component {
    </View>
  )} else {
    views.push(
-     <View key={0} style={{alignItems: 'center'}}>
+     <View key={0} style={{padding: 10, margin: 10, height:80}}>
      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
        Você não tem nova solicitação! :(
      </Text>

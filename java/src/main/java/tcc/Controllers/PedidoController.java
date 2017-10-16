@@ -82,7 +82,11 @@ public class PedidoController {
                                               @PathVariable("vendedorId") Long vendedorId) {
         try {
             Pedido pedido = pedidoService.buscaPedidoVendedor(status, vendedorId);
-            return new ResponseEntity <Pedido>(pedido, HttpStatus.OK);
+            if(Objects.nonNull(pedido)) {
+                return new ResponseEntity <Pedido>(pedido, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Não existem pedidos solicitados"), HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar pedido"), HttpStatus.BAD_REQUEST);
         }

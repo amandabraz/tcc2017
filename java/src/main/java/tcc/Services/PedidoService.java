@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
-import tcc.Models.Produto;
 import tcc.QuantidadePedidos;
 
 import javax.transaction.Transactional;
@@ -105,7 +104,7 @@ public class PedidoService {
     @Transactional
     public Pedido buscaPedidoVendedor(String status, Long vendedorId) {
         try {
-            return pedidoDAO.findFirstByStatusAndProdutoVendedorIdOrderByDataSolicitada(status, vendedorId);
+            return pedidoDAO.findFirstByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(status, vendedorId);
         } catch (Exception e) {
             throw e;
         }

@@ -21,7 +21,7 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             nativeQuery = true)
     List<Pedido> findByProdutoVendedorIdOrderByStatus(long vendedorId);
 
-    Pedido findFirstByStatusAndProdutoVendedorIdOrderByDataSolicitada(String status, long vendedorId);
+    Pedido findFirstByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(String status, long vendedorId);
 
     @Query(value = "SELECT produto.nome, SUM(pedido.quantidade) as qtd_vendida from pedido\n" +
             "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
