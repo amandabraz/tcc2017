@@ -63,6 +63,7 @@ public class PedidoController {
         }
     }
 
+    @Transactional
     @RequestMapping(value = "/vendedor/{vendedorId}/status/{status}", method = RequestMethod.GET)
     public ResponseEntity buscaPedidosPorStatusVendedor(@PathVariable("status") String status,
                                                         @PathVariable("vendedorId") Long vendedorId) {

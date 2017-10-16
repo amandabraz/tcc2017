@@ -51,14 +51,14 @@ export default class BuscaProduto extends Component {
                                
        .then((response) => response.json())
         .then((responseJson) => {
-          if (!responseJson.errorMessage || !responseJson.error) {
+          if (!responseJson.errorMessage) {
             this.setState({resultadoPesquisaProduto: responseJson});            
           }
           });
       fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
        .then((response) => response.json())
         .then((responseJson) => {
-              if (!responseJson.errorMessage  || !responseJson.error) {            
+              if (!responseJson.errorMessage) {            
                 this.setState({resultadoPesquisaVendedor: responseJson});
               }
           });
@@ -82,7 +82,7 @@ export default class BuscaProduto extends Component {
 
   buscaProduto() {
     var views = [];
-    if (this.state.resultadoPesquisaProduto.lenght > 0) {
+    if (this.state.resultadoPesquisaProduto.length > 0) {
       for(i in this.state.resultadoPesquisaProduto) {
         let produto = this.state.resultadoPesquisaProduto[i];
         let distancia = parseInt(produto.distancia);
@@ -143,7 +143,7 @@ export default class BuscaProduto extends Component {
 
   buscaVendedor() {
     var views = [];
-    if (this.state.resultadoPesquisaVendedor > 0) {
+    if (this.state.resultadoPesquisaVendedor.length > 0) {
       for(i in this.state.resultadoPesquisaVendedor) {
         let vendedor = this.state.resultadoPesquisaVendedor[i];
         views.push (

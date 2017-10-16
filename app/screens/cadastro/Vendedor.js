@@ -150,7 +150,7 @@ class Vendedor extends Component {
             <Button
               title="Finalizar"
               buttonStyle={{ padding: 16, marginBottom: 3 }}
-              onPress={this.handleFinalizarPress}
+              onPress={() => this.handleFinalizarPress()}
             />
           </ScrollView>
         </View>

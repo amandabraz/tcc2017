@@ -68,6 +68,8 @@ public class ProdutoService {
 
         List<Produto> listaProdutos = listaProdutosFiltrada;
 
+        List<Produto> listaProdutosNaoValidos = new ArrayList<>();
+
         for (Produto produto : listaProdutos) {
             Localizacao localizacaoVendedor = localizacaoService.encontraLocalizacaoRecenteVendedor(produto.getVendedor());
 
@@ -85,11 +87,10 @@ public class ProdutoService {
                     }
                 }
             }
-            if (listaProdutosFiltrada.size() > 1) {
-                listaProdutosFiltrada.remove(produto);
-            } else {
-                listaProdutosFiltrada = null;
-            }
+            listaProdutosNaoValidos.add(produto);
+        }
+        if(!CollectionUtils.isEmpty(listaProdutosNaoValidos)) {
+            listaProdutosFiltrada.removeAll(listaProdutosNaoValidos);
         }
         if (!CollectionUtils.isEmpty(listaProdutosFiltrada)) {
             Collections.sort(listaProdutosFiltrada);
