@@ -42,26 +42,6 @@ class PedidosSolicitadosCliente extends Component {
       });
   };
 
-  cancelarPedido() {
-      this.popup.confirm({
-          title: 'Cancelar Pedido',
-          content: ['Deseja realmente cancelar esse pedido?'],
-          ok: {
-              text: 'Confirmar',
-              style: {
-                  color: 'green',
-                  fontWeight: 'bold'
-              },
-          },
-          cancel: {
-              text: 'Voltar',
-              style: {
-                  color: 'red'
-              }
-          }
-      });
-}
-
   atualizaStatus(pedido) {
     fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
       .then((response) => response.json())
@@ -75,6 +55,33 @@ class PedidosSolicitadosCliente extends Component {
         }
       });
   }
+
+
+
+    cancelarPedido(pedido) {
+        this.popup.confirm({
+            title: 'Recusar Pedido',
+            content: ['Deseja realmente cancelar esse pedido?'],
+            ok: {
+                text: 'Confirmar',
+                style: {
+                    color: 'green',
+                    fontWeight: 'bold'
+                },
+                callback: () => {
+                  pedidoS.status = "Recusado";
+                  this.atualizaStatus(pedidoS);
+                  }
+            },
+            cancel: {
+                text: 'Cancelar',
+                style: {
+                    color: 'red'
+                }
+            }
+        });
+  }
+
 
 pedidoSolicitado(){
   var views = [];
@@ -123,10 +130,8 @@ pedidoSolicitado(){
                     color="#fff"
                     backgroundColor="#88557B"
                     borderRadius={10}
-                    onPress={() => {
-                      pedidoS.status = "Recusado";
-                      this.atualizaStatus(pedidoS);
-                    }}/>
+                    onPress={() =>this.cancelarPedido(pedidoS)}
+                    />
           </View>
         </View>
         }

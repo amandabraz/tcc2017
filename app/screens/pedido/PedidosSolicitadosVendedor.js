@@ -25,7 +25,7 @@ class PedidosSolicitadosVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.navigation.state.params.userId,      
+      userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       pedidosSolicitados: [],
     };
@@ -42,6 +42,7 @@ class PedidosSolicitadosVendedor extends Component {
       });
   };
 
+
   atualizaStatus(pedido) {
     fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
       .then((response) => response.json())
@@ -55,6 +56,7 @@ class PedidosSolicitadosVendedor extends Component {
         }
       });
   }
+
 
 pedidoSolicitado(){
   var views = [];
@@ -103,10 +105,7 @@ pedidoSolicitado(){
                     color="#fff"
                     backgroundColor="#88557B"
                     borderRadius={10}
-                    onPress={() => {
-                      pedidoS.status = "Recusado";
-                      this.atualizaStatus(pedidoS);
-                    }}/>
+                    onPress={() =>this.cancelarPedido(pedidoS)}/>
 
             <Button buttonStyle={{width: 90}}
                     title="Aceitar"
@@ -135,6 +134,31 @@ pedidoSolicitado(){
   }
   return views;
 }
+
+cancelarPedido(pedido) {
+    this.popup.confirm({
+        title: 'Recusar Pedido',
+        content: ['Deseja realmente cancelar esse pedido?'],
+        ok: {
+            text: 'Confirmar',
+            style: {
+                color: 'green',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              this.state.pedidoSolicitado.status = "Recusado";
+              this.atualizaStatus(pedidoS);
+              }
+        },
+        cancel: {
+            text: 'Cancelar',
+            style: {
+                color: 'red'
+            }
+        }
+    });
+}
+
 
   render() {
     return(
