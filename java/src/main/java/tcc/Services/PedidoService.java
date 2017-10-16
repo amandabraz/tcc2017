@@ -124,7 +124,26 @@ public class PedidoService {
 
             }
             return this.salvarPedido(pedidoAtualizado);
+           } catch (IOException e) {
+            throw e;
+        }
+    }
+    public Pedido alterarStatus(Long idPedido, String status) throws IOException {
+        try {
+            Pedido alterarPedido = pedidoDAO.findOne(idPedido);
+            Date data = new Date();
+            if (alterarPedido != null
+                    && alterarPedido.getStatus() != status) {
+                if(status.equals("Confirmado")){
+                    alterarPedido.setDataConfirmacao(data);
+                } else if(status.equals("Finalizado")){
+                    alterarPedido.setDataFinalizacao(data);
+                }
 
+             alterarPedido.setStatus(status);
+
+            }
+            return this.salvaPedido(alterarPedido);
         } catch (IOException e) {
             throw e;
         }
