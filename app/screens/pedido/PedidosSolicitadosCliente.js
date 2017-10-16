@@ -102,7 +102,7 @@ pedidoSolicitado(){
           <View style={{width: '60%', alignSelf:'center'}}>
             <Text style={styles.totalFont}> {pedidoS.produto.vendedor.usuario.nome}</Text>
             <Text style={styles.oneResultfont}> Pedido feito!</Text>
-            <Text style={{fontSize: 18}}> {pedidoS.dataSolicitada}</Text>
+            <Text style={{fontSize: 14}}> {pedidoS.dataSolicitada}</Text>
           </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
             <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -115,7 +115,7 @@ pedidoSolicitado(){
           <Image source={{uri: pedidoS.produto.imagemPrincipal}}
                  style={styles.imagemVendedor}/>
           </View>
-          <View style={{width: '80%'}}>
+          <View style={{width: '80%', paddingLeft: 6}}>
             <Text style={styles.totalFont}> {pedidoS.produto.nome}{'\n'}</Text>
             <Text style={styles.oneResultfont}>Quantidade:
               <Text style={styles.totalFont}> {pedidoS.quantidade}{'\n'}</Text>
@@ -142,7 +142,7 @@ pedidoSolicitado(){
   } else {
     views.push(
       <View key={0} style={{alignItems: 'center'}}>
-      <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
+      <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
         Nenhum pedido solicitado.
       </Text>
       </View>
@@ -156,7 +156,7 @@ pedidoSolicitado(){
       <View style={styles.container}>
       <ScrollView>
         <View style = {{margin: 5}}>
-        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color:'#A1453E', fontWeight: 'bold'}}>
+        <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color:'#A1453E', fontWeight: 'bold'}}>
           Pedidos Solicitados
         </Text>
         </View>
@@ -184,12 +184,12 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
   },
