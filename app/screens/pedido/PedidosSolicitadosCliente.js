@@ -21,19 +21,19 @@ import * as constante from '../../constantes';
 
 const { width, height } = Dimensions.get("window");
 
-class PedidosSolicitadosVendedor extends Component {
+class PedidosSolicitadosCliente extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId,
+      clienteId: this.props.navigation.state.params.clienteId,
       pedidosSolicitados: [],
     };
-    this.buscaDadosPedidosVendedor();
+    this.buscaDadosPedidosCliente();
   };
 
-  buscaDadosPedidosVendedor() {
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Solicitado')
+  buscaDadosPedidosCliente() {
+    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Solicitado')
     .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
@@ -42,19 +42,44 @@ class PedidosSolicitadosVendedor extends Component {
       });
   };
 
-
   atualizaStatus(pedido) {
     fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
-          this.buscaDadosPedidosVendedor();
+          this.buscaDadosPedidosCliente();
           this.setState({pedidosSolicitados: []});
           this.pedidoSolicitado();
         } else {
           Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
       });
+  }
+
+
+
+    cancelarPedido(pedido) {
+        this.popup.confirm({
+            title: 'Recusar Pedido',
+            content: ['Deseja realmente cancelar esse pedido?'],
+            ok: {
+                text: 'Confirmar',
+                style: {
+                    color: 'green',
+                    fontWeight: 'bold'
+                },
+                callback: () => {
+                  pedido.status = "Cancelado";
+                  this.atualizaStatus(pedido);
+                  }
+            },
+            cancel: {
+                text: 'Cancelar',
+                style: {
+                    color: 'red'
+                }
+            }
+        });
   }
 
 
@@ -71,13 +96,13 @@ pedidoSolicitado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
-              <Image source={{uri: pedidoS.cliente.usuario.imagemPerfil}}
+              <Image source={{uri: pedidoS.produto.vendedor.usuario.imagemPerfil}}
                   style={styles.imagemPrincipal}/>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
-            <Text style={styles.totalFont}> {pedidoS.cliente.usuario.nome}</Text>
-            <Text style={styles.oneResultfont}> fez um pedido!</Text>
-            <Text style={{fontSize: 14}}> {pedidoS.dataSolicitada}</Text>
+            <Text style={styles.totalFont}> {pedidoS.produto.vendedor.usuario.nome}</Text>
+            <Text style={styles.oneResultfont}> Pedido feito!</Text>
+            <Text style={{fontSize: 18}}> {pedidoS.dataSolicitada}</Text>
           </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
             <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -88,7 +113,7 @@ pedidoSolicitado(){
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
           <View style = {{ width: '20%'}}>
           <Image source={{uri: pedidoS.produto.imagemPrincipal}}
-                 style={styles.imagemCliente}/>
+                 style={styles.imagemVendedor}/>
           </View>
           <View style={{width: '80%'}}>
             <Text style={styles.totalFont}> {pedidoS.produto.nome}{'\n'}</Text>
@@ -99,23 +124,14 @@ pedidoSolicitado(){
             <Text style={styles.totalFont}> R$ {pedidoS.valorCompra}{'\n'}</Text>
             </View>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <Button buttonStyle={{width: 90}}
                     title ="Cancelar"
                     color="#fff"
                     backgroundColor="#88557B"
                     borderRadius={10}
-                    onPress={() =>this.cancelarPedido(pedidoS)}/>
-
-            <Button buttonStyle={{width: 90}}
-                    title="Aceitar"
-                    color="#fff"
-                    backgroundColor="#768888"
-                    borderRadius={10}
-                    onPress={() => {
-                      pedidoS.status = "Confirmado";
-                      this.atualizaStatus(pedidoS);
-                    }}/>
+                    onPress={() =>this.cancelarPedido(pedidoS)}
+                    />
           </View>
         </View>
         }
@@ -127,38 +143,13 @@ pedidoSolicitado(){
     views.push(
       <View key={0} style={{alignItems: 'center'}}>
       <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
-        Nenhum pedido solicitado
+        Nenhum pedido solicitado.
       </Text>
       </View>
     )
   }
   return views;
 }
-
-cancelarPedido(pedido) {
-    this.popup.confirm({
-        title: 'Recusar Pedido',
-        content: ['Deseja realmente cancelar esse pedido?'],
-        ok: {
-            text: 'Confirmar',
-            style: {
-                color: 'green',
-                fontWeight: 'bold'
-            },
-            callback: () => {
-              pedido.status = "Recusado";
-              this.atualizaStatus(pedido);
-              }
-        },
-        cancel: {
-            text: 'Cancelar',
-            style: {
-                color: 'red'
-            }
-        }
-    });
-}
-
 
   render() {
     return(
@@ -193,16 +184,16 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 14,
+    fontSize: 18,
     textAlign: 'left',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 14,
+    fontSize: 18,
     textAlign: 'left',
     fontWeight: 'bold',
   },
-  imagemCliente:{
+  imagemVendedor:{
     width: 60,
     height: 60,
     borderRadius: 100
@@ -219,6 +210,6 @@ const styles = StyleSheet.create({
   }
 });
 
-PedidosSolicitadosVendedor.defaultProps = { ...PedidosSolicitadosVendedor };
+PedidosSolicitadosCliente.defaultProps = { ...PedidosSolicitadosCliente };
 
-export default PedidosSolicitadosVendedor;
+export default PedidosSolicitadosCliente;

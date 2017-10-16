@@ -20,10 +20,13 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import PedidosCliente from '../screens/pedido/PedidosCliente';
+import PedidoCliente from '../screens/pedido/PedidoCliente';
 import PedidosSolicitadosVendedor from '../screens/pedido/PedidosSolicitadosVendedor';
 import PedidosConfirmadosVendedor from '../screens/pedido/PedidosConfirmadosVendedor';
 import PedidosFinalizadosVendedor from '../screens/pedido/PedidosFinalizadosVendedor';
+import PedidosSolicitadosCliente from '../screens/pedido/PedidosSolicitadosCliente';
+import PedidosConfirmadosCliente from '../screens/pedido/PedidosConfirmadosCliente';
+import PedidosFinalizadosCliente from '../screens/pedido/PedidosFinalizadosCliente';
 import LerTokenPedido from '../screens/pedido/LerTokenPedido';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
@@ -34,25 +37,6 @@ import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermit
 /**
 MENU SOMENTE PARA CLIENTE
 **/
-export const GerenciaCliente = StackNavigator({
-  PerfilCliente: {
-    screen: PerfilCliente
-  },
-  ExibeProduto: {
-    screen: ExibeProduto
-  },
-  ExibeVendedor: {
-    screen: ExibeVendedor
-  },
-  PedidosCliente: {
-    screen: PedidosCliente
-  }
- }, {
-  mode: 'card',
-  lazy: true,
-  headerMode: 'none',
-});
-
 export const BuscaPro = StackNavigator({
   BuscaProduto: {
     screen: BuscaProduto
@@ -76,17 +60,50 @@ export const BuscaPro = StackNavigator({
   headerMode: 'none',
 });
 
+export const GerenciaPedidosClientes = TabNavigator({
+  Solicitados: {
+    screen: PedidosSolicitadosCliente
+  },
+  Confirmados: {
+    screen: PedidosConfirmadosCliente
+  },
+  Finalizados: {
+    screen: PedidosFinalizadosCliente
+  },
+ },
+ {
+   tabBarPosition: 'top',
+   lazy: true,
+   swipeEnabled: false,
+   animationEnabled: false,
+   backBehavior: 'none',
+   tabBarOptions: {
+     showLabel: true,
+     activeTintColor: '#333333',
+     inactiveTintColor: '#fff',
+     labelStyle: {
+       fontSize: 12,
+     },
+     style: {
+       backgroundColor: '#4682b4',
+     },
+     indicatorStyle: {
+       backgroundColor: 'white',
+     }
+   }
+});
+
 export const TabsCliente = TabNavigator({
     PerfilCliente: {
-      screen: GerenciaCliente,
+      screen: PerfilCliente,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
       },
     },
-    Busca: {
-      screen: BuscaPro,
+    PedidosCliente: {
+      screen: GerenciaPedidosClientes,
       navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
       },
     },
     Home: {
@@ -115,7 +132,7 @@ export const TabsCliente = TabNavigator({
     animationEnabled: false,
     backBehavior: 'none',
     tabBarOptions: {
-      showIcon: true,      
+      showIcon: true,
       showLabel: false,
       activeTintColor: '#8fbc8f',
       inactiveTintColor: '#fff',
@@ -125,7 +142,7 @@ export const TabsCliente = TabNavigator({
       style: {
         backgroundColor: '#2f4f4f',
       },
-      indicatorStyle: { 
+      indicatorStyle: {
         backgroundColor: 'white',
        }
     }
@@ -170,7 +187,7 @@ export const GerenciaPedidos = TabNavigator({
       style: {
         backgroundColor: '#4682b4',
       },
-      indicatorStyle: { 
+      indicatorStyle: {
         backgroundColor: 'white',
        }
     }
@@ -237,7 +254,7 @@ export const TabsVendedor = TabNavigator({
     animationEnabled: false,
     backBehavior: 'none',
     tabBarOptions: {
-      showIcon: true,      
+      showIcon: true,
       showLabel: false,
       activeTintColor: '#333333',
       inactiveTintColor: '#fff',
@@ -247,7 +264,7 @@ export const TabsVendedor = TabNavigator({
       style: {
         backgroundColor: '#4682b4',
       },
-      indicatorStyle: { 
+      indicatorStyle: {
         backgroundColor: 'white',
        }
     }

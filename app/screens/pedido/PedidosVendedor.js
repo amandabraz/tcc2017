@@ -7,18 +7,18 @@ import {
   View
 } from 'react-native';
 
-class PedidosCliente extends Component {
+class PedidosVendedor extends Component {
 
   render() {
     return(
       <View>
-        <Text>Mock - Config Cliente</Text>
+        <Text>Mock - Config Vendedor</Text>
       </View>
     );
   }
 
 }
 
-PedidosCliente.defaultProps = { ...PedidosCliente };
+PedidosVendedor.defaultProps = { ...PedidosVendedor };
 
-export default PedidosCliente;
+export default PedidosVendedor;

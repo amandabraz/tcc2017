@@ -158,4 +158,13 @@ public class ProdutoService {
             throw e;
         }
     }
+
+    @Transactional
+    public List<Produto> buscaProdutosPorPreferenciasCliente(Long clienteId) {
+        try {
+            return produtoDAO.findByPreferenciasCliente(clienteId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

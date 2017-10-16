@@ -16,6 +16,7 @@
     "react-native-animatable": "^1.2.4",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-camera-roll-picker": "^1.1.9",
+    "react-native-chart": "^1.0.8-beta",
     "react-native-check-box": "^1.0.4",
     "react-native-checkbox": "^1.1.0",
     "react-native-datepicker": "^1.4.7",

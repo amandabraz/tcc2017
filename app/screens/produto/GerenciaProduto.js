@@ -161,7 +161,7 @@ class GerenciaProduto extends Component {
         <View style={{flex: 1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="darkblue"
+            tintColor="#768888"
           />
           <View style={{flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#ccc'}}>
             <Text style={{fontWeight: 'bold', fontSize: 12}}>
