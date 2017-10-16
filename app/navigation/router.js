@@ -107,7 +107,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Home: {
-      screen: HomeCliente,
+      screen: BuscaPro,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
       },
