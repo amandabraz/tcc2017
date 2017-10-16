@@ -26,19 +26,36 @@ public class PedidoService {
     private ProdutoService produtoService;
 
     @Transactional
-    public Pedido salvaPedido(Pedido pedido) throws IOException {
+    public Pedido geraPedido(Pedido pedido) throws IOException {
         try {
             Date dataSolicitada = new Date();
             String cliente = clienteService.buscaCliente(pedido.getCliente().getId()).getUsuario().getCpf();
-            String produto = produtoService.buscaProduto(pedido.getProduto().getId()).getNome();
-            String frase = dataSolicitada.toString() + produto + cliente;
+            Produto produto = produtoService.buscaProduto(pedido.getProduto().getId());
+            String frase = dataSolicitada.toString() + produto.getNome() + cliente;
             String token = (stringHexa(gerarHash(frase, "MD5")));
             pedido.setToken(token);
             pedido.setDataSolicitada(dataSolicitada);
-            return pedidoDAO.save(pedido);
+            alteraQtdProduto(pedido.getQuantidade(), produto, false);
+
+
+            return salvarPedido(pedido);
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    public void alteraQtdProduto(int qtdPedido, Produto produto, boolean incrementa) throws IOException {
+        int novaQtd = 0;
+        if (incrementa) {
+            novaQtd = produto.getQuantidade() + qtdPedido;
+        } else {
+            novaQtd = produto.getQuantidade() - qtdPedido;
+        }
+        produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(), produto.getId(), novaQtd);
+    }
+
+    public Pedido salvarPedido(Pedido pedido) {
+        return pedidoDAO.save(pedido);
     }
 
     private static String stringHexa(byte[] bytes) {
@@ -79,6 +96,38 @@ public class PedidoService {
         }
     }
 
+    public List<Pedido> buscaPedidosPorStatusVendedor(String status, Long vendedorId) {
+        try {
+            return pedidoDAO.findByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(status, vendedorId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Pedido alterarStatus(Long idPedido, String status) throws IOException {
+        try {
+            Pedido pedidoAtualizado = pedidoDAO.findOne(idPedido);
+            Date data = new Date();
+            if (pedidoAtualizado != null
+                    && pedidoAtualizado.getStatus() != status) {
+                if (status.equals("Confirmado")) {
+                    pedidoAtualizado.setDataConfirmacao(data);
+                } else if (status.equals("Finalizado")) {
+                    pedidoAtualizado.setDataFinalizacao(data);
+                } else if (status.equals("Recusado") || status.equals("Cancelado")) {
+                    // Incrementar quantidade disponível do produto
+                    Produto produto = pedidoAtualizado.getProduto();
+                    alteraQtdProduto(pedidoAtualizado.getQuantidade(), produto, true);
+                }
+
+             pedidoAtualizado.setStatus(status);
+
+            }
+            return this.salvarPedido(pedidoAtualizado);
+           } catch (IOException e) {
+            throw e;
+        }
+    }
     public Pedido alterarStatus(Long idPedido, String status) throws IOException {
         try {
             Pedido alterarPedido = pedidoDAO.findOne(idPedido);
@@ -95,7 +144,6 @@ public class PedidoService {
 
             }
             return this.salvaPedido(alterarPedido);
-
         } catch (IOException e) {
             throw e;
         }

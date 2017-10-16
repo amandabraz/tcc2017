@@ -2,6 +2,7 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import tcc.DAOs.ProdutoDAO;
 import tcc.Models.Localizacao;
@@ -52,7 +53,7 @@ public class ProdutoService {
 
             // remove resultados duplicados
             List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
-            organizaPorDistancia(listaProdutosFiltrada, lat, lng, alt);
+            listaProdutosFiltrada = organizaPorDistancia(listaProdutosFiltrada, lat, lng, alt);
 
             return listaProdutosFiltrada;
         } catch (Exception e) {
@@ -60,7 +61,7 @@ public class ProdutoService {
         }
     }
 
-    private void organizaPorDistancia(List<Produto> listaProdutosFiltrada, double latCliente, double lngCliente, double altCliente) {
+    private List<Produto> organizaPorDistancia(List<Produto> listaProdutosFiltrada, double latCliente, double lngCliente, double altCliente) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, -6);
         Date seisHorasAtras = calendar.getTime();
@@ -84,9 +85,16 @@ public class ProdutoService {
                     }
                 }
             }
-            listaProdutosFiltrada.remove(produto);
+            if (listaProdutosFiltrada.size() > 1) {
+                listaProdutosFiltrada.remove(produto);
+            } else {
+                listaProdutosFiltrada = null;
+            }
         }
-        Collections.sort(listaProdutosFiltrada);
+        if (!CollectionUtils.isEmpty(listaProdutosFiltrada)) {
+            Collections.sort(listaProdutosFiltrada);
+        }
+        return listaProdutosFiltrada;
     }
 
     @Transactional

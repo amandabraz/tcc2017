@@ -20,4 +20,5 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             nativeQuery = true)
     List<Pedido> findByProdutoVendedorIdOrderByStatus(long vendedorId);
 
+    List<Pedido> findByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(String status, long vendedorId);
 }

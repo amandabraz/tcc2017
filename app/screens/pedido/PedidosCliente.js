@@ -7,7 +7,7 @@ import {
   View
 } from 'react-native';
 
-class ConfiguracaoCliente extends Component {
+class PedidosCliente extends Component {
 
   render() {
     return(
@@ -19,6 +19,6 @@ class ConfiguracaoCliente extends Component {
 
 }
 
-ConfiguracaoCliente.defaultProps = { ...ConfiguracaoCliente };
+PedidosCliente.defaultProps = { ...PedidosCliente };
 
-export default ConfiguracaoCliente;
+export default PedidosCliente;

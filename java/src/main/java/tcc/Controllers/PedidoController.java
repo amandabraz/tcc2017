@@ -30,7 +30,7 @@ public class PedidoController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity registraPedido(@RequestBody Pedido pedido) {
         try {
-            Pedido novoPedido = pedidoService.salvaPedido(pedido);
+            Pedido novoPedido = pedidoService.geraPedido(pedido);
             if (Objects.nonNull(novoPedido)) {
                 return new ResponseEntity<>(novoPedido, HttpStatus.OK);
             } else {
@@ -57,6 +57,17 @@ public class PedidoController {
     public ResponseEntity buscaPedidosVendedor(@PathVariable("vendedorId") Long vendedorId) {
         try {
             List<Pedido> pedidos = pedidoService.buscaPedidosVendedor(vendedorId);
+            return new ResponseEntity<List<Pedido>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/vendedor/{vendedorId}/status/{status}", method = RequestMethod.GET)
+    public ResponseEntity buscaPedidosPorStatusVendedor(@PathVariable("status") String status,
+                                                        @PathVariable("vendedorId") Long vendedorId) {
+        try {
+            List<Pedido> pedidos = pedidoService.buscaPedidosPorStatusVendedor(status, vendedorId);
             return new ResponseEntity<List<Pedido>>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);

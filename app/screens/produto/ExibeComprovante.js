@@ -37,7 +37,7 @@ export default class ExibeComprovante extends Component {
      quantidadeText: '',
      precoText: '',
      meioPagamentoText: '',
-     tokenText: 'token',
+     tokenText: '',
      nomeVendedorText: '',
      imagemProduto: require('./img/camera11.jpg')
    };
