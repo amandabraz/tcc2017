@@ -111,7 +111,7 @@ pedidoConfirmado(){
  } else {
    views.push(
      <View key={0} style={{alignItems: 'center'}}>
-     <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
+     <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
        Nenhum pedido confirmado.
      </Text>
      </View>
@@ -125,7 +125,7 @@ pedidoConfirmado(){
       <View style={styles.container}>
       <ScrollView>
         <View style = {{margin: 5}}>
-          <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#6E6362', fontWeight: 'bold'}}>
+          <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#6E6362', fontWeight: 'bold'}}>
             Pedidos Confirmados
           </Text>
         </View>
@@ -153,12 +153,12 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
   },

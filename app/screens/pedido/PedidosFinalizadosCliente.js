@@ -81,7 +81,7 @@ pedidoFinalizado(){
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
            <Text style={styles.totalFont}> {pedidoF.produto.nome}</Text>
-           <Text style={{fontSize: 18}}> {pedidoF.dataFinalizacao}</Text>
+           <Text style={{fontSize: 14}}> {pedidoF.dataFinalizacao}</Text>
           </View>
           <View style={{width: '5%',justifyContent: 'center'}}>
           <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -94,7 +94,7 @@ pedidoFinalizado(){
               <Image source={{uri: pedidoF.produto.vendedor.usuario.imagemPerfil}}
                      style={styles.imagemCliente}/>
             </View>
-          <View style={{width: '80%'}}>
+          <View style={{width: '80%', paddingLeft: 6}}>
             <Text style={styles.totalFont}> {pedidoF.produto.vendedor.usuario.nome}</Text>
             <Text style={styles.oneResultfont}>Quantidade comprada:
             <Text style={styles.totalFont}> {pedidoF.quantidade}{'\n'}</Text>
@@ -113,7 +113,7 @@ pedidoFinalizado(){
    } else {
         views.push(
           <View key={0} style={{alignItems: 'center'}}>
-          <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
+          <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
             Nenhum pedido finalizado.
           </Text>
           </View>
@@ -140,7 +140,7 @@ pedidoFinalizado(){
               </View>
             <View style={{width: '60%', alignSelf:'center'}}>
              <Text style={styles.totalFont}> {pedidoR.produto.nome}</Text>
-             <Text style={{fontSize: 18}}> {pedidoR.dataFinalizacao}</Text>
+             <Text style={{fontSize: 14}}> {pedidoR.dataFinalizacao}</Text>
             </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
             <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -153,7 +153,7 @@ pedidoFinalizado(){
                 <Image source={{uri: pedidoR.produto.vendedor.usuario.imagemPerfil}}
                        style={styles.imagemCliente}/>
               </View>
-            <View style={{width: '80%'}}>
+            <View style={{width: '80%', paddingLeft: 6}}>
               <Text style={styles.totalFont}> {pedidoR.produto.vendedor.usuario.nome}</Text>
               <Text style={styles.oneResultfont}>Quantidade solicitada:
               <Text style={styles.totalFont}> {pedidoR.quantidade}{'\n'}</Text>
@@ -172,7 +172,7 @@ pedidoFinalizado(){
      } else {
           views.push(
             <View key={0} style={{alignItems: 'center'}}>
-            <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
+            <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
               Nenhum pedido recusado.
             </Text>
             </View>
@@ -199,7 +199,7 @@ pedidoFinalizado(){
                 </View>
               <View style={{width: '60%', alignSelf:'center'}}>
                <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
-               <Text style={{fontSize: 18}}> {pedidoC.dataFinalizacao}</Text>
+               <Text style={{fontSize: 14}}> {pedidoC.dataFinalizacao}</Text>
               </View>
               <View style={{width: '5%',justifyContent: 'center'}}>
               <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -212,7 +212,7 @@ pedidoFinalizado(){
                   <Image source={{uri: pedidoC.produto.vendedor.usuario.imagemPerfil}}
                          style={styles.imagemCliente}/>
                 </View>
-              <View style={{width: '80%'}}>
+              <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
                 <Text style={styles.oneResultfont}>Quantidade solicitada:
                 <Text style={styles.totalFont}> {pedidoC.quantidade}{'\n'}</Text>
@@ -231,7 +231,7 @@ pedidoFinalizado(){
        } else {
             views.push(
               <View key={0} style={{alignItems: 'center'}}>
-              <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
+              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
                 Nenhum pedido cancelado.
               </Text>
               </View>
@@ -246,19 +246,19 @@ pedidoFinalizado(){
       <View style={styles.container}>
       <ScrollView>
         <View style = {{margin: 5}}>
-        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#67A13F', fontWeight: 'bold'}}>
+        <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#67A13F', fontWeight: 'bold'}}>
           Pedidos Finalizados
         </Text>
         </View>
         {this.pedidoFinalizado()}
         <View style = {{margin: 5}}>
-        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#67A13F', fontWeight: 'bold'}}>
+        <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#A1453E', fontWeight: 'bold'}}>
           Pedidos Recusados
         </Text>
         </View>
         {this.pedidoRecusado()}
         <View style = {{margin: 5}}>
-        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#67A13F', fontWeight: 'bold'}}>
+        <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', fontWeight: 'bold'}}>
           Pedidos Cancelados
         </Text>
         </View>
@@ -286,12 +286,12 @@ const styles = StyleSheet.create({
   },
   oneResultfont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
   },
