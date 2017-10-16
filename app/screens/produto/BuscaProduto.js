@@ -51,14 +51,14 @@ export default class BuscaProduto extends Component {
                                
        .then((response) => response.json())
         .then((responseJson) => {
-          if (!responseJson.errorMessage) {
+          if (!responseJson.errorMessage || !responseJson.error) {
             this.setState({resultadoPesquisaProduto: responseJson});            
           }
           });
       fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
        .then((response) => response.json())
         .then((responseJson) => {
-              if (!responseJson.errorMessage) {            
+              if (!responseJson.errorMessage  || !responseJson.error) {            
                 this.setState({resultadoPesquisaVendedor: responseJson});
               }
           });
@@ -82,89 +82,93 @@ export default class BuscaProduto extends Component {
 
   buscaProduto() {
     var views = [];
-    for(i in this.state.resultadoPesquisaProduto) {
-      let produto = this.state.resultadoPesquisaProduto[i];
-      let distancia = parseInt(produto.distancia);
-      let distanciaEstilo = {
-        fontWeight: 'bold',
-        fontSize: 18,
-        padding: 4,    
-        color: '#fff',
-        backgroundColor: '#f2a59d', 
-        borderColor: '#f2a59d', 
-        borderStyle: 'solid', 
-        borderRadius: 100,
-        textAlign: 'center'
-      };
-      if (distancia > 0) {
-        if (distancia > 1000) {
-          let convert = (distancia/1000).toString().split('.');
-          distancia = convert[0] + ' km';
+    if (this.state.resultadoPesquisaProduto.lenght > 0) {
+      for(i in this.state.resultadoPesquisaProduto) {
+        let produto = this.state.resultadoPesquisaProduto[i];
+        let distancia = parseInt(produto.distancia);
+        let distanciaEstilo = {
+          fontWeight: 'bold',
+          fontSize: 18,
+          padding: 4,    
+          color: '#fff',
+          backgroundColor: '#f2a59d', 
+          borderColor: '#f2a59d', 
+          borderStyle: 'solid', 
+          borderRadius: 100,
+          textAlign: 'center'
+        };
+        if (distancia > 0) {
+          if (distancia > 1000) {
+            let convert = (distancia/1000).toString().split('.');
+            distancia = convert[0] + ' km';
+          } else {
+            distancia = distancia.toString() + ' m';          
+          }
         } else {
-          distancia = distancia.toString() + ' m';          
+          distanciaEstilo.fontSize = 13;
+          distancia = "offline há mais de 6h";
         }
-      } else {
-        distanciaEstilo.fontSize = 13;
-        distancia = "offline há mais de 6h";
-      }
-      views.push (
-        <View key={i}>
-          <View style={styles.oneResult}>
-            <View style={{width: "25%"}}>          
-              <Image source={{ uri: produto.imagemPrincipal }}
-                     style={styles.imageResultSearch}
-                     justifyContent='flex-start'/>
-            </View>                     
-            <View style={{width: "45%"}}>
-              <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+        views.push (
+          <View key={i}>
+            <View style={styles.oneResult}>
+              <View style={{width: "25%"}}>          
+                <Image source={{ uri: produto.imagemPrincipal }}
+                       style={styles.imageResultSearch}
+                       justifyContent='flex-start'/>
+              </View>                     
+              <View style={{width: "45%"}}>
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+              </View>
+              <View style={{width: "15%"}} justifyContent='center'>
+                <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
+              </View>
+              <View style={{width: "15%"}}>
+                <Icon
+                  name='shopping-cart'
+                  type=' material-community'
+                  color='#1C1C1C'
+                  onPress={() => this.onButtonOpenProduct(produto.id)}
+                  style={styles.imageResultSearch} />
+              </View>
             </View>
-            <View style={{width: "15%"}} justifyContent='center'>
-              <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
-            </View>
-            <View style={{width: "15%"}}>
-              <Icon
-                name='shopping-cart'
-                type=' material-community'
-                color='#1C1C1C'
-                onPress={() => this.onButtonOpenProduct(produto.id)}
-                style={styles.imageResultSearch} />
-            </View>
+            <Text>{'\n'}</Text>
           </View>
-          <Text>{'\n'}</Text>
-        </View>
-      );
+        );
+      }
     }
-      return views;
+    return views;    
   }
 
   buscaVendedor() {
     var views = [];
-    for(i in this.state.resultadoPesquisaVendedor) {
-      let vendedor = this.state.resultadoPesquisaVendedor[i];
-      views.push (
-        <View key={i}>
-        <View style={styles.oneResult}>
-          <Image source={{ uri: vendedor.usuario.imagemPerfil }}
-                 style={styles.imageResultSearch}
-                 justifyContent='flex-start'/>
+    if (this.state.resultadoPesquisaVendedor > 0) {
+      for(i in this.state.resultadoPesquisaVendedor) {
+        let vendedor = this.state.resultadoPesquisaVendedor[i];
+        views.push (
+          <View key={i}>
+          <View style={styles.oneResult}>
+            <Image source={{ uri: vendedor.usuario.imagemPerfil }}
+                  style={styles.imageResultSearch}
+                  justifyContent='flex-start'/>
 
-          <View style={{width: 210, margin: 10}}>
-            <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
-            <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
+            <View style={{width: 210, margin: 10}}>
+              <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
+              <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
+            </View>
+            <Icon
+              name='person'
+              type=' material-community'
+              color='#1C1C1C'
+              onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
+              style={styles.imageResultSearch}
+              />
           </View>
-          <Icon
-            name='person'
-            type=' material-community'
-            color='#1C1C1C'
-            onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
-            style={styles.imageResultSearch}
-             />
-        </View>
-        <Text>{'\n'}</Text>
-        </View>
-      );
+          <Text>{'\n'}</Text>
+          </View>
+        );
+    }
   }
   return views;
 }

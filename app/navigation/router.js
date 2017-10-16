@@ -125,6 +125,9 @@ export const TabsCliente = TabNavigator({
       style: {
         backgroundColor: '#2f4f4f',
       },
+      indicatorStyle: { 
+        backgroundColor: 'white',
+       }
     }
   });
 

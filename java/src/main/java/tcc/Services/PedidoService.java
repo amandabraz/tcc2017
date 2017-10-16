@@ -35,7 +35,7 @@ public class PedidoService {
             String token = (stringHexa(gerarHash(frase, "MD5")));
             pedido.setToken(token);
             pedido.setDataSolicitada(dataSolicitada);
-            decrementaProduto(pedido, produto);
+            alteraQtdProduto(pedido.getQuantidade(), produto, false);
 
 
             return salvarPedido(pedido);
@@ -44,9 +44,13 @@ public class PedidoService {
         }
     }
 
-    public void decrementaProduto(Pedido pedido, Produto produto) throws IOException {
-        // Decrementar quantidade disponível do produto
-        int novaQtd = produto.getQuantidade() - pedido.getQuantidade();
+    public void alteraQtdProduto(int qtdPedido, Produto produto, boolean incrementa) throws IOException {
+        int novaQtd = 0;
+        if (incrementa) {
+            novaQtd = produto.getQuantidade() + qtdPedido;
+        } else {
+            novaQtd = produto.getQuantidade() - qtdPedido;
+        }
         produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(), produto.getId(), novaQtd);
     }
 
@@ -113,7 +117,7 @@ public class PedidoService {
                 } else if (status.equals("Recusado") || status.equals("Cancelado")) {
                     // Incrementar quantidade disponível do produto
                     Produto produto = pedidoAtualizado.getProduto();
-                    decrementaProduto(pedidoAtualizado, produto);
+                    alteraQtdProduto(pedidoAtualizado.getQuantidade(), produto, true);
                 }
 
              pedidoAtualizado.setStatus(status);
