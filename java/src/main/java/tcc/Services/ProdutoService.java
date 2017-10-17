@@ -31,9 +31,20 @@ public class ProdutoService {
     @Transactional
     public Produto salvaProduto(Produto produto) throws IOException {
         try {
-            if (!StringUtils.isEmpty(produto.getImagemPrincipal())) {
-                produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
+            if (Objects.nonNull(produto.getId())) {
+                Produto updateProduto = produtoDAO.findOne(produto.getId());
+                if (Objects.nonNull(updateProduto.getImagemPrincipal()) &&
+                        Objects.nonNull(produto.getImagemPrincipal())) {
+                    if (!updateProduto.getImagemPrincipal().equals(produto.getImagemPrincipal())) {
+                        produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
+                    }
+                }
+            } else {
+                if (!StringUtils.isEmpty(produto.getImagemPrincipal())) {
+                    produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
+                }
             }
+
             return produtoDAO.save(produto);
         } catch (Exception e) {
             throw e;
