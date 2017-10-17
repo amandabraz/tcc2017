@@ -12,7 +12,8 @@ import {
   ToastAndroid,
   TouchableHighlight,
   TouchableOpacity,
-  Animated
+  Animated,
+  RefreshControl
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
@@ -51,7 +52,8 @@ class HomeVendedor extends Component {
             descricao:''
           }
         },
-        quantidadeVendida: []
+        quantidadeVendida: [],
+        refreshing: false,              
     };
     this.buscaDadosPedido();
     this.buscaQuantidadeVendida();
@@ -80,9 +82,11 @@ class HomeVendedor extends Component {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMessage) {
+        if (!responseJson.errorMessage) {
           this.setState({quantidadeVendida: responseJson});
-      }});
+        }
+        this.setState({refreshing:false});        
+    });
   };
 
   componentWillMount() {
@@ -192,13 +196,13 @@ class HomeVendedor extends Component {
      </View>
    </View>
  )} else {
-   views.push(
-     <View key={0} style={{padding: 10, margin: 10, height:80}}>
-     <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-       Você não tem nova solicitação! :(
-     </Text>
-     </View>
-   )}
+    views.push(
+      <View key={0} style={{padding: 10, margin: 10, height:80}}>
+      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+        Você não tem nova solicitação! :(
+      </Text>
+      </View>
+  )}
 
    return views;
 }
@@ -219,13 +223,14 @@ produtosVendidos(){
     </Text>
  </View>
 )}} else {
- views.push(
-   <View key={0} style={{alignItems: 'center'}}>
-   <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-     Você não tem produtos Vendidos! :(
-   </Text>
-   </View>
- )}
+    views.push(
+      <View key={0} style={{alignItems: 'center'}}>
+      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+        Você não tem produtos vendidos! :(
+      </Text>
+      </View>
+    )
+  }
 
  return views;
 }
@@ -245,17 +250,24 @@ produtosVendidos(){
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
-            <ScrollView>
-              {this.pedidoSolicitado()}
-            <View style={{paddingTop: 25}}>
-            <Text style={{marginLeft: 10, fontSize: 16}}>
-              Seus Produtos Vendidos:
-            </Text>
-            <ScrollView>
-              {this.produtosVendidos()}
-            </ScrollView>
-            </View>
-            </ScrollView>
+              <ScrollView refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={() => {
+                      this.setState({refreshing:true});
+                      this.buscaDadosPedido();
+                      this.buscaQuantidadeVendida();
+                    }}
+                  />
+                }>
+                {this.pedidoSolicitado()}
+                <View style={{paddingTop: 25}}>
+                  <Text style={{marginLeft: 10, fontSize: 16}}>
+                    Seus Produtos Vendidos:
+                  </Text>
+                  {this.produtosVendidos()}
+                </View>
+              </ScrollView>
             </View>
            <Popup ref={popup => this.popup = popup }/>
         </View>
