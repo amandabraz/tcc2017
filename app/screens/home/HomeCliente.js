@@ -8,6 +8,7 @@ import {
   Alert
 } from 'react-native';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
+import BuscaProduto from '../produto/BuscaProduto';
 
 class HomeCliente extends Component {
 
@@ -20,7 +21,7 @@ class HomeCliente extends Component {
         gps: 0
       };
     };
-  
+
   componentWillMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
@@ -31,22 +32,21 @@ class HomeCliente extends Component {
 
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
-      return(<LocalizacaoNaoPermitida 
+      return(<LocalizacaoNaoPermitida
           screenName={this.state.screenName}
           navigation={this.props.navigation}
           userId={this.state.userId}/>
       );
     } else {
-      return(
-        <View>
-          <Text>Home mock para Cliente</Text>
-        </View>
+      return(<BuscaProduto
+        screenName={this.state.screenName}
+        navigation={this.props.navigation}/>
       );
     }
   }
 }
 
-const styles = StyleSheet.create({  
+const styles = StyleSheet.create({
 });
 
 HomeCliente.defaultProps = { ...HomeCliente };

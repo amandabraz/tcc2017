@@ -10,6 +10,7 @@ import tcc.Models.Vendedor;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +65,9 @@ public class LocalizacaoService {
     public Localizacao encontraLocalizacaoRecenteVendedor(Vendedor vendedor) {
         try {
             Localizacao localizacaoMaisRecente = localizacaoDAO.findFirstByUsuarioOrderByHorarioDesc(vendedor.getUsuario());
-
+            if (Objects.isNull(localizacaoMaisRecente)) {
+                return null;
+            }
             return localizacaoMaisRecente;
         } catch (Exception e) {
             throw e;

@@ -41,7 +41,7 @@ public class LocalizacaoController {
             if (Objects.isNull(localizacaoAtualizada)) {
                 return new ResponseEntity<>(new CustomError("Erro ao salvar localizacao"), HttpStatus.BAD_REQUEST);
             }
-            return ResponseEntity.ok("Localização salva com sucesso.");
+            return new ResponseEntity<>(localizacaoAtualizada, HttpStatus.OK);
         } catch(Exception e) {
             return ResponseEntity.unprocessableEntity().body("Erro ao salvar a requisição:\n\t"+e.getMessage());
         }

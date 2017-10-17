@@ -20,8 +20,14 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import ConfiguracaoCliente from '../screens/configuracao/ConfiguracaoCliente';
-import ConfiguracaoVendedor from '../screens/configuracao/ConfiguracaoVendedor';
+import PedidoCliente from '../screens/pedido/PedidoCliente';
+import PedidosSolicitadosVendedor from '../screens/pedido/PedidosSolicitadosVendedor';
+import PedidosConfirmadosVendedor from '../screens/pedido/PedidosConfirmadosVendedor';
+import PedidosFinalizadosVendedor from '../screens/pedido/PedidosFinalizadosVendedor';
+import PedidosSolicitadosCliente from '../screens/pedido/PedidosSolicitadosCliente';
+import PedidosConfirmadosCliente from '../screens/pedido/PedidosConfirmadosCliente';
+import PedidosFinalizadosCliente from '../screens/pedido/PedidosFinalizadosCliente';
+import LerTokenPedido from '../screens/pedido/LerTokenPedido';
 import Estatisticas from '../screens/estatisticas/Estatisticas';
 import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
@@ -31,25 +37,6 @@ import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermit
 /**
 MENU SOMENTE PARA CLIENTE
 **/
-export const GerenciaCliente = StackNavigator({
-  PerfilCliente: {
-    screen: PerfilCliente
-  },
-  ExibeProduto: {
-    screen: ExibeProduto
-  },
-  ExibeVendedor: {
-    screen: ExibeVendedor
-  },
-  ConfiguracaoCliente: {
-    screen: ConfiguracaoCliente
-  }
- }, {
-  mode: 'card',
-  lazy: true,
-  headerMode: 'none',
-});
-
 export const BuscaPro = StackNavigator({
   BuscaProduto: {
     screen: BuscaProduto
@@ -73,56 +60,79 @@ export const BuscaPro = StackNavigator({
   headerMode: 'none',
 });
 
+export const GerenciaPedidosClientes = TabNavigator({
+  Solicitados: {
+    screen: PedidosSolicitadosCliente
+  },
+  Confirmados: {
+    screen: PedidosConfirmadosCliente
+  },
+  Finalizados: {
+    screen: PedidosFinalizadosCliente
+  },
+ },
+ {
+   tabBarPosition: 'top',
+   lazy: true,
+   swipeEnabled: false,
+   animationEnabled: false,
+   backBehavior: 'none',
+   tabBarOptions: {
+     showLabel: true,
+     activeTintColor: '#333333',
+     inactiveTintColor: '#fff',
+     labelStyle: {
+       fontSize: 12,
+     },
+     style: {
+       backgroundColor: '#4682b4',
+     },
+     indicatorStyle: {
+       backgroundColor: 'white',
+     }
+   }
+});
+
 export const TabsCliente = TabNavigator({
     PerfilCliente: {
-      screen: GerenciaCliente,
+      screen: PerfilCliente,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
       },
     },
-    Busca: {
-      screen: BuscaPro,
+    PedidosCliente: {
+      screen: GerenciaPedidosClientes,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="search" size={25} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
       },
     },
     Home: {
-      screen: HomeCliente,
+      screen: BuscaPro,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
       },
     },
     Favoritos: {
       screen: ProdutosFavoritos,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
       },
     },
     Ranking: {
       screen: RankingProdutos,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
       },
     }
   },{
-    initialRouteName: 'Home',    
-    tabBarComponent: TabView.TabBarBottom,
+    initialRouteName: 'Home',
     lazy: true,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
     backBehavior: 'none',
     tabBarOptions: {
+      showIcon: true,
       showLabel: false,
       activeTintColor: '#8fbc8f',
       inactiveTintColor: '#fff',
@@ -132,21 +142,56 @@ export const TabsCliente = TabNavigator({
       style: {
         backgroundColor: '#2f4f4f',
       },
+      indicatorStyle: {
+        backgroundColor: 'white',
+       }
     }
   });
 
-export const GerenciaVendedor = StackNavigator({
-    PerfilVendedor: {
-      screen: PerfilVendedor
+export const GerenciaPedidosConfirmados = StackNavigator({
+    Confirmados: {
+      screen: PedidosConfirmadosVendedor
     },
-    ConfiguracaoVendedor: {
-      screen: ConfiguracaoVendedor
+    LerToken: {
+      screen: LerTokenPedido
     }
   }, {
-    mode: 'card',
-    headerMode: 'none',
-    lazy: true
+      mode: 'card',
+      headerMode: 'none',
+      lazy: true
   });
+
+export const GerenciaPedidos = TabNavigator({
+    Solicitados: {
+      screen: PedidosSolicitadosVendedor
+    },
+    Confirmados: {
+      screen: GerenciaPedidosConfirmados
+    },
+    Finalizados: {
+      screen: PedidosFinalizadosVendedor
+    }
+  }, {
+    tabBarPosition: 'top',
+    lazy: true,
+    swipeEnabled: false,
+    animationEnabled: false,
+    backBehavior: 'none',
+    tabBarOptions: {
+      showLabel: true,
+      activeTintColor: '#333333',
+      inactiveTintColor: '#fff',
+      labelStyle: {
+        fontSize: 12,
+      },
+      style: {
+        backgroundColor: '#4682b4',
+      },
+      indicatorStyle: {
+        backgroundColor: 'white',
+       }
+    }
+});
 
 export const GerenciaProdutos = StackNavigator({
   GerenciaProduto: {
@@ -174,53 +219,42 @@ export const TabsVendedor = TabNavigator({
     GerenciaProdutos: {
       screen: GerenciaProdutos,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
       },
     },
     Estatisticas: {
       screen: Estatisticas,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
       },
     },
     Home: {
       screen: HomeVendedor,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
       },
     },
-    GerenciaVendedor: {
-      screen: GerenciaVendedor,
+    PerfilVendedor: {
+      screen: PerfilVendedor,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="account-box" size={25} color={tintColor} />
       },
     },
-    // TODO: colocar outra rota no lugar de configuracao já que ele foi pra dentro de GerenciaVendedor
-    Configuração: {
-      screen: ConfiguracaoVendedor,
+    Pedidos: {
+      screen: GerenciaPedidos,
       navigationOptions: {
-        tabBar: {
-          icon: ({ tintColor }) => <Icon name="settings" size={25} color={tintColor} />
-        },
+        tabBarIcon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
       },
     }
   },{
     initialRouteName: 'Home',
-    tabBarComponent: TabView.TabBarBottom,
     tabBarPosition: 'bottom',
     lazy: true,
     swipeEnabled: false,
     animationEnabled: false,
     backBehavior: 'none',
     tabBarOptions: {
+      showIcon: true,
       showLabel: false,
       activeTintColor: '#333333',
       inactiveTintColor: '#fff',
@@ -230,10 +264,14 @@ export const TabsVendedor = TabNavigator({
       style: {
         backgroundColor: '#4682b4',
       },
+      indicatorStyle: {
+        backgroundColor: 'white',
+       }
     }
 });
 
 export const Root = StackNavigator({
+
   Login: {
     screen: Login,
   },

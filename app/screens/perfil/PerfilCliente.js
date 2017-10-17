@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { AppRegistry, 
-  Text, 
-  StyleSheet, 
-  TouchableOpacity, 
-  View, 
-  Image, 
+import { AppRegistry,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
   ScrollView,
   Dimensions,
   ToastAndroid,
-  StatusBar 
+  StatusBar
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
@@ -29,7 +29,7 @@ export default class PerfilCliente extends Component {
     super(props);
     this.state = {
       userId: this.props.navigation.state.params.userId,
-      clienteId: this.props.navigation.state.params.clienteId,      
+      clienteId: this.props.navigation.state.params.clienteId,
       dataNascimentoText: '',
       imagemPerfil: require('./img/camera2.jpg'),
       tags: [],
@@ -58,10 +58,10 @@ export default class PerfilCliente extends Component {
           cpf: '',
           email: '',
         },
-      }  
+      }
     };
     this.buscaDadosCliente();
-    this.preencherDietasArray();  
+    this.preencherDietasArray();
   }
 
   preencherDietasArray() {
@@ -84,21 +84,22 @@ export default class PerfilCliente extends Component {
       });
   };
 
+
   habilitaEdicao() {
     if (this.state.editavel == false) {
-      this.setState({editavel: true, 
-        titleTextClass: styles.titleTextEdit, 
+      this.setState({editavel: true,
+        titleTextClass: styles.titleTextEdit,
         baseTextClass: styles.baseTextEdit,
         pencilColor: '#ccc'});
     } else {
-      this.setState({editavel: false, 
-        titleTextClass: styles.titleText, 
+      this.setState({editavel: false,
+        titleTextClass: styles.titleText,
         baseTextClass: styles.baseText,
         pencilColor: '#fff'});
     }
   }
 
-  mostraTags() { 
+  mostraTags() {
     if (this.state.editavel == false) {
       return (
         <Fumi
@@ -164,7 +165,7 @@ export default class PerfilCliente extends Component {
           <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
             <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
             <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Restrições dietéticas</Text>
-          </View>        
+          </View>
         );
         for (i in listaRestricoes) {
           let dieta = listaRestricoes[i];
@@ -211,15 +212,15 @@ export default class PerfilCliente extends Component {
     this.setState({restricoesCliente: restricoes});
   };
 
-  
+
   mostraBotaoSalvar() {
     if (this.state.editavel == true) {
       return(
         <View style={{alignSelf: 'center'}}>
           <TouchableOpacity
-            style={styles.button}          
+            style={styles.button}
             onPress={() => this.salvaEdicaoCliente()}>
-            <Text style={styles.buttonText}>SALVAR</Text> 
+            <Text style={styles.buttonText}>SALVAR</Text>
           </TouchableOpacity>
 
 
@@ -259,7 +260,7 @@ export default class PerfilCliente extends Component {
       }
       restricoes = restricoes.slice(0, -3);
       this.setState({restricoesDieteticasText: restricoes,
-                     restricoesCliente: responseJson.restricoesDieteticas});      
+                     restricoesCliente: responseJson.restricoesDieteticas});
     }
   }
 
@@ -308,7 +309,7 @@ export default class PerfilCliente extends Component {
         if (!rJson.errorMessage) {
           this.preparaCliente(rJson);
           this.setState({editavel: false});
-          ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);          
+          ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
   }
@@ -343,7 +344,7 @@ export default class PerfilCliente extends Component {
 
   render () {
     return (
-      <View style={{ flex: 1 }}>      
+      <View style={{ flex: 1 }}>
         <StatusBar barStyle="light-content" />
         <HeaderImageScrollView
           maxHeight={MAX_HEIGHT}
@@ -351,11 +352,11 @@ export default class PerfilCliente extends Component {
           maxOverlayOpacity={0.6}
           minOverlayOpacity={0.3}
           fadeOutForeground
-          renderHeader={() => 
+          renderHeader={() =>
               <Image source={this.state.imagemPerfil} style={styles.image}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}  
-                    onPress={this.trocaImagemPerfil.bind(this)}>            
-                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>     
+                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+                    onPress={this.trocaImagemPerfil.bind(this)}>
+                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>
                 </TouchableOpacity>
               </Image>
           }
@@ -371,10 +372,10 @@ export default class PerfilCliente extends Component {
                 <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
               </TouchableOpacity>
             </View>
-            <View style={{alignItems: 'flex-end', width: '20%'}}>          
+            <View style={{alignItems: 'flex-end', width: '20%'}}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                 <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-              </TouchableOpacity>    
+              </TouchableOpacity>
             </View>
           </View>
           </Animatable.View>
@@ -390,10 +391,10 @@ export default class PerfilCliente extends Component {
                   <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{alignItems: 'flex-end', width: '20%'}}>          
+              <View style={{alignItems: 'flex-end', width: '20%'}}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                   <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-                </TouchableOpacity>    
+                </TouchableOpacity>
               </View>
             </View>
           </TriggeringView>
@@ -428,7 +429,7 @@ export default class PerfilCliente extends Component {
                   iconName={'mobile'}
                   iconColor={'darkslategrey'}
                   value={this.state.celularText}
-                  onChange={(celular) => this.setState({celularText: celular})}                  
+                  onChange={(celular) => this.setState({celularText: celular})}
                   editable={this.state.editavel}
                   inputStyle={this.state.baseTextClass}/>
 
@@ -458,7 +459,7 @@ export default class PerfilCliente extends Component {
               {this.mostraBotaoSalvar()}
           </ScrollView>
         </HeaderImageScrollView>
-      </View>      
+      </View>
     );
   }
 }
@@ -548,7 +549,7 @@ export default class PerfilCliente extends Component {
     fontFamily: 'Roboto',
   },
   button: {
-    borderRadius: 5,    
+    borderRadius: 5,
     justifyContent: 'center',
     height: 35,
     width: 200,
