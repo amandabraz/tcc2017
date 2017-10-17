@@ -99,7 +99,7 @@ pedidoFinalizado(){
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
            <Text style={styles.totalFont}> {pedidoF.produto.nome}</Text>
-           <Text style={{fontSize: 18}}> {dataFinalizacao}</Text>
+           <Text style={{fontSize: 16}}> {dataFinalizacao}</Text>
           </View>
           <View style={{width: '5%',justifyContent: 'center'}}>
           <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
