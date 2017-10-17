@@ -34,10 +34,21 @@ export default class BuscaProduto extends Component {
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: [],
       textoBusca: '',
-      semProdutos: false
+      semProdutos: false,
     }
+    this.buscaPedidosIndicados();
   }
 
+
+  buscaPedidosIndicados() {
+    fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
+    .then((response) => response.json())
+      .then((responseJson) => {
+          if (!responseJson.errorMessage) {
+            this.setState({resultadoPesquisaProduto: responseJson});
+          }
+      });
+  };
 
   setSearchText(searchText) {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -125,7 +136,7 @@ export default class BuscaProduto extends Component {
           borderRadius: 100,
           textAlign: 'center'
         };
-        if (distancia > 0) {
+        if (distancia > -1) {
           if (distancia > 1000) {
             let convert = (distancia/1000).toString().split('.');
             distancia = convert[0] + ' km';

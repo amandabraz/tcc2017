@@ -270,13 +270,13 @@ pedidoFinalizado(){
         </View>
         {this.pedidoFinalizado()}
         <View style = {{margin: 5}}>
-        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#67A13F', fontWeight: 'bold'}}>
+        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#A1453E', fontWeight: 'bold'}}>
           Pedidos Recusados
         </Text>
         </View>
         {this.pedidoRecusado()}
         <View style = {{margin: 5}}>
-        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#67A13F', fontWeight: 'bold'}}>
+        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', fontWeight: 'bold'}}>
           Pedidos Cancelados
         </Text>
         </View>
