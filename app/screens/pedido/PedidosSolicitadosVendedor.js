@@ -68,7 +68,6 @@ pedidoSolicitado(){
       let pedidoS = this.state.pedidosSolicitados[i];
       var data = new Date(pedidoS.dataSolicitada);
       var dataSolicitado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
-      pedidoS.dataSolicitada = dataSolicitado;
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
@@ -80,7 +79,7 @@ pedidoSolicitado(){
           <View style={{width: '60%', alignSelf:'center'}}>
             <Text style={styles.totalFont}> {pedidoS.cliente.usuario.nome}</Text>
             <Text style={styles.oneResultfont}> fez um pedido!</Text>
-            <Text style={{fontSize: 14}}> {pedidoS.dataSolicitada}</Text>
+            <Text style={{fontSize: 14}}> {dataSolicitado}</Text>
           </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
             <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
