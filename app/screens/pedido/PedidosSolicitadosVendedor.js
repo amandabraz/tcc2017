@@ -29,7 +29,7 @@ class PedidosSolicitadosVendedor extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       pedidosSolicitados: [],
-      refreshing: false,            
+      refreshing: false,
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -41,7 +41,7 @@ class PedidosSolicitadosVendedor extends Component {
         if (!responseJson.errorMessage) {
             this.setState({pedidosSolicitados: responseJson});
         }
-        this.setState({refreshing: false});                
+        this.setState({refreshing: false});
       });
   };
 
@@ -93,7 +93,7 @@ pedidoSolicitado(){
           <Image source={{uri: pedidoS.produto.imagemPrincipal}}
                  style={styles.imagemCliente}/>
           </View>
-          <View style={{width: '80%'}}>
+          <View style={{width: '80%', paddingLeft: 6}}>
             <Text style={styles.totalFont}> {pedidoS.produto.nome}{'\n'}</Text>
             <Text style={styles.oneResultfont}>Quantidade:
               <Text style={styles.totalFont}> {pedidoS.quantidade}{'\n'}</Text>

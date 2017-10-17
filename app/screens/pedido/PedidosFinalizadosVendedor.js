@@ -35,7 +35,7 @@ class PedidosFinalizadosVendedor extends Component {
       pedidosFinalizados: [],
       pedidosRecusados: [],
       pedidosCancelados: [],
-      refreshing: false,                  
+      refreshing: false,
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -63,7 +63,7 @@ class PedidosFinalizadosVendedor extends Component {
           if (!responseJson.errorMessage) {
               this.setState({pedidosCancelados: responseJson});
         }
-        this.setState({refreshing: false});                                
+        this.setState({refreshing: false});
       });
   };
 
@@ -112,7 +112,7 @@ pedidoFinalizado(){
               <Image source={{uri: pedidoF.cliente.usuario.imagemPerfil}}
                      style={styles.imagemCliente}/>
             </View>
-          <View style={{width: '80%'}}>
+          <View style={{width: '80%', paddingLeft: 6}}>
             <Text style={styles.totalFont}> {pedidoF.cliente.usuario.nome}</Text>
             <Text style={styles.oneResultfont}>Quantidade vendida:
             <Text style={styles.totalFont}> {pedidoF.quantidade}{'\n'}</Text>
@@ -167,7 +167,7 @@ pedidoFinalizado(){
                 <Image source={{uri: pedidoR.produto.vendedor.usuario.imagemPerfil}}
                        style={styles.imagemCliente}/>
               </View>
-            <View style={{width: '80%'}}>
+            <View style={{width: '80%', paddingLeft: 6}}>
               <Text style={styles.totalFont}> {pedidoR.produto.vendedor.usuario.nome}</Text>
               <Text style={styles.oneResultfont}>Quantidade solicitada:
               <Text style={styles.totalFont}> {pedidoR.quantidade}{'\n'}</Text>
@@ -222,7 +222,7 @@ pedidoFinalizado(){
                   <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
                          style={styles.imagemCliente}/>
                 </View>
-              <View style={{width: '80%'}}>
+              <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
                 <Text style={styles.oneResultfont}>Quantidade solicitada:
                 <Text style={styles.totalFont}> {pedidoC.quantidade}{'\n'}</Text>
