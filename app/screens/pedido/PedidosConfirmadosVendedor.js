@@ -11,7 +11,8 @@ import {
   ScrollView,
   ToastAndroid,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
@@ -31,6 +32,7 @@ class PedidosConfirmadosVendedor extends Component {
       userId: this.props.navigation.state.params.userId,      
       vendedorId: this.props.navigation.state.params.vendedorId,
       pedidosConfirmados: [],
+      refreshing: false,                  
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -42,6 +44,7 @@ class PedidosConfirmadosVendedor extends Component {
           if (!responseJson.errorMessage) {
               this.setState({pedidosConfirmados: responseJson});
         }
+        this.setState({refreshing: false});                        
       });
   };
 
@@ -113,7 +116,16 @@ pedidoConfirmado(){
   render() {
     return(
       <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaDadosPedidosVendedor();
+            }}
+          />
+        }>
         <View style = {{margin: 5}}>
           <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#6E6362', fontWeight: 'bold'}}>
             Pedidos Confirmados

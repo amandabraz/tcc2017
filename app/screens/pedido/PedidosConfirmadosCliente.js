@@ -11,7 +11,8 @@ import {
   ScrollView,
   ToastAndroid,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
@@ -32,6 +33,7 @@ class PedidosConfirmadosCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosConfirmados: [],
+      refreshing: false,      
     };
     this.buscaDadosPedidosCliente();
   };
@@ -43,6 +45,7 @@ class PedidosConfirmadosCliente extends Component {
           if (!responseJson.errorMessage) {
               this.setState({pedidosConfirmados: responseJson});
         }
+        this.setState({refreshing: false});                
       });
   };
 
@@ -67,6 +70,8 @@ pedidoConfirmado(){
   if(this.state.pedidosConfirmados.length > 0){
     for (i in this.state.pedidosConfirmados){
       let pedidoC = this.state.pedidosConfirmados[i];
+      var data = new Date(pedidoC.dataConfirmacao);      
+      let dataConfirmado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
       views.push(
         <View key={i} style={styles.oneResult1}>
         <Accordion header={
@@ -76,7 +81,8 @@ pedidoConfirmado(){
                  style={styles.imagemPrincipal}/>
           </View>
         <View style={{width: '65%', alignSelf:'center'}}>
-          <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
+           <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
+           <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>                    
            <Text style={styles.oneResultfont}> Receber:
            <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
            </Text>
@@ -123,7 +129,16 @@ pedidoConfirmado(){
   render() {
     return(
       <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaDadosPedidosCliente();
+            }}
+          />
+        }>
         <View style = {{margin: 5}}>
           <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#6E6362', fontWeight: 'bold'}}>
             Pedidos Confirmados

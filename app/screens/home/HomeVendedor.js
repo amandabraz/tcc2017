@@ -175,13 +175,13 @@ class HomeVendedor extends Component {
                   backgroundColor="#88557B"
                   borderRadius={10}
                   onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}
-                  buttonStyle={{width: 80}}/>
+                  buttonStyle={{width: '40%'}}/>
 
           <Button title="Aceitar"
                   color="#fff"
                   backgroundColor="#768888"
                   borderRadius={10}
-                  buttonStyle={{width: 80}}
+                  buttonStyle={{width: '40%'}}
                   onPress={() => {
                          this.state.pedidoSolicitado.status = "Confirmado";
                          this.atualizaStatus(this.state.pedidoSolicitado);

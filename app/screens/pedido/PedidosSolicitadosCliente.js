@@ -11,7 +11,8 @@ import {
   ScrollView,
   ToastAndroid,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
@@ -28,6 +29,7 @@ class PedidosSolicitadosCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosSolicitados: [],
+      refreshing: false,      
     };
     this.buscaDadosPedidosCliente();
   };
@@ -39,6 +41,7 @@ class PedidosSolicitadosCliente extends Component {
         if (!responseJson.errorMessage) {
             this.setState({pedidosSolicitados: responseJson});
         }
+        this.setState({refreshing: false});
       });
   };
 
@@ -125,7 +128,7 @@ pedidoSolicitado(){
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <Button buttonStyle={{width: 90}}
+            <Button buttonStyle={{width: '40%'}}
                     title ="Cancelar"
                     color="#fff"
                     backgroundColor="#88557B"
@@ -154,7 +157,16 @@ pedidoSolicitado(){
   render() {
     return(
       <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaDadosPedidosCliente();
+            }}
+          />
+        }>
         <View style = {{margin: 5}}>
         <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color:'#A1453E', fontWeight: 'bold'}}>
           Pedidos Solicitados
