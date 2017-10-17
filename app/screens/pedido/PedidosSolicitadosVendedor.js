@@ -11,7 +11,8 @@ import {
   ScrollView,
   ToastAndroid,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
@@ -28,6 +29,7 @@ class PedidosSolicitadosVendedor extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       pedidosSolicitados: [],
+      refreshing: false,            
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -39,6 +41,7 @@ class PedidosSolicitadosVendedor extends Component {
         if (!responseJson.errorMessage) {
             this.setState({pedidosSolicitados: responseJson});
         }
+        this.setState({refreshing: false});                
       });
   };
 
@@ -100,14 +103,14 @@ pedidoSolicitado(){
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Button buttonStyle={{width: 90}}
-                    title ="Cancelar"
+            <Button buttonStyle={{width: '40%'}}
+                    title ="Recusar"
                     color="#fff"
                     backgroundColor="#88557B"
                     borderRadius={10}
                     onPress={() =>this.cancelarPedido(pedidoS)}/>
 
-            <Button buttonStyle={{width: 90}}
+            <Button buttonStyle={{width: '40%'}}
                     title="Aceitar"
                     color="#fff"
                     backgroundColor="#768888"
@@ -163,7 +166,16 @@ cancelarPedido(pedido) {
   render() {
     return(
       <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaDadosPedidosVendedor();
+            }}
+          />
+        }>
         <View style = {{margin: 5}}>
         <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color:'#A1453E', fontWeight: 'bold'}}>
           Pedidos Solicitados

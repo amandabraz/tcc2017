@@ -11,7 +11,8 @@ import {
   ScrollView,
   ToastAndroid,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
@@ -34,32 +35,34 @@ class PedidosFinalizadosCliente extends Component {
       pedidosFinalizados: [],
       pedidosRecusados: [],
       pedidosCancelados: [],
+      refreshing: false,      
     };
     this.buscaDadosPedidosCliente();
   };
 
   buscaDadosPedidosCliente() {
-    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Confirmado')
+    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Finalizado')
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMessage) {
+        if (!responseJson.errorMessage) {
               this.setState({pedidosFinalizados: responseJson});
         }
       });
-      fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Recusado')
-      .then((response) => response.json())
-        .then((responseJson) => {
-            if (!responseJson.errorMessage) {
-                this.setState({pedidosRecusados: responseJson});
-          }
-        });
-        fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Cancelado')
-        .then((response) => response.json())
-          .then((responseJson) => {
-              if (!responseJson.errorMessage) {
-                  this.setState({pedidosCancelados: responseJson});
-            }
-          });
+    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Recusado')
+    .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+              this.setState({pedidosRecusados: responseJson});
+        }
+      });
+    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Cancelado')
+    .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+              this.setState({pedidosCancelados: responseJson});
+        }
+        this.setState({refreshing: false});        
+      });
   };
 
 
@@ -68,9 +71,8 @@ pedidoFinalizado(){
   if(this.state.pedidosFinalizados.length > 0){
     for (i in this.state.pedidosFinalizados){
       let pedidoF = this.state.pedidosFinalizados[i];
-      var dataNormal = new Date(pedidoF.dataFinalizacao);
-      var dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-      pedidoF.dataFinalizacao = dataFinalizacao;
+      let dataNormal = new Date(pedidoF.dataFinalizacao);
+      let dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();      
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
@@ -81,7 +83,7 @@ pedidoFinalizado(){
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
            <Text style={styles.totalFont}> {pedidoF.produto.nome}</Text>
-           <Text style={{fontSize: 14}}> {pedidoF.dataFinalizacao}</Text>
+           <Text style={{fontSize: 14}}> {dataFinalizacao}</Text>
           </View>
           <View style={{width: '5%',justifyContent: 'center'}}>
           <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -127,9 +129,6 @@ pedidoFinalizado(){
     if(this.state.pedidosRecusados.length > 0){
       for (i in this.state.pedidosRecusados){
         let pedidoR = this.state.pedidosRecusados[i];
-        var dataNormal = new Date(pedidoR.dataFinalizacao);
-        var dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-        pedidoR.dataFinalizacao = dataFinalizacao;
         views.push(
           <View key={i} style={styles.oneResult1}>
             <Accordion header={
@@ -140,7 +139,6 @@ pedidoFinalizado(){
               </View>
             <View style={{width: '60%', alignSelf:'center'}}>
              <Text style={styles.totalFont}> {pedidoR.produto.nome}</Text>
-             <Text style={{fontSize: 14}}> {pedidoR.dataFinalizacao}</Text>
             </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
             <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -186,9 +184,6 @@ pedidoFinalizado(){
       if(this.state.pedidosCancelados.length > 0){
         for (i in this.state.pedidosCancelados){
           let pedidoC = this.state.pedidosCancelados[i];
-          var dataNormal = new Date(pedidoC.dataFinalizacao);
-          var dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-          pedidoC.dataFinalizacao = dataFinalizacao;
           views.push(
             <View key={i} style={styles.oneResult1}>
               <Accordion header={
@@ -199,7 +194,6 @@ pedidoFinalizado(){
                 </View>
               <View style={{width: '60%', alignSelf:'center'}}>
                <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
-               <Text style={{fontSize: 14}}> {pedidoC.dataFinalizacao}</Text>
               </View>
               <View style={{width: '5%',justifyContent: 'center'}}>
               <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
@@ -244,7 +238,16 @@ pedidoFinalizado(){
   render() {
     return(
       <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaDadosPedidosCliente();
+            }}
+          />
+        }>
         <View style = {{margin: 5}}>
         <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#67A13F', fontWeight: 'bold'}}>
           Pedidos Finalizados
