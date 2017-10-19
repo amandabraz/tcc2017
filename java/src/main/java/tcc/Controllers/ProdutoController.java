@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,8 +89,11 @@ public class ProdutoController {
                                         @RequestParam(value = "longitude") double longitude,
                                         @RequestParam(value = "altitude") double altitude) {
         try {
-
-            return new ResponseEntity<List<Produto>>(produtoService.encontraProduto(filtro, latitude, longitude, altitude), HttpStatus.OK);
+            List<Produto> produtosEncontrados = produtoService.encontraProduto(filtro, latitude, longitude, altitude);
+            if (CollectionUtils.isEmpty(produtosEncontrados)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<List<Produto>>(produtosEncontrados, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }
@@ -153,6 +157,16 @@ public class ProdutoController {
             return new ResponseEntity(produtoEditado, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do produto! Tente novamente");
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/produto/cliente/{clienteId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity buscaProdutosPorPreferenciasCliente(@PathVariable("clienteId") Long clienteId) {
+        try {
+            return new ResponseEntity<List<Produto>>(produtoService.buscaProdutosPorPreferenciasCliente(clienteId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }
     }
 }

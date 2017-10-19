@@ -27,15 +27,28 @@ export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      screenName: 'TabsCliente',      
-      gps: 0,      
+      screenName: 'TabsCliente',
+      gps: 0,
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: [],
-      textoBusca: ''
+      textoBusca: '',
+      semProdutos: false,
     }
+    this.buscaPedidosIndicados();
   }
+
+
+  buscaPedidosIndicados() {
+    fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
+    .then((response) => response.json())
+      .then((responseJson) => {
+          if (!responseJson.errorMessage) {
+            this.setState({resultadoPesquisaProduto: responseJson});
+          }
+      });
+  };
 
   setSearchText(searchText) {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -44,123 +57,157 @@ export default class BuscaProduto extends Component {
       this.setState({gps: false});
     });
     if (this.state.gps) {
-      fetch(constante.ENDPOINT + 'produto?filtro=' + searchText 
+      fetch(constante.ENDPOINT + 'produto?filtro=' + searchText
                                + '&latitude=' + this.state.gps.coords.latitude
                                + '&longitude=' + this.state.gps.coords.longitude
                                + '&altitude=' + this.state.gps.coords.altitude)
-                               
+
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaProduto: responseJson});
+              if (!responseJson.errorMessage) {
+                this.setState({resultadoPesquisaProduto: responseJson});
+              }
+              else {
+                this.setState({semProdutos:true});
+                {this.buscaRegistros()}
+              }
           });
       fetch(constante.ENDPOINT + 'vendedor?filtro=' + searchText)
        .then((response) => response.json())
         .then((responseJson) => {
-              this.setState({resultadoPesquisaVendedor: responseJson});
+              if (!responseJson.errorMessage) {
+                this.setState({resultadoPesquisaVendedor: responseJson});
+              }
+              else {
+                this.setState({semProdutos:true});
+                {this.buscaRegistros()}
+              }
           });
+    }
+    if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1) {
+      this.setState({semProdutos:true});
     }
   }
 
+
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeProduto', 
-          {produtoId: produtoIdSelecionado, 
+    this.props.navigation.navigate('ExibeProduto',
+          {produtoId: produtoIdSelecionado,
             clienteId: this.state.clienteId
           });
   };
 
   onButtonOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
-    this.props.navigation.navigate('ExibeVendedor', 
-          {selectUserId: usuarioSelecionado, 
+    this.props.navigation.navigate('ExibeVendedor',
+          {selectUserId: usuarioSelecionado,
             vendedorId: vendedorIdSelecionado,
-            clienteId: this.state.clienteId 
+            clienteId: this.state.clienteId
           });
   };
 
+  buscaRegistros() {
+    if (this.state.semProdutos == true) {
+      if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1){
+        return (
+          <View key={0} style={{alignItems: 'center'}}>
+          <Text style={styles.texto}>
+            Não há produtos cadastrados, tente outro nome!
+          </Text>
+          </View>
+        )
+      }
+    }
+  }
+
   buscaProduto() {
     var views = [];
-    for(i in this.state.resultadoPesquisaProduto) {
-      let produto = this.state.resultadoPesquisaProduto[i];
-      let distancia = parseInt(produto.distancia);
-      let distanciaEstilo = {
-        fontWeight: 'bold',
-        fontSize: 18,
-        padding: 4,    
-        color: '#fff',
-        backgroundColor: '#f2a59d', 
-        borderColor: '#f2a59d', 
-        borderStyle: 'solid', 
-        borderRadius: 100,
-        textAlign: 'center'
-      };
-      if (distancia > 0) {
-        if (distancia > 1000) {
-          let convert = (distancia/1000).toString().split('.');
-          distancia = convert[0] + ' km';
+    if (this.state.resultadoPesquisaProduto.length > 0) {
+      for(i in this.state.resultadoPesquisaProduto) {
+        let produto = this.state.resultadoPesquisaProduto[i];
+        let distancia = parseInt(produto.distancia);
+        let distanciaEstilo = {
+          fontWeight: 'bold',
+          fontSize: 18,
+          padding: 4,
+          color: '#fff',
+          backgroundColor: '#f2a59d',
+          borderColor: '#f2a59d',
+          borderStyle: 'solid',
+          borderRadius: 100,
+          textAlign: 'center'
+        };
+        if (distancia > -1) {
+          if (distancia > 1000) {
+            let convert = (distancia/1000).toString().split('.');
+            distancia = convert[0] + ' km';
+          } else {
+            distancia = distancia.toString() + ' m';
+          }
         } else {
-          distancia = distancia.toString() + ' m';          
+          distanciaEstilo.fontSize = 13;
+          distancia = "offline há mais de 6h";
         }
-      } else {
-        distanciaEstilo.fontSize = 13;
-        distancia = "offline há mais de 6h";
-      }
-      views.push (
-        <View key={i}>
-          <View style={styles.oneResult}>
-            <View style={{width: "25%"}}>          
-              <Image source={{ uri: produto.imagemPrincipal }}
-                     style={styles.imageResultSearch}
-                     justifyContent='flex-start'/>
-            </View>                     
-            <View style={{width: "45%"}}>
-              <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+        views.push (
+          <View key={i}>
+            <View style={styles.oneResult}>
+              <View style={{width: "25%"}}>
+                <Image source={{ uri: produto.imagemPrincipal }}
+                       style={styles.imageResultSearch}
+                       justifyContent='flex-start'/>
+              </View>
+              <View style={{width: "45%"}}>
+                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+              </View>
+              <View style={{width: "15%"}} justifyContent='center'>
+                <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
+              </View>
+              <View style={{width: "15%"}}>
+                <Icon
+                  name='shopping-cart'
+                  type=' material-community'
+                  color='#1C1C1C'
+                  onPress={() => this.onButtonOpenProduct(produto.id)}
+                  style={styles.imageResultSearch} />
+              </View>
             </View>
-            <View style={{width: "15%"}} justifyContent='center'>
-              <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
-            </View>
-            <View style={{width: "15%"}}>
-              <Icon
-                name='shopping-cart'
-                type=' material-community'
-                color='#1C1C1C'
-                onPress={() => this.onButtonOpenProduct(produto.id)}
-                style={styles.imageResultSearch} />
-            </View>
+            <Text>{'\n'}</Text>
           </View>
-          <Text>{'\n'}</Text>
-        </View>
-      );
+        );
+      }
     }
-      return views;
+    return views;
   }
 
   buscaVendedor() {
     var views = [];
-    for(i in this.state.resultadoPesquisaVendedor) {
-      let vendedor = this.state.resultadoPesquisaVendedor[i];
-      views.push (
-        <View key={i}>
-        <View style={styles.oneResult}>
-          <Image source={{ uri: vendedor.usuario.imagemPerfil }}
-                 style={styles.imageResultSearch}
-                 justifyContent='flex-start'/>
+    if (this.state.resultadoPesquisaVendedor.length > 0) {
+      for(i in this.state.resultadoPesquisaVendedor) {
+        let vendedor = this.state.resultadoPesquisaVendedor[i];
+        views.push (
+          <View key={i}>
+          <View style={styles.oneResult}>
+            <Image source={{ uri: vendedor.usuario.imagemPerfil }}
+                  style={styles.imageResultSearch}
+                  justifyContent='flex-start'/>
 
-          <View style={{width: 210, margin: 10}}>
-            <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
-            <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
+            <View style={{width: 210, margin: 10}}>
+              <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
+              <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
+            </View>
+            <Icon
+              name='person'
+              type=' material-community'
+              color='#1C1C1C'
+              onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
+              style={styles.imageResultSearch}
+              />
           </View>
-          <Icon
-            name='person'
-            type=' material-community'
-            color='#1C1C1C'
-            onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
-            style={styles.imageResultSearch}
-             />
-        </View>
-        <Text>{'\n'}</Text>
-        </View>
-      );
+          <Text>{'\n'}</Text>
+          </View>
+        );
+    }
   }
   return views;
 }
@@ -176,7 +223,7 @@ componentWillMount() {
 
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
-      return(<LocalizacaoNaoPermitida 
+      return(<LocalizacaoNaoPermitida
         screenName={this.state.screenName}
         navigation={this.props.navigation}
         userId={this.state.userId} />
@@ -206,7 +253,7 @@ componentWillMount() {
               <View style={styles.results}>
                 {this.buscaProduto()}
                 {this.buscaVendedor()}
-
+                {this.buscaRegistros()}
               </View>
             </View>
           </ScrollView>
@@ -265,6 +312,11 @@ const styles = StyleSheet.create({
     alignItems:  'center',
     justifyContent: 'center',
     borderRadius: 100,
+  },
+  texto: {
+    marginTop: 12,
+    fontSize: 18,
+    justifyContent: 'center'
   },
   searchBar: {
     paddingLeft: 30,
