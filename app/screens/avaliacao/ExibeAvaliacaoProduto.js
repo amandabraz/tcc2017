@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  Easing,
   StyleSheet,
   Text,
   TextInput,
@@ -9,45 +10,36 @@ import {
 } from 'react-native';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import BuscaProduto from '../produto/BuscaProduto';
+import Rating from 'react-native-rating';
 
 class ExibeAvaliacaoProduto extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-        screenName: 'TabsCliente',
-        userId: this.props.navigation.state.params.userId,
-        clienteId: this.props.navigation.state.params.clienteId,
-        gps: 0
-      };
-    };
-
-  componentWillMount() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({gps: position});
-    }, (error) => {
-      this.setState({gps: 0});
-    });
-  }
 
   render() {
-    if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
-      return(<LocalizacaoNaoPermitida
-          screenName={this.state.screenName}
-          navigation={this.props.navigation}
-          userId={this.state.userId}/>
+
+    const images = {
+    starFilled: require('./img/star_filled.png'),
+    starUnfilled: require('./img/star_unfilled.png')
+  }
+
+      return(<Rating
+    onChange={rating => console.log(rating)}
+    selectedStar={images.starFilled}
+    unselectedStar={images.starUnfilled}
+    config={{
+      easing: Easing.inOut(Easing.ease),
+      duration: 350
+    }}
+    stagger={80}
+    maxScale={1.4}
+    starStyle={{
+      width: 40,
+      height: 40
+    }}
+  />
       );
-    } else {
-      return(<BuscaProduto
-        screenName={this.state.screenName}
-        navigation={this.props.navigation}/>
-      );
-    }
   }
 }
-
-const styles = StyleSheet.create({
-});
 
 ExibeAvaliacaoProduto.defaultProps = { ...ExibeAvaliacaoProduto };
 
