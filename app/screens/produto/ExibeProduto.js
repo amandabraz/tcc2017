@@ -17,6 +17,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import { Icon, Button } from 'react-native-elements';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import Rating from 'react-native-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -113,6 +114,10 @@ export default class ExibeProduto extends Component {
   };
 
 render() {
+  const images = {
+  starFilled: require('./img/star_filled.png'),
+  starUnfilled: require('./img/star_unfilled.png')
+}
   return (
     <View style={styles.container}>
       <HeaderImageScrollView
@@ -131,6 +136,19 @@ render() {
                    style={styles.imageResultSearch}/>
           </View>
           <View style={{width: '40%'}}>
+          <Rating
+            onChange={rating => console.log(rating)}
+            initial= {2}
+            editable={false}
+            selectedStar={images.starFilled}
+            unselectedStar={images.starUnfilled}
+            stagger={80}
+            maxScale={1.4}
+            starStyle={{
+              width: 30,
+              height: 30
+            }}
+            />
             <Text style={styles.barText}>
               {this.state.produto.nome}
             </Text>
