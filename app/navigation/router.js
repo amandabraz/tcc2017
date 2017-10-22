@@ -54,9 +54,6 @@ export const BuscaPro = StackNavigator({
   ExibeVendedor: {
     screen: ExibeVendedor
   },
-  ExibeAvaliacaoProduto: {
-    screen: ExibeAvaliacaoProduto
-  },
  },
  {
   mode: 'card',
