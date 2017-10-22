@@ -27,8 +27,12 @@ public class Avaliacao {
     public Produto produto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "AVALIADOR", nullable = false)
+    @JoinColumn(name = "FK_CLIENTE", nullable = false)
     public Cliente cliente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FK_PEDIDO", nullable = false)
+    public Pedido pedido;
 
     public Avaliacao(Long id) {
         super();
@@ -39,10 +43,11 @@ public class Avaliacao {
         super();
     }
 
-    public Avaliacao(float nota, Produto produto, Cliente cliente) {
+    public Avaliacao(float nota, Produto produto, Cliente cliente, Pedido pedido) {
         this.nota = nota;
         this.produto = produto;
         this.cliente = cliente;
+        this.pedido = pedido;
     }
 
     public Long getId() {
@@ -75,5 +80,13 @@ public class Avaliacao {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 }
