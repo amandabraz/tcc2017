@@ -57,21 +57,14 @@ public class Usuario  implements Serializable {
     @Column(name = "imagem_perfil", nullable = true)
     private String imagemPerfil;
 
+    @Column(name = "fcm_token", nullable = true, length = 152)
+    private String fcmToken;
+
     /**
      * Construtor com todos os dados para retorno do banco
      */
     public Usuario() {
-        this.id = id;
-        this.senha = senha;
-        this.deletado = deletado;
-        this.perfil = perfil;
-        this.nome = nome;
-        this.email = email;
-        this.dataNasc = dataNasc;
-        this.cpf = cpf;
-        this.ddd = ddd;
-        this.telefone = telefone;
-        this.bloqueado = bloqueado;
+        super();
     }
 
     /**
@@ -81,33 +74,6 @@ public class Usuario  implements Serializable {
     public Usuario(Long id) {
         super();
         this.id = id;
-    }
-
-
-    /**
-     * @param senha
-     * @param deletado
-     * @param perfil
-     * @param nome
-     * @param email
-     * @param dataNasc
-     * @param cpf
-     * @param ddd
-     * @param telefone
-     * @param bloqueado
-     */
-    public Usuario(String senha,  boolean deletado, char perfil, String nome, String email, Date dataNasc,
-                   String cpf, String ddd, String telefone, boolean bloqueado) {
-        this.senha = senha;
-        this.deletado = deletado;
-        this.perfil = perfil;
-        this.nome = nome;
-        this.email = email;
-        this.dataNasc = dataNasc;
-        this.cpf = cpf;
-        this.ddd = ddd;
-        this.telefone = telefone;
-        this.bloqueado = bloqueado;
     }
 
     public Long getId() {
@@ -206,21 +172,12 @@ public class Usuario  implements Serializable {
         this.imagemPerfil = imagemPerfil;
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", senha='" + senha + '\'' +
-                ", deletado=" + deletado +
-                ", perfil=" + perfil +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", dataNasc=" + dataNasc +
-                ", cpf='" + cpf + '\'' +
-                ", ddd='" + ddd + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", bloqueado=" + bloqueado +
-                '}';
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     @Override
@@ -238,11 +195,32 @@ public class Usuario  implements Serializable {
                 Objects.equals(dataNasc, usuario.dataNasc) &&
                 Objects.equals(cpf, usuario.cpf) &&
                 Objects.equals(ddd, usuario.ddd) &&
-                Objects.equals(telefone, usuario.telefone);
+                Objects.equals(telefone, usuario.telefone) &&
+                Objects.equals(imagemPerfil, usuario.imagemPerfil) &&
+                Objects.equals(fcmToken, usuario.fcmToken);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, bloqueado);
+        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, bloqueado, imagemPerfil, fcmToken);
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", senha='" + senha + '\'' +
+                ", deletado=" + deletado +
+                ", perfil=" + perfil +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", dataNasc=" + dataNasc +
+                ", cpf='" + cpf + '\'' +
+                ", ddd='" + ddd + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", bloqueado=" + bloqueado +
+                ", imagemPerfil='" + imagemPerfil + '\'' +
+                ", fcmToken='" + fcmToken + '\'' +
+                '}';
     }
 }
