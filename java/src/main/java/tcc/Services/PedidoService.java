@@ -3,6 +3,7 @@ package tcc.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
+import tcc.Models.Cliente;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
 import tcc.QuantidadePedidos;
@@ -30,13 +31,15 @@ public class PedidoService {
     public Pedido geraPedido(Pedido pedido) throws IOException {
         try {
             Date dataSolicitada = new Date();
-            String cliente = clienteService.buscaCliente(pedido.getCliente().getId()).getUsuario().getCpf();
+            Cliente cliente = clienteService.buscaCliente(pedido.getCliente().getId());
+            pedido.setCliente(cliente);
             Produto produto = produtoService.buscaProduto(pedido.getProduto().getId());
-            String frase = dataSolicitada.toString() + produto.getNome() + cliente;
+            String frase = dataSolicitada.toString() + produto.getNome() + cliente.getUsuario().getCpf();
             String token = (stringHexa(gerarHash(frase, "MD5")));
             pedido.setToken(token);
             pedido.setDataSolicitada(dataSolicitada);
             alteraQtdProduto(pedido.getQuantidade(), produto, false);
+            pedido.setProduto(produto);
 
 
             return salvarPedido(pedido);
@@ -45,14 +48,14 @@ public class PedidoService {
         }
     }
 
-    public void alteraQtdProduto(int qtdPedido, Produto produto, boolean incrementa) throws IOException {
+    public Produto alteraQtdProduto(int qtdPedido, Produto produto, boolean incrementa) throws IOException {
         int novaQtd = 0;
         if (incrementa) {
             novaQtd = produto.getQuantidade() + qtdPedido;
         } else {
             novaQtd = produto.getQuantidade() - qtdPedido;
         }
-        produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(), produto.getId(), novaQtd);
+        return produtoService.alteraQuantidadeProduto(produto.getVendedor().getId(), produto.getId(), novaQtd);
     }
 
     public Pedido salvarPedido(Pedido pedido) {
@@ -134,7 +137,8 @@ public class PedidoService {
                 } else if (status.equals("Recusado") || status.equals("Cancelado")) {
                     // Incrementar quantidade disponível do produto
                     Produto produto = pedidoAtualizado.getProduto();
-                    alteraQtdProduto(pedidoAtualizado.getQuantidade(), produto, true);
+                    produto = alteraQtdProduto(pedidoAtualizado.getQuantidade(), produto, true);
+                    pedidoAtualizado.setProduto(produto);
                 }
 
              pedidoAtualizado.setStatus(status);

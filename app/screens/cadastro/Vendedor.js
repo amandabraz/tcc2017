@@ -14,6 +14,7 @@ class Vendedor extends Component {
     super(props);
     this.state = {
         userId: this.props.navigation.state.params.userId,
+        fcm_token: this.props.navigation.state.params.fcm_token,        
         pagamentosArray: [],
         nomeLoja: '',
         meiosPagamentos: []
@@ -74,7 +75,12 @@ class Vendedor extends Component {
             .then((responseJson) => {
               if (!responseJson.errorMessage) {
                 ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('TabsVendedor', {userId: responseJson.usuario.id, vendedorId: responseJson.id });
+                this.props.navigation.navigate('TabsVendedor', 
+                  {
+                    userId: responseJson.usuario.id, 
+                    vendedorId: responseJson.id, 
+                    fcm_token: responseJson.fcmToken
+                  });
               } else {
                 Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
               }

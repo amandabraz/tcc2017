@@ -9,7 +9,7 @@ export default class PushNotification extends Component {
 
   componentDidMount() {
     
-    // this method generate fcm token.
+    // this method generates fcm token.
     FCM.requestPermissions();
     FCM.getFCMToken().then(token => {
       console.log("TOKEN (getFCMToken)", token);
@@ -20,7 +20,7 @@ export default class PushNotification extends Component {
       console.log("INITIAL NOTIFICATION", notif)
     });
     
-    // This method give received notifications to mobile to display.
+    // This method sends received notifications to mobile to display.
     this.notificationUnsubscribe = FCM.on("notification", notif => {
       console.log("a", notif);
       if (notif && notif.local_notification) {

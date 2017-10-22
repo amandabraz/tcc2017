@@ -23,6 +23,7 @@ class Cliente extends Component {
     super(props);
     this.state = {
         userId: this.props.navigation.state.params.userId,
+        fcm_token: this.props.navigation.state.params.fcm_token,
         dietasArray: [],
         restricoesDieteticas: [],
         tags: []
@@ -70,7 +71,12 @@ class Cliente extends Component {
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
             ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-            this.props.navigation.navigate('TabsCliente', {userId: responseJson.usuario.id, clienteId: responseJson.id});
+            this.props.navigation.navigate('TabsCliente', 
+              {
+                userId: responseJson.usuario.id, 
+                clienteId: responseJson.id, 
+                fcm_token: responseJson.fcmToken
+              });
           } else {
             Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
           }

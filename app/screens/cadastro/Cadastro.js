@@ -17,6 +17,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import ImagePicker from 'react-native-image-picker';
 import { Icon } from 'react-native-elements';
+import FCM from "react-native-fcm";
 import * as constante from '../../constantes';
 
 class Cadastro extends Component {
@@ -36,8 +37,15 @@ class Cadastro extends Component {
     backgroundColorEmail: "transparent",
     backgroundColorCpf: "transparent",
     backgroundColorSenha: "transparent",
+    fcm_token: '',
   }
  }
+  componentDidMount () {
+    FCM.requestPermissions();
+    FCM.getFCMToken().then(token => {
+      this.setState({fcm_token:  token});
+    });
+  }
 
   validaEmail = (email) => {
     var re = /\S+@\S+\.\S+/;
@@ -161,7 +169,7 @@ class Cadastro extends Component {
   onButtonVendedor = () => {
     const {
       state: {
-        date, nome, email, cpf, celular, senha, imagemPerfil
+        date, nome, email, cpf, celular, senha, imagemPerfil, fcm_token
       }
     } = this;
     usuario = {
@@ -173,7 +181,8 @@ class Cadastro extends Component {
       "telefone": celular.substr(2,10),
       "senha": senha,
       "perfil": 'V',
-      "imagemPerfil": imagemPerfil
+      "imagemPerfil": imagemPerfil,
+      "fcmToken": fcm_token
     }
     let continuar = this.validaCampos(usuario);
 
@@ -192,7 +201,11 @@ class Cadastro extends Component {
                 Alert.alert(responseJson.errorMessage);
               } else {
                 ToastAndroid.showWithGravity('Cadastro de Vendedor iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('Vendedor', {userId: responseJson.id});
+                this.props.navigation.navigate('Vendedor', 
+                  {
+                    userId: responseJson.id, 
+                    fcm_token: responseJson.fcmToken
+                  });
               }
             })
             .catch((error) => {
@@ -203,7 +216,7 @@ class Cadastro extends Component {
   onButtonCliente = () => {
     const {
       state: {
-        date, nome, cpf, celular, email, senha, imagemPerfil
+        date, nome, cpf, celular, email, senha, imagemPerfil, fcm_token
       }
     } = this;
     usuario = {
@@ -215,7 +228,8 @@ class Cadastro extends Component {
       "telefone": celular.substr(2,10),
       "senha": senha,
       "perfil": 'C',
-      "imagemPerfil": imagemPerfil
+      "imagemPerfil": imagemPerfil,
+      "fcmToken": fcm_token 
     }
     let continuar = this.validaCampos(usuario);
 
@@ -234,7 +248,11 @@ class Cadastro extends Component {
                 Alert.alert(responseJson.errorMessage);
               } else {
                 ToastAndroid.showWithGravity('Cadastro de Cliente iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('Cliente', {userId: responseJson.id});
+                this.props.navigation.navigate('Cliente', 
+                  {
+                    userId: responseJson.id, 
+                    fcm_token: responseJson.fcmToken
+                  });
               }
             })
             .catch((error) => {

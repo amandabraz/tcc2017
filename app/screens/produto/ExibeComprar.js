@@ -18,7 +18,9 @@ import Popup from 'react-native-popup';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as constante from '../../constantes';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
+import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
+import FCM from "react-native-fcm";
+
 
 const { width, height } = Dimensions.get("window");
 

@@ -31,6 +31,7 @@ export default class BuscaProduto extends Component {
       gps: 0,
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
+      fcm_token: this.props.navigation.state.params.fcm_token,      
       resultadoPesquisaProduto: [],
       resultadoPesquisaVendedor: [],
       textoBusca: '',

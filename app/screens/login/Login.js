@@ -17,7 +17,9 @@ import {
 
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
+import FCM from "react-native-fcm";
 import * as constante from '../../constantes';
+
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
@@ -30,7 +32,7 @@ export default class Login extends Component {
 
    this.state = {
      email: '',
-     senha: ''
+     senha: '',
    }
   }
 
@@ -98,12 +100,14 @@ export default class Login extends Component {
               if (responseJson.usuario.perfil == "V") {
                 this.props.navigation.navigate('TabsVendedor', {
                   userId: responseJson.usuario.id,
-                  vendedorId: responseJson.id
+                  vendedorId: responseJson.id,
+                  fcm_token: responseJson.usuario.fcmToken
                 });
               } else if (responseJson.usuario.perfil == "C") {
                 this.props.navigation.navigate('TabsCliente', {
                   userId: responseJson.usuario.id,
-                  clienteId: responseJson.id
+                  clienteId: responseJson.id,
+                  fcm_token: responseJson.usuario.fcmToken
                 });
               }
             }

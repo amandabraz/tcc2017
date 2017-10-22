@@ -32,6 +32,7 @@ class HomeVendedor extends Component {
         gps: 0,
         userId: this.props.navigation.state.params.userId,
         vendedorId: this.props.navigation.state.params.vendedorId,
+        fcm_token: this.props.navigation.state.params.fcm_token,        
         imagemProduto: require('./img/camera2.jpg'),
         imagemCliente: require('./img/camera2.jpg'),
         dataSolicitada:'',
