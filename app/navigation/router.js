@@ -33,6 +33,7 @@ import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
+import ExibeAvaliacaoProduto from '../screens/avaliacao/ExibeAvaliacaoProduto';
 
 /**
 MENU SOMENTE PARA CLIENTE
@@ -52,6 +53,9 @@ export const BuscaPro = StackNavigator({
   },
   ExibeVendedor: {
     screen: ExibeVendedor
+  },
+  ExibeAvaliacaoProduto: {
+    screen: ExibeAvaliacaoProduto
   },
  },
  {
