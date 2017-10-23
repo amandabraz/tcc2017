@@ -17,6 +17,8 @@ import React, {
 import Popup from 'react-native-popup';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as constante from '../../constantes';
+import NavigationBar from 'react-native-navbar';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 
@@ -139,7 +141,10 @@ export default class ExibeComprar extends Component {
               .then((responseJson) => {
                 if (!responseJson.errorMessage) {
                   ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                  this.props.navigation.navigate('ExibeComprovante', {pedidoId: responseJson.id});
+                  this.props.navigation.navigate('ExibeComprovante', 
+                  {pedidoId: responseJson.id,          
+                  produtoId: this.props.navigation.state.params.produtoId,
+                  clienteId: this.props.navigation.state.params.clienteId});
                 } else {
                   Alert.alert("Houve um erro ao finalizar o pedido, tente novamente");
                 }
@@ -173,8 +178,17 @@ export default class ExibeComprar extends Component {
     }
 
     render() {
+      const {goBack} = this.props.navigation;
         return(
             <View style={styles.container}>
+
+            <NavigationBar
+              leftButton={
+                <TouchableOpacity onPress={() => goBack()}>
+                  <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+                </TouchableOpacity>
+              }/>
+
               <HeaderImageScrollView
                 maxHeight={200}
                 minHeight ={100}

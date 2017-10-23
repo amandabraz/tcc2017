@@ -17,6 +17,8 @@ import { Fumi } from 'react-native-textinput-effects';
 import { Icon, Button } from 'react-native-elements';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import NavigationBar from 'react-native-navbar';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 
 const { width, height } = Dimensions.get("window");
 
@@ -113,8 +115,16 @@ export default class ExibeProduto extends Component {
   };
 
 render() {
+  const {goBack} = this.props.navigation;
+
   return (
     <View style={styles.container}>
+      <NavigationBar 
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }/>
       <HeaderImageScrollView
         maxHeight={300}
         minHeight ={100}

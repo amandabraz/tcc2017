@@ -20,7 +20,9 @@ import {
   Button
 } from 'react-native-elements';
 import QRCode from 'react-native-qrcode';
+import NavigationActions from 'react-navigation';
 import NavigationBar from 'react-native-navbar';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
 
 //dimensão da janela
@@ -33,6 +35,8 @@ export default class ExibeComprovante extends Component {
 
    this.state = {
      pedidoId: this.props.navigation.state.params.pedidoId,
+     clienteId: this.props.navigation.state.params.clienteId,
+     produtoId: this.props.navigation.state.params.produtoId,
      nomeProdutoText: '',
      quantidadeText: '',
      precoText: '',
@@ -68,12 +72,27 @@ export default class ExibeComprovante extends Component {
 
   //render
   render() {
+    
+    // const {goBack} = this.props.navigation.dispatch(NavigationActions.back('ExibeProduto', {produtoId:this.state.produtoId, clienteId: this.state.clienteId}))
+    // const {goBack} = this.props.navigation.dispatch(NavigationActions.back({
+    //   params: {produtoId:this.state.produtoId, clienteId: this.state.clienteId},
+    //   key: 'ExibeProduto'
+    // }));
+    // const {goBack} =  this.props.navigation.dispatch(NavigationActions.back({
+    //   key: null
+    // }))
+
     //retorno
     return (
       <View style={{flex: 1}}>
         <NavigationBar
           title={titleConfig}
-          tintColor="skyblue"/>
+          tintColor="skyblue"
+          leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }/>
 
       <ScrollView>
       <View style={styles.container}>

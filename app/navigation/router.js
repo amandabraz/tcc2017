@@ -208,9 +208,28 @@ export const GerenciaProdutos = StackNavigator({
       },
 }, {
   mode: 'card',
-  headerMode: 'none',
+  headerMode: 'none',   
   lazy: true
 });
+
+//implementação para voltar duas telas
+const defaultGetStateForAction = BuscaPro.router.getStateForAction;
+
+BuscaPro.router.getStateForAction = (passedAction, state) => {
+  if(state && state.routes && state.routes.length > 2
+      && passedAction.type === 'POP_TWO_ROUTES') {
+    let routes = state.routes.slice();
+    routes.pop();
+    routes.pop();
+
+    return {
+      index: routes.length - 1,
+      routes: routes
+    };
+  }
+  // default behaviour for none custom types
+  return defaultGetStateForAction(passedAction, state);
+}
 
 /**
 MENU SOMENTE PARA VENDEDORES
