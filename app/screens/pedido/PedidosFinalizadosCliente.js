@@ -67,7 +67,6 @@ class PedidosFinalizadosCliente extends Component {
       });
   };
 
-
 pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
@@ -75,6 +74,7 @@ pedidoFinalizado(){
       let pedidoF = this.state.pedidosFinalizados[i];
       let dataNormal = new Date(pedidoF.dataFinalizacao);
       let dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+      let score = 0;
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
@@ -87,13 +87,24 @@ pedidoFinalizado(){
            <Text style={styles.totalFont}> {pedidoF.produto.nome}</Text>
            <Text style={{fontSize: 14}}> {dataFinalizacao}</Text>
            <Text style={{fontSize: 14}}> O que achou do produto?</Text>
-           <View style={{width: '80%'}}>
+           <View style={{width: '60%'}}>
            <StarRating
-             disabled={false}
              maxStars={5}
              starSize={25}
              starColor={'#e6b800'}
-             selectedStar={rating => console.log(rating)}/>
+             rating={score}
+             selectedStar={(rating) => {
+               fetch(constante.ENDPOINT + 'pedido/' + pedidoF.id + '/produto/avaliacao/' + rating, {method: 'PUT'})
+                 .then((response) => response.json())
+                 .then((responseJson) => {
+                   if (!responseJson.errorMessage) {
+                     score = rating;
+                     ToastAndroid.showWithGravity('Avaliação realizada, obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                   } else {
+                     Alert.alert("Houve um erro ao realizar a avaliação, tente novamente");
+                   }
+                 });
+             }}/>
              </View>
           </View>
           <View style={{width: '5%',justifyContent: 'center'}}>
