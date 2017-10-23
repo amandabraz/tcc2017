@@ -30,6 +30,7 @@ export default class ExibeComprar extends Component {
         this.state = {
             produtoId: this.props.navigation.state.params.produtoId,
             clienteId: this.props.navigation.state.params.clienteId,
+            userId: this.props.navigation.state.params.userId,
             imagemPrincipal: require('./img/camera11.jpg'),
             imagemVendedor: require('./img/camera11.jpg'),
             quantidadeSelecionada: 1,
@@ -135,8 +136,8 @@ export default class ExibeComprar extends Component {
                   ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
                   this.props.navigation.navigate('ExibeComprovante', 
                   {pedidoId: responseJson.id,          
-                  produtoId: this.props.navigation.state.params.produtoId,
-                  clienteId: this.props.navigation.state.params.clienteId});
+                  userId: this.state.userId,
+                  clienteId: this.state.clienteId});
                 } else {
                   Alert.alert("Houve um erro ao finalizar o pedido, tente novamente");
                 }

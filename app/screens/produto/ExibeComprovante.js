@@ -36,7 +36,7 @@ export default class ExibeComprovante extends Component {
    this.state = {
      pedidoId: this.props.navigation.state.params.pedidoId,
      clienteId: this.props.navigation.state.params.clienteId,
-     produtoId: this.props.navigation.state.params.produtoId,
+     userId: this.props.navigation.state.params.userId,
      nomeProdutoText: '',
      quantidadeText: '',
      precoText: '',
@@ -73,15 +73,22 @@ export default class ExibeComprovante extends Component {
   //render
   render() {
     
-    const {goBack} = this.props.navigation;
+    // const {goBack} = this.props.navigation;
     // const {goBack} = this.props.navigation.dispatch(NavigationActions.back('ExibeProduto', {produtoId:this.state.produtoId, clienteId: this.state.clienteId}))
-    // const {goBack} = this.props.navigation.dispatch(NavigationActions.back({
+    // const goBack  = this.props.navigation.dispatch(NavigationActions.back({
     //   params: {produtoId:this.state.produtoId, clienteId: this.state.clienteId},
     //   key: 'ExibeProduto'
     // }));
     // const {goBack} =  this.props.navigation.dispatch(NavigationActions.back({
     //   key: null
     // }))
+    // const {goBack} = this.props.navigation.dispatch(
+    //   {type: 'Reset', index: 0, actions: [
+    //     { type: 'Navigate', 
+    //     routeName:'ExibeProduto', 
+    //     params: {produtoId:this.state.produtoId, clienteId: this.state.clienteId}
+    //   }]});
+    
 
     //retorno
     return (
@@ -90,7 +97,10 @@ export default class ExibeComprovante extends Component {
           title={titleConfig}
           tintColor="skyblue"
           leftButton={
-          <TouchableOpacity onPress={() => goBack()}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('TabsCliente', {
+            userId: this.state.userId,
+            clienteId: this.state.clienteId
+          })}>
             <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }/>

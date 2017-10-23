@@ -27,6 +27,7 @@ export default class ExibeProduto extends Component {
         super(props, context);
         this.state = {
           produtoId: this.props.navigation.state.params.produtoId,
+          userId: this.props.navigation.state.params.userId,
           clienteId: this.props.navigation.state.params.clienteId,
           imagemPrincipal: require('./img/camera11.jpg'),
           imagemVendedor: require('./img/camera11.jpg'),
@@ -111,7 +112,10 @@ export default class ExibeProduto extends Component {
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeComprar', {produtoId: this.state.produtoId, clienteId: this.state.clienteId});
+    this.props.navigation.navigate('ExibeComprar', 
+    {produtoId: this.state.produtoId, 
+      clienteId: this.state.clienteId,
+      userId: this.state.userId});
   };
 
 render() {
