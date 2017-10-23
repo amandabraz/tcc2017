@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import tcc.CustomQueryHelpers.QuantidadePedidos;
 import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
+import tcc.Models.Avaliacao;
 import tcc.Models.Pedido;
-import tcc.QuantidadePedidos;
+import tcc.Services.AvaliacaoService;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
@@ -28,6 +30,9 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
+
+    @Autowired
+    private AvaliacaoService avaliacaoService;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity registraPedido(@RequestBody Pedido pedido) {
@@ -140,6 +145,36 @@ public class PedidoController {
             return new ResponseEntity <List<QuantidadePedidos>>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "{pedidoId}/produto/avaliacao/{nota}", method = RequestMethod.PUT)
+    public ResponseEntity avaliaProduto(@PathVariable("pedidoId") Long pedidoId,
+                                        @PathVariable("nota") float nota) {
+        try {
+            Pedido pedido = pedidoService.buscaPedido(pedidoId);
+            Avaliacao novaAvaliacao = new Avaliacao(nota, pedido.getProduto(), pedido.getCliente(), pedido);
+            int novoScore = avaliacaoService.recalculaScoreProduto(novaAvaliacao);
+            return new ResponseEntity(novoScore, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao salvar avaliação"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "{pedidoId}/produto/avaliacao", method = RequestMethod.GET)
+    public ResponseEntity buscaAvaliacaoProduto(@PathVariable("pedidoId") Long pedidoId) {
+        try {
+            Pedido pedido = pedidoService.buscaPedido(pedidoId);
+            Avaliacao avaliacaoProduto = avaliacaoService.buscaAvaliacaoPedido(pedido);
+            if (Objects.nonNull(avaliacaoProduto)) {
+                return new ResponseEntity(avaliacaoProduto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Avaliação não encontrada"), HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao salvar avaliação"), HttpStatus.BAD_REQUEST);
         }
     }
 }

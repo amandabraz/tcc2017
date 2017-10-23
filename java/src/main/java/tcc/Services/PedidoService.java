@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
-import tcc.QuantidadePedidos;
+import tcc.CustomQueryHelpers.QuantidadePedidos;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PedidoService {
@@ -25,6 +26,9 @@ public class PedidoService {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private AvaliacaoService avaliacaoService;
 
     @Transactional
     public Pedido geraPedido(Pedido pedido) throws IOException {
@@ -115,7 +119,15 @@ public class PedidoService {
 
     public List<Pedido> buscaPedidosPorStatusCliente(String status, Long clienteId) {
         try {
-            return pedidoDAO.findByStatusAndClienteIdOrderByDataSolicitadaDesc(status, clienteId);
+            List<Pedido> pedidoList = pedidoDAO.findByStatusAndClienteIdOrderByDataSolicitadaDesc(status, clienteId);
+            for (Pedido pedido : pedidoList) {
+                if (Objects.nonNull(avaliacaoService.buscaAvaliacaoPedido(pedido))) {
+                    pedido.setAvaliado(true);
+                } else {
+                    pedido.setAvaliado(false);
+                }
+            }
+            return pedidoList;
         } catch (Exception e) {
             throw e;
         }
