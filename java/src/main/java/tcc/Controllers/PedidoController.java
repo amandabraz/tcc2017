@@ -161,4 +161,20 @@ public class PedidoController {
             return new ResponseEntity<>(new CustomError("Erro ao salvar avaliação"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "{pedidoId}/produto/avaliacao", method = RequestMethod.GET)
+    public ResponseEntity buscaAvaliacaoProduto(@PathVariable("pedidoId") Long pedidoId) {
+        try {
+            Pedido pedido = pedidoService.buscaPedido(pedidoId);
+            Avaliacao avaliacaoProduto = avaliacaoService.buscaAvaliacaoPedido(pedido);
+            if (Objects.nonNull(avaliacaoProduto)) {
+                return new ResponseEntity(avaliacaoProduto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Avaliação não encontrada"), HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao salvar avaliação"), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
