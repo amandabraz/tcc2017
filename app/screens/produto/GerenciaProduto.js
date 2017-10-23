@@ -14,7 +14,7 @@ import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as constante from '../../constantes';
-import Rating from 'react-native-rating';
+import StarRating from 'react-native-star-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -86,10 +86,6 @@ class GerenciaProduto extends Component {
 
   mostraProdutos() {
     var views = [];
-    const images = {
-    starFilled: require('./img/star_filled.png'),
-    starUnfilled: require('./img/star_unfilled.png')
-  }
     if(this.state.listaProdutos.length > 0){
       for (i in this.state.listaProdutos) {
         let produto = this.state.listaProdutos[i];
@@ -108,19 +104,14 @@ class GerenciaProduto extends Component {
                      justifyContent='flex-start'/>
                 <View style={{width: '65%', marginLeft: 12, marginRight: 12}}>
                   <Text style={styles.textNome}> {produto.nome} </Text>
-                  <Rating
-                    onChange={rating => console.log(rating)}
-                    initial= {2}
-                    editable={false}
-                    selectedStar={images.starFilled}
-                    unselectedStar={images.starUnfilled}
-                    stagger={80}
-                    maxScale={1.4}
-                    starStyle={{
-                      width: 20,
-                      height: 20
-                    }}
-                    />
+                  <View style={{width: '70%'}}>
+                  <StarRating
+                    disabled={true}
+                    maxStars={5}
+                    rating={produto.score}
+                    starSize={15}
+                    starColor={'#e6b800'}/>
+                  </View>
                 </View>
               </View>
               <View style={styles.parteDireita}>
