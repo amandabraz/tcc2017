@@ -92,7 +92,8 @@ pedidoSolicitado(){
     for (i in this.state.pedidosSolicitados){
       let pedidoS = this.state.pedidosSolicitados[i];
       let data = new Date(pedidoS.dataSolicitada);
-      let dataSolicitada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+      let dataSolicitada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear() + 
+      " - "+data.getHours() + ":" + data.getMinutes();
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
