@@ -78,7 +78,8 @@ pedidoFinalizado(){
     for (i in this.state.pedidosFinalizados){
       let pedidoF = this.state.pedidosFinalizados[i];
       let dataNormal = new Date(pedidoF.dataFinalizacao);
-      let dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+      let dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() + 
+      " - "+dataNormal.getHours() + ":" + dataNormal.getMinutes();
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={

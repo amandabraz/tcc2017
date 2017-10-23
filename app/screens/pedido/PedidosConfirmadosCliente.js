@@ -71,7 +71,8 @@ pedidoConfirmado(){
     for (i in this.state.pedidosConfirmados){
       let pedidoC = this.state.pedidosConfirmados[i];
       var data = new Date(pedidoC.dataConfirmacao);      
-      let dataConfirmado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+      let dataConfirmado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear() + 
+      " - "+data.getHours() + ":" + data.getMinutes();
       views.push(
         <View key={i} style={styles.oneResult1}>
         <Accordion header={
