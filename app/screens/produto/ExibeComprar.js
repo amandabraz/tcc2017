@@ -48,19 +48,6 @@ export default class ExibeComprar extends Component {
             precoTotalText: ''
         }
         this.buscaProduto();
-        this.preencherPagamentosArray();
-    }
-
-    preencherPagamentosArray() {
-      fetch(constante.ENDPOINT + 'meiopagamento')
-        .then((response) => response.json())
-          .then((responseJson) => {
-            var pagamentosBuscados = [];
-            for (i in responseJson) {
-                pagamentosBuscados.push(responseJson[i]);
-            }
-            this.setState({pagamentosArray: pagamentosBuscados});
-          });
     }
 
     mostrarCheckboxesPagamento() {
@@ -102,6 +89,11 @@ export default class ExibeComprar extends Component {
               this.setState({quantidadeDis: qnt});
             }
             this.setState({precoTotalText: rJson.preco});
+            var pagamentosBuscados = [];
+            for (i in rJson.vendedor.meiosPagamentos) {
+              pagamentosBuscados.push(rJson.vendedor.meiosPagamentos[i]);
+            }
+            this.setState({pagamentosArray: pagamentosBuscados});
           }
         });
       }
