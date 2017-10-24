@@ -122,6 +122,7 @@ export default class BuscaProduto extends Component {
   buscaProduto() {
     var views = [];
     if (this.state.resultadoPesquisaProduto.length > 0) {
+      let imagemPrincipal = require('./img/camera11.jpg');
       for(i in this.state.resultadoPesquisaProduto) {
         let produto = this.state.resultadoPesquisaProduto[i];
         let distancia = parseInt(produto.distancia);
@@ -136,6 +137,9 @@ export default class BuscaProduto extends Component {
           borderRadius: 100,
           textAlign: 'center'
         };
+        if(produto.imagemPrincipal){
+          imagemPrincipal = {uri: produto.imagemPrincipal};
+        }
         if (distancia > -1) {
           if (distancia > 1000) {
             let convert = (distancia/1000).toString().split('.');
@@ -151,7 +155,7 @@ export default class BuscaProduto extends Component {
           <View key={i}>
             <View style={styles.oneResult}>
               <View style={{width: "25%"}}>
-                <Image source={{ uri: produto.imagemPrincipal }}
+                <Image source={imagemPrincipal}
                        style={styles.imageResultSearch}
                        justifyContent='flex-start'/>
               </View>
@@ -183,12 +187,16 @@ export default class BuscaProduto extends Component {
   buscaVendedor() {
     var views = [];
     if (this.state.resultadoPesquisaVendedor.length > 0) {
+      let imagemPerfil = require('./img/camera11.jpg');
       for(i in this.state.resultadoPesquisaVendedor) {
         let vendedor = this.state.resultadoPesquisaVendedor[i];
+        if(vendedor.usuario.imagemPerfil){
+          imagemPerfil = {uri: vendedor.usuario.imagemPerfil};
+        }
         views.push (
           <View key={i}>
           <View style={styles.oneResult}>
-            <Image source={{ uri: vendedor.usuario.imagemPerfil }}
+            <Image source={imagemPerfil}
                   style={styles.imageResultSearch}
                   justifyContent='flex-start'/>
 
