@@ -21,7 +21,6 @@ import {Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
-import Chart from 'react-native-chart';
 
 const { width, height } = Dimensions.get("window");
 
@@ -52,11 +51,9 @@ class HomeVendedor extends Component {
             descricao:''
           }
         },
-        quantidadeVendida: [],
-        refreshing: false,              
+        refreshing: false,
     };
     this.buscaDadosPedido();
-    this.buscaQuantidadeVendida();
   };
 
   buscaDadosPedido() {
@@ -78,17 +75,6 @@ class HomeVendedor extends Component {
       }});
   };
 
-  buscaQuantidadeVendida() {
-    fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
-    .then((response) => response.json())
-      .then((responseJson) => {
-        if (!responseJson.errorMessage) {
-          this.setState({quantidadeVendida: responseJson});
-        }
-        this.setState({refreshing:false});        
-    });
-  };
-
   componentWillMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
@@ -107,7 +93,6 @@ class HomeVendedor extends Component {
           this.setState({pedidoSolicitado: []})
           this.buscaDadosPedido();
           this.pedidoSolicitado();
-          this.produtosVendidos();
         } else {
           Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
@@ -172,20 +157,18 @@ class HomeVendedor extends Component {
             </Text>
 
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
+          <View style={{flexDirection: 'row', paddingTop:10}}>
 
           <Button title ="Recusar"
                   color="#fff"
                   backgroundColor="#88557B"
                   borderRadius={10}
-                  onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}
-                  buttonStyle={{width: '40%'}}/>
+                  onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}/>
 
-          <Button title="Aceitar"
+          <Button title=" Aceitar "
                   color="#fff"
                   backgroundColor="#768888"
                   borderRadius={10}
-                  buttonStyle={{width: '40%'}}
                   onPress={() => {
                          this.state.pedidoSolicitado.status = "Confirmado";
                          this.atualizaStatus(this.state.pedidoSolicitado);
@@ -207,35 +190,6 @@ class HomeVendedor extends Component {
    return views;
 }
 
-produtosVendidos(){
-  var views = [];
-  if(this.state.quantidadeVendida.length > 0){
-    for(i in this.state.quantidadeVendida){
-      let prodQtdVendido = this.state.quantidadeVendida[i];
-  views.push(
-  <View key={i} style={styles.produtosV}>
-    <Animated.View style={[styles.bar, styles.points, {width: prodQtdVendido[1]}]}/>
-    <Text style={{fontSize: 7, justifyContent: 'center'}}>
-      {prodQtdVendido[1]}
-    </Text>
-    <Text style={{fontSize: 12, justifyContent: 'center'}}>
-      {prodQtdVendido[0]}
-    </Text>
- </View>
-)}} else {
-    views.push(
-      <View key={0} style={{alignItems: 'center'}}>
-      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-        Você não tem produtos vendidos! :(
-      </Text>
-      </View>
-    )
-  }
-
- return views;
-}
-
-
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(<LocalizacaoNaoPermitida
@@ -256,17 +210,10 @@ produtosVendidos(){
                     onRefresh={() => {
                       this.setState({refreshing:true});
                       this.buscaDadosPedido();
-                      this.buscaQuantidadeVendida();
                     }}
                   />
                 }>
                 {this.pedidoSolicitado()}
-                <View style={{paddingTop: 25}}>
-                  <Text style={{marginLeft: 10, fontSize: 16}}>
-                    Seus Produtos Vendidos:
-                  </Text>
-                  {this.produtosVendidos()}
-                </View>
               </ScrollView>
             </View>
            <Popup ref={popup => this.popup = popup }/>
