@@ -56,6 +56,7 @@ export default class ExibeComprovante extends Component {
             if (responseJson.produto.imagemPrincipal) {
               this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
             }
+          
           this.setState({nomeProdutoText: responseJson.produto.nome});
           this.setState({quantidadeText: responseJson.quantidade});
           this.setState({precoText: responseJson.valorCompra});

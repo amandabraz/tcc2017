@@ -20,7 +20,8 @@ import * as constante from '../../constantes';
 import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
+import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
+import Rating from 'react-native-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -171,7 +172,14 @@ export default class ExibeComprar extends Component {
     }
 
     render() {
-      const {goBack} = this.props.navigation;
+      
+      const {goBack} = this.props.navigation
+      
+      const images = {
+      starFilled: require('./img/star_filled.png'),
+      starUnfilled: require('./img/star_unfilled.png')
+    }
+      
         return(
             <View style={styles.container}>
 
@@ -207,6 +215,19 @@ export default class ExibeComprar extends Component {
                 <Text style={styles.produtoText}>
                   {this.state.produto.nome}
                 </Text>
+                <Rating
+                  onChange={rating => console.log(rating)}
+                  initial= {2}
+                  editable={false}
+                  selectedStar={images.starFilled}
+                  unselectedStar={images.starUnfilled}
+                  stagger={80}
+                  maxScale={1.4}
+                  starStyle={{
+                    width: 30,
+                    height: 30
+                  }}
+                  />
                 <Text style={styles.quantidadeText}>
                   {this.state.quantidadeDis}
                 </Text>

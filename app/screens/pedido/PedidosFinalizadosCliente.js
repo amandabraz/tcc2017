@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  Easing,
   StyleSheet,
   Text,
   TextInput,
@@ -23,6 +24,7 @@ import QRCode from 'react-native-qrcode';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
+import Rating from 'react-native-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,7 +37,7 @@ class PedidosFinalizadosCliente extends Component {
       pedidosFinalizados: [],
       pedidosRecusados: [],
       pedidosCancelados: [],
-      refreshing: false,      
+      refreshing: false,
     };
     this.buscaDadosPedidosCliente();
   };
@@ -61,18 +63,22 @@ class PedidosFinalizadosCliente extends Component {
         if (!responseJson.errorMessage) {
               this.setState({pedidosCancelados: responseJson});
         }
-        this.setState({refreshing: false});        
+        this.setState({refreshing: false});
       });
   };
 
 
 pedidoFinalizado(){
+  const images = {
+    starFilled: require('./img/star_filled.png'),
+    starUnfilled: require('./img/star_unfilled.png')
+  }
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
     for (i in this.state.pedidosFinalizados){
       let pedidoF = this.state.pedidosFinalizados[i];
       let dataNormal = new Date(pedidoF.dataFinalizacao);
-      let dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();      
+      let dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
@@ -84,6 +90,22 @@ pedidoFinalizado(){
           <View style={{width: '60%', alignSelf:'center'}}>
            <Text style={styles.totalFont}> {pedidoF.produto.nome}</Text>
            <Text style={{fontSize: 14}}> {dataFinalizacao}</Text>
+           <Text style={{fontSize: 14}}> O que achou do produto?</Text>
+           <Rating
+            onChange={rating => console.log(rating)}
+            selectedStar={images.starFilled}
+            unselectedStar={images.starUnfilled}
+            config={{
+              easing: Easing.inOut(Easing.ease),
+              duration: 350
+            }}
+            stagger={80}
+            maxScale={1.4}
+            starStyle={{
+            width: 40,
+            height: 40
+            }}
+            />
           </View>
           <View style={{width: '5%',justifyContent: 'center'}}>
           <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
