@@ -78,21 +78,6 @@ export default class ExibeComprovante extends Component {
       userId: this.state.userId,
       clienteId: this.state.clienteId
     })
-    // const {goBack} = this.props.navigation.dispatch(NavigationActions.back('ExibeProduto', {produtoId:this.state.produtoId, clienteId: this.state.clienteId}))
-    // const goBack  = this.props.navigation.dispatch(NavigationActions.back({
-    //   params: {produtoId:this.state.produtoId, clienteId: this.state.clienteId},
-    //   key: 'ExibeProduto'
-    // }));
-    // const {goBack} =  this.props.navigation.dispatch(NavigationActions.back({
-    //   key: null
-    // }))
-    // const {goBack} = this.props.navigation.dispatch(
-    //   {type: 'Reset', index: 0, actions: [
-    //     { type: 'Navigate', 
-    //     routeName:'ExibeProduto', 
-    //     params: {produtoId:this.state.produtoId, clienteId: this.state.clienteId}
-    //   }]});
-    
 
     //retorno
     return (
