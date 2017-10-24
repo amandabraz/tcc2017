@@ -261,6 +261,7 @@ export default class ExibeComprar extends Component {
             <View style={{width: '70%'}}>
               <RadioGroup size={18}
                         thickness={2}
+                        selectedIndex={1}
                         color='gray'
                         onSelect = {(index, value) => this.setState({meioPagamentoEscolhido: value})}>
               {this.mostrarCheckboxesPagamento()}
