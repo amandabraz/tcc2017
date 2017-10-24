@@ -73,7 +73,10 @@ export default class ExibeComprovante extends Component {
   //render
   render() {
     
-    // const {goBack} = this.props.navigation;
+    const {goBack} = this.props.navigation.navigate('TabsCliente', {
+      userId: this.state.userId,
+      clienteId: this.state.clienteId
+    })
     // const {goBack} = this.props.navigation.dispatch(NavigationActions.back('ExibeProduto', {produtoId:this.state.produtoId, clienteId: this.state.clienteId}))
     // const goBack  = this.props.navigation.dispatch(NavigationActions.back({
     //   params: {produtoId:this.state.produtoId, clienteId: this.state.clienteId},
@@ -97,10 +100,7 @@ export default class ExibeComprovante extends Component {
           title={titleConfig}
           tintColor="skyblue"
           leftButton={
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('TabsCliente', {
-            userId: this.state.userId,
-            clienteId: this.state.clienteId
-          })}>
+          <TouchableOpacity onPress={() => this.goBack()}>
             <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }/>
