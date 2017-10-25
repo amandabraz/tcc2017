@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   View,
   ScrollView
@@ -149,30 +150,37 @@ export default class BuscaProduto extends Component {
         }
         views.push (
           <View key={i}>
-            <View style={styles.oneResult}>
-              <View style={{width: "25%"}}>
-                <Image source={{ uri: produto.imagemPrincipal }}
-                       style={styles.imageResultSearch}
-                       justifyContent='flex-start'/>
+            <TouchableHighlight 
+              onPress={() => this.onButtonOpenProduct(produto.id)}
+              underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
+            >
+              <View>
+                <View style={styles.oneResult}>
+                  <View style={{width: "25%"}}>
+                    <Image source={{ uri: produto.imagemPrincipal }}
+                          style={styles.imageResultSearch}
+                          justifyContent='flex-start'/>
+                  </View>
+                  <View style={{width: "45%"}}>
+                    <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+                  </View>
+                  <View style={{width: "15%"}} justifyContent='center'>
+                    <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
+                  </View>
+                  <View style={{width: "15%"}}>
+                    <Icon
+                      name='shopping-cart'
+                      type=' material-community'
+                      color='#1C1C1C'
+                      onPress={() => this.onButtonOpenProduct(produto.id)}
+                      style={styles.imageResultSearch} />
+                  </View>
+                </View>
+                <Text>{'\n'}</Text>
               </View>
-              <View style={{width: "45%"}}>
-                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
-              </View>
-              <View style={{width: "15%"}} justifyContent='center'>
-                <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
-              </View>
-              <View style={{width: "15%"}}>
-                <Icon
-                  name='shopping-cart'
-                  type=' material-community'
-                  color='#1C1C1C'
-                  onPress={() => this.onButtonOpenProduct(produto.id)}
-                  style={styles.imageResultSearch} />
-              </View>
-            </View>
-            <Text>{'\n'}</Text>
+            </TouchableHighlight>
           </View>
         );
       }
