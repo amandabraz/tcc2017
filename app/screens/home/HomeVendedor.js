@@ -13,7 +13,8 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   Animated,
-  RefreshControl
+  RefreshControl,
+  Switch
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
@@ -125,7 +126,6 @@ class HomeVendedor extends Component {
 
   pedidoSolicitado(){
     var views = [];
-    if(this.state.pedidoSolicitado.id){
     views.push(
     <View key={1} style={styles.oneResult}>
       <View style={{flexDirection: 'row'}}>
@@ -178,19 +178,46 @@ class HomeVendedor extends Component {
         </View>
      </View>
    </View>
- )} else {
-    views.push(
-      <View key={0} style={{padding: 10, margin: 10, height:80}}>
-      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-        Você não tem nova solicitação! :(
-      </Text>
-      </View>
-  )}
-
-   return views;
+ )
+  return views;
 }
 
-  render() {
+resumoVendas(){
+  var views = [];
+  views.push(
+  <View key={1} style={styles.oneResultResumo}>
+  <Switch/>
+  <View style={{flexDirection: 'row', height: '30%'}}>
+    <View style={{width: '50%'}}>
+    <Text>
+    Clientes
+    </Text>
+    <Image source={require('./img/iconp.png')}/>
+    </View>
+    <View style={{width: '50%'}}>
+    <Text>
+    Produtos
+    </Text>
+    <Image source={require('./img/iconf.png')}/>
+    </View>
+  </View>
+  <View style={{flexDirection: 'row', height: '60%', alignItems:'center'}}>
+  <View style={{width: '50%'}}>
+  <Image source={require('./img/carteira2.png')}/>
+  </View>
+  <View style={{width: '50%', alignItems: 'center'}}>
+  <Text>
+  Total
+  </Text>
+  </View>
+
+  </View>
+ </View>
+)
+return views;
+}
+
+render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(<LocalizacaoNaoPermitida
         screenName={this.state.screenName}
@@ -204,17 +231,12 @@ class HomeVendedor extends Component {
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
-              <ScrollView refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={() => {
-                      this.setState({refreshing:true});
-                      this.buscaDadosPedido();
-                    }}
-                  />
-                }>
+              <View style={{ height:'38%'}}>
                 {this.pedidoSolicitado()}
-              </ScrollView>
+              </View>
+              <View style={{ height:'50%'}}>
+                {this.resumoVendas()}
+              </View>
             </View>
            <Popup ref={popup => this.popup = popup }/>
         </View>
@@ -232,8 +254,7 @@ const titleConfig = {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flexDirection: 'column',
-    alignContent: 'space-between'
+    height: '100%'
   },
   bar: {
     borderRadius: 5,
@@ -250,7 +271,8 @@ const styles = StyleSheet.create({
      borderColor: '#fff',
      padding: 10,
      margin: 10,
-     width: '98%'
+     width: '98%',
+     height: '98%'
   },
   produtosV:{
     margin: 6,
@@ -283,9 +305,20 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 100
   },
+  oneResultResumo:{
+     flexDirection: 'column',
+     backgroundColor: 'rgba(255, 255, 255, 0.55)',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 10,
+     width: '98%',
+     height: '100%'
+  },
   imagemProduto:{
     width: '98%',
-    height: 190,
+    height: '98%',
     borderRadius: 10
   }
 });

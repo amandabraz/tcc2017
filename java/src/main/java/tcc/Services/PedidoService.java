@@ -2,6 +2,7 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
@@ -176,4 +177,12 @@ public class PedidoService {
         }
     }
 
+    @Transactional
+    public List<QuantidadeVendidaCliente> qtdVendidaCliente(Long vendedorId) {
+        try {
+            return (List<QuantidadeVendidaCliente>) pedidoDAO.findByQtdVendidaAndClientes(vendedorId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

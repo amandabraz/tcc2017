@@ -40,4 +40,11 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "AND pedido.status != 'Recusado' AND pedido.status != 'Cancelado'\n" +
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
+
+    @Query(value = "SELECT SUM(pedido.quantidade) as qtd_vendida, COUNT(DISTINCT pedido.fk_cliente) as n_clientes from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.status != 'Recusado' AND pedido.status != 'Cancelado'\n", nativeQuery = true)
+    List<?> findByQtdVendidaAndClientes(long vendedorId);
+
 }

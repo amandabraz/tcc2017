@@ -14,6 +14,7 @@ import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Avaliacao;
 import tcc.Models.Pedido;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.Services.AvaliacaoService;
 import tcc.Services.PedidoService;
 
@@ -177,4 +178,19 @@ public class PedidoController {
             return new ResponseEntity<>(new CustomError("Erro ao salvar avaliação"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "qtd/ncliente/vendedor/{vendedorId}", method = RequestMethod.GET)
+    public ResponseEntity qtdVendidaCliente(@PathVariable("vendedorId") Long vendedorId) {
+        try {
+            List<QuantidadeVendidaCliente> pedidos = pedidoService.qtdVendidaCliente(vendedorId);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<QuantidadeVendidaCliente>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
