@@ -127,7 +127,7 @@ pedidoSolicitado(){
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <Button buttonStyle={{width: '40%'}}
+            <Button buttonStyle={{width: '80%'}}
                     title ="Cancelar"
                     color="#fff"
                     backgroundColor="#88557B"
