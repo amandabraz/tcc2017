@@ -165,10 +165,11 @@ export default class PerfilVendedor extends Component {
           "telefone": celularText.substr(2,10),
           "notificacao": false,
           "bloqueado": false,
-          "imagemPerfil": imagemPerfil.uri
+          "imagemPerfil": imagemPerfil.uri,
+          "fcmToken": vendedor.usuario.fcm_token
       },
       "nomeFantasia": nomeFantasiaText,
-      "meiosPagamentos": meiosPagamentoVendedor
+      "meiosPagamentos": meiosPagamentoVendedor,
     }
 
     fetch(constante.ENDPOINT + 'vendedor', {

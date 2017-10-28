@@ -292,7 +292,8 @@ export default class PerfilCliente extends Component {
         "telefone": celularText.substr(2,10),
         "notificacao": false,
         "bloqueado": false,
-        "imagemPerfil": imagemPerfil.uri
+        "imagemPerfil": imagemPerfil.uri,
+        "fcmToken": cliente.usuario.fcm_token
       },
       "restricoesDieteticas": restricoesCliente,
       "tags": tags

@@ -133,6 +133,16 @@ export default class ExibeComprar extends Component {
               .then((responseJson) => {
                 if (!responseJson.errorMessage) {
                   ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                  FCM.send(constante.SENDER_ID, 
+                    {
+                    "message":{
+                      "token" : this.state.produto.vendedor.usuario.fcm_token,
+                      "notification" : {
+                        "body" : "This is an FCM notification message!",
+                        "title" : "FCM Message",
+                        }
+                     }
+                  });
                   this.props.navigation.navigate('ExibeComprovante', {pedidoId: responseJson.id});
                 } else {
                   Alert.alert("Houve um erro ao finalizar o pedido, tente novamente");
