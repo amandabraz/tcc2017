@@ -17,13 +17,6 @@ import NavigationBar from 'react-native-navbar';
 
 const { width, height } = Dimensions.get("window");
 
-const data = [
-    [0, 1],
-    [1, 3],
-    [3, 7],
-    [4, 9],
-];
-
 class Estatisticas extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +30,6 @@ class Estatisticas extends Component {
     this.buscaDadosPedido();
     this.buscaQuantidadeVendida();
   };
-
 
   buscaDadosPedido() {
     fetch(constante.ENDPOINT+'pedido/'+ 'Solicitado' + '/vendedor/' + this.state.vendedorId, {method: 'GET'})
@@ -99,8 +91,12 @@ class Estatisticas extends Component {
             <View style={styles.container}>
               <Chart
                 style={styles.chart}
-                data={data}
-                verticalGridStep={7}
+                data={[
+                    [0, 1],
+                    [1, 3],
+                    [3, 7],
+                    [4, 9],
+                ]}
                 type="line"
               />
             </View>
