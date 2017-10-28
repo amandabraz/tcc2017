@@ -104,7 +104,6 @@ class Estatisticas extends Component {
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
