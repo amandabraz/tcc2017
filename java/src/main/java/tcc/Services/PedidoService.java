@@ -12,6 +12,8 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -178,11 +180,24 @@ public class PedidoService {
     }
 
     @Transactional
-    public List<QuantidadeVendidaCliente> qtdVendidaCliente(Long vendedorId) {
+    public List<QuantidadeVendidaCliente> qtdVendidaCliente(Long vendedorId, Boolean data) {
         try {
-            return (List<QuantidadeVendidaCliente>) pedidoDAO.findByQtdVendidaAndClientes(vendedorId);
+            return (List<QuantidadeVendidaCliente>) pedidoDAO.findByQtdVendidaAndClientes(vendedorId, buscaData(data));
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    private Date buscaData (Boolean m){
+        new Date();
+        Date referenceDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(referenceDate);
+        if(m == true){
+            c.add(Calendar.MONTH, -1);
+        } else {
+            c.add(Calendar.DAY_OF_WEEK, -7);
+        }
+        return c.getTime();
     }
 }

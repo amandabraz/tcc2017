@@ -53,8 +53,11 @@ class HomeVendedor extends Component {
           }
         },
         refreshing: false,
+        informacoes: [],
+        data: true
     };
     this.buscaDadosPedido();
+    this.buscaInformacoes();
   };
 
   buscaDadosPedido() {
@@ -76,6 +79,15 @@ class HomeVendedor extends Component {
       }});
   };
 
+  buscaInformacoes(){
+    fetch(constante.ENDPOINT+'pedido/qtd/ncliente/vendedor/' + this.state.vendedorId + this.state.data, {method: 'GET'})
+    .then((response) => response.json())
+      .then((responseJson) => {
+          if (!responseJson.errorMessage) {
+          this.setState({informacoes: responseJson});
+      }});
+  }
+
   componentWillMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
@@ -92,8 +104,10 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({pedidoSolicitado: []})
+          this.setState({informacoes: []})
           this.buscaDadosPedido();
           this.pedidoSolicitado();
+          this.buscaInformacoes();
         } else {
           Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
@@ -126,6 +140,7 @@ class HomeVendedor extends Component {
 
   pedidoSolicitado(){
     var views = [];
+  if(this.state.pedidoSolicitado.id){
     views.push(
     <View key={1} style={styles.oneResult}>
       <View style={{flexDirection: 'row'}}>
@@ -178,43 +193,62 @@ class HomeVendedor extends Component {
         </View>
      </View>
    </View>
- )
+ )}
   return views;
 }
 
 resumoVendas(){
   var views = [];
-  views.push(
-  <View key={1} style={styles.oneResultResumo}>
-  <Switch/>
-  <View style={{flexDirection: 'row', height: '30%'}}>
-    <View style={{width: '50%'}}>
-    <Text>
-    Clientes
-    </Text>
-    <Image source={require('./img/iconp.png')}/>
+  var qtdProdutos = 0;
+  var cliente = 0;
+  var total = 0;
+  if(this.state.informacoes.length > 0){
+    for (i in this.state.informacoes) {
+      let prod = this.state.informacoes[i];
+      qtdProdutos = prod[0] + ' '
+      cliente = prod[1] + ' '
+      total = prod[2]
+      views.push(
+        <View key={1} style={styles.oneResultResumo}>
+          <Switch
+            onValueChange = {(value) => console.log(value) }/>
+        <View style={{flexDirection: 'row', height: '30%'}}>
+        <View style={{width: '50%', alignItems: 'center'}}>
+          <Text style={{fontSize: 14, alignSelf: 'center'}}>
+            <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
+              {cliente}
+            </Text>
+              Clientes conquistados
+            </Text>
+          <Image source={require('./img/iconp.png')}/>
+       </View>
+       <View style={{width: '50%', alignItems: 'center'}}>
+       <Text style={{fontSize: 14, alignSelf: 'center'}}>
+        <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
+          {qtdProdutos}
+        </Text>
+            Produtos vendidos
+        </Text>
+        <Image source={require('./img/iconf.png')}/>
+      </View>
+      </View>
+      <View style={{flexDirection: 'row', height: '60%', alignItems:'center'}}>
+        <View style={{width: '50%'}}>
+          <Image source={require('./img/carteira2.png')}/>
+        </View>
+        <View style={{width: '50%', alignItems: 'center'}}>
+          <Text style={{fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: 'cadetblue'}}>
+            {total}
+          </Text>
+          <Text style={{fontSize: 18, alignSelf: 'center'}}>
+             Reais
+          </Text>
+        </View>
     </View>
-    <View style={{width: '50%'}}>
-    <Text>
-    Produtos
-    </Text>
-    <Image source={require('./img/iconf.png')}/>
-    </View>
-  </View>
-  <View style={{flexDirection: 'row', height: '60%', alignItems:'center'}}>
-  <View style={{width: '50%'}}>
-  <Image source={require('./img/carteira2.png')}/>
-  </View>
-  <View style={{width: '50%', alignItems: 'center'}}>
-  <Text>
-  Total
-  </Text>
-  </View>
-
-  </View>
- </View>
-)
-return views;
+   </View>
+  )}
+ }
+ return views;
 }
 
 render() {
@@ -231,12 +265,12 @@ render() {
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
-              <View style={{ height:'38%'}}>
-                {this.pedidoSolicitado()}
-              </View>
-              <View style={{ height:'50%'}}>
-                {this.resumoVendas()}
-              </View>
+                <View style={{ height:'38%'}}>
+                  {this.pedidoSolicitado()}
+                </View>
+                <View style={{ height:'50%'}}>
+                  {this.resumoVendas()}
+                </View>
             </View>
            <Popup ref={popup => this.popup = popup }/>
         </View>

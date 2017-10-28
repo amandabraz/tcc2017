@@ -180,10 +180,11 @@ public class PedidoController {
     }
 
     @Transactional
-    @RequestMapping(value = "qtd/ncliente/vendedor/{vendedorId}", method = RequestMethod.GET)
-    public ResponseEntity qtdVendidaCliente(@PathVariable("vendedorId") Long vendedorId) {
+    @RequestMapping(value = "qtd/ncliente/vendedor/{vendedorId}/{data}", method = RequestMethod.GET)
+    public ResponseEntity qtdVendidaCliente(@PathVariable("vendedorId") Long vendedorId,
+                                            @PathVariable("data") Boolean data) {
         try {
-            List<QuantidadeVendidaCliente> pedidos = pedidoService.qtdVendidaCliente(vendedorId);
+            List<QuantidadeVendidaCliente> pedidos = pedidoService.qtdVendidaCliente(vendedorId, data);
             if (CollectionUtils.isEmpty(pedidos)) {
                 return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
             }

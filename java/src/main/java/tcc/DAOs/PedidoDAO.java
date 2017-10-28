@@ -2,9 +2,11 @@ package tcc.DAOs;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.Models.Cliente;
 import tcc.Models.Pedido;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PedidoDAO extends CrudRepository<Pedido, Long>{
@@ -41,10 +43,11 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
 
-    @Query(value = "SELECT SUM(pedido.quantidade) as qtd_vendida, COUNT(DISTINCT pedido.fk_cliente) as n_clientes from pedido\n" +
+    @Query(value = "SELECT SUM(pedido.quantidade) as qtd_vendida, COUNT(DISTINCT pedido.fk_cliente) as n_clientes, ROUND(SUM(pedido.valor_compra), 2) as valor from pedido\n" +
             "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
             "WHERE produto.fk_vendedor = ?1 \n"+
-            "AND pedido.status != 'Recusado' AND pedido.status != 'Cancelado'\n", nativeQuery = true)
-    List<?> findByQtdVendidaAndClientes(long vendedorId);
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
+    List<?> findByQtdVendidaAndClientes(long vendedorId, Date data);
 
 }
