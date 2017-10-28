@@ -2,6 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
+  Animated,
   AppRegistry,
   Dimensions,
   RefreshControl,
@@ -25,29 +26,10 @@ class Estatisticas extends Component {
         userId: this.props.navigation.state.params.userId,
         vendedorId: this.props.navigation.state.params.vendedorId,
         quantidadeVendida: [],
+        produtoVendido: [],
         refreshing: false,
     };
-    this.buscaDadosPedido();
     this.buscaQuantidadeVendida();
-  };
-
-  buscaDadosPedido() {
-    fetch(constante.ENDPOINT+'pedido/'+ 'Solicitado' + '/vendedor/' + this.state.vendedorId, {method: 'GET'})
-    .then((response) => response.json())
-      .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-            this.setState({pedidoSolicitado: responseJson});
-
-            if (responseJson.cliente.usuario.imagemPerfil) {
-              this.setState({imagemCliente: {uri: responseJson.cliente.usuario.imagemPerfil }})
-            }
-            if (responseJson.produto.imagemPrincipal) {
-              this.setState({imagemProduto:{ uri: responseJson.produto.imagemPrincipal }})
-            }
-            var dataNormal = new Date(responseJson.dataSolicitada);
-            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
-            this.setState({dataSolicitada: dataS})
-      }});
   };
 
   buscaQuantidadeVendida() {
@@ -56,10 +38,41 @@ class Estatisticas extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({quantidadeVendida: responseJson});
+          this.setState({produtoVendido: responseJson})
         }
         this.setState({refreshing:false});
     });
   };
+
+
+  produtosVendidosVendedor(){
+    if(this.state.quantidadeVendida.length > 0){
+      return(
+      <View key={i} style={styles.container}>
+        <View style={[styles.bar, styles.points, {width: this.state.quantidadeVendida.length}]}/>
+        <Chart
+          style = {styles.chart}
+          data = {
+              this.state.quantidadeVendida
+          }
+          type = "bar"
+          verticalGridStep={4}
+          widthPercent = {0.5}
+          heightPercent = {0.5}
+        />
+      </View>
+      )
+    } else {
+      return(
+        <View key={0} style={{alignItems: 'center'}}>
+        <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+          Não há produtos vendidos para estatísticas.
+        </Text>
+        </View>
+      )
+    }
+  }
+
 
   render() {
     const titleConfig = {
@@ -78,8 +91,8 @@ class Estatisticas extends Component {
                 refreshing={this.state.refreshing}
                 onRefresh={() => {
                   this.setState({refreshing:true});
-                  this.buscaDadosPedido();
                   this.buscaQuantidadeVendida();
+                  this.produtosVendidosVendedor();
                 }}
               />
             }>
@@ -87,18 +100,7 @@ class Estatisticas extends Component {
               <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#0000CD', fontWeight: 'bold'}}>
                 Produtos mais vendidos do mês
               </Text>
-            </View>
-            <View style={styles.container}>
-              <Chart
-                style={styles.chart}
-                data={[
-                    [0, 1],
-                    [1, 3],
-                    [3, 7],
-                    [4, 9],
-                ]}
-                type="line"
-              />
+              {this.produtosVendidosVendedor()}
             </View>
           </ScrollView>
       </View>
@@ -108,6 +110,7 @@ class Estatisticas extends Component {
 
 const styles = StyleSheet.create({
     container: {
+        width,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -115,8 +118,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     chart: {
-        width: 200,
-        height: 200,
+        width: 350,
+        height: 350,
+    },
+    produtosV:{
+      margin: 6,
+      padding: 10,
+      borderWidth: 1,
+      borderRadius: 10,
+      borderColor: '#fff',
+      width: '98%'
     },
 });
 

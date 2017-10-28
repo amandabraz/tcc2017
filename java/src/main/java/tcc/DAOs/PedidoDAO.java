@@ -37,7 +37,7 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
     @Query(value = "SELECT produto.nome, SUM(pedido.quantidade) as qtd_vendida from pedido\n" +
             "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
             "WHERE produto.fk_vendedor = ?1 \n"+
-            "AND pedido.status = 'Solicitado' OR pedido.status = 'Confirmado' OR pedido.status = 'Finalizado'\n" +
+            "AND pedido.status != 'Recusado' AND pedido.status != 'Cancelado'\n" +
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
 }
