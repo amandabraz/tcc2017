@@ -13,14 +13,14 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   Animated,
-  RefreshControl,
-  Switch
+  RefreshControl
 } from 'react-native';
 import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
+import Switch from 'react-native-customisable-switch';
 import * as constante from '../../constantes';
 
 const { width, height } = Dimensions.get("window");
@@ -53,8 +53,9 @@ class HomeVendedor extends Component {
           }
         },
         refreshing: false,
-        informacoes: [],
-        data: true
+        informacoes: '',
+        filtroMensal: true,
+        alturaPedido: '1%'
     };
     this.buscaDadosPedido();
     this.buscaInformacoes();
@@ -66,7 +67,7 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
             this.setState({pedidoSolicitado: responseJson});
-
+            this.setState({alturaPedido: '38%'});
             if (responseJson.cliente.usuario.imagemPerfil) {
               this.setState({imagemCliente: {uri: responseJson.cliente.usuario.imagemPerfil }})
             }
@@ -80,7 +81,7 @@ class HomeVendedor extends Component {
   };
 
   buscaInformacoes(){
-    fetch(constante.ENDPOINT+'pedido/qtd/ncliente/vendedor/' + this.state.vendedorId + this.state.data, {method: 'GET'})
+    fetch(constante.ENDPOINT+'pedido/qtd/ncliente/vendedor/' + this.state.vendedorId + '/' + this.state.filtroMensal, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -138,7 +139,8 @@ class HomeVendedor extends Component {
       });
   }
 
-  pedidoSolicitado(){
+
+pedidoSolicitado(){
     var views = [];
   if(this.state.pedidoSolicitado.id){
     views.push(
@@ -197,59 +199,11 @@ class HomeVendedor extends Component {
   return views;
 }
 
-resumoVendas(){
-  var views = [];
-  var qtdProdutos = 0;
-  var cliente = 0;
-  var total = 0;
-  if(this.state.informacoes.length > 0){
-    for (i in this.state.informacoes) {
-      let prod = this.state.informacoes[i];
-      qtdProdutos = prod[0] + ' '
-      cliente = prod[1] + ' '
-      total = prod[2]
-      views.push(
-        <View key={1} style={styles.oneResultResumo}>
-          <Switch
-            onValueChange = {(value) => console.log(value) }/>
-        <View style={{flexDirection: 'row', height: '30%'}}>
-        <View style={{width: '50%', alignItems: 'center'}}>
-          <Text style={{fontSize: 14, alignSelf: 'center'}}>
-            <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
-              {cliente}
-            </Text>
-              Clientes conquistados
-            </Text>
-          <Image source={require('./img/iconp.png')}/>
-       </View>
-       <View style={{width: '50%', alignItems: 'center'}}>
-       <Text style={{fontSize: 14, alignSelf: 'center'}}>
-        <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
-          {qtdProdutos}
-        </Text>
-            Produtos vendidos
-        </Text>
-        <Image source={require('./img/iconf.png')}/>
-      </View>
-      </View>
-      <View style={{flexDirection: 'row', height: '60%', alignItems:'center'}}>
-        <View style={{width: '50%'}}>
-          <Image source={require('./img/carteira2.png')}/>
-        </View>
-        <View style={{width: '50%', alignItems: 'center'}}>
-          <Text style={{fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: 'cadetblue'}}>
-            {total}
-          </Text>
-          <Text style={{fontSize: 18, alignSelf: 'center'}}>
-             Reais
-          </Text>
-        </View>
-    </View>
-   </View>
-  )}
- }
- return views;
-}
+  escolherData(value) {
+    value =!this.state.filtroMensal;
+     this.setState({filtroMensal: value});
+    this.buscaInformacoes();
+  }
 
 render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
@@ -265,11 +219,61 @@ render() {
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
-                <View style={{ height:'38%'}}>
+                <View style={{height: this.state.alturaPedido}}>
                   {this.pedidoSolicitado()}
                 </View>
-                <View style={{ height:'50%'}}>
-                  {this.resumoVendas()}
+                <View style={{height:'50%'}}>
+                <View style={styles.oneResultResumo}>
+                <View style={{alignItems: 'flex-end'}}>
+                  <View style={{flexDirection: 'row'}}>
+                      <Text style={{fontSize: 12, padding: 5, alignSelf: 'center'}}>
+                        Semanal
+                      </Text>
+                      <Switch value = {this.state.filtroMensal}
+                              onChangeValue = {(value) => this.escolherData(value)}
+                              switchWidth = {40}
+                              switchHeight = {18}
+                              buttonWidth = {16}
+                              buttonHeight = {16}/>
+                      <Text style={{fontSize: 12, paddingLeft: 5, alignSelf: 'center'}}>
+                         Mensal
+                      </Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row', height: '30%'}}>
+                <View style={{width: '50%', alignItems: 'center'}}>
+                  <Text style={{fontSize: 14, alignSelf: 'center'}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
+                      {this.state.informacoes.numeroClientes + ' '}
+                    </Text>
+                       Clientes conquistados
+                    </Text>
+                  <Image source={require('./img/iconp.png')}/>
+               </View>
+               <View style={{width: '50%', alignItems: 'center'}}>
+               <Text style={{fontSize: 14, alignSelf: 'center'}}>
+                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
+                  {this.state.informacoes.quantidadeVendida + ' '}
+                </Text>
+                     Produtos vendidos
+                </Text>
+                <Image source={require('./img/iconf.png')}/>
+              </View>
+              </View>
+              <View style={{flexDirection: 'row', height: '60%', alignItems:'center'}}>
+                <View style={{width: '50%'}}>
+                  <Image source={require('./img/carteira2.png')}/>
+                </View>
+                <View style={{width: '50%', alignItems: 'center'}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: 'cadetblue'}}>
+                    R$ {this.state.informacoes.valorRecebido}
+                  </Text>
+                  <Text style={{fontSize: 18, alignSelf: 'center'}}>
+                     Reais obtidos
+                  </Text>
+                </View>
+            </View>
+           </View>
                 </View>
             </View>
            <Popup ref={popup => this.popup = popup }/>

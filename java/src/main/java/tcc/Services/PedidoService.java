@@ -180,20 +180,42 @@ public class PedidoService {
     }
 
     @Transactional
-    public List<QuantidadeVendidaCliente> qtdVendidaCliente(Long vendedorId, Boolean data) {
+    public QuantidadeVendidaCliente qtdVendidaCliente(Long vendedorId, Boolean filtroMensal) {
         try {
-            return (List<QuantidadeVendidaCliente>) pedidoDAO.findByQtdVendidaAndClientes(vendedorId, buscaData(data));
+                QuantidadeVendidaCliente quantidadeVendidaCliente  = new QuantidadeVendidaCliente();
+                Integer qtd = pedidoDAO.findByQtdVendida(vendedorId, buscaData(filtroMensal));
+                 if(qtd == null) {
+                        quantidadeVendidaCliente.setQuantidadeVendida(0);
+                    } else {
+                        quantidadeVendidaCliente.setQuantidadeVendida(qtd);
+                    }
+
+                int cliente = pedidoDAO.findByQtdClientes(vendedorId, buscaData(filtroMensal));
+                 if(cliente == 0){
+                     quantidadeVendidaCliente.setNumeroClientes(0);
+                 } else {
+                     quantidadeVendidaCliente.setNumeroClientes(cliente);
+                 }
+
+                Float total = pedidoDAO.findByQtdTotal(vendedorId, buscaData(filtroMensal));
+                 if(total == null) {
+                     quantidadeVendidaCliente.setValorRecebido(0);
+                 } else {
+                     quantidadeVendidaCliente.setValorRecebido(total);
+                 }
+
+            return quantidadeVendidaCliente;
         } catch (Exception e) {
             throw e;
         }
     }
 
-    private Date buscaData (Boolean m){
+    private Date buscaData (Boolean filtroMensal){
         new Date();
         Date referenceDate = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(referenceDate);
-        if(m == true){
+        if(filtroMensal == true){
             c.add(Calendar.MONTH, -1);
         } else {
             c.add(Calendar.DAY_OF_WEEK, -7);

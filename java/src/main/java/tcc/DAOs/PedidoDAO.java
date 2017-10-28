@@ -43,11 +43,25 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
 
-    @Query(value = "SELECT SUM(pedido.quantidade) as qtd_vendida, COUNT(DISTINCT pedido.fk_cliente) as n_clientes, ROUND(SUM(pedido.valor_compra), 2) as valor from pedido\n" +
+    @Query(value = "SELECT SUM(pedido.quantidade) as qtd_vendida from pedido\n" +
             "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
             "WHERE produto.fk_vendedor = ?1 \n"+
             "AND pedido.data_finalizacao >= ?2 \n" +
             "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
-    List<?> findByQtdVendidaAndClientes(long vendedorId, Date data);
+    Integer findByQtdVendida(long vendedorId, Date filtroMensal);
+
+    @Query(value = "SELECT COUNT(DISTINCT pedido.fk_cliente) as n_clientes from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
+    int findByQtdClientes(long vendedorId, Date filtroMensal);
+
+    @Query(value = "SELECT ROUND(SUM(pedido.valor_compra), 2) as valor from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
+    Float findByQtdTotal(long vendedorId, Date filtroMensal);
 
 }
