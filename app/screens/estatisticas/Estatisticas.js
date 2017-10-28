@@ -91,7 +91,7 @@ class Estatisticas extends Component {
                 }}
               />
             }>
-            <View style = {{margin: 5, alignItems: 'center', flexDirection: 'column', alignContent: 'space-between'}}>
+            <View style = {{margin: 10, flexDirection: 'column', marginTop: 15}}>
               <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#0000CD', fontWeight: 'bold'}}>
                 Produtos mais vendidos do mês
               </Text>
@@ -100,7 +100,7 @@ class Estatisticas extends Component {
               <Chart
                 style={styles.chart}
                 data={data}
-                verticalGridStep={5}
+                verticalGridStep={7}
                 type="line"
               />
             </View>
