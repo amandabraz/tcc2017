@@ -59,6 +59,8 @@ class Estatisticas extends Component {
           verticalGridStep={4}
           widthPercent = {0.5}
           heightPercent = {0.5}
+          showDataPoint={true}
+          visibleYRange={[0,30]}
         />
       </View>
       )
@@ -120,6 +122,7 @@ const styles = StyleSheet.create({
     chart: {
         width: 350,
         height: 350,
+        flex:1,
     },
     produtosV:{
       margin: 6,
