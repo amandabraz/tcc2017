@@ -40,4 +40,14 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "AND pedido.status = 'Solicitado' OR pedido.status = 'Confirmado' OR pedido.status = 'Finalizado'\n" +
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
+
+    @Query(value = "SELECT SUM(nota) from pedido WHERE fk_produto = ?1",
+            countQuery = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            countName = "countSelectSomaNotasPorProduto",
+            nativeQuery = true)
+    long selectSomaNotasPorProduto(long produtoId);
+
+    @Query(value = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            nativeQuery = true)
+    long countNotasPorProduto(long produtoId);
 }
