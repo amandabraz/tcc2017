@@ -84,7 +84,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.tcc2017"
@@ -95,6 +95,8 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [onesignal_app_id: "97d7d9f6-b2b5-419d-a7c9-1365810b26bb",
+                                onesignal_google_project_number: "REMOTE"]
     }
     splits {
         abi {
@@ -126,6 +128,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-onesignal')
     compile project(':react-native-alerts')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-camera')
