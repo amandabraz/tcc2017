@@ -89,8 +89,16 @@ class PedidosSolicitadosCliente extends Component {
 pedidoSolicitado(){
   var views = [];
   if(this.state.pedidosSolicitados.length > 0){
-    for (i in this.state.pedidosSolicitados){
+    for (i in this.state.pedidosSolicitados) {
+      let imagemPrincipalV = require('./img/camera11.jpg');     
+      let imagemPrincipalP = require('./img/camera11.jpg');            
       let pedidoS = this.state.pedidosSolicitados[i];
+      if (pedidoS.produto.vendedor.usuario.imagemPerfil) {
+        imagemPrincipalV = {uri: pedidoS.produto.vendedor.usuario.imagemPerfil};
+      }
+      if (pedidoS.produto.imagemPrincipal) {
+        imagemPrincipalP = { uri: pedidoS.produto.imagemPrincipal };
+      }
       let data = new Date(pedidoS.dataSolicitada);
       let dataSolicitada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
       views.push(
@@ -98,7 +106,7 @@ pedidoSolicitado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
-              <Image source={{uri: pedidoS.produto.vendedor.usuario.imagemPerfil}}
+              <Image source={imagemPrincipalV}
                   style={styles.imagemPrincipal}/>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
@@ -114,7 +122,7 @@ pedidoSolicitado(){
           <View style={{paddingTop: 15}}>
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
           <View style = {{ width: '20%'}}>
-          <Image source={{uri: pedidoS.produto.imagemPrincipal}}
+          <Image source={imagemPrincipalP}
                  style={styles.imagemVendedor}/>
           </View>
           <View style={{width: '80%', paddingLeft: 6}}>
@@ -203,16 +211,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
-  },
-  imagemVendedor:{
-    width: 60,
-    height: 60,
-    borderRadius: 100
-  },
-  imagemProduto:{
-    width: '98%',
-    height: 100,
-    borderRadius: 10
   },
   imagemPrincipal:{
     width: '98%',

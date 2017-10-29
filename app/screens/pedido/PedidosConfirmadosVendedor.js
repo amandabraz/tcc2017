@@ -51,8 +51,12 @@ class PedidosConfirmadosVendedor extends Component {
 pedidoConfirmado(){
   var views = [];
   if(this.state.pedidosConfirmados.length > 0){
-    for (i in this.state.pedidosConfirmados){
+    for (i in this.state.pedidosConfirmados) {
+      let imagemPrincipalC = require('./img/camera11.jpg');
       let pedidoC = this.state.pedidosConfirmados[i];
+      if (pedidoC.cliente.usuario.imagemPerfil) {
+        imagemPrincipalC = {uri: pedidoC.cliente.usuario.imagemPerfil};
+      }
       var data = new Date(pedidoC.dataConfirmacao);      
       let dataConfirmado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();      
       views.push(
@@ -60,7 +64,7 @@ pedidoConfirmado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '20%'}}>
-            <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
+            <Image source={imagemPrincipalC}
                   style={styles.imagemPrincipal}/>
             </View>
             <View style={{width: '65%', alignSelf:'center'}}>
@@ -163,16 +167,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
-  },
-  imagemCliente:{
-    width: 60,
-    height: 60,
-    borderRadius: 100
-  },
-  imagemProduto:{
-    width: '98%',
-    height: 100,
-    borderRadius: 10
   },
   imagemPrincipal:{
     width: '98%',
