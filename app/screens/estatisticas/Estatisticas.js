@@ -30,23 +30,15 @@ class Estatisticas extends Component {
         vendedorId: this.props.navigation.state.params.vendedorId,
         quantidadeVendida: [],
         produtoVendido: [],
-        valorTotalPorProduto: [],
+        valorTotalArrecadadoPorProduto: [],
+        nomeProduto: [],
         refreshing: false,
     };
     this.buscaQuantidadeVendida();
+    this.buscaValorArrecadadoPorProduto();
   };
 
-  buscaValorTotalObtidoPorProduto(){
-    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30', {method: 'GET'})
-    .then((response) => response.json())
-      .then((responseJson) => {
-        if (!responseJson.errorMessage) {
-          this.setState({valorTotalPorProduto: responseJson});
-          this.setState({produtoVendido: responseJson})
-        }
-        this.setState({refreshing:false});
-    });
-  }
+  //BUSCA POR UNIDADES VENDIDAS - BAR CHART
 
   buscaQuantidadeVendida() {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
@@ -59,7 +51,6 @@ class Estatisticas extends Component {
         this.setState({refreshing:false});
     });
   };
-
 
   buscaProdutosVendidosVendedor(){
     if(this.state.quantidadeVendida.length > 0){
@@ -91,14 +82,33 @@ class Estatisticas extends Component {
     }
   }
 
-  valorTotalObtidoPorProduto(){
-    if(this.state.valorTotalPorProduto.length > 0){
+  //BUSCA POR VALOR ARRECADADO - PIE CHART
+
+  buscaValorArrecadadoPorProduto(){
+    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30', {method: 'GET'})
+    .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {          
+          let valorTotalArrecadadoPorProdutoResponse = []
+          let nomeProdutoVendidoResponse = []
+          for (let i=0; i<responseJson.length; i++){
+            nomeProdutoVendidoResponse.push(responseJson[i][0])
+            valorTotalArrecadadoPorProdutoResponse.push(responseJson[i][1])
+          }
+          this.setState({valorTotalArrecadadoPorProduto: valorTotalArrecadadoPorProdutoResponse})
+          this.setState({nomeProduto: nomeProdutoVendidoResponse})
+        }
+        this.setState({refreshing:false})
+    });
+  }
+
+  exibeValorArrecadadoPorProduto(){
+    if(this.state.valorTotalArrecadadoPorProduto.length > 0){
       var textDescriptions = []
-      let i = 0;
-      for(produto in this.state.produtoVendido){
+      for(let i = 0; i<this.state.nomeProduto.length; i++){
         textDescriptions.push(
-          <Text style={styles.pieChart_description}>
-            <Text style={{color: colorsForPieChart[i]}}>🌑</Text> produto.nome
+          <Text key={keyOfPieChart+"_desc_"+i} style={styles.pieChart_description}>
+            <Text style={{color: colorsForPieChart[i], fontSize: 20, fontWeight: 'bold'}}>*</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
           </Text>
         )
       }
@@ -106,7 +116,7 @@ class Estatisticas extends Component {
       <View key={keyOfPieChart} style={styles.container}>
         <PieChart
           chart_wh={250}
-          series={this.state.valorTotalPorProduto}
+          series={this.state.valorTotalArrecadadoPorProduto}
           sliceColor={colorsForPieChart}
           doughnut={true}
           coverRadius={0.45}
@@ -147,8 +157,7 @@ class Estatisticas extends Component {
                 onRefresh={() => {
                   this.setState({refreshing:true});
                   this.buscaQuantidadeVendida();
-                  this.produtosVendidosVendedor();
-                  this.valorTotalObtidoPorProduto();
+                  this.buscaValorArrecadadoPorProduto();
                 }}
               />
             }>
@@ -156,13 +165,13 @@ class Estatisticas extends Component {
               <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#0000CD', fontWeight: 'bold'}}>
                 Produtos mais vendidos do mês
               </Text>
-              {this.produtosVendidosVendedor()}
+              {this.buscaProdutosVendidosVendedor()}
             </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
-                Valor total obtido por produto no mês
+                Valor total arrecadado por produto no mês
               </Text>
-              {this.valorTotalObtidoPorProduto()}
+              {this.exibeValorArrecadadoPorProduto()}
             </View>
           </ScrollView>
       </View>
@@ -210,7 +219,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const colorsForPieChart = ['#F44336','#2196F3','#FFEB3B', '#4CAF50', '#FF9800'];
+const colorsForPieChart = ['#F44336','#2196F3','#d1bc0c', '#4CAF50', '#FF9800'];
 
 Estatisticas.defaultProps = { ...Estatisticas };
 
