@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.CustomQueryHelpers.QuantidadePedidos;
+import tcc.CustomQueryHelpers.ValorTotalVendaPedidos;
 import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Avaliacao;
@@ -145,6 +147,20 @@ public class PedidoController {
             return new ResponseEntity <List<QuantidadePedidos>>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @Transactional
+    @RequestMapping(value = "valorTotal/vendedor/{vendedorId}", method = RequestMethod.GET)
+    public ResponseEntity quantidadeVendidaProduto(
+            @PathVariable("vendedorId") Long vendedorId,
+            @RequestParam(required = true, name="lastDays") Integer diasParaBusca) {
+        try {
+            List<ValorTotalVendaPedidos> valorTotalVendaNomeProduto = pedidoService.buscaValorTotalVendaPorProduto(vendedorId, diasParaBusca);
+            return new ResponseEntity<>(valorTotalVendaNomeProduto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar valot total de vendas\n" + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -15,8 +15,11 @@ import {
 import * as constante from '../../constantes';
 import Chart from 'react-native-chart';
 import NavigationBar from 'react-native-navbar';
+import PieChart from 'react-native-pie-chart';
 
 const { width, height } = Dimensions.get("window");
+
+const keyOfPieChart = "pieChart_";
 
 class Estatisticas extends Component {
   constructor(props) {
@@ -27,10 +30,23 @@ class Estatisticas extends Component {
         vendedorId: this.props.navigation.state.params.vendedorId,
         quantidadeVendida: [],
         produtoVendido: [],
+        valorTotalPorProduto: [],
         refreshing: false,
     };
     this.buscaQuantidadeVendida();
   };
+
+  buscaValorTotalObtidoPorProduto(){
+    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30', {method: 'GET'})
+    .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({valorTotalPorProduto: responseJson});
+          this.setState({produtoVendido: responseJson})
+        }
+        this.setState({refreshing:false});
+    });
+  }
 
   buscaQuantidadeVendida() {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
@@ -45,7 +61,7 @@ class Estatisticas extends Component {
   };
 
 
-  produtosVendidosVendedor(){
+  buscaProdutosVendidosVendedor(){
     if(this.state.quantidadeVendida.length > 0){
       return(
       <View key={i} style={styles.container}>
@@ -75,6 +91,43 @@ class Estatisticas extends Component {
     }
   }
 
+  valorTotalObtidoPorProduto(){
+    if(this.state.valorTotalPorProduto.length > 0){
+      var textDescriptions = []
+      let i = 0;
+      for(produto in this.state.produtoVendido){
+        textDescriptions.push(
+          <Text style={styles.pieChart_description}>
+            <Text style={{color: colorsForPieChart[i]}}>🌑</Text> produto.nome
+          </Text>
+        )
+      }
+      return(
+      <View key={keyOfPieChart} style={styles.container}>
+        <PieChart
+          chart_wh={250}
+          series={this.state.valorTotalPorProduto}
+          sliceColor={colorsForPieChart}
+          doughnut={true}
+          coverRadius={0.45}
+          coverFill={'#D9DBDB'}
+        />
+        <View>
+          {textDescriptions}
+        </View>        
+      </View>
+      )
+    } else {
+      return(
+        <View key={keyOfPieChart+0} style={{alignItems: 'center'}}>
+        <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+          Não há valor total de venda para estatísticas.
+        </Text>
+        </View>
+      )
+    }
+  }
+
 
   render() {
     const titleConfig = {
@@ -95,6 +148,7 @@ class Estatisticas extends Component {
                   this.setState({refreshing:true});
                   this.buscaQuantidadeVendida();
                   this.produtosVendidosVendedor();
+                  this.valorTotalObtidoPorProduto();
                 }}
               />
             }>
@@ -103,6 +157,12 @@ class Estatisticas extends Component {
                 Produtos mais vendidos do mês
               </Text>
               {this.produtosVendidosVendedor()}
+            </View>
+            <View style = {styles.pieChart_viewStyle}>
+              <Text style={styles.pieChart_text}>
+                Valor total obtido por produto no mês
+              </Text>
+              {this.valorTotalObtidoPorProduto()}
             </View>
           </ScrollView>
       </View>
@@ -117,7 +177,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        backgroundColor: 'white',
+        backgroundColor: '#D9DBDB',
     },
     chart: {
         width: 350,
@@ -132,7 +192,25 @@ const styles = StyleSheet.create({
       borderColor: '#fff',
       width: '98%'
     },
+    pieChart_text:{
+      marginTop: 8, 
+      fontSize: 16, 
+      justifyContent: 'center', 
+      color: '#406161', 
+      fontWeight: 'bold'
+    },
+    pieChart_viewStyle:{
+      margin: 10, 
+      marginTop: 15
+    },
+    pieChart_description:{
+      marginTop: 8, 
+      fontSize: 14, 
+      justifyContent: 'center'
+    }
 });
+
+const colorsForPieChart = ['#F44336','#2196F3','#FFEB3B', '#4CAF50', '#FF9800'];
 
 Estatisticas.defaultProps = { ...Estatisticas };
 
