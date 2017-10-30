@@ -17,6 +17,7 @@
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-chart": "^1.0.8-beta",
     "react-native-check-box": "^1.0.4",
+    "react-native-customisable-switch": "^0.1.0",
     "react-native-datepicker": "^1.4.7",
     "react-native-elements": "^0.17.0",
     "react-native-flexi-radio-button": "^0.2.1",

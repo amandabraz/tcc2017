@@ -20,8 +20,8 @@ import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
+import Switch from 'react-native-customisable-switch';
 import * as constante from '../../constantes';
-import Chart from 'react-native-chart';
 
 const { width, height } = Dimensions.get("window");
 
@@ -52,11 +52,13 @@ class HomeVendedor extends Component {
             descricao:''
           }
         },
-        quantidadeVendida: [],
-        refreshing: false,              
+        refreshing: false,
+        informacoes: '',
+        filtroMensal: true,
+        alturaPedido: '1%'
     };
     this.buscaDadosPedido();
-    this.buscaQuantidadeVendida();
+    this.buscaInformacoes();
   };
 
   buscaDadosPedido() {
@@ -65,7 +67,7 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
             this.setState({pedidoSolicitado: responseJson});
-
+            this.setState({alturaPedido: '38%'});
             if (responseJson.cliente.usuario.imagemPerfil) {
               this.setState({imagemCliente: {uri: responseJson.cliente.usuario.imagemPerfil }})
             }
@@ -78,16 +80,14 @@ class HomeVendedor extends Component {
       }});
   };
 
-  buscaQuantidadeVendida() {
-    fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
+  buscaInformacoes(){
+    fetch(constante.ENDPOINT+'pedido/qtd/ncliente/vendedor/' + this.state.vendedorId + '/' + this.state.filtroMensal, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
-        if (!responseJson.errorMessage) {
-          this.setState({quantidadeVendida: responseJson});
-        }
-        this.setState({refreshing:false});        
-    });
-  };
+          if (!responseJson.errorMessage) {
+          this.setState({informacoes: responseJson});
+      }});
+  }
 
   componentWillMount() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -105,9 +105,10 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({pedidoSolicitado: []})
+          this.setState({informacoes: []})
           this.buscaDadosPedido();
           this.pedidoSolicitado();
-          this.produtosVendidos();
+          this.buscaInformacoes();
         } else {
           Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
@@ -138,9 +139,10 @@ class HomeVendedor extends Component {
       });
   }
 
-  pedidoSolicitado(){
+
+pedidoSolicitado(){
     var views = [];
-    if(this.state.pedidoSolicitado.id){
+  if(this.state.pedidoSolicitado.id){
     views.push(
     <View key={1} style={styles.oneResult}>
       <View style={{flexDirection: 'row'}}>
@@ -172,20 +174,18 @@ class HomeVendedor extends Component {
             </Text>
 
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', margin: 5, paddingTop:10}}>
+          <View style={{flexDirection: 'row', paddingTop:10}}>
 
           <Button title ="Recusar"
                   color="#fff"
                   backgroundColor="#88557B"
                   borderRadius={10}
-                  onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}
-                  buttonStyle={{width: '40%'}}/>
+                  onPress = {() =>this.cancelarPedido(this.state.pedidoSolicitado)}/>
 
-          <Button title="Aceitar"
+          <Button title=" Aceitar "
                   color="#fff"
                   backgroundColor="#768888"
                   borderRadius={10}
-                  buttonStyle={{width: '40%'}}
                   onPress={() => {
                          this.state.pedidoSolicitado.status = "Confirmado";
                          this.atualizaStatus(this.state.pedidoSolicitado);
@@ -195,48 +195,17 @@ class HomeVendedor extends Component {
         </View>
      </View>
    </View>
- )} else {
-    views.push(
-      <View key={0} style={{padding: 10, margin: 10, height:80}}>
-      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-        Você não tem nova solicitação! :(
-      </Text>
-      </View>
-  )}
-
-   return views;
+ )}
+  return views;
 }
 
-produtosVendidos(){
-  var views = [];
-  if(this.state.quantidadeVendida.length > 0){
-    for(i in this.state.quantidadeVendida){
-      let prodQtdVendido = this.state.quantidadeVendida[i];
-  views.push(
-  <View key={i} style={styles.produtosV}>
-    <Animated.View style={[styles.bar, styles.points, {width: prodQtdVendido[1]}]}/>
-    <Text style={{fontSize: 7, justifyContent: 'center'}}>
-      {prodQtdVendido[1]}
-    </Text>
-    <Text style={{fontSize: 12, justifyContent: 'center'}}>
-      {prodQtdVendido[0]}
-    </Text>
- </View>
-)}} else {
-    views.push(
-      <View key={0} style={{alignItems: 'center'}}>
-      <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-        Você não tem produtos vendidos! :(
-      </Text>
-      </View>
-    )
+  escolherData(value) {
+    value =!this.state.filtroMensal;
+     this.setState({filtroMensal: value});
+    this.buscaInformacoes();
   }
 
- return views;
-}
-
-
-  render() {
+render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(<LocalizacaoNaoPermitida
         screenName={this.state.screenName}
@@ -250,24 +219,62 @@ produtosVendidos(){
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
-              <ScrollView refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={() => {
-                      this.setState({refreshing:true});
-                      this.buscaDadosPedido();
-                      this.buscaQuantidadeVendida();
-                    }}
-                  />
-                }>
-                {this.pedidoSolicitado()}
-                <View style={{paddingTop: 25}}>
-                  <Text style={{marginLeft: 10, fontSize: 16}}>
-                    Seus Produtos Vendidos:
-                  </Text>
-                  {this.produtosVendidos()}
+                <View style={{height: this.state.alturaPedido}}>
+                  {this.pedidoSolicitado()}
                 </View>
-              </ScrollView>
+                <View style={{height:'50%'}}>
+                <View style={styles.oneResultResumo}>
+                <View style={{alignItems: 'flex-end'}}>
+                  <View style={{flexDirection: 'row'}}>
+                      <Text style={{fontSize: 12, padding: 5, alignSelf: 'center'}}>
+                        Semanal
+                      </Text>
+                      <Switch value = {this.state.filtroMensal}
+                              onChangeValue = {(value) => this.escolherData(value)}
+                              switchWidth = {40}
+                              switchHeight = {18}
+                              buttonWidth = {16}
+                              buttonHeight = {16}/>
+                      <Text style={{fontSize: 12, paddingLeft: 5, alignSelf: 'center'}}>
+                         Mensal
+                      </Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row', height: '30%'}}>
+                <View style={{width: '50%', alignItems: 'center'}}>
+                  <Text style={{fontSize: 14, alignSelf: 'center'}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
+                      {this.state.informacoes.numeroClientes + ' '}
+                    </Text>
+                       Clientes conquistados
+                    </Text>
+                  <Image source={require('./img/iconp.png')}/>
+               </View>
+               <View style={{width: '50%', alignItems: 'center'}}>
+               <Text style={{fontSize: 14, alignSelf: 'center'}}>
+                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
+                  {this.state.informacoes.quantidadeVendida + ' '}
+                </Text>
+                     Produtos vendidos
+                </Text>
+                <Image source={require('./img/iconf.png')}/>
+              </View>
+              </View>
+              <View style={{flexDirection: 'row', height: '60%', alignItems:'center'}}>
+                <View style={{width: '50%'}}>
+                  <Image source={require('./img/carteira2.png')}/>
+                </View>
+                <View style={{width: '50%', alignItems: 'center'}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: 'cadetblue'}}>
+                    R$ {this.state.informacoes.valorRecebido}
+                  </Text>
+                  <Text style={{fontSize: 18, alignSelf: 'center'}}>
+                     Reais obtidos
+                  </Text>
+                </View>
+            </View>
+           </View>
+                </View>
             </View>
            <Popup ref={popup => this.popup = popup }/>
         </View>
@@ -285,8 +292,7 @@ const titleConfig = {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flexDirection: 'column',
-    alignContent: 'space-between'
+    height: '100%'
   },
   bar: {
     borderRadius: 5,
@@ -303,7 +309,8 @@ const styles = StyleSheet.create({
      borderColor: '#fff',
      padding: 10,
      margin: 10,
-     width: '98%'
+     width: '98%',
+     height: '98%'
   },
   produtosV:{
     margin: 6,
@@ -336,9 +343,20 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 100
   },
+  oneResultResumo:{
+     flexDirection: 'column',
+     backgroundColor: 'rgba(255, 255, 255, 0.55)',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 10,
+     width: '98%',
+     height: '100%'
+  },
   imagemProduto:{
     width: '98%',
-    height: 190,
+    height: '98%',
     borderRadius: 10
   }
 });
