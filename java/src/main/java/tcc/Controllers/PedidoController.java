@@ -155,7 +155,7 @@ public class PedidoController {
             List<Object> valorTotalVendaNomeProduto = pedidoService.buscaValorTotalVendaPorProduto(vendedorId, diasParaBusca, quantidadeMaxProdutos);
             return new ResponseEntity<>(valorTotalVendaNomeProduto, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError("Erro ao buscar valot total de vendas\n" + e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CustomError("Erro ao buscar valor total de vendas\n" + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
