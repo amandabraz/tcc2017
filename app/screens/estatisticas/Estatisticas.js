@@ -122,7 +122,7 @@ class Estatisticas extends Component {
           coverRadius={0.45}
           coverFill={'#D9DBDB'}
         />
-        <View style={{flexDirection: 'row'}}>
+        <View style={styles.pieChart_textAlign}>
           {textDescriptions}
         </View>        
       </View>
@@ -216,10 +216,16 @@ const styles = StyleSheet.create({
       marginTop: 8, 
       fontSize: 14, 
       justifyContent: 'center'
+    },
+    pieChart_textAlign:{
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center', 
+      justifyContent: 'center'
     }
 });
 
-const colorsForPieChart = ['#F44336','#2196F3','#d1bc0c', '#4CAF50', '#FF9800'];
+const colorsForPieChart = ['#F44336','#2196F3','#d1bc0c', '#4CAF50', '#Fd720f', '#776567'];
 
 Estatisticas.defaultProps = { ...Estatisticas };
 
