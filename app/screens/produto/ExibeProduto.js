@@ -20,6 +20,7 @@ import * as constante from '../../constantes';
 import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import Rating from 'react-native-rating';
+import StarRating from 'react-native-star-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -38,6 +39,7 @@ export default class ExibeProduto extends Component {
             categoria: {
               descricao: ''
             },
+            score: 0
           },
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
@@ -55,7 +57,7 @@ export default class ExibeProduto extends Component {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
-          dateText: '',
+          dateText: ''
         };
         this.buscaProduto();
     }
@@ -119,8 +121,7 @@ export default class ExibeProduto extends Component {
       userId: this.state.userId});
   };
 
-render() {
-  
+render() {  
   const {goBack} = this.props.navigation;
 
   const images = {
@@ -152,19 +153,12 @@ render() {
                    style={styles.imageResultSearch}/>
           </View>
           <View style={{width: '40%'}}>
-          <Rating
-            onChange={rating => console.log(rating)}
-            initial= {2}
-            editable={false}
-            selectedStar={images.starFilled}
-            unselectedStar={images.starUnfilled}
-            stagger={80}
-            maxScale={1.4}
-            starStyle={{
-              width: 30,
-              height: 30
-            }}
-            />
+          <StarRating
+            disabled={true}
+            maxStars={5}
+            rating={this.state.produto.score}
+            starSize={20}
+            starColor={'#e6b800'}/>
             <Text style={styles.barText}>
               {this.state.produto.nome}
             </Text>
