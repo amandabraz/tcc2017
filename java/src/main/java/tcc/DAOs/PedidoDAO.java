@@ -48,4 +48,14 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "    AND pedido.data_finalizacao BETWEEN DATE_SUB(NOW(), INTERVAL ?2 DAY) and DATE_SUB(NOW(), INTERVAL 0 DAY)\n" +
             "    GROUP BY produto.id_produto;", nativeQuery = true)
     List<?> findByValorTotalVendaPedidos(Long vendedorId, Integer diasParaBusca);
+    
+    @Query(value = "SELECT SUM(nota) from pedido WHERE fk_produto = ?1",
+            countQuery = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            countName = "countSelectSomaNotasPorProduto",
+            nativeQuery = true)
+    long selectSomaNotasPorProduto(long produtoId);
+
+    @Query(value = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            nativeQuery = true)
+    long countNotasPorProduto(long produtoId);
 }
