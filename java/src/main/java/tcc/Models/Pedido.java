@@ -12,7 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -71,8 +70,8 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "FK_PAGAMENTO", nullable = false)
     public Pagamento pagamento;
 
-    @Transient
-    public boolean avaliado;
+    @Column(name = "NOTA", nullable = true)
+    public Integer nota = 0;
 
     public Long getId() {
         return id;
@@ -170,12 +169,12 @@ public class Pedido implements Serializable {
         this.pagamento = pagamento;
     }
 
-    public boolean isAvaliado() {
-        return avaliado;
+    public Integer getNota() {
+        return nota;
     }
 
-    public void setAvaliado(boolean avaliado) {
-        this.avaliado = avaliado;
+    public void setNota(Integer nota) {
+        this.nota = nota;
     }
 
     @Override
@@ -186,6 +185,7 @@ public class Pedido implements Serializable {
         return quantidade == pedido.quantidade &&
                 Float.compare(pedido.valorCompra, valorCompra) == 0 &&
                 deletado == pedido.deletado &&
+                nota == pedido.nota &&
                 Objects.equals(id, pedido.id) &&
                 Objects.equals(status, pedido.status) &&
                 Objects.equals(dataFinalizacao, pedido.dataFinalizacao) &&
@@ -199,7 +199,7 @@ public class Pedido implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento);
+        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota);
     }
 
     @Override
@@ -213,10 +213,11 @@ public class Pedido implements Serializable {
                 ", quantidade=" + quantidade +
                 ", valorCompra=" + valorCompra +
                 ", deletado=" + deletado +
-                ", token=" + token +
+                ", token='" + token + '\'' +
                 ", produto=" + produto +
                 ", cliente=" + cliente +
                 ", pagamento=" + pagamento +
+                ", nota=" + nota +
                 '}';
     }
 
