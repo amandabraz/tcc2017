@@ -14,7 +14,6 @@ import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Pedido;
 import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
-import tcc.Services.AvaliacaoService;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;

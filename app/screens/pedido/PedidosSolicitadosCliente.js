@@ -216,6 +216,11 @@ const styles = StyleSheet.create({
     width: '98%',
     height: 80,
     borderRadius: 10
+  },
+  imagemVendedor:{
+    width: 60,
+    height: 60,
+    borderRadius: 100
   }
 });
 

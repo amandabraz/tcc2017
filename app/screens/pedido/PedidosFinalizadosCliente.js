@@ -187,7 +187,7 @@ pedidoFinalizado(){
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
                 <Image source={imagemPrincipalV}
-                      style={styles.imagemCliente}/>
+                      style={styles.imagemVendedor}/>
               </View>
               <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoF.produto.vendedor.usuario.nome}</Text>
