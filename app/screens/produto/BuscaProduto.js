@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
+  TouchableHighlight,
   View,
   ScrollView
 } from 'react-native';
@@ -153,30 +153,37 @@ export default class BuscaProduto extends Component {
         }
         views.push (
           <View key={i}>
-            <View style={styles.oneResult}>
-              <View style={{width: "25%"}}>
-                <Image source={imagemPrincipal}
-                       style={styles.imageResultSearch}
-                       justifyContent='flex-start'/>
+            <TouchableHighlight 
+              onPress={() => this.onButtonOpenProduct(produto.id)}
+              underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
+            >
+              <View>
+                <View style={styles.oneResult}>
+                  <View style={{width: "25%"}}>
+                    <Image source={imagemPrincipal}
+                          style={styles.imageResultSearch}
+                          justifyContent='flex-start'/>
+                  </View>
+                  <View style={{width: "45%"}}>
+                    <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+                  </View>
+                  <View style={{width: "15%"}} justifyContent='center'>
+                    <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
+                  </View>
+                  <View style={{width: "15%"}}>
+                    <Icon
+                      name='shopping-cart'
+                      type=' material-community'
+                      color='#1C1C1C'
+                      onPress={() => this.onButtonOpenProduct(produto.id)}
+                      style={styles.imageResultSearch} />
+                  </View>
+                </View>
+                <Text>{'\n'}</Text>
               </View>
-              <View style={{width: "45%"}}>
-                <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
-                <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
-              </View>
-              <View style={{width: "15%"}} justifyContent='center'>
-                <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
-              </View>
-              <View style={{width: "15%"}}>
-                <Icon
-                  name='shopping-cart'
-                  type=' material-community'
-                  color='#1C1C1C'
-                  onPress={() => this.onButtonOpenProduct(produto.id)}
-                  style={styles.imageResultSearch} />
-              </View>
-            </View>
-            <Text>{'\n'}</Text>
+            </TouchableHighlight>
           </View>
         );
       }
@@ -187,33 +194,39 @@ export default class BuscaProduto extends Component {
   buscaVendedor() {
     var views = [];
     if (this.state.resultadoPesquisaVendedor.length > 0) {
-      let imagemPerfil = require('./img/camera11.jpg');
       for(i in this.state.resultadoPesquisaVendedor) {
+        let imagemPerfil = require('./img/camera11.jpg');
         let vendedor = this.state.resultadoPesquisaVendedor[i];
         if(vendedor.usuario.imagemPerfil){
           imagemPerfil = {uri: vendedor.usuario.imagemPerfil};
         }
         views.push (
-          <View key={i} style={styles.oneResult}>
-          <View style={{width: "25%"}}>
-            <Image source={imagemPerfil}
-                  style={styles.imageResultSearch}
-                  justifyContent='flex-start'/>
-          </View>
-            <View style={{width: "60%"}}>
-              <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
-            </View>
-          <View style={{width: "15%"}}>
-            <Icon
-              name='person'
-              type=' material-community'
-              color='#1C1C1C'
+          <View key={i}>
+            <TouchableHighlight 
               onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
-              style={styles.imageResultSearch}
-              />
-           </View>
-          <Text>{'\n'}</Text>
+              underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
+            >
+              <View>
+                <View style={styles.oneResult}>
+                  <Image source={imagemPerfil}
+                        style={styles.imageResultSearch}
+                        justifyContent='flex-start'/>
+
+                  <View style={{width: 210, margin: 10}}>
+                    <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
+                  </View>
+                  <Icon
+                    name='person'
+                    type=' material-community'
+                    color='#1C1C1C'
+                    onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
+                    style={styles.imageResultSearch}
+                    />
+                </View>
+                <Text>{'\n'}</Text>
+              </View>
+            </TouchableHighlight>
           </View>
         );
     }
