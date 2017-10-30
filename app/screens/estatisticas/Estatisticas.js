@@ -39,6 +39,7 @@ class Estatisticas extends Component {
   };
 
   //BUSCA POR UNIDADES VENDIDAS - BAR CHART
+
   buscaQuantidadeVendida() {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
     .then((response) => response.json())
@@ -51,26 +52,30 @@ class Estatisticas extends Component {
     });
   };
 
-  produtosVendidos(){
-    var views = [];
+  buscaProdutosVendidosVendedor(){
     if(this.state.quantidadeVendida.length > 0){
-      for(i in this.state.quantidadeVendida){
-        let prodQtdVendido = this.state.quantidadeVendida[i];
-    views.push(
-    <View key={i} style={styles.produtosV}>
-      <Animated.View style={[styles.bar, styles.points, {width: prodQtdVendido[1]}]}/>
-      <Text style={{fontSize: 7, justifyContent: 'center'}}>
-        {prodQtdVendido[1]}
-      </Text>
-      <Text style={{fontSize: 12, justifyContent: 'center'}}>
-        {prodQtdVendido[0]}
-      </Text>
-   </View>
-  )}} else {
-      views.push(
+      return(
+      <View style={styles.container}>
+        <View style={[styles.bar, styles.points, {width: this.state.quantidadeVendida.length}]}/>
+        <Chart
+          style = {styles.chart}
+          data = {
+              this.state.quantidadeVendida
+          }
+          type = "bar"
+          verticalGridStep={4}
+          widthPercent = {0.5}
+          heightPercent = {0.5}
+          showDataPoint={true}
+          visibleYRange={[0,30]}
+        />
+      </View>
+      )
+    } else {
+      return(
         <View key={0} style={{alignItems: 'center'}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Você não tem produtos vendidos! :(
+          Não há produtos vendidos para estatísticas.
         </Text>
         </View>
       )
@@ -156,11 +161,11 @@ class Estatisticas extends Component {
                 }}
               />
             }>
-            <View style={{paddingTop: 25}}>
-              <Text style={{marginLeft: 10, fontSize: 16}}>
-                Seus Produtos Vendidos:
+            <View style = {{margin: 10, flexDirection: 'column', marginTop: 15}}>
+              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#0000CD', fontWeight: 'bold'}}>
+                Produtos mais vendidos do mês
               </Text>
-              {this.produtosVendidos()}
+              {this.buscaProdutosVendidosVendedor()}
             </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
@@ -211,14 +216,6 @@ const styles = StyleSheet.create({
       marginTop: 8,
       fontSize: 14,
       justifyContent: 'center'
-    },
-    bar: {
-      borderRadius: 5,
-      height: 7,
-      marginRight: 5
-    },
-    points: {
-      backgroundColor: '#88557B'
     },
     pieChart_textAlign:{
       flexDirection: 'row',
