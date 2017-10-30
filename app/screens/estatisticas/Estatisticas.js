@@ -85,7 +85,7 @@ class Estatisticas extends Component {
   //BUSCA POR VALOR ARRECADADO - PIE CHART
 
   buscaValorArrecadadoPorProduto(){
-    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30', {method: 'GET'})
+    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30&maxCount=5', {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {          
@@ -108,7 +108,7 @@ class Estatisticas extends Component {
       for(let i = 0; i<this.state.nomeProduto.length; i++){
         textDescriptions.push(
           <Text key={keyOfPieChart+"_desc_"+i} style={styles.pieChart_description}>
-            <Text style={{color: colorsForPieChart[i], fontSize: 20, fontWeight: 'bold'}}>*</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
+            <Text style={{color: colorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
           </Text>
         )
       }
@@ -122,7 +122,7 @@ class Estatisticas extends Component {
           coverRadius={0.45}
           coverFill={'#D9DBDB'}
         />
-        <View>
+        <View style={{flexDirection: 'row'}}>
           {textDescriptions}
         </View>        
       </View>
