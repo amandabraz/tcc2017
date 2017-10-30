@@ -195,24 +195,31 @@ export default class BuscaProduto extends Component {
         let vendedor = this.state.resultadoPesquisaVendedor[i];
         views.push (
           <View key={i}>
-          <View style={styles.oneResult}>
-            <Image source={{ uri: vendedor.usuario.imagemPerfil }}
-                  style={styles.imageResultSearch}
-                  justifyContent='flex-start'/>
-
-            <View style={{width: 210, margin: 10}}>
-              <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
-              <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
-            </View>
-            <Icon
-              name='person'
-              type=' material-community'
-              color='#1C1C1C'
+            <TouchableHighlight 
               onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
-              style={styles.imageResultSearch}
-              />
-          </View>
-          <Text>{'\n'}</Text>
+              underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
+            >
+              <View>
+                <View style={styles.oneResult}>
+                  <Image source={{ uri: vendedor.usuario.imagemPerfil }}
+                        style={styles.imageResultSearch}
+                        justifyContent='flex-start'/>
+
+                  <View style={{width: 210, margin: 10}}>
+                    <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
+                  </View>
+                  <Icon
+                    name='person'
+                    type=' material-community'
+                    color='#1C1C1C'
+                    onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
+                    style={styles.imageResultSearch}
+                    />
+                </View>
+                <Text>{'\n'}</Text>
+              </View>
+            </TouchableHighlight>
           </View>
         );
     }
