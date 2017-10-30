@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from 'react-native';
 import * as constante from '../../constantes';
 import Chart from 'react-native-chart';
