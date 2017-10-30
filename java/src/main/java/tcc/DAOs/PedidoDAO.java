@@ -43,6 +43,16 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
 
+    @Query(value = "SELECT SUM(nota) from pedido WHERE fk_produto = ?1",
+            countQuery = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            countName = "countSelectSomaNotasPorProduto",
+            nativeQuery = true)
+    long selectSomaNotasPorProduto(long produtoId);
+
+    @Query(value = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            nativeQuery = true)
+    long countNotasPorProduto(long produtoId);
+    
     @Query(value = "SELECT SUM(pedido.quantidade) as qtd_vendida from pedido\n" +
             "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
             "WHERE produto.fk_vendedor = ?1 \n"+

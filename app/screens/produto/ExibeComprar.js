@@ -19,7 +19,7 @@ import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header
 import * as constante from '../../constantes';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
-import Rating from 'react-native-rating';
+import StarRating from 'react-native-star-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,6 +37,7 @@ export default class ExibeComprar extends Component {
               nome: '',
               preco: '',
               quantidade: '',
+              score: 0,
               vendedor:{
                 usuario:{
                   nome: ''
@@ -166,10 +167,6 @@ export default class ExibeComprar extends Component {
     }
 
     render() {
-      const images = {
-      starFilled: require('./img/star_filled.png'),
-      starUnfilled: require('./img/star_unfilled.png')
-    }
         return(
             <View style={styles.container}>
               <HeaderImageScrollView
@@ -197,19 +194,14 @@ export default class ExibeComprar extends Component {
                 <Text style={styles.produtoText}>
                   {this.state.produto.nome}
                 </Text>
-                <Rating
-                  onChange={rating => console.log(rating)}
-                  initial= {2}
-                  editable={false}
-                  selectedStar={images.starFilled}
-                  unselectedStar={images.starUnfilled}
-                  stagger={80}
-                  maxScale={1.4}
-                  starStyle={{
-                    width: 30,
-                    height: 30
-                  }}
-                  />
+                <View style={{width: '70%'}}>
+                <StarRating
+                  disabled={true}
+                  maxStars={5}
+                  rating={this.state.produto.score}
+                  starSize={20}
+                  starColor={'#e6b800'}/>
+                  </View>
                 <Text style={styles.quantidadeText}>
                   {this.state.quantidadeDis}
                 </Text>
