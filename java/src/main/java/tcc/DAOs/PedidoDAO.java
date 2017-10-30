@@ -2,9 +2,11 @@ package tcc.DAOs;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.Models.Cliente;
 import tcc.Models.Pedido;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PedidoDAO extends CrudRepository<Pedido, Long>{
@@ -40,4 +42,36 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "AND pedido.status != 'Recusado' AND pedido.status != 'Cancelado'\n" +
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
+
+    @Query(value = "SELECT SUM(nota) from pedido WHERE fk_produto = ?1",
+            countQuery = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            countName = "countSelectSomaNotasPorProduto",
+            nativeQuery = true)
+    long selectSomaNotasPorProduto(long produtoId);
+
+    @Query(value = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+            nativeQuery = true)
+    long countNotasPorProduto(long produtoId);
+    
+    @Query(value = "SELECT SUM(pedido.quantidade) as qtd_vendida from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
+    Integer findByQtdVendida(long vendedorId, Date filtroMensal);
+
+    @Query(value = "SELECT COUNT(DISTINCT pedido.fk_cliente) as n_clientes from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
+    int findByQtdClientes(long vendedorId, Date filtroMensal);
+
+    @Query(value = "SELECT ROUND(SUM(pedido.valor_compra), 2) as valor from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
+    Float findByQtdTotal(long vendedorId, Date filtroMensal);
+
 }
