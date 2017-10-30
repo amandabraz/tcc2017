@@ -2,17 +2,21 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
-import tcc.QuantidadePedidos;
+import tcc.CustomQueryHelpers.QuantidadePedidos;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PedidoService {
@@ -25,6 +29,9 @@ public class PedidoService {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private AvaliacaoService avaliacaoService;
 
     @Transactional
     public Pedido geraPedido(Pedido pedido) throws IOException {
@@ -115,7 +122,15 @@ public class PedidoService {
 
     public List<Pedido> buscaPedidosPorStatusCliente(String status, Long clienteId) {
         try {
-            return pedidoDAO.findByStatusAndClienteIdOrderByDataSolicitadaDesc(status, clienteId);
+            List<Pedido> pedidoList = pedidoDAO.findByStatusAndClienteIdOrderByDataSolicitadaDesc(status, clienteId);
+            for (Pedido pedido : pedidoList) {
+                if (Objects.nonNull(avaliacaoService.buscaAvaliacaoPedido(pedido))) {
+                    pedido.setAvaliado(true);
+                } else {
+                    pedido.setAvaliado(false);
+                }
+            }
+            return pedidoList;
         } catch (Exception e) {
             throw e;
         }
@@ -164,4 +179,47 @@ public class PedidoService {
         }
     }
 
+    @Transactional
+    public QuantidadeVendidaCliente qtdVendidaCliente(Long vendedorId, Boolean filtroMensal) {
+        try {
+                QuantidadeVendidaCliente quantidadeVendidaCliente  = new QuantidadeVendidaCliente();
+                Integer qtd = pedidoDAO.findByQtdVendida(vendedorId, buscaData(filtroMensal));
+                 if(qtd == null) {
+                        quantidadeVendidaCliente.setQuantidadeVendida(0);
+                    } else {
+                        quantidadeVendidaCliente.setQuantidadeVendida(qtd);
+                    }
+
+                int cliente = pedidoDAO.findByQtdClientes(vendedorId, buscaData(filtroMensal));
+                 if(cliente == 0){
+                     quantidadeVendidaCliente.setNumeroClientes(0);
+                 } else {
+                     quantidadeVendidaCliente.setNumeroClientes(cliente);
+                 }
+
+                Float total = pedidoDAO.findByQtdTotal(vendedorId, buscaData(filtroMensal));
+                 if(total == null) {
+                     quantidadeVendidaCliente.setValorRecebido(0);
+                 } else {
+                     quantidadeVendidaCliente.setValorRecebido(total);
+                 }
+
+            return quantidadeVendidaCliente;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private Date buscaData (Boolean filtroMensal){
+        new Date();
+        Date referenceDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(referenceDate);
+        if(filtroMensal == true){
+            c.add(Calendar.MONTH, -1);
+        } else {
+            c.add(Calendar.DAY_OF_WEEK, -7);
+        }
+        return c.getTime();
+    }
 }

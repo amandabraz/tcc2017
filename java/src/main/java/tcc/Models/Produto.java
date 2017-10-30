@@ -83,8 +83,6 @@ public class Produto implements Serializable, Comparable<Produto> {
     @Column(name = "OBSERVACAO")
     private String observacao;
 
-
-    //TODO: implementar logica que calcula o score com base nas avaliacoes dadas
     @Column(name = "SCORE")
     private float score = 0;
 

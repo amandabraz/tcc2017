@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -69,6 +70,9 @@ public class Pedido implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FK_PAGAMENTO", nullable = false)
     public Pagamento pagamento;
+
+    @Transient
+    public boolean avaliado;
 
     public Long getId() {
         return id;
@@ -164,6 +168,14 @@ public class Pedido implements Serializable {
 
     public void setPagamento(Pagamento pagamento) {
         this.pagamento = pagamento;
+    }
+
+    public boolean isAvaliado() {
+        return avaliado;
+    }
+
+    public void setAvaliado(boolean avaliado) {
+        this.avaliado = avaliado;
     }
 
     @Override
