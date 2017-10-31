@@ -10,11 +10,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
-  Animated,
-  ScrollView,
-  Dimensions,
-  RefreshControl
+  View
 } from 'react-native';
 import * as constante from '../../constantes';
 
@@ -43,7 +39,7 @@ class Estatisticas extends Component {
     this.buscaValorArrecadadoPorProduto();
   };
 
-  //BUSCA POR UNIDADES VENDIDAS - BAR CHART 
+  //BUSCA POR UNIDADES VENDIDAS - BAR CHART
   buscaQuantidadeVendida() {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
     .then((response) => response.json())
@@ -88,7 +84,7 @@ class Estatisticas extends Component {
     fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30&maxCount=5', {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
-        if (!responseJson.errorMessage) {          
+        if (!responseJson.errorMessage) {
           let valorTotalArrecadadoPorProdutoResponse = []
           let nomeProdutoVendidoResponse = []
           for (let i=0; i<responseJson.length; i++){
@@ -124,7 +120,7 @@ class Estatisticas extends Component {
         />
         <View style={styles.pieChart_textAlign}>
           {textDescriptions}
-        </View>        
+        </View>
       </View>
       )
     } else {
@@ -166,7 +162,7 @@ class Estatisticas extends Component {
                 Seus Produtos Vendidos:
               </Text>
               {this.produtosVendidos()}
-            </View> 
+            </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
                 Valor total arrecadado por produto no mês
@@ -202,19 +198,19 @@ const styles = StyleSheet.create({
       width: '98%'
     },
     pieChart_text:{
-      marginTop: 8, 
-      fontSize: 16, 
-      justifyContent: 'center', 
-      color: '#406161', 
+      marginTop: 8,
+      fontSize: 16,
+      justifyContent: 'center',
+      color: '#406161',
       fontWeight: 'bold'
     },
     pieChart_viewStyle:{
-      margin: 10, 
+      margin: 10,
       marginTop: 15
     },
     pieChart_description:{
-      marginTop: 8, 
-      fontSize: 14, 
+      marginTop: 8,
+      fontSize: 14,
       justifyContent: 'center'
     },
     bar: {
@@ -228,7 +224,7 @@ const styles = StyleSheet.create({
     pieChart_textAlign:{
       flexDirection: 'row',
       flexWrap: 'wrap',
-      alignItems: 'center', 
+      alignItems: 'center',
       justifyContent: 'center'
     }
 });
