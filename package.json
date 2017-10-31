@@ -28,6 +28,7 @@
     "react-native-modal": "^2.5.0",
     "react-native-navbar": "^1.7.1",
     "react-native-onesignal": "^3.0.6",
+    "react-native-pie-chart": "^1.0.12",
     "react-native-popup": "^0.6.1",
     "react-native-qrcode": "^0.2.6",
     "react-native-qrcode-scanner": "0.0.22",
