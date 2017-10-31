@@ -9,7 +9,6 @@
   "dependencies": {
     "categoreact": "^1.1.1",
     "react": "16.0.0-alpha.6",
-    "react-google-charts": "^1.5.5",
     "react-native": "0.44.0",
     "react-native-accordion": "^1.0.1",
     "react-native-action-button": "^2.6.9",
@@ -17,7 +16,6 @@
     "react-native-animatable": "^1.2.4",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-chart": "^1.0.8-beta",
-    "react-native-charts-wrapper": "^0.2.10",
     "react-native-check-box": "^1.0.4",
     "react-native-customisable-switch": "^0.1.0",
     "react-native-datepicker": "^1.4.7",
@@ -34,7 +32,6 @@
     "react-native-qrcode": "^0.2.6",
     "react-native-qrcode-scanner": "0.0.22",
     "react-native-star-rating": "^1.0.8",
-    "react-native-svg": "^5.4.2",
     "react-native-tag-input": "0.0.14",
     "react-native-tags": "^0.2.0",
     "react-native-textinput-effects": "^0.3.1",
