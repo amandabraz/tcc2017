@@ -38,8 +38,7 @@ class Estatisticas extends Component {
     this.buscaValorArrecadadoPorProduto();
   };
 
-  //BUSCA POR UNIDADES VENDIDAS - BAR CHART
-
+  //BUSCA POR UNIDADES VENDIDAS - BAR CHART E LISTA DE PRODUTOS
   buscaQuantidadeVendida() {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
     .then((response) => response.json())
@@ -192,7 +191,7 @@ class Estatisticas extends Component {
             </View>
             <View style = {{margin: 10, flexDirection: 'column', marginTop: 15, marginRight: 15}}>
               <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', marginRight: 5, color: '#0000CD', fontWeight: 'bold'}}>
-                Produtos vendidos:
+                Representação gráfica:
               </Text>
               {this.buscaProdutosVendidosVendedor()}
             </View>
@@ -245,6 +244,11 @@ const styles = StyleSheet.create({
       margin: 10,
       marginTop: 15,
       marginRight: 5
+      fontWeight: 'bold'
+    },
+    pieChart_viewStyle:{
+      margin: 10,
+      marginTop: 15
     },
     pieChart_description:{
       marginTop: 8,
