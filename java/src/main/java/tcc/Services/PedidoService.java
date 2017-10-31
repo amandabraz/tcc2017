@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
