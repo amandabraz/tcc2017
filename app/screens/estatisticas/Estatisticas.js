@@ -56,30 +56,52 @@ class Estatisticas extends Component {
     if(this.state.quantidadeVendida.length > 0){
       return(
       <View style={styles.container}>
-        <View style={[styles.bar, styles.points, {width: this.state.quantidadeVendida.length}]}/>
+        <View style={{width: this.state.quantidadeVendida.length}}/>
         <Chart
           style = {styles.chart}
           data = {
               this.state.quantidadeVendida
           }
           type = "bar"
-          verticalGridStep={4}
-          widthPercent = {0.5}
-          heightPercent = {0.5}
-          showDataPoint={true}
-          visibleYRange={[0,30]}
         />
       </View>
       )
     } else {
       return(
-        <View key={0} style={{alignItems: 'center'}}>
+        <View key={0} style={{alignItems: 'center', marginRight: 5}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
           Não há produtos vendidos para estatísticas.
         </Text>
         </View>
       )
     }
+  }
+
+  produtosVendidos(){
+    var views = [];
+    if(this.state.quantidadeVendida.length > 0){
+      for(i in this.state.quantidadeVendida){
+        let prodQtdVendido = this.state.quantidadeVendida[i];
+    views.push(
+    <View key={i} style={styles.produtosV}>
+      <Animated.View style={[styles.bar, styles.points, {width: prodQtdVendido[1]}]}/>
+      <Text style={{fontSize: 7, justifyContent: 'center'}}>
+        {prodQtdVendido[1]}
+      </Text>
+      <Text style={{fontSize: 12, justifyContent: 'center'}}>
+        {prodQtdVendido[0]}
+      </Text>
+   </View>
+  )}} else {
+      views.push(
+        <View key={0} style={{alignItems: 'center'}}>
+        <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+          Você não tem produtos vendidos! :(
+        </Text>
+        </View>
+      )
+    }
+    return views;
   }
 
   //BUSCA POR VALOR ARRECADADO - PIE CHART
@@ -161,9 +183,15 @@ class Estatisticas extends Component {
                 }}
               />
             }>
-            <View style = {{margin: 10, flexDirection: 'column', marginTop: 15}}>
-              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#0000CD', fontWeight: 'bold'}}>
-                Produtos mais vendidos do mês
+            <View style={{paddingTop: 25, marginRight: 5}}>
+              <Text style={{marginLeft: 10, marginRight: 10, fontSize: 16}}>
+                Seus Produtos Vendidos:
+              </Text>
+              {this.produtosVendidos()}
+            </View>
+            <View style = {{margin: 10, flexDirection: 'column', marginTop: 15, marginRight: 15}}>
+              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', marginRight: 5, color: '#0000CD', fontWeight: 'bold'}}>
+                Produtos vendidos:
               </Text>
               {this.buscaProdutosVendidosVendedor()}
             </View>
@@ -187,11 +215,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'column',
         backgroundColor: '#D9DBDB',
+        marginRight: 5
     },
     chart: {
         width: 350,
         height: 350,
         flex:1,
+        marginRight: 5,
     },
     produtosV:{
       margin: 6,
@@ -199,18 +229,21 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderRadius: 10,
       borderColor: '#fff',
-      width: '98%'
+      width: '98%',
+      marginRight: 5
     },
     pieChart_text:{
       marginTop: 8,
       fontSize: 16,
       justifyContent: 'center',
       color: '#406161',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      marginRight: 5
     },
     pieChart_viewStyle:{
       margin: 10,
-      marginTop: 15
+      marginTop: 15,
+      marginRight: 5
     },
     pieChart_description:{
       marginTop: 8,
