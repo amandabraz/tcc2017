@@ -63,6 +63,7 @@ class Estatisticas extends Component {
               this.state.quantidadeVendida
           }
           type = "bar"
+          verticalGridStep = {1}
         />
       </View>
       )
