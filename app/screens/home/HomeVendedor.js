@@ -76,7 +76,7 @@ class HomeVendedor extends Component {
             }
             var dataNormal = new Date(responseJson.dataSolicitada);
             var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() + 
-                        " - "+dataNormal.getHours() + ":" + dataNormal.getMinutes();
+                        " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
             this.setState({dataSolicitada: dataS})
       }});
   };
