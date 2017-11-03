@@ -8,19 +8,20 @@ import java.util.List;
 
 public interface ProdutoDAO extends CrudRepository <Produto, Long> {
     List<Produto> findById(Long id);
-    List<Produto> findByDeletadoAndNomeIgnoreCaseContaining(boolean deletado, String nome);
 
-    List<Produto> findByDeletadoAndTagsDescricaoIgnoreCaseContaining(boolean deletado, String descricao);
+    List<Produto> findByDeletadoAndNomeIgnoreCaseContainingAndQuantidadeGreaterThan(boolean deletado, String nome, int qtdMinima);
 
-    List<Produto> findByDeletadoAndIngredientesItemIgnoreCaseContaining(boolean deletado, String item);
+    List<Produto> findByDeletadoAndTagsDescricaoIgnoreCaseContainingAndQuantidadeGreaterThan(boolean deletado, String descricao, int qtdMinima);
 
-    List<Produto> findByDeletadoAndRestricoesDieteticasDescricaoIgnoreCaseContaining(boolean deletado, String descricao);
+    List<Produto> findByDeletadoAndIngredientesItemIgnoreCaseContainingAndQuantidadeGreaterThan(boolean deletado, String item, int qtdMinima);
 
-    List<Produto> findByDeletadoAndCategoriaDescricaoIgnoreCaseContaining(boolean deletado, String descricao);
+    List<Produto> findByDeletadoAndRestricoesDieteticasDescricaoIgnoreCaseContainingAndQuantidadeGreaterThan(boolean deletado, String descricao, int qtdMinima);
 
-    List<Produto> findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContaining(boolean deletado, String nomeFantasia);
+    List<Produto> findByDeletadoAndCategoriaDescricaoIgnoreCaseContainingAndQuantidadeGreaterThan(boolean deletado, String descricao, int qtdMinima);
 
-    List<Produto> findByDeletadoAndVendedorIdOrderByDataPreparacaoDesc(boolean deletado, Long id);
+    List<Produto> findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContainingAndQuantidadeGreaterThan(boolean deletado, String nomeFantasia, int qtdMinima);
+
+    List<Produto> findByDeletadoAndVendedorIdAndQuantidadeGreaterThanOrderByDataPreparacaoDesc(boolean deletado, Long id, int qtdMinima);
 
     @Query(value = "SELECT * FROM produto\n" +
             "LEFT JOIN produto_tag on produto.id_produto = produto_tag.id_produto\n" +
@@ -31,11 +32,13 @@ public interface ProdutoDAO extends CrudRepository <Produto, Long> {
             "LEFT JOIN restricao_dietetica on produto_restricao.id_restricao = restricao_dietetica.id_restricao\n" +
             "LEFT JOIN produto_ingrediente on produto.id_produto = produto_ingrediente.id_produto\n" +
             "LEFT JOIN ingrediente on produto_ingrediente.id_ingrediente = ingrediente.id_ingrediente\n" +
-            "WHERE cliente_tag.id_cliente = ?1 \n" +
+            "WHERE (cliente_tag.id_cliente = ?1 \n" +
             "AND produto.deletado = 0\n" +
             "OR UPPER(tag.descricao) LIKE CONCAT('%', UPPER(produto.nome), '%')\n" +
             "OR UPPER(tag.descricao) LIKE CONCAT('%', UPPER(ingrediente.item), '%')\n" +
-            "OR UPPER(tag.descricao) LIKE CONCAT('%', UPPER(restricao_dietetica.descricao), '%')" +
+            "OR UPPER(tag.descricao) LIKE CONCAT('%', UPPER(restricao_dietetica.descricao), '%')) \n" +
+            "AND produto.quantidade > 0 \n" +
+            "AND produto.deletado = 0 \n" +
             "GROUP BY produto.id_produto",
             nativeQuery = true)
     List<Produto> findByPreferenciasCliente(Long clienteId);
