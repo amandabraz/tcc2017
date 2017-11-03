@@ -90,7 +90,7 @@ class GerenciaProduto extends Component {
       for (i in this.state.listaProdutos) {
         let produto = this.state.listaProdutos[i];
         var dataNormal = new Date(produto.dataPreparacao);
-        var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+        var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
         produto.dataPreparacao = dataPrep;
         views.push(
           <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>

@@ -77,7 +77,8 @@ class HomeVendedor extends Component {
               this.setState({imagemProduto:{ uri: responseJson.produto.imagemPrincipal }})
             }
             var dataNormal = new Date(responseJson.dataSolicitada);
-            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() + 
+                        " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
             this.setState({dataSolicitada: dataS})
             this.setState({refreshing:false});
       }});
