@@ -1,4 +1,4 @@
-package tcc;
+package tcc.CustomQueryHelpers;
 
 public class QuantidadePedidos {
 

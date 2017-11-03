@@ -14,6 +14,7 @@ import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as constante from '../../constantes';
+import StarRating from 'react-native-star-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -89,7 +90,7 @@ class GerenciaProduto extends Component {
       for (i in this.state.listaProdutos) {
         let produto = this.state.listaProdutos[i];
         var dataNormal = new Date(produto.dataPreparacao);
-        var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+        var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
         produto.dataPreparacao = dataPrep;
         views.push(
           <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>
@@ -103,6 +104,14 @@ class GerenciaProduto extends Component {
                      justifyContent='flex-start'/>
                 <View style={{width: '65%', marginLeft: 12, marginRight: 12}}>
                   <Text style={styles.textNome}> {produto.nome} </Text>
+                  <View style={{width: '70%'}}>
+                  <StarRating
+                    disabled={true}
+                    maxStars={5}
+                    rating={produto.score}
+                    starSize={15}
+                    starColor={'#e6b800'}/>
+                  </View>
                 </View>
               </View>
               <View style={styles.parteDireita}>
@@ -129,7 +138,7 @@ class GerenciaProduto extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{alignSelf: 'flex-start', paddingLeft: 40}}>
+            <View style={{paddingLeft:10, alignSelf: 'flex-start'}}>
               <Text style={styles.textoMenor}>
                 Preparado no dia {produto.dataPreparacao}
                 {'\n'}{'\n'}
@@ -155,8 +164,7 @@ class GerenciaProduto extends Component {
       title: 'Gerência de Produtos',
       tintColor: "#fff",
       fontFamily: 'Roboto',
-    };
-
+    }
     return(
         <View style={{flex: 1}}>
           <NavigationBar

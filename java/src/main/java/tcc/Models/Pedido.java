@@ -70,6 +70,9 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "FK_PAGAMENTO", nullable = false)
     public Pagamento pagamento;
 
+    @Column(name = "NOTA", nullable = true)
+    public Integer nota = 0;
+
     public Long getId() {
         return id;
     }
@@ -166,6 +169,14 @@ public class Pedido implements Serializable {
         this.pagamento = pagamento;
     }
 
+    public Integer getNota() {
+        return nota;
+    }
+
+    public void setNota(Integer nota) {
+        this.nota = nota;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -174,6 +185,7 @@ public class Pedido implements Serializable {
         return quantidade == pedido.quantidade &&
                 Float.compare(pedido.valorCompra, valorCompra) == 0 &&
                 deletado == pedido.deletado &&
+                nota == pedido.nota &&
                 Objects.equals(id, pedido.id) &&
                 Objects.equals(status, pedido.status) &&
                 Objects.equals(dataFinalizacao, pedido.dataFinalizacao) &&
@@ -187,7 +199,7 @@ public class Pedido implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento);
+        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota);
     }
 
     @Override
@@ -201,10 +213,11 @@ public class Pedido implements Serializable {
                 ", quantidade=" + quantidade +
                 ", valorCompra=" + valorCompra +
                 ", deletado=" + deletado +
-                ", token=" + token +
+                ", token='" + token + '\'' +
                 ", produto=" + produto +
                 ", cliente=" + cliente +
                 ", pagamento=" + pagamento +
+                ", nota=" + nota +
                 '}';
     }
 

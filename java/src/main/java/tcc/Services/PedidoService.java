@@ -2,17 +2,20 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tcc.CustomQueryHelpers.QuantidadePedidos;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Cliente;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
-import tcc.QuantidadePedidos;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -168,4 +171,93 @@ public class PedidoService {
         }
     }
 
+    @Transactional
+    public List<Object> buscaValorTotalVendaPorProduto(Long vendedorId, Integer diasParaBusca, Integer quantidadeMaxProdutos) {
+        try {
+            //pego todos os valores - OBJECT pois a busca no DAO não tem um tipo definido
+            List<Object> valorTotalVendaPedidos = (List<Object>)pedidoDAO.findByValorTotalVendaPedidos(vendedorId, diasParaBusca);
+
+            if(valorTotalVendaPedidos.size() > quantidadeMaxProdutos){
+                //os valores maiores que quantidadeMaxProdutos são unidos
+                Double somaTotalVendaValoresUnidos = 0.0;
+                Iterator valoresASeremUnidos = valorTotalVendaPedidos.subList(quantidadeMaxProdutos, valorTotalVendaPedidos.size()).iterator();
+
+                while(valoresASeremUnidos.hasNext()){
+                    Object[] umProduto = (Object[]) valoresASeremUnidos.next();
+                    somaTotalVendaValoresUnidos += (Double)umProduto[1];
+                }
+                valorTotalVendaPedidos = valorTotalVendaPedidos.subList(0, quantidadeMaxProdutos);
+                Object[] novoProduto = {"Outros Produtos", somaTotalVendaValoresUnidos};
+                valorTotalVendaPedidos.add(novoProduto);
+            }
+
+            return valorTotalVendaPedidos;
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    @Transactional
+    public int recalculaScoreProduto(Pedido pedido) throws IOException {
+        try {
+            Produto produto = produtoService.buscaProduto(pedido.getProduto().getId());
+            long somaNotas = pedidoDAO.selectSomaNotasPorProduto(produto.getId());
+            long countNotas = pedidoDAO.countNotasPorProduto(produto.getId());
+
+            Integer novoScore = Math.round(somaNotas / countNotas);
+            // edita e salva Produto
+            produto.setScore(novoScore);
+            produtoService.editaProduto(produto);
+
+            // retorna score atualizado pra tela de Pedidos
+            return novoScore;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public QuantidadeVendidaCliente qtdVendidaCliente(Long vendedorId, Boolean filtroMensal) {
+        try {
+                QuantidadeVendidaCliente quantidadeVendidaCliente  = new QuantidadeVendidaCliente();
+                Integer qtd = pedidoDAO.findByQtdVendida(vendedorId, buscaData(filtroMensal));
+                 if(qtd == null) {
+                        quantidadeVendidaCliente.setQuantidadeVendida(0);
+                    } else {
+                        quantidadeVendidaCliente.setQuantidadeVendida(qtd);
+                    }
+
+                int cliente = pedidoDAO.findByQtdClientes(vendedorId, buscaData(filtroMensal));
+                 if(cliente == 0){
+                     quantidadeVendidaCliente.setNumeroClientes(0);
+                 } else {
+                     quantidadeVendidaCliente.setNumeroClientes(cliente);
+                 }
+
+                Float total = pedidoDAO.findByQtdTotal(vendedorId, buscaData(filtroMensal));
+                 if(total == null) {
+                     quantidadeVendidaCliente.setValorRecebido(0);
+                 } else {
+                     quantidadeVendidaCliente.setValorRecebido(total);
+                 }
+
+            return quantidadeVendidaCliente;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+
+    private Date buscaData (Boolean filtroMensal){
+        new Date();
+        Date referenceDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(referenceDate);
+        if(filtroMensal == true){
+            c.add(Calendar.MONTH, -1);
+        } else {
+            c.add(Calendar.DAY_OF_WEEK, -7);
+        }
+        return c.getTime();
+    }
 }

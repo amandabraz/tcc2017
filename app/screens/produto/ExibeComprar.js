@@ -18,9 +18,7 @@ import Popup from 'react-native-popup';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as constante from '../../constantes';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
-import FCM from "react-native-fcm";
-
+(??)import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 
 const { width, height } = Dimensions.get("window");
 
@@ -38,6 +36,7 @@ export default class ExibeComprar extends Component {
               nome: '',
               preco: '',
               quantidade: '',
+              score: 0,
               vendedor:{
                 usuario:{
                   nome: ''
@@ -52,7 +51,14 @@ export default class ExibeComprar extends Component {
         this.buscaProduto();
     }
 
+    retornaPrimeiroMeioPagamento(){
+      return this.state.pagamentosArray[0]
+    }
+
     mostrarCheckboxesPagamento() {
+      //atualiza o meioDePagamento default
+      this.state.meioPagamentoEscolhido = this.retornaPrimeiroMeioPagamento();
+      
       var views = [];
       for(i in this.state.pagamentosArray) {
         let pagamento = this.state.pagamentosArray[i];
@@ -204,6 +210,14 @@ export default class ExibeComprar extends Component {
                 <Text style={styles.produtoText}>
                   {this.state.produto.nome}
                 </Text>
+                <View style={{width: '70%'}}>
+                <StarRating
+                  disabled={true}
+                  maxStars={5}
+                  rating={this.state.produto.score}
+                  starSize={20}
+                  starColor={'#e6b800'}/>
+                  </View>
                 <Text style={styles.quantidadeText}>
                   {this.state.quantidadeDis}
                 </Text>
@@ -255,6 +269,7 @@ export default class ExibeComprar extends Component {
             <View style={{width: '70%'}}>
               <RadioGroup size={18}
                         thickness={2}
+                        selectedIndex={0}
                         color='gray'
                         onSelect = {(index, value) => this.setState({meioPagamentoEscolhido: value})}>
               {this.mostrarCheckboxesPagamento()}

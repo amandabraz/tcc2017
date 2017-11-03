@@ -50,6 +50,7 @@
 		085DB99094A240CFBFC7A5D9 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86E5382463B74A57AA3B8241 /* libRNImagePicker.a */; };
 		4F53F1D74DFF4DC9A67FA076 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF3EF97F9D3E4BD59A94A64E /* libimageCropPicker.a */; };
 		E6C02E6076AC4409982E896D /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A4AB439654B474FAD06B0C2 /* libRNFIRMessaging.a */; };
+		73BC9D99EE9A4C71958057B5 /* libRNAlerts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9D6C96BCAF408DA0BA8899 /* libRNAlerts.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -289,6 +290,8 @@
 		B7F76858AB2C44EEA0665D04 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; name = "RNFIRMessaging.xcodeproj"; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		8A4AB439654B474FAD06B0C2 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; name = "libRNFIRMessaging.a"; path = "libRNFIRMessaging.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		4694FCA8A27441818E7153E8 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; name = "RCTCamera.xcodeproj"; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B56E859B89474CBE8B2D1926 /* RNAlerts.xcodeproj */ = {isa = PBXFileReference; name = "RNAlerts.xcodeproj"; path = "../node_modules/react-native-alerts/ios/RNAlerts.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5F9D6C96BCAF408DA0BA8899 /* libRNAlerts.a */ = {isa = PBXFileReference; name = "libRNAlerts.a"; path = "libRNAlerts.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -320,6 +323,7 @@
 				085DB99094A240CFBFC7A5D9 /* libRNImagePicker.a in Frameworks */,
 				4F53F1D74DFF4DC9A67FA076 /* libimageCropPicker.a in Frameworks */,
 				E6C02E6076AC4409982E896D /* libRNFIRMessaging.a in Frameworks */,
+				73BC9D99EE9A4C71958057B5 /* libRNAlerts.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +496,7 @@
 				C83C85AFDCF84191823B0BDC /* imageCropPicker.xcodeproj */,
 				B7F76858AB2C44EEA0665D04 /* RNFIRMessaging.xcodeproj */,
 				4694FCA8A27441818E7153E8 /* RCTCamera.xcodeproj */,
+				B56E859B89474CBE8B2D1926 /* RNAlerts.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1060,6 +1065,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
+					"$(SRCROOT)/../node_modules/react-native-alerts/ios",
 				);
 			};
 			name = Debug;
@@ -1092,6 +1098,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
+					"$(SRCROOT)/../node_modules/react-native-alerts/ios",
 				);
 			};
 			name = Release;
@@ -1117,6 +1124,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios",
+					"$(SRCROOT)/../node_modules/react-native-alerts/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 				);
 			};
@@ -1142,6 +1151,8 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios",
+					"$(SRCROOT)/../node_modules/react-native-alerts/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 				);
 			};
@@ -1184,6 +1195,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-alerts/ios",
 				);
 			};
 			name = Debug;
@@ -1225,6 +1237,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-alerts/ios",
 				);
 			};
 			name = Release;

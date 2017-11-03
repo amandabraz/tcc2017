@@ -17,6 +17,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import { Icon, Button } from 'react-native-elements';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import StarRating from 'react-native-star-rating';
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,6 +35,7 @@ export default class ExibeProduto extends Component {
             categoria: {
               descricao: ''
             },
+            score: 0
           },
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
@@ -51,7 +53,7 @@ export default class ExibeProduto extends Component {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
-          dateText: '',
+          dateText: ''
         };
         this.buscaProduto();
     }
@@ -101,7 +103,7 @@ export default class ExibeProduto extends Component {
             this.setState({ingredientesText: ingredientes});
           }
           var dataNormal = new Date(rJson.dataPreparacao);
-          var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+          var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
           this.setState({dateText: dataPrep});
         }
       });
@@ -131,6 +133,12 @@ render() {
                    style={styles.imageResultSearch}/>
           </View>
           <View style={{width: '40%'}}>
+          <StarRating
+            disabled={true}
+            maxStars={5}
+            rating={this.state.produto.score}
+            starSize={20}
+            starColor={'#e6b800'}/>
             <Text style={styles.barText}>
               {this.state.produto.nome}
             </Text>

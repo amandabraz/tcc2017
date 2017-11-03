@@ -236,7 +236,7 @@ export default class PerfilCliente extends Component {
     }
 
     var dataNormal = new Date(responseJson.usuario.dataNasc);
-    var dataNasc = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+    var dataNasc = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
     this.setState({nomeText: responseJson.usuario.nome,
                   dataNascimentoText: dataNasc,
                   celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});

@@ -53,8 +53,9 @@ pedidoConfirmado(){
   if(this.state.pedidosConfirmados.length > 0){
     for (i in this.state.pedidosConfirmados){
       let pedidoC = this.state.pedidosConfirmados[i];
-      var data = new Date(pedidoC.dataConfirmacao);      
-      let dataConfirmado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();      
+      var dataNormal = new Date(pedidoC.dataConfirmacao);      
+      let dataConfirmado = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={

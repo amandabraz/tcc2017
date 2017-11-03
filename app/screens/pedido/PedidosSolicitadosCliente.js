@@ -91,8 +91,9 @@ pedidoSolicitado(){
   if(this.state.pedidosSolicitados.length > 0){
     for (i in this.state.pedidosSolicitados){
       let pedidoS = this.state.pedidosSolicitados[i];
-      let data = new Date(pedidoS.dataSolicitada);
-      let dataSolicitada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+      let dataNormal = new Date(pedidoS.dataSolicitada);
+      let dataSolicitada = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() + 
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
@@ -127,7 +128,7 @@ pedidoSolicitado(){
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <Button buttonStyle={{width: '40%'}}
+            <Button buttonStyle={{width: '80%'}}
                     title ="Cancelar"
                     color="#fff"
                     backgroundColor="#88557B"
