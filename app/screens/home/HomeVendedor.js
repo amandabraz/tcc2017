@@ -54,6 +54,9 @@ class HomeVendedor extends Component {
         },
         refreshing: false,
         informacoes: '',
+        clientes: '',
+        clientesMantidos: '',
+        produtoVendido: '',
         filtroMensal: true,
         alturaPedido: '1%',
         alturaResumo: '100%'
@@ -90,6 +93,30 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
           this.setState({informacoes: responseJson});
+          if (responseJson.quantidadeVendida > 1) {
+            var qnt = "";
+              qnt = "Produtos vendidos";
+            this.setState({produtoVendido: qnt});
+          } else {
+              qnt = "Produto vendido";
+            this.setState({produtoVendido: qnt});
+          }
+          if (responseJson.numeroClientes > 1) {
+            var cliente = "";
+              cliente = "Clientes conquistados";
+            this.setState({clientes: cliente});
+          } else {
+              cliente = "Cliente conquistado";
+          this.setState({clientes: cliente});
+          }
+          if (responseJson.clienteConquistados > 1) {
+              var clientec = "";
+                clientec = "Clientes Mantidos";
+              this.setState({clientesMantidos: clientec});
+            } else {
+                clientec = "Cliente Mantido";
+              this.setState({clientesMantidos: clientec});
+            }
           this.setState({refreshing:false});
       }});
   }
@@ -264,13 +291,13 @@ render() {
                     <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
                       {this.state.informacoes.numeroClientes + ' '}
                     </Text>
-                       Clientes conquistados
+                       {this.state.clientes}
                     </Text>
                     <Text style={{fontSize: 14, alignSelf: 'center'}}>
                       <Text style={{fontWeight: 'bold', fontSize: 14, color: 'crimson'}}>
                         {this.state.informacoes.clienteConquistados + ' '}
                       </Text>
-                         Clientes mantidos
+                         {this.state.clientesMantidos}
                       </Text>
                   <Image source={require('./img/iconp.png')}/>
                </View>
@@ -279,7 +306,7 @@ render() {
                 <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
                   {this.state.informacoes.quantidadeVendida + ' '}
                 </Text>
-                     Produtos vendidos
+                     {this.state.produtoVendido}
                 </Text>
                 <Image source={require('./img/iconf.png')}/>
               </View>
