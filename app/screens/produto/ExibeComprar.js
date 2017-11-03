@@ -52,7 +52,14 @@ export default class ExibeComprar extends Component {
         this.buscaProduto();
     }
 
+    retornaPrimeiroMeioPagamento(){
+      return this.state.pagamentosArray[0]
+    }
+
     mostrarCheckboxesPagamento() {
+      //atualiza o meioDePagamento default
+      this.state.meioPagamentoEscolhido = this.retornaPrimeiroMeioPagamento();
+      
       var views = [];
       for(i in this.state.pagamentosArray) {
         let pagamento = this.state.pagamentosArray[i];
@@ -253,6 +260,7 @@ export default class ExibeComprar extends Component {
             <View style={{width: '70%'}}>
               <RadioGroup size={18}
                         thickness={2}
+                        selectedIndex={0}
                         color='gray'
                         onSelect = {(index, value) => this.setState({meioPagamentoEscolhido: value})}>
               {this.mostrarCheckboxesPagamento()}
