@@ -278,6 +278,6 @@ const styles = StyleSheet.create({
   }
 });
 
-AceiteTermoUso.defaultProps = { ...AceiteTermoUso };
+TermoUso.defaultProps = { ...TermoUso };
 
-export default AceiteTermoUso;
+export default TermoUso;
