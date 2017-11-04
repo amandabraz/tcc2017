@@ -302,6 +302,32 @@ carregarCategoriasArray() {
       }
     }
 
+    selecionarFoto() {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            image: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemProduto: source})
+        }
+      });
+    }
+
 render() {
     const {goBack} = this.props.navigation;
     const inputIngredientes = {
@@ -340,8 +366,11 @@ return (
         <View style={styles.container}>
         <View style={{ alignItems: 'center'}}>
         <View style={styles.profilepicWrap}>
-            <Image style={styles.profilepic}
-                   source={this.state.imagemPrincipal}/>
+        <TouchableOpacity style={styles.profilepicWrap} onPress={this.selecionarFoto.bind(this)}>
+          <Image style={styles.profilepic}
+                 source={this.state.imagemPrincipal}
+                 justifyContent='flex-start'/>
+        </TouchableOpacity>  
         </View>
         </View>
 
