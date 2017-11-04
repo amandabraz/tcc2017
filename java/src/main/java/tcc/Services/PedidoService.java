@@ -237,6 +237,22 @@ public class PedidoService {
                      quantidadeVendidaCliente.setValorRecebido(total);
                  }
 
+
+            Integer clienteconquistado = pedidoDAO.findByQtdClientesConquistados(vendedorId, buscaData(filtroMensal));
+            if(clienteconquistado == null){
+                quantidadeVendidaCliente.setClienteConquistados(0);
+            } else {
+                quantidadeVendidaCliente.setClienteConquistados(clienteconquistado);
+            }
+
+            Float ticketMedio = pedidoDAO.findByTicketMedio(vendedorId, buscaData(filtroMensal));
+            if(ticketMedio == null) {
+                quantidadeVendidaCliente.setTicketMedio(0);
+            } else {
+                quantidadeVendidaCliente.setTicketMedio(ticketMedio);
+            }
+
+
             return quantidadeVendidaCliente;
         } catch (Exception e) {
             throw e;
@@ -249,7 +265,7 @@ public class PedidoService {
         Date referenceDate = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(referenceDate);
-        if(filtroMensal == true){
+        if(filtroMensal){
             c.add(Calendar.MONTH, -1);
         } else {
             c.add(Calendar.DAY_OF_WEEK, -7);

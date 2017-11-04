@@ -85,16 +85,25 @@ class PedidosFinalizadosVendedor extends Component {
 pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
-    for (i in this.state.pedidosFinalizados){
+    for (i in this.state.pedidosFinalizados) {
+      let imagemPrincipalP = require('./img/camera11.jpg');      
+      let imagemPrincipalC = require('./img/camera11.jpg');            
       let pedidoF = this.state.pedidosFinalizados[i];
+      if (pedidoF.produto.imagemPrincipal) {
+        imagemPrincipalP = {uri: pedidoF.produto.imagemPrincipal};
+      }
+      if (pedidoF.cliente.usuario.imagemPerfil) {
+        imagemPrincipalC = {uri: pedidoF.cliente.usuario.imagemPerfil};
+      }
       var dataNormal = new Date(pedidoF.dataFinalizacao);
-      var dataFinalizacao = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+      var dataFinalizacao = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
-             <Image source={{uri: pedidoF.produto.imagemPrincipal}}
+             <Image source={imagemPrincipalP}
                      style={styles.imagemPrincipal}/>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
@@ -105,11 +114,12 @@ pedidoFinalizado(){
           <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
           </View>
       </View>
-          } content={
+          } 
+          content={
             <View style={{paddingTop: 15}}>
             <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
             <View style = {{ width: '20%'}}>
-              <Image source={{uri: pedidoF.cliente.usuario.imagemPerfil}}
+              <Image source={imagemPrincipalC}
                      style={styles.imagemCliente}/>
             </View>
           <View style={{width: '80%', paddingLeft: 6}}>
@@ -144,13 +154,21 @@ pedidoFinalizado(){
     var views = [];
     if(this.state.pedidosRecusados.length > 0){
       for (i in this.state.pedidosRecusados){
+        let imagemPrincipalP = require('./img/camera11.jpg');      
+        let imagemPrincipalC = require('./img/camera11.jpg');            
         let pedidoR = this.state.pedidosRecusados[i];
+        if (pedidoR.produto.imagemPrincipal) {
+          imagemPrincipalP = {uri: pedidoR.produto.imagemPrincipal};
+        }
+        if (pedidoR.cliente.usuario.imagemPerfil) {
+          imagemPrincipalC = {uri: pedidoR.cliente.usuario.imagemPerfil};
+        }
         views.push(
           <View key={i} style={styles.oneResult1}>
             <Accordion header={
               <View style={{flexDirection: 'row'}}>
               <View style = {{ width: '25%'}}>
-               <Image source={{uri: pedidoR.produto.imagemPrincipal}}
+               <Image source={imagemPrincipalP}
                        style={styles.imagemPrincipal}/>
               </View>
             <View style={{width: '60%', alignSelf:'center'}}>
@@ -164,7 +182,7 @@ pedidoFinalizado(){
               <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
-                <Image source={{uri: pedidoR.produto.vendedor.usuario.imagemPerfil}}
+                <Image source={imagemPrincipalC}
                        style={styles.imagemCliente}/>
               </View>
             <View style={{width: '80%', paddingLeft: 6}}>
@@ -199,13 +217,21 @@ pedidoFinalizado(){
       var views = [];
       if(this.state.pedidosCancelados.length > 0){
         for (i in this.state.pedidosCancelados){
+          let imagemPrincipalP = require('./img/camera11.jpg');      
+          let imagemPrincipalC = require('./img/camera11.jpg');            
           let pedidoC = this.state.pedidosCancelados[i];
+          if (pedidoC.produto.imagemPrincipal) {
+            imagemPrincipalP = {uri: pedidoC.produto.imagemPrincipal};
+          }
+          if (pedidoC.cliente.usuario.imagemPerfil) {
+            imagemPrincipalC = {uri: pedidoC.cliente.usuario.imagemPerfil};
+          }
           views.push(
             <View key={i} style={styles.oneResult1}>
               <Accordion header={
                 <View style={{flexDirection: 'row'}}>
                 <View style = {{ width: '25%'}}>
-                 <Image source={{uri: pedidoC.produto.imagemPrincipal}}
+                 <Image source={imagemPrincipalP}
                          style={styles.imagemPrincipal}/>
                 </View>
               <View style={{width: '60%', alignSelf:'center'}}>
@@ -219,7 +245,7 @@ pedidoFinalizado(){
                 <View style={{paddingTop: 15}}>
                 <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
                 <View style = {{ width: '20%'}}>
-                  <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
+                  <Image source={imagemPrincipalC}
                          style={styles.imagemCliente}/>
                 </View>
               <View style={{width: '80%', paddingLeft: 6}}>

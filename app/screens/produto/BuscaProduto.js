@@ -8,7 +8,6 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  TouchableOpacity,
   View,
   ScrollView
 } from 'react-native';
@@ -42,6 +41,9 @@ export default class BuscaProduto extends Component {
 
 
   buscaPedidosIndicados() {
+    if (this.state.resultadoPesquisaProduto.length > 0) {      
+      this.setState({resultadoPesquisaProduto: []});
+    }
     fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
@@ -52,6 +54,14 @@ export default class BuscaProduto extends Component {
   };
 
   setSearchText(searchText) {
+    // zerando listas antes de criar nova lista
+    if (this.state.resultadoPesquisaProduto.length > 0) {
+      this.setState({resultadoPesquisaProduto: []});
+    }
+    if (this.state.resultadoPesquisaVendedor.length > 0) {
+      this.setState({resultadoPesquisaVendedor: []});
+    }
+    
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
     }, (error) => {
@@ -94,7 +104,8 @@ export default class BuscaProduto extends Component {
   onButtonOpenProduct = (produtoIdSelecionado) => {
     this.props.navigation.navigate('ExibeProduto',
           {produtoId: produtoIdSelecionado,
-            clienteId: this.state.clienteId
+            clienteId: this.state.clienteId,
+            userId: this.state.userId
           });
   };
 
@@ -110,10 +121,11 @@ export default class BuscaProduto extends Component {
     if (this.state.semProdutos == true) {
       if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1){
         return (
-          <View key={0} style={{alignItems: 'center'}}>
-          <Text style={styles.texto}>
-            Não há produtos cadastrados, tente outro nome!
-          </Text>
+          <View key={0} style={{width: '80%'}}>
+            <Text style={styles.texto}>
+              Não há produtos cadastrados, {'\n'}
+              tente outro nome!
+            </Text>
           </View>
         )
       }
@@ -123,6 +135,7 @@ export default class BuscaProduto extends Component {
   buscaProduto() {
     var views = [];
     if (this.state.resultadoPesquisaProduto.length > 0) {
+      let imagemPrincipal = require('./img/camera11.jpg');
       for(i in this.state.resultadoPesquisaProduto) {
         let produto = this.state.resultadoPesquisaProduto[i];
         let distancia = parseInt(produto.distancia);
@@ -137,6 +150,9 @@ export default class BuscaProduto extends Component {
           borderRadius: 100,
           textAlign: 'center'
         };
+        if(produto.imagemPrincipal){
+          imagemPrincipal = {uri: produto.imagemPrincipal};
+        }
         if (distancia > -1) {
           if (distancia > 1000) {
             let convert = (distancia/1000).toString().split('.');
@@ -157,7 +173,7 @@ export default class BuscaProduto extends Component {
               <View>
                 <View style={styles.oneResult}>
                   <View style={{width: "25%"}}>
-                    <Image source={{ uri: produto.imagemPrincipal }}
+                    <Image source={imagemPrincipal}
                           style={styles.imageResultSearch}
                           justifyContent='flex-start'/>
                   </View>
@@ -192,7 +208,11 @@ export default class BuscaProduto extends Component {
     var views = [];
     if (this.state.resultadoPesquisaVendedor.length > 0) {
       for(i in this.state.resultadoPesquisaVendedor) {
+        let imagemPerfil = require('./img/camera11.jpg');
         let vendedor = this.state.resultadoPesquisaVendedor[i];
+        if(vendedor.usuario.imagemPerfil){
+          imagemPerfil = {uri: vendedor.usuario.imagemPerfil};
+        }
         views.push (
           <View key={i}>
             <TouchableHighlight 
@@ -201,7 +221,7 @@ export default class BuscaProduto extends Component {
             >
               <View>
                 <View style={styles.oneResult}>
-                  <Image source={{ uri: vendedor.usuario.imagemPerfil }}
+                  <Image source={imagemPerfil}
                         style={styles.imageResultSearch}
                         justifyContent='flex-start'/>
 
@@ -331,7 +351,8 @@ const styles = StyleSheet.create({
   texto: {
     marginTop: 12,
     fontSize: 18,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchBar: {
     paddingLeft: 30,

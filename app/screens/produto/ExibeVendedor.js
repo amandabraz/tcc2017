@@ -76,11 +76,15 @@ export default class ExibeVendedor extends Component {
     if(this.state.resultadoProduto.length > 0){
     for(i in this.state.resultadoProduto) {
       let produto = this.state.resultadoProduto[i];
+      let imagemPrincipalP = require('./img/camera11.jpg');            
+      if (produto.imagemPrincipal) {
+        imagemPrincipalP = { uri: produto.imagemPrincipal };
+      }      
       views.push (
         <View key={i}>
         <TouchableOpacity onPress={() => this.onButtonOpenProduct(produto)}>
           <View style={styles.oneResult}>
-              <Image source={{ uri: produto.imagemPrincipal }}
+              <Image source={imagemPrincipalP}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
 

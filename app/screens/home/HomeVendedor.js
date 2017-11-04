@@ -54,8 +54,12 @@ class HomeVendedor extends Component {
         },
         refreshing: false,
         informacoes: '',
+        clientes: '',
+        clientesMantidos: '',
+        produtoVendido: '',
         filtroMensal: true,
-        alturaPedido: '1%'
+        alturaPedido: '1%',
+        alturaResumo: '100%'
     };
     this.buscaDadosPedido();
     this.buscaInformacoes();
@@ -67,7 +71,8 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
             this.setState({pedidoSolicitado: responseJson});
-            this.setState({alturaPedido: '38%'});
+            this.setState({alturaPedido: '40%'});
+            this.setState({alturaResumo: '50%'});
             if (responseJson.cliente.usuario.imagemPerfil) {
               this.setState({imagemCliente: {uri: responseJson.cliente.usuario.imagemPerfil }})
             }
@@ -75,8 +80,10 @@ class HomeVendedor extends Component {
               this.setState({imagemProduto:{ uri: responseJson.produto.imagemPrincipal }})
             }
             var dataNormal = new Date(responseJson.dataSolicitada);
-            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
+                        " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
             this.setState({dataSolicitada: dataS})
+            this.setState({refreshing:false});
       }});
   };
 
@@ -86,6 +93,31 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
           this.setState({informacoes: responseJson});
+          if (responseJson.quantidadeVendida > 1) {
+            var qnt = "";
+              qnt = "Produtos vendidos";
+            this.setState({produtoVendido: qnt});
+          } else {
+              qnt = "Produto vendido";
+            this.setState({produtoVendido: qnt});
+          }
+          if (responseJson.numeroClientes > 1) {
+            var cliente = "";
+              cliente = "Clientes conquistados";
+            this.setState({clientes: cliente});
+          } else {
+              cliente = "Cliente conquistado";
+          this.setState({clientes: cliente});
+          }
+          if (responseJson.clienteConquistados > 1) {
+              var clientec = "";
+                clientec = "Clientes Mantidos";
+              this.setState({clientesMantidos: clientec});
+            } else {
+                clientec = "Cliente Mantido";
+              this.setState({clientesMantidos: clientec});
+            }
+          this.setState({refreshing:false});
       }});
   }
 
@@ -109,6 +141,9 @@ class HomeVendedor extends Component {
           this.buscaDadosPedido();
           this.pedidoSolicitado();
           this.buscaInformacoes();
+          this.setState({alturaResumo: '100%'});
+          this.setState({alturaPedido: '1%'});
+          this.setState({refreshing:false});
         } else {
           Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
         }
@@ -219,10 +254,20 @@ render() {
             title={titleConfig}
             tintColor="#768888"/>
             <View style={styles.container}>
+            <ScrollView refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={() => {
+                    this.setState({refreshing:true});
+                    this.pedidoSolicitado();
+                    this.buscaInformacoes();
+                  }}
+                />
+              }>
                 <View style={{height: this.state.alturaPedido}}>
                   {this.pedidoSolicitado()}
                 </View>
-                <View style={{height:'50%'}}>
+                <View style={{height:this.state.alturaResumo}}>
                 <View style={styles.oneResultResumo}>
                 <View style={{alignItems: 'flex-end'}}>
                   <View style={{flexDirection: 'row'}}>
@@ -246,8 +291,14 @@ render() {
                     <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
                       {this.state.informacoes.numeroClientes + ' '}
                     </Text>
-                       Clientes conquistados
+                       {this.state.clientes}
                     </Text>
+                    <Text style={{fontSize: 14, alignSelf: 'center'}}>
+                      <Text style={{fontWeight: 'bold', fontSize: 14, color: 'crimson'}}>
+                        {this.state.informacoes.clienteConquistados + ' '}
+                      </Text>
+                         {this.state.clientesMantidos}
+                      </Text>
                   <Image source={require('./img/iconp.png')}/>
                </View>
                <View style={{width: '50%', alignItems: 'center'}}>
@@ -255,7 +306,7 @@ render() {
                 <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
                   {this.state.informacoes.quantidadeVendida + ' '}
                 </Text>
-                     Produtos vendidos
+                     {this.state.produtoVendido}
                 </Text>
                 <Image source={require('./img/iconf.png')}/>
               </View>
@@ -269,12 +320,19 @@ render() {
                     R$ {this.state.informacoes.valorRecebido}
                   </Text>
                   <Text style={{fontSize: 18, alignSelf: 'center'}}>
-                     Reais obtidos
+                     Reais obtidos {'\n'}
                   </Text>
+                  <Text style={{fontSize: 18, alignSelf: 'center'}}>
+                  <Text style={{fontWeight: 'bold', alignSelf: 'center', color: 'cadetblue'}}>
+                    R$ {this.state.informacoes.ticketMedio + ' '}
+                  </Text>
+                     por cliente
+                  </Text>
+                    </View>
+                  </View>
                 </View>
-            </View>
-           </View>
-                </View>
+              </View>
+              </ScrollView>
             </View>
            <Popup ref={popup => this.popup = popup }/>
         </View>

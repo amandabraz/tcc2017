@@ -29,7 +29,7 @@ class PedidosSolicitadosCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosSolicitados: [],
-      refreshing: false,      
+      refreshing: false,
     };
     this.buscaDadosPedidosCliente();
   };
@@ -89,16 +89,28 @@ class PedidosSolicitadosCliente extends Component {
 pedidoSolicitado(){
   var views = [];
   if(this.state.pedidosSolicitados.length > 0){
-    for (i in this.state.pedidosSolicitados){
+    for (i in this.state.pedidosSolicitados) {
+      let imagemPrincipalV = require('./img/camera11.jpg');
+      let imagemPrincipalP = require('./img/camera11.jpg');
       let pedidoS = this.state.pedidosSolicitados[i];
-      let data = new Date(pedidoS.dataSolicitada);
-      let dataSolicitada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+
+      if (pedidoS.produto.vendedor.usuario.imagemPerfil) {
+        imagemPrincipalV = {uri: pedidoS.produto.vendedor.usuario.imagemPerfil};
+      }
+      if (pedidoS.produto.imagemPrincipal) {
+        imagemPrincipalP = { uri: pedidoS.produto.imagemPrincipal };
+      }
+
+      let dataNormal = new Date(pedidoS.dataSolicitada);
+      let dataSolicitada = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
-              <Image source={{uri: pedidoS.produto.vendedor.usuario.imagemPerfil}}
+              <Image source={imagemPrincipalV}
                   style={styles.imagemPrincipal}/>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
@@ -114,7 +126,7 @@ pedidoSolicitado(){
           <View style={{paddingTop: 15}}>
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
           <View style = {{ width: '20%'}}>
-          <Image source={{uri: pedidoS.produto.imagemPrincipal}}
+          <Image source={imagemPrincipalP}
                  style={styles.imagemVendedor}/>
           </View>
           <View style={{width: '80%', paddingLeft: 6}}>
@@ -204,20 +216,15 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
   },
-  imagemVendedor:{
-    width: 60,
-    height: 60,
-    borderRadius: 100
-  },
-  imagemProduto:{
-    width: '98%',
-    height: 100,
-    borderRadius: 10
-  },
   imagemPrincipal:{
     width: '98%',
     height: 80,
     borderRadius: 10
+  },
+  imagemVendedor:{
+    width: 60,
+    height: 60,
+    borderRadius: 100
   }
 });
 
