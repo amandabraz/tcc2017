@@ -44,6 +44,7 @@ export default class AlteraProduto extends Component {
      preco: '',
      observacao: '',
      imagemPrincipal: require('./img/camera11.jpg'),
+     imagemProduto: '',
      backgroundColorPreco: "transparent",
      restricoesProdutos: [],
      dataOriginal: ''
@@ -258,7 +259,7 @@ carregarCategoriasArray() {
             ingredientes,
             tags,
             restricoesDieteticas,
-            imagemPrincipal
+            imagemProduto
           }
         } = this;
 
@@ -274,7 +275,7 @@ carregarCategoriasArray() {
           "ingredientes": ingredientes,
           "tags": tags,
           "restricoesDieteticas": restricoesDieteticas,
-          "imagemPrincipal": imagemPrincipal.uri,
+          "imagemPrincipal": imagemProduto,
           "deletado": false,
           "score": 0,
         }
@@ -323,7 +324,8 @@ carregarCategoriasArray() {
           this.setState({
             image: {uri: response.uri, width: 200, height: 200, changed: true}
           });
-          this.setState({imagemProduto: source})
+          this.setState({imagemProduto: source});
+          this.setState({imagemPrincipal: source});
         }
       });
     }
@@ -370,7 +372,7 @@ return (
           <Image style={styles.profilepic}
                  source={this.state.imagemPrincipal}
                  justifyContent='flex-start'/>
-        </TouchableOpacity>  
+        </TouchableOpacity>
         </View>
         </View>
 
