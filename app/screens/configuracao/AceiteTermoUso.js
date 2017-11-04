@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   View
 } from 'react-native';
 import {
@@ -16,6 +17,7 @@ import {
   Icon
 } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
+import * as constante from '../../constantes';
 
 class AceiteTermoUso extends Component {
 
@@ -32,6 +34,36 @@ class AceiteTermoUso extends Component {
     AsyncStorage.removeItem('jwt');
     alert('You have been logged out.');
   }
+
+  login = () => {
+
+    fetch(constante.ENDPOINT + 'usuario/' + this.state.userId, {method: 'GET'})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          if (responseJson != null) {
+            ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              if (responseJson.perfil == "V") {
+                this.props.navigation.navigate('TabsVendedor', {
+                  userId: responseJson.id,
+                  vendedorId: this.state.vendedorId
+                });
+              } else if (responseJson.perfil == "C") {
+                this.props.navigation.navigate('TabsCliente', {
+                  userId: responseJson.id,
+                  clienteId: this.state.clienteId
+                });
+              }
+            }
+          } else {
+            Alert.alert("Erro no login.");
+          }
+        })
+        .catch((error) => {
+          Alert.alert("error Response", JSON.stringify(error));
+          console.error(error);
+      });
+  };
 
   render() {
     return (
@@ -210,6 +242,7 @@ class AceiteTermoUso extends Component {
                     color="#fff"
                     backgroundColor="#88557B"
                     borderRadius={10}
+                    onPress={() => this.login()}
             />
           </View>
         </View>
