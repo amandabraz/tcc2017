@@ -379,6 +379,10 @@ export default class PerfilCliente extends Component {
 		  });
     }
 
+    abrirTermos() {
+      this.props.navigation.navigate('TermoUso');
+    }
+
   render () {
     return (
       <View style={{ flex: 1 }}>
@@ -413,6 +417,9 @@ export default class PerfilCliente extends Component {
             <View style={styles.bar}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                   <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.abrirTermos()}>
+                  <FontAwesomeIcon name="file-text" size={20} color={this.state.pencilColor} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.sobreColaboradores()}>
                   <FontAwesomeIcon name="question" size={20} color={this.state.pencilColor} />
