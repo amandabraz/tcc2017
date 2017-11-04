@@ -33,7 +33,7 @@ class PedidosConfirmadosCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosConfirmados: [],
-      refreshing: false,      
+      refreshing: false,
     };
     this.buscaDadosPedidosCliente();
   };
@@ -45,7 +45,7 @@ class PedidosConfirmadosCliente extends Component {
           if (!responseJson.errorMessage) {
               this.setState({pedidosConfirmados: responseJson});
         }
-        this.setState({refreshing: false});                
+        this.setState({refreshing: false});
       });
   };
 
@@ -71,11 +71,15 @@ pedidoConfirmado(){
     for (i in this.state.pedidosConfirmados) {
       let imagemPrincipalV = require('./img/camera11.jpg');
       let pedidoC = this.state.pedidosConfirmados[i];
+
       if (pedidoC.produto.vendedor.usuario.imagemPerfil) {
         imagemPrincipalV = {uri: pedidoC.produto.vendedor.usuario.imagemPerfil};
       }
-      var data = new Date(pedidoC.dataConfirmacao);      
-      let dataConfirmado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+
+      var dataNormal = new Date(pedidoC.dataConfirmacao);
+      let dataConfirmado = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() +
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+
       views.push(
         <View key={i} style={styles.oneResult1}>
         <Accordion header={
@@ -86,7 +90,7 @@ pedidoConfirmado(){
           </View>
         <View style={{width: '65%', alignSelf:'center'}}>
            <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
-           <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>                    
+           <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
            <Text style={styles.oneResultfont}> Receber:
            <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
            </Text>

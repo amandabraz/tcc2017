@@ -41,6 +41,9 @@ export default class BuscaProduto extends Component {
 
 
   buscaPedidosIndicados() {
+    if (this.state.resultadoPesquisaProduto.length > 0) {      
+      this.setState({resultadoPesquisaProduto: []});
+    }
     fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
@@ -51,6 +54,14 @@ export default class BuscaProduto extends Component {
   };
 
   setSearchText(searchText) {
+    // zerando listas antes de criar nova lista
+    if (this.state.resultadoPesquisaProduto.length > 0) {
+      this.setState({resultadoPesquisaProduto: []});
+    }
+    if (this.state.resultadoPesquisaVendedor.length > 0) {
+      this.setState({resultadoPesquisaVendedor: []});
+    }
+    
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
     }, (error) => {
@@ -109,10 +120,11 @@ export default class BuscaProduto extends Component {
     if (this.state.semProdutos == true) {
       if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1){
         return (
-          <View key={0} style={{alignItems: 'center'}}>
-          <Text style={styles.texto}>
-            Não há produtos cadastrados, tente outro nome!
-          </Text>
+          <View key={0} style={{width: '80%'}}>
+            <Text style={styles.texto}>
+              Não há produtos cadastrados, {'\n'}
+              tente outro nome!
+            </Text>
           </View>
         )
       }
@@ -338,7 +350,8 @@ const styles = StyleSheet.create({
   texto: {
     marginTop: 12,
     fontSize: 18,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchBar: {
     paddingLeft: 30,

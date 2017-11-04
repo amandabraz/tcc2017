@@ -29,7 +29,7 @@ class PedidosSolicitadosCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosSolicitados: [],
-      refreshing: false,      
+      refreshing: false,
     };
     this.buscaDadosPedidosCliente();
   };
@@ -90,17 +90,21 @@ pedidoSolicitado(){
   var views = [];
   if(this.state.pedidosSolicitados.length > 0){
     for (i in this.state.pedidosSolicitados) {
-      let imagemPrincipalV = require('./img/camera11.jpg');     
-      let imagemPrincipalP = require('./img/camera11.jpg');            
+      let imagemPrincipalV = require('./img/camera11.jpg');
+      let imagemPrincipalP = require('./img/camera11.jpg');
       let pedidoS = this.state.pedidosSolicitados[i];
+
       if (pedidoS.produto.vendedor.usuario.imagemPerfil) {
         imagemPrincipalV = {uri: pedidoS.produto.vendedor.usuario.imagemPerfil};
       }
       if (pedidoS.produto.imagemPrincipal) {
         imagemPrincipalP = { uri: pedidoS.produto.imagemPrincipal };
       }
-      let data = new Date(pedidoS.dataSolicitada);
-      let dataSolicitada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+
+      let dataNormal = new Date(pedidoS.dataSolicitada);
+      let dataSolicitada = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={

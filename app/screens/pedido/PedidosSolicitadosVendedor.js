@@ -65,17 +65,20 @@ pedidoSolicitado(){
   var views = [];
   if(this.state.pedidosSolicitados.length > 0){
     for (i in this.state.pedidosSolicitados) {
-      let imagemPrincipalC = require('./img/camera11.jpg');  
-      let imagemPrincipalP = require('./img/camera11.jpg');            
+      let imagemPrincipalC = require('./img/camera11.jpg');
+      let imagemPrincipalP = require('./img/camera11.jpg');
       let pedidoS = this.state.pedidosSolicitados[i];
+
       if (pedidoS.cliente.usuario.imagemPerfil) {
         imagemPrincipalC = {uri: pedidoS.cliente.usuario.imagemPerfil};
       }
       if (pedidoS.produto.imagemPrincipal) {
         imagemPrincipalP = {uri: pedidoS.produto.imagemPrincipal};
       }
-      var data = new Date(pedidoS.dataSolicitada);
-      var dataSolicitado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+      var dataNormal = new Date(pedidoS.dataSolicitada);
+      var dataSolicitado = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
