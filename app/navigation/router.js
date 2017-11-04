@@ -33,7 +33,7 @@ import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
-import TermoUso from '../screens/configuracao/TermoUso';
+import AceiteTermoUso from '../screens/configuracao/AceiteTermoUso';
 
 /**
 MENU SOMENTE PARA CLIENTE
@@ -292,9 +292,6 @@ export const TabsVendedor = TabNavigator({
 
 export const Root = StackNavigator({
 
-  TermoUso: {
-    screen: TermoUso
-  },
   Login: {
     screen: Login,
   },
@@ -315,6 +312,9 @@ export const Root = StackNavigator({
   },
   LocalizacaoNaoPermitida: {
     screen: LocalizacaoNaoPermitida,
+  },
+  AceiteTermoUso: {
+    screen: AceiteTermoUso,
   },
 }, {
   mode: 'card',
