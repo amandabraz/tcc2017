@@ -31,8 +31,8 @@ class AceiteTermoUso extends Component {
     };
 
   logout() {
-    AsyncStorage.removeItem('jwt');
-    alert('You have been logged out.');
+    ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+    this.props.navigation.navigate('Login');
   }
 
   login = () => {
