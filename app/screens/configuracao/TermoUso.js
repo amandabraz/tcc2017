@@ -27,12 +27,19 @@ class TermoUso extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="#768888"
-          padding={10}
-        />
         <View style={styles.oneResult1}>
+          <View style={{borderWidth: 1,
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        padding: 10,
+                        margin: 10}}>
+            <Text style={{fontSize: 20,
+                          padding: 5,
+                          color: '#88557B',
+                          alignSelf: 'center'}}>
+                          Termos de Uso
+            </Text>
+          </View>
 
           <View style={{width: '80%', paddingLeft: 6}}>
           <Text > {'\n'}</Text>
@@ -45,14 +52,14 @@ class TermoUso extends Component {
 
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Button buttonStyle={{width: '75%'}}
-                    title ="Recusar"
+                    title ="Não aceito"
                     color="#fff"
                     backgroundColor="#768888"
                     borderRadius={10}
             />
 
             <Button buttonStyle={{width: '75%'}}
-                    title="Aceitar"
+                    title="Aceito"
                     color="#fff"
                     backgroundColor="#88557B"
                     borderRadius={10}
