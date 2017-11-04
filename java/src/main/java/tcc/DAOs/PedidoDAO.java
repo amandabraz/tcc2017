@@ -81,4 +81,19 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
     Float findByQtdTotal(long vendedorId, Date filtroMensal);
 
+    @Query(value = "SELECT ROUND(SUM(pedido.valor_compra) / count(pedido.fk_cliente),2) AS ticket from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n", nativeQuery = true)
+    Float findByTicketMedio(long vendedorId, Date filtroMensal);
+
+    @Query(value = "SELECT COUNT(DISTINCT pedido.fk_cliente) as n_clientes from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE produto.fk_vendedor = ?1 \n"+
+            "AND pedido.data_finalizacao >= ?2 \n" +
+            "AND pedido.status = 'Finalizado'\n" +
+            "GROUP BY pedido.fk_cliente\n" +
+            "HAVING COUNT(n_clientes)>1", nativeQuery = true)
+    Integer findByQtdClientesConquistados(long vendedorId, Date filtroMensal);
 }
