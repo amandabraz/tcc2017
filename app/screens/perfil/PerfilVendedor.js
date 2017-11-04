@@ -100,6 +100,9 @@ export default class PerfilVendedor extends Component {
         meioPagVendedor.push(responseJson.meiosPagamentos[j]);
       }
       this.setState({meiosPagamentoVendedor: meioPagVendedor});
+    } else {
+      pagamentos = "Nenhum pagamento escolhido.";
+      this.setState({meiosPagamentoText: pagamentos});
     }
   }
 
