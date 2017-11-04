@@ -21,6 +21,8 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Hideo } from 'react-native-textinput-effects';
 import * as constante from '../../constantes';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
+import OneSignal from 'react-native-onesignal';
+
 
 const { width, height } = Dimensions.get("window");
 

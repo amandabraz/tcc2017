@@ -22,6 +22,7 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import Switch from 'react-native-customisable-switch';
 import * as constante from '../../constantes';
+import OneSignal from 'react-native-onesignal';
 
 const { width, height } = Dimensions.get("window");
 
@@ -61,6 +62,65 @@ class HomeVendedor extends Component {
     this.buscaDadosPedido();
     this.buscaInformacoes();
   };
+
+  componentWillMount() {
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener('registered', this.onRegistered);
+    OneSignal.addEventListener('ids', this.onIds);
+  }
+
+  componentDidMount() {
+    //salvar token do onesignal no nosso banco
+    var token = this.onIds;
+
+    if (token) {
+      vendedorEditado = {
+        "id": this.state.vendedorId,
+        "token": token.userId
+      }
+      fetch(constante.ENDPOINT + 'token', {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(vendedorEditado)})
+      .then((response) => response.json())
+      .then((responseJson) => { 
+        if (!responseJson.errorMessage) {
+          console.log('Token salvo para usuario');
+        }        
+      })
+    }
+  }
+
+  componentWillUnmount() {
+      OneSignal.removeEventListener('received', this.onReceived);
+      OneSignal.removeEventListener('opened', this.onOpened);
+      OneSignal.removeEventListener('registered', this.onRegistered);
+      OneSignal.removeEventListener('ids', this.onIds);
+  }
+
+  onReceived(notification) {
+      console.log("Notification received: ", notification);
+  }
+
+  onOpened(openResult) {
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  }
+
+  onRegistered(notifData) {
+      console.log("Device has been registered for push notifications!", notifData);
+  }
+
+  onIds(device) {
+    console.log('Device info: ', device);
+    return device;
+  }
 
   buscaDadosPedido() {
     fetch(constante.ENDPOINT+'pedido/'+ 'Solicitado' + '/vendedor/' + this.state.vendedorId, {method: 'GET'})

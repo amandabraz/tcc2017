@@ -148,4 +148,13 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
         }
     }
+
+    @RequestMapping(value = "/token", method = RequestMethod.PATCH)
+    public ResponseEntity atualizaPushToken(@RequestBody Usuario usuario) {
+        try {
+            return new ResponseEntity(usuarioService.editaUsuario(usuario), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Token não atualizado"), HttpStatus.FORBIDDEN);
+        }
+    }
 }
