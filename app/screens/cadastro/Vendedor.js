@@ -74,7 +74,7 @@ class Vendedor extends Component {
             .then((responseJson) => {
               if (!responseJson.errorMessage) {
                 ToastAndroid.showWithGravity('Cadastro finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('TabsVendedor', {userId: responseJson.usuario.id, vendedorId: responseJson.id });
+                this.props.navigation.navigate('AceiteTermoUso', {userId: responseJson.usuario.id, vendedorId: responseJson.id });
               } else {
                 Alert.alert("Houve um erro ao efetuar o cadastro, tente novamente");
               }
