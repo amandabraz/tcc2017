@@ -19,6 +19,7 @@ import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import CheckBox from 'react-native-check-box';
 import TagInput from 'react-native-tag-input';
+import Popup from 'react-native-popup';
 
 const { width, height } = Dimensions.get("window");
 
@@ -314,7 +315,6 @@ export default class PerfilCliente extends Component {
       });
   }
 
-  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
 
   trocaImagemPerfil() {
     var options = {
@@ -342,6 +342,43 @@ export default class PerfilCliente extends Component {
     });
   }
 
+
+    desejaSair() {
+      this.popup.confirm({
+        title: 'Logout',
+        content: ['Tem certeza que deseja sair?'],
+        ok: {
+          text: 'Sim',
+          style: {
+            color: 'gray',
+            fontWeight: 'bold'
+          },
+          callback: () => {
+            {this.logout()}
+          }
+        },
+        cancel: {
+          text: 'Não',
+          style: {
+            color: 'gray',
+            fontWeight: 'bold'
+          }
+        }
+      });
+    }
+
+    logout() {
+      ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+      this.props.navigation.navigate('Login');
+    }
+
+    sobreColaboradores() {
+      this.popup.tip({
+        title: 'Trabalho de Conclusão de Curso',
+			     content: [' ', 'Aline Bender Dias', 'Amanda Barbosa Braz', 'Larissa Sitta Espinosa', 'Maiara de Oliveira Rodrigues', ' ', 'PUC - CAMPINAS', ' ', '2017'],
+		  });
+    }
+
   render () {
     return (
       <View style={{ flex: 1 }}>
@@ -366,18 +403,6 @@ export default class PerfilCliente extends Component {
             ref={navTitleView => {
               this.navTitleView = navTitleView;
             }}>
-            <View style={styles.bar}>
-            <View style={{alignItems: 'flex-start', width: '80%'}}>
-              <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{alignItems: 'flex-end', width: '20%'}}>
-              <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-                <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-              </TouchableOpacity>
-            </View>
-          </View>
           </Animatable.View>
           }>
           <TriggeringView
@@ -386,16 +411,15 @@ export default class PerfilCliente extends Component {
             onDisplay={() => this.navTitleView.fadeOut(100)
             }>
             <View style={styles.bar}>
-              <View style={{alignItems: 'flex-start', width: '80%'}}>
-                <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                  <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{alignItems: 'flex-end', width: '20%'}}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                   <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
                 </TouchableOpacity>
-              </View>
+                <TouchableOpacity onPress={() => this.sobreColaboradores()}>
+                  <FontAwesomeIcon name="question" size={20} color={this.state.pencilColor} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this.desejaSair()}>
+                  <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
+                </TouchableOpacity>
             </View>
           </TriggeringView>
 
@@ -459,6 +483,7 @@ export default class PerfilCliente extends Component {
               {this.mostraBotaoSalvar()}
           </ScrollView>
         </HeaderImageScrollView>
+        <Popup ref={popup => this.popup = popup }/>
       </View>
     );
   }
@@ -498,7 +523,8 @@ export default class PerfilCliente extends Component {
     width,
     padding: '5%',
     backgroundColor: 'darkslategrey',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   barItem:{
     padding: 18,
