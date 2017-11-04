@@ -18,17 +18,38 @@ import {
 } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import Popup from 'react-native-popup';
 
 class AceiteTermoUso extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId,
-      clienteId: this.props.navigation.state.params.clienteId,
       };
     };
+
+  naoAceito() {
+    this.popup.confirm({
+      title: 'Aceite de Termos',
+      content: ['Para acesso à aplicação é necessário aceitar os Termos de Uso. Tem certeza que deseja sair?'],
+      ok: {
+        text: 'Continuar',
+        style: {
+          color: 'blue',
+          fontWeight: 'bold'
+        }
+      },
+      cancel: {
+        text: 'Sair',
+        style: {
+          color: 'red'
+        },
+        callback: () => {
+          {this.logout()}
+        }
+      }
+    });
+  }
 
   logout() {
     ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -36,39 +57,13 @@ class AceiteTermoUso extends Component {
   }
 
   login = () => {
-
-    fetch(constante.ENDPOINT + 'usuario/' + this.state.userId, {method: 'GET'})
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (!responseJson.errorMessage) {
-          if (responseJson != null) {
-            ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-              if (responseJson.perfil == "V") {
-                this.props.navigation.navigate('TabsVendedor', {
-                  userId: responseJson.id,
-                  vendedorId: this.state.vendedorId
-                });
-              } else if (responseJson.perfil == "C") {
-                this.props.navigation.navigate('TabsCliente', {
-                  userId: responseJson.id,
-                  clienteId: this.state.clienteId
-                });
-              }
-            }
-          } else {
-            Alert.alert("Erro no login.");
-          }
-        })
-        .catch((error) => {
-          Alert.alert("error Response", JSON.stringify(error));
-          console.error(error);
-      });
+    this.props.navigation.navigate('Cadastro');
   };
 
   render() {
     return (
-      <ScrollView>
       <View style={{flex: 1}}>
+      <ScrollView>
         <View style={styles.oneResult1}>
           <View style={{borderWidth: 1,
                         borderRadius: 10,
@@ -234,7 +229,7 @@ class AceiteTermoUso extends Component {
                     color="#fff"
                     backgroundColor="#768888"
                     borderRadius={10}
-                    onPress={() => this.logout()}
+                    onPress={this.naoAceito.bind(this)}
             />
 
             <Button buttonStyle={{width: '75%'}}
@@ -246,8 +241,9 @@ class AceiteTermoUso extends Component {
             />
           </View>
         </View>
-      </View>
       </ScrollView>
+      <Popup ref={popup => this.popup = popup }/>
+    </View>
     )
   }
 }
