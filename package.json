@@ -31,6 +31,7 @@
     "react-native-popup": "^0.6.1",
     "react-native-qrcode": "^0.2.6",
     "react-native-qrcode-scanner": "0.0.22",
+    "react-native-rating": "^2.0.4",
     "react-native-star-rating": "^1.0.8",
     "react-native-tag-input": "0.0.14",
     "react-native-tags": "^0.2.0",

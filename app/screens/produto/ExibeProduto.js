@@ -17,6 +17,9 @@ import { Fumi } from 'react-native-textinput-effects';
 import { Icon, Button } from 'react-native-elements';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import NavigationBar from 'react-native-navbar';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import Rating from 'react-native-rating';
 import StarRating from 'react-native-star-rating';
 
 const { width, height } = Dimensions.get("window");
@@ -26,6 +29,7 @@ export default class ExibeProduto extends Component {
         super(props, context);
         this.state = {
           produtoId: this.props.navigation.state.params.produtoId,
+          userId: this.props.navigation.state.params.userId,
           clienteId: this.props.navigation.state.params.clienteId,
           imagemPrincipal: require('./img/camera11.jpg'),
           imagemVendedor: require('./img/camera11.jpg'),
@@ -111,12 +115,28 @@ export default class ExibeProduto extends Component {
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeComprar', {produtoId: this.state.produtoId, clienteId: this.state.clienteId});
+    this.props.navigation.navigate('ExibeComprar', 
+    {produtoId: this.state.produtoId, 
+      clienteId: this.state.clienteId,
+      userId: this.state.userId});
   };
 
-render() {
+render() {  
+  const {goBack} = this.props.navigation;
+
+  const images = {
+  starFilled: require('./img/star_filled.png'),
+  starUnfilled: require('./img/star_unfilled.png')
+}
+  
   return (
     <View style={styles.container}>
+      <NavigationBar 
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }/>
       <HeaderImageScrollView
         maxHeight={300}
         minHeight ={100}

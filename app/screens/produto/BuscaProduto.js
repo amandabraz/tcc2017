@@ -104,7 +104,8 @@ export default class BuscaProduto extends Component {
   onButtonOpenProduct = (produtoIdSelecionado) => {
     this.props.navigation.navigate('ExibeProduto',
           {produtoId: produtoIdSelecionado,
-            clienteId: this.state.clienteId
+            clienteId: this.state.clienteId,
+            userId: this.state.userId
           });
   };
 
