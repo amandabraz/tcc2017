@@ -29,10 +29,10 @@ class PedidosConfirmadosVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.navigation.state.params.userId,      
+      userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       pedidosConfirmados: [],
-      refreshing: false,                  
+      refreshing: false,
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -44,29 +44,36 @@ class PedidosConfirmadosVendedor extends Component {
           if (!responseJson.errorMessage) {
               this.setState({pedidosConfirmados: responseJson});
         }
-        this.setState({refreshing: false});                        
+        this.setState({refreshing: false});
       });
   };
 
 pedidoConfirmado(){
   var views = [];
   if(this.state.pedidosConfirmados.length > 0){
-    for (i in this.state.pedidosConfirmados){
+    for (i in this.state.pedidosConfirmados) {
+      let imagemPrincipalC = require('./img/camera11.jpg');
       let pedidoC = this.state.pedidosConfirmados[i];
-      var dataNormal = new Date(pedidoC.dataConfirmacao);      
-      let dataConfirmado = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
+
+      if (pedidoC.cliente.usuario.imagemPerfil) {
+        imagemPrincipalC = {uri: pedidoC.cliente.usuario.imagemPerfil};
+      }
+
+      var dataNormal = new Date(pedidoC.dataConfirmacao);
+      let dataConfirmado = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() +
       " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '20%'}}>
-            <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
+            <Image source={imagemPrincipalC}
                   style={styles.imagemPrincipal}/>
             </View>
             <View style={{width: '65%', alignSelf:'center'}}>
               <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
-              <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>          
+              <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
               <Text style={styles.oneResultfont}> Entregar:
               <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
               </Text>
@@ -81,19 +88,19 @@ pedidoConfirmado(){
               <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
             </View>
           </View>
-          } content={  
+          } content={
             <View style={{margin: 15, alignItems:'center'}}>
               <Button buttonStyle={{width: 150}}
                   title="Validar Token"
                   color="#fff"
                   backgroundColor="#768888"
                   borderRadius={10}
-                  onPress={() => 
+                  onPress={() =>
                     {
                       this.props.navigation.navigate('LerToken', {
                         userId: this.state.userId,
                         vendedorId: this.state.vendedorId,
-                        token: pedidoC.token, 
+                        token: pedidoC.token,
                         pedidoId: pedidoC.id});
                     }}/>
             </View>
@@ -164,16 +171,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
-  },
-  imagemCliente:{
-    width: 60,
-    height: 60,
-    borderRadius: 100
-  },
-  imagemProduto:{
-    width: '98%',
-    height: 100,
-    borderRadius: 10
   },
   imagemPrincipal:{
     width: '98%',

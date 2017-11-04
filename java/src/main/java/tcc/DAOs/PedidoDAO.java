@@ -2,7 +2,6 @@ package tcc.DAOs;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.Models.Cliente;
 import tcc.Models.Pedido;
 

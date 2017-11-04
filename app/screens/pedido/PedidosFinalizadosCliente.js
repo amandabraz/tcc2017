@@ -151,7 +151,15 @@ pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
     for (i in this.state.pedidosFinalizados){
+      let imagemPrincipalP = require('./img/camera11.jpg');
+      let imagemPrincipalV = require('./img/camera11.jpg');                     
       let pedidoF = this.state.pedidosFinalizados[i];
+      if (pedidoF.produto.imagemPrincipal) {
+        imagemPrincipalP = { uri: pedidoF.produto.imagemPrincipal };
+      }
+      if (pedidoF.produto.vendedor.usuario.imagemPerfil) {
+        imagemPrincipalV = {uri: pedidoF.produto.vendedor.usuario.imagemPerfil};
+      }
       let dataNormal = new Date(pedidoF.dataFinalizacao);
       let dataFinalizacao = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
       " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
@@ -162,7 +170,7 @@ pedidoFinalizado(){
           header={
             <View style={{flexDirection: 'row'}}>
               <View style = {{ width: '25%'}}>
-                <Image source={{uri: pedidoF.produto.imagemPrincipal}}
+                <Image source={imagemPrincipalP}
                       style={styles.imagemPrincipal}/>
               </View>
               <View style={{width: '60%', alignSelf:'center'}}>
@@ -178,8 +186,8 @@ pedidoFinalizado(){
             <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
-                <Image source={{uri: pedidoF.produto.vendedor.usuario.imagemPerfil}}
-                      style={styles.imagemCliente}/>
+                <Image source={imagemPrincipalV}
+                      style={styles.imagemVendedor}/>
               </View>
               <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoF.produto.vendedor.usuario.nome}</Text>
@@ -215,14 +223,22 @@ pedidoFinalizado(){
   pedidoRecusado(){
     var views = [];
     if(this.state.pedidosRecusados.length > 0){
-      for (i in this.state.pedidosRecusados){
+      for (i in this.state.pedidosRecusados) {
+        let imagemPrincipalP = require('./img/camera11.jpg');
+        let imagemPrincipalV = require('./img/camera11.jpg');                     
         let pedidoR = this.state.pedidosRecusados[i];
+        if (pedidoR.produto.imagemPrincipal) {
+          imagemPrincipalP = { uri: pedidoR.produto.imagemPrincipal };
+        }
+        if (pedidoR.produto.vendedor.usuario.imagemPerfil) {
+          imagemPrincipalV = {uri: pedidoR.produto.vendedor.usuario.imagemPerfil};
+        }
         views.push(
           <View key={i} style={styles.oneResult1}>
             <Accordion header={
               <View style={{flexDirection: 'row'}}>
               <View style = {{ width: '25%'}}>
-               <Image source={{uri: pedidoR.produto.imagemPrincipal}}
+               <Image source={imagemPrincipalP}
                        style={styles.imagemPrincipal}/>
               </View>
             <View style={{width: '60%', alignSelf:'center'}}>
@@ -236,8 +252,8 @@ pedidoFinalizado(){
               <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
-                <Image source={{uri: pedidoR.produto.vendedor.usuario.imagemPerfil}}
-                       style={styles.imagemCliente}/>
+                <Image source={imagemPrincipalV}
+                       style={styles.imagemVendedor}/>
               </View>
             <View style={{width: '80%', paddingLeft: 6}}>
               <Text style={styles.totalFont}> {pedidoR.produto.vendedor.usuario.nome}</Text>
@@ -272,12 +288,20 @@ pedidoFinalizado(){
       if(this.state.pedidosCancelados.length > 0){
         for (i in this.state.pedidosCancelados){
           let pedidoC = this.state.pedidosCancelados[i];
+          let imagemPrincipalP = require('./img/camera11.jpg');
+          let imagemPrincipalV = require('./img/camera11.jpg');                     
+          if (pedidoC.produto.imagemPrincipal) {
+            imagemPrincipalP = { uri: pedidoC.produto.imagemPrincipal };
+          }
+          if (pedidoC.produto.vendedor.usuario.imagemPerfil) {
+            imagemPrincipalV = {uri: pedidoC.produto.vendedor.usuario.imagemPerfil};
+          }
           views.push(
             <View key={i} style={styles.oneResult1}>
               <Accordion header={
                 <View style={{flexDirection: 'row'}}>
                 <View style = {{ width: '25%'}}>
-                 <Image source={{uri: pedidoC.produto.imagemPrincipal}}
+                 <Image source={imagemPrincipalP}
                          style={styles.imagemPrincipal}/>
                 </View>
               <View style={{width: '60%', alignSelf:'center'}}>
@@ -291,8 +315,8 @@ pedidoFinalizado(){
                 <View style={{paddingTop: 15}}>
                 <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
                 <View style = {{ width: '20%'}}>
-                  <Image source={{uri: pedidoC.produto.vendedor.usuario.imagemPerfil}}
-                         style={styles.imagemCliente}/>
+                  <Image source={imagemPrincipalV}
+                         style={styles.imagemVendedor}/>
                 </View>
               <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
@@ -385,7 +409,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
   },
-  imagemCliente:{
+  imagemVendedor:{
     width: 60,
     height: 60,
     borderRadius: 100
