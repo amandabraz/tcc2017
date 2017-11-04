@@ -20,7 +20,7 @@ import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
 import Popup from 'react-native-popup';
 
-class AceiteTermoUso extends Component {
+class TermoUso extends Component {
 
   constructor(props) {
     super(props);
