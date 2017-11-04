@@ -4,6 +4,7 @@ import React, {
 import {
   Alert,
   AppRegistry,
+  AsyncStorage,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,14 +17,21 @@ import {
 } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 
-class TermoUso extends Component {
+class AceiteTermoUso extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.navigation.state.params.userId,
+      vendedorId: this.props.navigation.state.params.vendedorId,
+      clienteId: this.props.navigation.state.params.clienteId,
       };
     };
 
+  logout() {
+    AsyncStorage.removeItem('jwt');
+    alert('You have been logged out.');
+  }
 
   render() {
     return (
@@ -194,6 +202,7 @@ class TermoUso extends Component {
                     color="#fff"
                     backgroundColor="#768888"
                     borderRadius={10}
+                    onPress={() => this.logout()}
             />
 
             <Button buttonStyle={{width: '75%'}}
@@ -240,4 +249,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TermoUso;
+AceiteTermoUso.defaultProps = { ...AceiteTermoUso };
+
+export default AceiteTermoUso;
