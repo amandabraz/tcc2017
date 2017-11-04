@@ -375,7 +375,7 @@ export default class PerfilCliente extends Component {
     sobreColaboradores() {
       this.popup.tip({
         title: 'Trabalho de Conclusão de Curso',
-			     content: [' ', 'Aline Bender Dias', 'Amanda Barbosa Braz', 'Larissa Sitta Espinosa', 'Maiara de Oliveira Rodrigues', ' ', 'PUC - CAMPINAS', ' ', '2017'],
+			     content: [' ', 'Aline Bender Dias', 'Amanda Barbosa Braz', 'Larissa Sitta Espinosa', 'Maiara de Oliveira Rodrigues', ' ', 'amoratcc@gmail.com', ' ', 'PUC - CAMPINAS', '2017'],
 		  });
     }
 
