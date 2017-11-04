@@ -55,14 +55,7 @@ export default class ExibeComprar extends Component {
         this.buscaProduto();
     }
 
-    retornaPrimeiroMeioPagamento(){
-      return this.state.pagamentosArray[0]
-    }
-
     mostrarCheckboxesPagamento() {
-      //atualiza o meioDePagamento default
-      this.state.meioPagamentoEscolhido = this.retornaPrimeiroMeioPagamento();
-      
       var views = [];
       for(i in this.state.pagamentosArray) {
         let pagamento = this.state.pagamentosArray[i];
@@ -143,8 +136,8 @@ export default class ExibeComprar extends Component {
               .then((responseJson) => {
                 if (!responseJson.errorMessage) {
                   ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                  this.props.navigation.navigate('ExibeComprovante', 
-                  {pedidoId: responseJson.id,          
+                  this.props.navigation.navigate('ExibeComprovante',
+                  {pedidoId: responseJson.id,
                   userId: this.state.userId,
                   clienteId: this.state.clienteId});
                 } else {
@@ -180,14 +173,14 @@ export default class ExibeComprar extends Component {
     }
 
     render() {
-      
+
       const {goBack} = this.props.navigation
-      
+
       const images = {
       starFilled: require('./img/star_filled.png'),
       starUnfilled: require('./img/star_unfilled.png')
     }
-    
+
         return(
             <View style={styles.container}>
 
@@ -282,7 +275,6 @@ export default class ExibeComprar extends Component {
             <View style={{width: '70%'}}>
               <RadioGroup size={18}
                         thickness={2}
-                        selectedIndex={0}
                         color='gray'
                         onSelect = {(index, value) => this.setState({meioPagamentoEscolhido: value})}>
               {this.mostrarCheckboxesPagamento()}

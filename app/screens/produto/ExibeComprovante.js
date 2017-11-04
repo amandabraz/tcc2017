@@ -56,7 +56,7 @@ export default class ExibeComprovante extends Component {
             if (responseJson.produto.imagemPrincipal) {
               this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
             }
-          
+
           this.setState({nomeProdutoText: responseJson.produto.nome});
           this.setState({quantidadeText: responseJson.quantidade});
           this.setState({precoText: responseJson.valorCompra});
@@ -71,22 +71,19 @@ export default class ExibeComprovante extends Component {
     this.props.navigation.navigate('ExibeComprovante');
   };
 
-  //render
   render() {
-    
-    const {goBack} = this.props.navigation.navigate('TabsCliente', {
-      userId: this.state.userId,
-      clienteId: this.state.clienteId
-    })
+
+    const {goBack} = this.props.navigation;
 
     //retorno
     return (
       <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="skyblue"
-          leftButton={
-          <TouchableOpacity onPress={() => this.goBack()}>
+
+      <NavigationBar
+        title={titleConfig}
+        tintColor="skyblue"
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
             <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }/>
