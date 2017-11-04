@@ -88,10 +88,14 @@ class GerenciaProduto extends Component {
     var views = [];
     if(this.state.listaProdutos.length > 0){
       for (i in this.state.listaProdutos) {
+        let imagemPrincipal = require('./img/camera11.jpg');
         let produto = this.state.listaProdutos[i];
         var dataNormal = new Date(produto.dataPreparacao);
-        var dataPrep = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear();
+        var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
         produto.dataPreparacao = dataPrep;
+        if (produto.imagemPrincipal) {
+          imagemPrincipal = {uri: produto.imagemPrincipal};
+        }
         views.push(
           <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>
             <View style={styles.oneResult}>
@@ -99,7 +103,7 @@ class GerenciaProduto extends Component {
               <TouchableOpacity onPress={() => this.deletarProduto(produto)}>
                 <FontAwesomeIcon name="trash" size={20} color={'#ccc'} />
               </TouchableOpacity>
-                <Image source={{uri: produto.imagemPrincipal}}
+                <Image source={imagemPrincipal}
                      style={styles.photo}
                      justifyContent='flex-start'/>
                 <View style={{width: '65%', marginLeft: 12, marginRight: 12}}>

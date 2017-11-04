@@ -64,16 +64,27 @@ class PedidosSolicitadosVendedor extends Component {
 pedidoSolicitado(){
   var views = [];
   if(this.state.pedidosSolicitados.length > 0){
-    for (i in this.state.pedidosSolicitados){
+    for (i in this.state.pedidosSolicitados) {
+      let imagemPrincipalC = require('./img/camera11.jpg');
+      let imagemPrincipalP = require('./img/camera11.jpg');
       let pedidoS = this.state.pedidosSolicitados[i];
-      var data = new Date(pedidoS.dataSolicitada);
-      var dataSolicitado = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+
+      if (pedidoS.cliente.usuario.imagemPerfil) {
+        imagemPrincipalC = {uri: pedidoS.cliente.usuario.imagemPerfil};
+      }
+      if (pedidoS.produto.imagemPrincipal) {
+        imagemPrincipalP = {uri: pedidoS.produto.imagemPrincipal};
+      }
+      var dataNormal = new Date(pedidoS.dataSolicitada);
+      var dataSolicitado = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
+      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
-              <Image source={{uri: pedidoS.cliente.usuario.imagemPerfil}}
+              <Image source={imagemPrincipalC}
                   style={styles.imagemPrincipal}/>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
@@ -89,8 +100,8 @@ pedidoSolicitado(){
           <View style={{paddingTop: 15}}>
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
           <View style = {{ width: '20%'}}>
-          <Image source={{uri: pedidoS.produto.imagemPrincipal}}
-                 style={styles.imagemCliente}/>
+          <Image source={imagemPrincipalP}
+                 style={styles.imagemProduto}/>
           </View>
           <View style={{width: '80%', paddingLeft: 6}}>
             <Text style={styles.totalFont}> {pedidoS.produto.nome}{'\n'}</Text>
@@ -213,15 +224,10 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
   },
-  imagemCliente:{
+  imagemProduto:{
     width: 60,
     height: 60,
     borderRadius: 100
-  },
-  imagemProduto:{
-    width: '98%',
-    height: 100,
-    borderRadius: 10
   },
   imagemPrincipal:{
     width: '98%',
