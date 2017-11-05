@@ -8,7 +8,9 @@ import { AppRegistry,
   ScrollView,
   Dimensions,
   ToastAndroid,
-  StatusBar
+  StatusBar,
+  Alert,
+  Picker
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
@@ -32,6 +34,7 @@ export default class PerfilCliente extends Component {
       clienteId: this.props.navigation.state.params.clienteId,
       dataNascimentoText: '',
       imagemPerfil: require('./img/camera2.jpg'),
+      image: '',
       tags: [],
       nomeText: '',
       tagsText: "Nenhuma tag inserida",
@@ -272,7 +275,7 @@ export default class PerfilCliente extends Component {
         cliente,
         nomeText,
         celularText,
-        imagemPerfil,
+        image,
         tags,
         restricoesCliente
       }
@@ -292,7 +295,7 @@ export default class PerfilCliente extends Component {
         "telefone": celularText.substr(2,10),
         "notificacao": false,
         "bloqueado": false,
-        "imagemPerfil": imagemPerfil.uri
+        "imagemPerfil": image
       },
       "restricoesDieteticas": restricoesCliente,
       "tags": tags
@@ -345,46 +348,19 @@ export default class PerfilCliente extends Component {
   render () {
     return (
       <View style={{ flex: 1 }}>
+        <ScrollView>
         <StatusBar barStyle="light-content" />
-        <HeaderImageScrollView
-          maxHeight={MAX_HEIGHT}
-          minHeight={1}
-          maxOverlayOpacity={0.6}
-          minOverlayOpacity={0.3}
-          fadeOutForeground
-          renderHeader={() =>
-              <Image source={this.state.imagemPerfil} style={styles.image}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
-                    onPress={this.trocaImagemPerfil.bind(this)}>
-                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>
-                </TouchableOpacity>
-              </Image>
-          }
-          renderForeground={() =>
-            <Animatable.View
-            style={styles.navTitleView}
-            ref={navTitleView => {
-              this.navTitleView = navTitleView;
-            }}>
-            <View style={styles.bar}>
-            <View style={{alignItems: 'flex-start', width: '80%'}}>
-              <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{alignItems: 'flex-end', width: '20%'}}>
-              <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-                <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-              </TouchableOpacity>
-            </View>
-          </View>
-          </Animatable.View>
-          }>
           <TriggeringView
             style={styles.section}
             onHide={() => this.navTitleView.fadeInUp(200)}
             onDisplay={() => this.navTitleView.fadeOut(100)
             }>
+            <Image source={this.state.imagemPerfil} style={styles.image}>
+              <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+                  onPress={this.trocaImagemPerfil.bind(this)}>
+                <FontAwesomeIcon name="camera" size={22} color={'gray'}/>
+              </TouchableOpacity>
+            </Image>
             <View style={styles.bar}>
               <View style={{alignItems: 'flex-start', width: '80%'}}>
                 <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
@@ -398,8 +374,6 @@ export default class PerfilCliente extends Component {
               </View>
             </View>
           </TriggeringView>
-
-            <ScrollView>
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome'}
@@ -458,7 +432,6 @@ export default class PerfilCliente extends Component {
 
               {this.mostraBotaoSalvar()}
           </ScrollView>
-        </HeaderImageScrollView>
       </View>
     );
   }
