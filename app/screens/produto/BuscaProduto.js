@@ -41,7 +41,7 @@ export default class BuscaProduto extends Component {
 
 
   buscaPedidosIndicados() {
-    if (this.state.resultadoPesquisaProduto.length > 0) {      
+    if (this.state.resultadoPesquisaProduto.length > 0) {
       this.setState({resultadoPesquisaProduto: []});
     }
     fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
@@ -61,7 +61,7 @@ export default class BuscaProduto extends Component {
     if (this.state.resultadoPesquisaVendedor.length > 0) {
       this.setState({resultadoPesquisaVendedor: []});
     }
-    
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
     }, (error) => {
@@ -166,7 +166,7 @@ export default class BuscaProduto extends Component {
         }
         views.push (
           <View key={i}>
-            <TouchableHighlight 
+            <TouchableHighlight
               onPress={() => this.onButtonOpenProduct(produto.id)}
               underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
             >
@@ -179,8 +179,9 @@ export default class BuscaProduto extends Component {
                   </View>
                   <View style={{width: "45%"}}>
                     <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>R$ {produto.preco}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.quantidade} disponíveis</Text>
                   </View>
                   <View style={{width: "15%"}} justifyContent='center'>
                     <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
@@ -215,7 +216,7 @@ export default class BuscaProduto extends Component {
         }
         views.push (
           <View key={i}>
-            <TouchableHighlight 
+            <TouchableHighlight
               onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
               underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
             >
