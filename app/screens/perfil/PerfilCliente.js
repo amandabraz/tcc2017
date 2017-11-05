@@ -1,18 +1,19 @@
 import React, {
   Component
 } from 'react';
-import { AppRegistry,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  ScrollView,
-  Dimensions,
-  ToastAndroid,
-  StatusBar,
+import {
+  AppRegistry,
   Alert,
-  Picker
+  Dimensions,
+  Image,
+  Picker,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {
@@ -26,9 +27,7 @@ import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import CheckBox from 'react-native-check-box';
 import TagInput from 'react-native-tag-input';
-import HeaderImageScrollView, {
-  TriggeringView
-} from 'react-native-image-header-scroll-view';
+import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 
 const { width, height } = Dimensions.get("window");
 
