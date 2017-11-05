@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     pieChart_viewStyle:{
       margin: 10,
       marginTop: 15,
-      marginRight: 5
+      marginRight: 5,
       fontWeight: 'bold'
     },
     pieChart_viewStyle:{
