@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tcc.CustomQueryHelpers.RankingProdutosVendidos;
 import tcc.CustomQueryHelpers.QuantidadePedidos;
 import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
@@ -182,6 +183,20 @@ public class PedidoController {
             return new ResponseEntity <QuantidadeVendidaCliente>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "ranking/produto/{filtroMensal}", method = RequestMethod.GET)
+    public ResponseEntity rankingProdutosVendidos(@PathVariable("filtroMensal") Boolean filtroMensal) {
+        try {
+            List<RankingProdutosVendidos> pedidos = pedidoService.rankingProdutosVendidos(filtroMensal);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<RankingProdutosVendidos>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos"), HttpStatus.BAD_REQUEST);
         }
     }
 

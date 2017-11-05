@@ -2,6 +2,7 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tcc.CustomQueryHelpers.RankingProdutosVendidos;
 import tcc.CustomQueryHelpers.QuantidadePedidos;
 import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.DAOs.PedidoDAO;
@@ -259,6 +260,15 @@ public class PedidoService {
         }
     }
 
+
+    @Transactional
+    public List<RankingProdutosVendidos> rankingProdutosVendidos (Boolean filtroMensal) {
+        try {
+            return (List<RankingProdutosVendidos>) pedidoDAO.findByProdutosMaisVendidos(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 
     private Date buscaData (Boolean filtroMensal){
         new Date();
