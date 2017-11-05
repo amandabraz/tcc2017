@@ -34,6 +34,7 @@ import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
 import TermoUso from '../screens/configuracao/TermoUso';
+import AceiteTermoUso from '../screens/configuracao/AceiteTermoUso';
 
 /**
 MENU SOMENTE PARA CLIENTE
@@ -315,6 +316,9 @@ export const Root = StackNavigator({
   },
   TermoUso: {
     screen: TermoUso,
+  },
+  AceiteTermoUso: {
+    screen: AceiteTermoUso,
   },
 }, {
   mode: 'card',

@@ -13,7 +13,6 @@ import {
   View
 } from 'react-native';
 import * as constante from '../../constantes';
-
 import Chart from 'react-native-chart';
 import NavigationBar from 'react-native-navbar';
 import PieChart from 'react-native-pie-chart';
@@ -39,7 +38,7 @@ class Estatisticas extends Component {
     this.buscaValorArrecadadoPorProduto();
   };
 
-  //BUSCA POR UNIDADES VENDIDAS - BAR CHART
+  //BUSCA POR UNIDADES VENDIDAS - BAR CHART E LISTA DE PRODUTOS
   buscaQuantidadeVendida() {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
     .then((response) => response.json())
@@ -51,6 +50,32 @@ class Estatisticas extends Component {
         this.setState({refreshing:false});
     });
   };
+
+  buscaProdutosVendidosVendedor(){
+    if(this.state.quantidadeVendida.length > 0){
+      return(
+      <View style={styles.container}>
+        <View style={{width: this.state.quantidadeVendida.length}}/>
+        <Chart
+          style = {styles.chart}
+          data = {
+              this.state.quantidadeVendida
+          }
+          type = "bar"
+          verticalGridStep = {1}
+        />
+      </View>
+      )
+    } else {
+      return(
+        <View key={0} style={{alignItems: 'center', marginRight: 5}}>
+        <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+          Não há produtos vendidos para estatísticas.
+        </Text>
+        </View>
+      )
+    }
+  }
 
   produtosVendidos(){
     var views = [];
@@ -76,6 +101,7 @@ class Estatisticas extends Component {
         </View>
       )
     }
+    return views;
   }
 
   //BUSCA POR VALOR ARRECADADO - PIE CHART
@@ -157,11 +183,17 @@ class Estatisticas extends Component {
                 }}
               />
             }>
-            <View style={{paddingTop: 25}}>
-              <Text style={{marginLeft: 10, fontSize: 16}}>
+            <View style={{paddingTop: 25, marginRight: 5}}>
+              <Text style={{marginLeft: 10, marginRight: 10, fontSize: 16}}>
                 Seus Produtos Vendidos:
               </Text>
               {this.produtosVendidos()}
+            </View>
+            <View style = {{margin: 10, flexDirection: 'column', marginTop: 15, marginRight: 15}}>
+              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', marginRight: 5, color: '#0000CD', fontWeight: 'bold'}}>
+                Representação gráfica:
+              </Text>
+              {this.buscaProdutosVendidosVendedor()}
             </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
@@ -183,11 +215,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'column',
         backgroundColor: '#D9DBDB',
+        marginRight: 5
     },
     chart: {
         width: 350,
         height: 350,
         flex:1,
+        marginRight: 5,
     },
     produtosV:{
       margin: 6,
@@ -195,13 +229,21 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderRadius: 10,
       borderColor: '#fff',
-      width: '98%'
+      width: '98%',
+      marginRight: 5
     },
     pieChart_text:{
       marginTop: 8,
       fontSize: 16,
       justifyContent: 'center',
       color: '#406161',
+      fontWeight: 'bold',
+      marginRight: 5
+    },
+    pieChart_viewStyle:{
+      margin: 10,
+      marginTop: 15,
+      marginRight: 5,
       fontWeight: 'bold'
     },
     pieChart_viewStyle:{
@@ -212,14 +254,6 @@ const styles = StyleSheet.create({
       marginTop: 8,
       fontSize: 14,
       justifyContent: 'center'
-    },
-    bar: {
-      borderRadius: 5,
-      height: 7,
-      marginRight: 5
-    },
-    points: {
-      backgroundColor: '#88557B'
     },
     pieChart_textAlign:{
       flexDirection: 'row',
