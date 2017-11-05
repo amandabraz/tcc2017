@@ -34,7 +34,7 @@ export default class PerfilVendedor extends Component {
       nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
-      imagemPerfil: require('./img/camera2.jpg'),
+      imagemPerfil: require('./img/camera11.jpg'),
       meiosPagamentoText: "Nenhum meio de pagamento escolhido",
       pagamentoEstilo: {
         color: '#CCCCCC',

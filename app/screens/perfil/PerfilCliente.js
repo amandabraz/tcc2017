@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
 import { AppRegistry,
   Text,
   StyleSheet,
@@ -13,14 +15,20 @@ import { AppRegistry,
   Picker
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Fumi } from 'react-native-textinput-effects';
-import { Icon } from 'react-native-elements';
+import {
+  Fumi
+} from 'react-native-textinput-effects';
+import {
+  Icon
+} from 'react-native-elements';
 import * as constante from '../../constantes';
-import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import CheckBox from 'react-native-check-box';
 import TagInput from 'react-native-tag-input';
+import HeaderImageScrollView, {
+  TriggeringView
+} from 'react-native-image-header-scroll-view';
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,8 +41,8 @@ export default class PerfilCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       dataNascimentoText: '',
-      imagemPerfil: require('./img/camera2.jpg'),
-      image: '',
+      imagemPerfil: require('./img/camera11.jpg'),
+      imagemEditada: '',
       tags: [],
       nomeText: '',
       tagsText: "Nenhuma tag inserida",
@@ -275,11 +283,12 @@ export default class PerfilCliente extends Component {
         cliente,
         nomeText,
         celularText,
-        image,
+        imagemEditada,
         tags,
         restricoesCliente
       }
     } = this;
+
     clienteEditado = {
       "id": clienteId,
       "usuario": {
@@ -295,11 +304,12 @@ export default class PerfilCliente extends Component {
         "telefone": celularText.substr(2,10),
         "notificacao": false,
         "bloqueado": false,
-        "imagemPerfil": image
+        "imagemPerfil": imagemEditada
       },
       "restricoesDieteticas": restricoesCliente,
       "tags": tags
     };
+
     fetch(constante.ENDPOINT + 'cliente', {
       method: 'PUT',
       headers: {
@@ -320,29 +330,32 @@ export default class PerfilCliente extends Component {
   openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
 
   trocaImagemPerfil() {
-    var options = {
-      title: 'Selecione sua foto',
-      takePhotoButtonTitle: 'Tirar uma foto',
-      chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
-      cancelButtonTitle: 'Cancelar',
-      storageOptions: {
-        skipBackup: false,
-        path: 'images'
-      }
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        //do nothing
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        let source = 'data:image/jpeg;base64,' + response.data;
-        this.setState({
-          image: {uri: response.uri, width: 200, height: 200, changed: true}
-        });
-        this.setState({imagemPerfil: source});
-      }
-    });
+    if (this.state.editavel == false) {
+    } else {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPerfil: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemEditada: source});
+        }
+      });
+    }
   }
 
   render () {
