@@ -96,4 +96,13 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "GROUP BY pedido.fk_cliente\n" +
             "HAVING COUNT(n_clientes)>1", nativeQuery = true)
     Integer findByQtdClientesConquistados(long vendedorId, Date filtroMensal);
+
+    @Query(value = "SELECT produto.nome, SUM(pedido.quantidade) as qtd_vendida from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
+            "WHERE pedido.data_finalizacao = ?1 \n"+
+            "AND pedido.status = 'Finalizado'\n" +
+            "GROUP BY produto.id_produto \n" +
+            "ORDER BY 2 DESC \n" +
+            "LIMIT 10", nativeQuery = true)
+    List<?> findByProdutosMaisVendidos(Date filtroMensal);
 }
