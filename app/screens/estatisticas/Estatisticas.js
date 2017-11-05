@@ -16,6 +16,7 @@ import * as constante from '../../constantes';
 import Chart from 'react-native-chart';
 import NavigationBar from 'react-native-navbar';
 import PieChart from 'react-native-pie-chart';
+import Slider from "react-native-slider";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,9 +34,10 @@ class Estatisticas extends Component {
         valorTotalArrecadadoPorProduto: [],
         nomeProduto: [],
         refreshing: false,
+        motherfuckerslidervalue: 30,
     };
     this.buscaQuantidadeVendida();
-    this.buscaValorArrecadadoPorProduto();
+    this.buscaValorArrecadadoPorProduto(this.state.motherfuckerslidervalue);
   };
 
   //BUSCA POR UNIDADES VENDIDAS - BAR CHART E LISTA DE PRODUTOS
@@ -106,8 +108,8 @@ class Estatisticas extends Component {
 
   //BUSCA POR VALOR ARRECADADO - PIE CHART
 
-  buscaValorArrecadadoPorProduto(){
-    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30&maxCount=5', {method: 'GET'})
+  buscaValorArrecadadoPorProduto(diasASeremFiltrados){
+    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays='+diasASeremFiltrados+'&maxCount=10', {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
@@ -130,7 +132,7 @@ class Estatisticas extends Component {
       for(let i = 0; i<this.state.nomeProduto.length; i++){
         textDescriptions.push(
           <Text key={keyOfPieChart+"_desc_"+i} style={styles.pieChart_description}>
-            <Text style={{color: colorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
+            <Text style={{color: twentyColorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
           </Text>
         )
       }
@@ -139,7 +141,7 @@ class Estatisticas extends Component {
         <PieChart
           chart_wh={250}
           series={this.state.valorTotalArrecadadoPorProduto}
-          sliceColor={colorsForPieChart}
+          sliceColor={twentyColorsForPieChart}
           doughnut={true}
           coverRadius={0.45}
           coverFill={'#D9DBDB'}
@@ -160,6 +162,20 @@ class Estatisticas extends Component {
     }
   }
 
+  exibeSlider(){
+    return(
+      <Slider
+        value={this.state.motherfuckerslidervalue}
+        onValueChange={(value) => {
+          this.setState({ motherfuckerslidervalue:value })
+          this.buscaValorArrecadadoPorProduto(value)
+        }}
+        minimumValue={1}
+        maximumValue={30}
+        step={1}
+      />
+    );
+  }
 
   render() {
     const titleConfig = {
@@ -179,7 +195,7 @@ class Estatisticas extends Component {
                 onRefresh={() => {
                   this.setState({refreshing:true});
                   this.buscaQuantidadeVendida();
-                  this.buscaValorArrecadadoPorProduto();
+                  this.buscaValorArrecadadoPorProduto(this.state.motherfuckerslidervalue);
                 }}
               />
             }>
@@ -197,8 +213,9 @@ class Estatisticas extends Component {
             </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
-                Valor total arrecadado por produto no mês
+                Valor total arrecadado por produto nos últimos {this.state.motherfuckerslidervalue} dias
               </Text>
+              {this.exibeSlider()}
               {this.exibeValorArrecadadoPorProduto()}
             </View>
           </ScrollView>
@@ -263,7 +280,13 @@ const styles = StyleSheet.create({
     }
 });
 
-const colorsForPieChart = ['#F44336','#2196F3','#d1bc0c', '#4CAF50', '#Fd720f', '#776567'];
+const twentyColorsForPieChart = [
+  '#F44336','#2196F3','#d1bc0c','#4CAF50','#Fd720f','#776567',
+  '#e6194b','#911eb4','#46f0f0','#f032e6','#d2f53c','e0b5b5',
+  '#008080','#aa6e28','#ac96ba','#808080','#800000','#aaffc3',
+  '#808000',"#000080"
+
+];
 
 Estatisticas.defaultProps = { ...Estatisticas };
 
