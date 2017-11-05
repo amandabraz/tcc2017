@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
@@ -76,10 +75,10 @@ export default class ExibeVendedor extends Component {
     if(this.state.resultadoProduto.length > 0){
     for(i in this.state.resultadoProduto) {
       let produto = this.state.resultadoProduto[i];
-      let imagemPrincipalP = require('./img/camera11.jpg');            
+      let imagemPrincipalP = require('./img/camera11.jpg');
       if (produto.imagemPrincipal) {
         imagemPrincipalP = { uri: produto.imagemPrincipal };
-      }      
+      }
       views.push (
         <View key={i}>
         <TouchableOpacity onPress={() => this.onButtonOpenProduct(produto)}>
@@ -136,7 +135,7 @@ onButtonOpenProduct = (produto) => {
             label={'Nome da loja'}
             iconClass={MaterialsIcon}
             iconName={'store'}
-            iconColor={'darkslategrey'}
+            iconColor={'#4A4A4A'}
             value={this.state.nomeFantasiaText}
             editable={false}
             inputStyle={styles.baseText}/>
@@ -146,7 +145,7 @@ onButtonOpenProduct = (produto) => {
               label={'Meios de Pagamento'}
               iconClass={FontAwesomeIcon}
               iconName={'asterisk'}
-              iconColor={'darkslategrey'}
+              iconColor={'#4A4A4A'}
               value={this.state.meiosPagamentoText}
               multiline={true}
               editable={false}
@@ -179,7 +178,6 @@ onButtonOpenProduct = (produto) => {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: 'rgba(202, 203, 247, 0.58)',
   },
   profilepicWrap:{
     width: 180,
@@ -195,12 +193,12 @@ onButtonOpenProduct = (produto) => {
     borderWidth: 4
   },
   oneResultfontTitle:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontWeight: 'bold',
     fontSize: 18,
   },
   oneResultfont:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontSize: 15,
   },
   imageResultSearch:{
@@ -228,18 +226,18 @@ onButtonOpenProduct = (produto) => {
   },
   baseText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 20,
   },
   listText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 16,
   },
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontFamily: 'Roboto',
   },
 });

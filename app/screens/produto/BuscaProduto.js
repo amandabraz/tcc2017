@@ -41,7 +41,7 @@ export default class BuscaProduto extends Component {
 
 
   buscaPedidosIndicados() {
-    if (this.state.resultadoPesquisaProduto.length > 0) {      
+    if (this.state.resultadoPesquisaProduto.length > 0) {
       this.setState({resultadoPesquisaProduto: []});
     }
     fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
@@ -61,7 +61,7 @@ export default class BuscaProduto extends Component {
     if (this.state.resultadoPesquisaVendedor.length > 0) {
       this.setState({resultadoPesquisaVendedor: []});
     }
-    
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
     }, (error) => {
@@ -143,9 +143,9 @@ export default class BuscaProduto extends Component {
           fontWeight: 'bold',
           fontSize: 18,
           padding: 4,
-          color: '#fff',
-          backgroundColor: '#f2a59d',
-          borderColor: '#f2a59d',
+          color: '#FCFCFC',
+          backgroundColor: '#624063',
+          borderColor: '#624063',
           borderStyle: 'solid',
           borderRadius: 100,
           textAlign: 'center'
@@ -166,7 +166,7 @@ export default class BuscaProduto extends Component {
         }
         views.push (
           <View key={i}>
-            <TouchableHighlight 
+            <TouchableHighlight
               onPress={() => this.onButtonOpenProduct(produto.id)}
               underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
             >
@@ -189,7 +189,7 @@ export default class BuscaProduto extends Component {
                     <Icon
                       name='shopping-cart'
                       type=' material-community'
-                      color='#1C1C1C'
+                      color='#4A4A4A'
                       onPress={() => this.onButtonOpenProduct(produto.id)}
                       style={styles.imageResultSearch} />
                   </View>
@@ -215,7 +215,7 @@ export default class BuscaProduto extends Component {
         }
         views.push (
           <View key={i}>
-            <TouchableHighlight 
+            <TouchableHighlight
               onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
               underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
             >
@@ -232,7 +232,7 @@ export default class BuscaProduto extends Component {
                   <Icon
                     name='person'
                     type=' material-community'
-                    color='#1C1C1C'
+                    color='#4A4A4A'
                     onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
                     style={styles.imageResultSearch}
                     />
@@ -268,14 +268,14 @@ componentWillMount() {
         <View style={{flex: 1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="#023329"
+            tintColor="#624063"
           />
         <View style={styles.container}>
         <Hideo
             iconClass={FontAwesomeIcon}
             iconName={'search'}
-            iconColor={'white'}
-            iconBackgroundColor={'#f2a59d'}
+            iconColor={'#624063'}
+            iconBackgroundColor={'#FCFCFC'}
             inputStyle={{ color: '#464949' }}
             onChangeText={(textoBusca) => this.setState({textoBusca})}
             onSubmitEditing={() => this.setSearchText(this.state.textoBusca)}
@@ -300,7 +300,7 @@ componentWillMount() {
 
 const titleConfig = {
   title: 'Busca de Produtos',
-  tintColor: "#DCDCDC",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 
@@ -317,12 +317,12 @@ const styles = StyleSheet.create({
      margin: 3,
   },
   oneResultfontTitle:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontWeight: 'bold',
     fontSize: 18,
   },
   oneResultfont:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontSize: 15,
   },
   results:{

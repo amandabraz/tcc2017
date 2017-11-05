@@ -117,7 +117,7 @@ class Cliente extends Component {
       <View style={{flex: 1}}>
         <NavigationBar
           title={titleConfig}
-          tintColor="#95c9db"
+          tintColor="#624063"
         />
         <View style={styles.container}>
 
@@ -152,7 +152,7 @@ class Cliente extends Component {
 
 const titleConfig = {
   title: 'Cadastro Cliente',
-  tintColor: "#dc143c",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 
