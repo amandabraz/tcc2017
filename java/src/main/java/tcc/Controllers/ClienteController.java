@@ -38,7 +38,7 @@ public class ClienteController {
         } catch (Exception ex) {
             return new ResponseEntity<>(new CustomError("Erro ao salvar Cliente"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(novoCliente.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(novoCliente, HttpStatus.OK);
     }
 
 
