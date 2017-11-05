@@ -112,7 +112,7 @@ class PedidoCliente extends Component {
         <View style={{flex:1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="#768888"/>
+            tintColor="#885581"/>
             <View style={styles.container}>
               <View style={styles.oneResult}>
                 <View style={{flexDirection: 'row'}}>

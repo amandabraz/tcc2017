@@ -18,7 +18,6 @@ import StartTimerLocation from '../localizacao/TimerGeolocation.js';
 import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
-import NavigationBar from 'react-native-navbar';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
@@ -86,8 +85,8 @@ pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
     for (i in this.state.pedidosFinalizados) {
-      let imagemPrincipalP = require('./img/camera11.jpg');      
-      let imagemPrincipalC = require('./img/camera11.jpg');            
+      let imagemPrincipalP = require('./img/camera11.jpg');
+      let imagemPrincipalC = require('./img/camera11.jpg');
       let pedidoF = this.state.pedidosFinalizados[i];
       if (pedidoF.produto.imagemPrincipal) {
         imagemPrincipalP = {uri: pedidoF.produto.imagemPrincipal};
@@ -96,7 +95,7 @@ pedidoFinalizado(){
         imagemPrincipalC = {uri: pedidoF.cliente.usuario.imagemPerfil};
       }
       var dataNormal = new Date(pedidoF.dataFinalizacao);
-      var dataFinalizacao = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
+      var dataFinalizacao = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() +
       " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
       views.push(
         <View key={i} style={styles.oneResult1}>
@@ -114,7 +113,7 @@ pedidoFinalizado(){
           <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
           </View>
       </View>
-          } 
+          }
           content={
             <View style={{paddingTop: 15}}>
             <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
@@ -154,8 +153,8 @@ pedidoFinalizado(){
     var views = [];
     if(this.state.pedidosRecusados.length > 0){
       for (i in this.state.pedidosRecusados){
-        let imagemPrincipalP = require('./img/camera11.jpg');      
-        let imagemPrincipalC = require('./img/camera11.jpg');            
+        let imagemPrincipalP = require('./img/camera11.jpg');
+        let imagemPrincipalC = require('./img/camera11.jpg');
         let pedidoR = this.state.pedidosRecusados[i];
         if (pedidoR.produto.imagemPrincipal) {
           imagemPrincipalP = {uri: pedidoR.produto.imagemPrincipal};
@@ -217,8 +216,8 @@ pedidoFinalizado(){
       var views = [];
       if(this.state.pedidosCancelados.length > 0){
         for (i in this.state.pedidosCancelados){
-          let imagemPrincipalP = require('./img/camera11.jpg');      
-          let imagemPrincipalC = require('./img/camera11.jpg');            
+          let imagemPrincipalP = require('./img/camera11.jpg');
+          let imagemPrincipalC = require('./img/camera11.jpg');
           let pedidoC = this.state.pedidosCancelados[i];
           if (pedidoC.produto.imagemPrincipal) {
             imagemPrincipalP = {uri: pedidoC.produto.imagemPrincipal};

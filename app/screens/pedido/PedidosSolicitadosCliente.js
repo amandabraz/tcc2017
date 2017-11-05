@@ -142,7 +142,7 @@ pedidoSolicitado(){
             <Button buttonStyle={{width: '80%'}}
                     title ="Cancelar"
                     color="#fff"
-                    backgroundColor="#88557B"
+                    backgroundColor="#7A8887"
                     borderRadius={10}
                     onPress={() =>this.cancelarPedido(pedidoS)}
                     />

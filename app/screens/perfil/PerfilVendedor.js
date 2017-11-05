@@ -196,7 +196,7 @@ export default class PerfilVendedor extends Component {
         label={'Meios de Pagamento'}
         iconClass={FontAwesomeIcon}
         iconName={'asterisk'}
-        iconColor={'darkslategrey'}
+        iconColor={'#7A8887'}
         value={this.state.meiosPagamentoText}
         multiline={true}
         editable={false}
@@ -229,7 +229,7 @@ export default class PerfilVendedor extends Component {
       views.push(
         <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
           <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
-          <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
+          <Text style={{fontFamily: 'Roboto', color: '#7A8887', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
         </View>
       );
       for (i in pagamentosVendedor) {
@@ -388,7 +388,7 @@ export default class PerfilVendedor extends Component {
                 iconClass={FontAwesomeIcon}
                 iconSize={20}
                 iconName={'user'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.nomeText}
                 editable={this.state.editavel}
                 inputStyle={this.state.titleTextClass}
@@ -399,7 +399,7 @@ export default class PerfilVendedor extends Component {
                 label={'CPF'}
                 iconClass={FontAwesomeIcon}
                 iconName={'info'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.CPFText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -409,7 +409,7 @@ export default class PerfilVendedor extends Component {
                 label={'Data de Nascimento'}
                 iconClass={FontAwesomeIcon}
                 iconName={'calendar'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.dataNascimentoText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -419,7 +419,7 @@ export default class PerfilVendedor extends Component {
                 label={'Email'}
                 iconClass={FontAwesomeIcon}
                 iconName={'at'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.emailText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -429,7 +429,7 @@ export default class PerfilVendedor extends Component {
                 label={'Celular'}
                 iconClass={FontAwesomeIcon}
                 iconName={'mobile'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.celularText}
                 editable={this.state.editavel}
                 inputStyle={this.state.baseTextClass}
@@ -441,7 +441,7 @@ export default class PerfilVendedor extends Component {
                 label={'Nome da loja'}
                 iconClass={MaterialsIcon}
                 iconName={'store'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.nomeFantasiaText}
                 editable={this.state.editavel}
                 inputStyle={this.state.baseTextClass}
@@ -495,13 +495,13 @@ export default class PerfilVendedor extends Component {
   bar:{
     width,
     padding: '5%',
-    backgroundColor: 'darkslategrey',
+    backgroundColor: '#7A8887',
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
   baseText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontSize: 20,
   },
   baseTextEdit: {
@@ -517,7 +517,7 @@ export default class PerfilVendedor extends Component {
   },
   listText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontSize: 16,
   },
   barText: {
@@ -528,7 +528,7 @@ export default class PerfilVendedor extends Component {
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontFamily: 'Roboto',
   },
   titleTextEdit: {
@@ -542,7 +542,7 @@ export default class PerfilVendedor extends Component {
     justifyContent: 'center',
     height: 35,
     width: 200,
-    backgroundColor: "darkslategrey",
+    backgroundColor: "#7A8887",
     alignSelf: 'stretch',
     marginBottom: 20
   },

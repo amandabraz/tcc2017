@@ -108,7 +108,7 @@ export default class PerfilCliente extends Component {
         label={'Tags'}
         iconClass={FontAwesomeIcon}
         iconName={'hashtag'}
-        iconColor={'darkslategrey'}
+        iconColor={'#4A4A4A'}
         value={this.state.tagsText}
         editable={false}
         multiline={true}
@@ -127,7 +127,7 @@ export default class PerfilCliente extends Component {
         <View style={{ margin: 15, height: 150}}>
           <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
             <FontAwesomeIcon name="hashtag" size={17} color={'#9fa1a3'} />
-            <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Tags</Text>
+            <Text style={{fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 16, fontWeight: "bold"}}>  Tags</Text>
           </View>
           <TagInput
             value={this.state.tags}
@@ -152,7 +152,7 @@ export default class PerfilCliente extends Component {
         label={'Restrições dietéticas'}
         iconClass={FontAwesomeIcon}
         iconName={'asterisk'}
-        iconColor={'darkslategrey'}
+        iconColor={'#4A4A4A'}
         value={this.state.restricoesDieteticasText}
         multiline={true}
         editable={false}
@@ -165,7 +165,7 @@ export default class PerfilCliente extends Component {
         views.push(
           <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
             <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
-            <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Restrições dietéticas</Text>
+            <Text style={{fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 16, fontWeight: "bold"}}>  Restrições dietéticas</Text>
           </View>
         );
         for (i in listaRestricoes) {
@@ -437,7 +437,7 @@ export default class PerfilCliente extends Component {
                 iconClass={FontAwesomeIcon}
                 iconSize={20}
                 iconName={'user'}
-                iconColor={'darkslategrey'}
+                iconColor={'#4A4A4A'}
                 value={this.state.nomeText}
                 onChangeText={(nome) => this.setState({nomeText: nome})}
                 editable={this.state.editavel}
@@ -448,7 +448,7 @@ export default class PerfilCliente extends Component {
                   label={'CPF'}
                   iconClass={FontAwesomeIcon}
                   iconName={'info'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.cliente.usuario.cpf}
                   editable={false}
                   inputStyle={styles.baseText}/>
@@ -458,7 +458,7 @@ export default class PerfilCliente extends Component {
                   label={'Celular'}
                   iconClass={FontAwesomeIcon}
                   iconName={'mobile'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.celularText}
                   onChange={(celular) => this.setState({celularText: celular})}
                   editable={this.state.editavel}
@@ -469,7 +469,7 @@ export default class PerfilCliente extends Component {
                   label={'Data de Nascimento'}
                   iconClass={FontAwesomeIcon}
                   iconName={'calendar'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.dataNascimentoText}
                   editable={false}
                   inputStyle={styles.baseText}/>
@@ -479,7 +479,7 @@ export default class PerfilCliente extends Component {
                   label={'Email'}
                   iconClass={FontAwesomeIcon}
                   iconName={'at'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.cliente.usuario.email}
                   editable={false}
                   inputStyle={styles.baseText}/>
@@ -529,7 +529,7 @@ export default class PerfilCliente extends Component {
   bar:{
     width,
     padding: '5%',
-    backgroundColor: 'darkslategrey',
+    backgroundColor: '#624063',
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
@@ -539,7 +539,7 @@ export default class PerfilCliente extends Component {
   },
   baseText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 20,
   },
   baseTextEdit: {
@@ -555,7 +555,7 @@ export default class PerfilCliente extends Component {
   },
   listText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 14,
   },
   barText: {
@@ -566,7 +566,7 @@ export default class PerfilCliente extends Component {
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontFamily: 'Roboto',
   },
   titleTextEdit: {
@@ -578,7 +578,7 @@ export default class PerfilCliente extends Component {
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontFamily: 'Roboto',
   },
   button: {
@@ -586,7 +586,7 @@ export default class PerfilCliente extends Component {
     justifyContent: 'center',
     height: 35,
     width: 200,
-    backgroundColor: "darkslategrey",
+    backgroundColor: "#7A8887",
     alignSelf: 'stretch',
     marginBottom: 20
   },

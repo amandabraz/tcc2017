@@ -81,10 +81,10 @@ export default class ExibeComprovante extends Component {
 
       <NavigationBar
         title={titleConfig}
-        tintColor="skyblue"
+        tintColor="#624063"
         leftButton={
           <TouchableOpacity onPress={() => goBack()}>
-            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+            <MaterialsIcon name="chevron-left" size={40} color={'#fff'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }/>
 
@@ -131,7 +131,7 @@ export default class ExibeComprovante extends Component {
 
 const titleConfig = {
   title: 'Comprovante de Compra',
-  tintColor: "#1C1C1C",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 

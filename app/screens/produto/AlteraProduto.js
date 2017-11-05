@@ -326,14 +326,15 @@ return (
     <View style= {{flex: 3}}>
       <NavigationBar
         title={titleConfig}
+        tintColor="#7A8887"
         leftButton={
           <TouchableOpacity onPress={() => goBack()}>
-            <MaterialsIcon name="arrow-back" size={34} color={'#8B636C'}  style={{ padding: 3 }} />
+            <MaterialsIcon name="arrow-back" size={34} color={'#fff'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }
         rightButton={
           <TouchableOpacity onPress={() => this.salvaEdicaoProduto()}>
-            <MaterialsIcon name="check" size={34} color={'#8B636C'} style={{ padding: 5 }} />
+            <MaterialsIcon name="check" size={34} color={'#fff'} style={{ padding: 5 }} />
           </TouchableOpacity>
         } />
       <ScrollView>
@@ -352,7 +353,7 @@ return (
                   value={this.state.nome}
                   onChangeText={(nome) => this.setState({nome: nome})}
                   iconName={'cutlery'}
-                  iconColor={'#8B636C'}/>
+                  iconColor={'#7A8887'}/>
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
@@ -362,7 +363,7 @@ return (
                   onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
-                  iconColor={'#8B636C'}/>
+                  iconColor={'#7A8887'}/>
 
          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                     label={'Quantidade disponível'}
@@ -372,12 +373,12 @@ return (
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
                     iconName={'shopping-cart'}
-                    iconColor={'#8B636C'}/>
+                    iconColor={'#7A8887'}/>
 
       <View style={{flexDirection:'row', padding: 18, alignItems: 'center'}}>
         <FontAwesomeIcon
           name='calendar'
-          color='#8B636C'
+          color='#7A8887'
           size = {18}/>
         <DatePicker
               style={{width: 300}}
@@ -392,7 +393,7 @@ return (
                    dateText: {
                        fontFamily: 'Roboto',
                        fontSize: 16,
-                       color: '#8B636C'}
+                       color: '#7A8887'}
                        }}
               onDateChange={(dataPreparacao) => {this.setState({dataPreparacao: dataPreparacao});}}/>
         </View>
@@ -430,7 +431,7 @@ return (
               <TagInput
                 value={this.state.ingredientes}
                 onChange={this.onChangeIngredientes}
-                tagColor="#8B636C"
+                tagColor="#7A8887"
                 tagTextColor="white"
                 tagAlign="center"
                 tagContainerStyle={{height: 24}}
@@ -448,7 +449,7 @@ return (
              <TagInput
                 value={this.state.tags}
                 onChange={this.onChangeTags}
-                tagColor="#8B636C"
+                tagColor="#7A8887"
                 tagTextColor="white"
                 tagAlign="center"
                 tagContainerStyle={{height: 24}}
@@ -467,7 +468,7 @@ return (
                       value={this.state.observacao}
                       onChangeText={(observacao) => this.setState({observacao: observacao})}
                       iconName={'pencil-square-o'}
-                      iconColor={'#8B636C'}
+                      iconColor={'#7A8887'}
                       multiline={true}
                       maxLength={255}/>
             </View>
@@ -480,7 +481,7 @@ return (
 
 const titleConfig = {
   title: 'Editar Produto',
-  tintColor: '#8B636C',
+  tintColor: '#fff',
   fontFamily: 'Roboto',
 };
 
@@ -511,7 +512,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   foto: {
-    color: '#8B636C',
+    color: '#7A8887',
     fontSize: 16,
     fontFamily: 'Roboto',
     fontWeight: 'bold',
