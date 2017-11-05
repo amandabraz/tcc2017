@@ -43,7 +43,7 @@ export default class AlteraProduto extends Component {
      nome: '',
      preco: '',
      observacao: '',
-     image: require('./img/camera11.jpg'),
+     imagemPrincipal: require('./img/camera11.jpg'),
      imagemProduto: '',
      backgroundColorPreco: "transparent",
      restricoesProdutos: [],
@@ -54,32 +54,6 @@ export default class AlteraProduto extends Component {
     this.preencherDietasArray();
  };
 
- selecionarFoto() {
-   var options = {
-     title: 'Selecione sua foto',
-     takePhotoButtonTitle: 'Tirar uma foto',
-     chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
-     cancelButtonTitle: 'Cancelar',
-     storageOptions: {
-       skipBackup: false,
-       path: 'images'
-     }
-   };
-   ImagePicker.showImagePicker(options, (response) => {
-     if (response.didCancel) {
-       //do nothing
-     } else if (response.error) {
-       console.log('ImagePicker Error: ', response.error);
-     } else {
-       let source = 'data:image/jpeg;base64,' + response.data;
-       this.setState({
-         image: {uri: response.uri, width: 200, height: 200, changed: true}
-       });
-       this.setState({imagemProduto: source});
-     }
-   });
- }
-
  buscaProduto() {
    if (this.state.produtoId > 0) {
      fetch(constante.ENDPOINT+'produto/' + this.state.produtoId)
@@ -89,7 +63,7 @@ export default class AlteraProduto extends Component {
          this.setState({produto: rJson});
 
          if (rJson.imagemPrincipal) {
-           this.setState({image: { uri: rJson.imagemPrincipal }});
+           this.setState({imagemPrincipal: { uri: rJson.imagemPrincipal }});
          }
          this.setState({nome: rJson.nome});
          this.setState({preco: rJson.preco.toString()});
@@ -329,6 +303,31 @@ carregarCategoriasArray() {
       }
     }
 
+    selecionarFoto() {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPrincipal: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemProduto: source});
+        }
+      });
+    }
 
 render() {
     const {goBack} = this.props.navigation;
@@ -365,12 +364,16 @@ return (
           </TouchableOpacity>
         } />
       <ScrollView>
-      <View style={styles.container}>
-      <View style={{ alignItems: 'center'}}>
-        <TouchableOpacity onPress={this.selecionarFoto.bind(this)}>
-          <Image source={this.state.image}/>
+        <View style={styles.container}>
+        <View style={{ alignItems: 'center'}}>
+        <View style={styles.profilepicWrap}>
+        <TouchableOpacity style={styles.profilepicWrap} onPress={this.selecionarFoto.bind(this)}>
+          <Image style={styles.profilepic}
+                 source={this.state.imagemPrincipal}
+                 justifyContent='flex-start'/>
         </TouchableOpacity>
-      </View>
+        </View>
+        </View>
 
           <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Nome'}
