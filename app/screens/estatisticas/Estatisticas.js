@@ -34,10 +34,10 @@ class Estatisticas extends Component {
         valorTotalArrecadadoPorProduto: [],
         nomeProduto: [],
         refreshing: false,
-        motherfuckerslidervalue: 30,
+        sliderValue: 30,
     };
     this.buscaQuantidadeVendida();
-    this.buscaValorArrecadadoPorProduto(this.state.motherfuckerslidervalue);
+    this.buscaValorArrecadadoPorProduto(this.state.sliderValue);
   };
 
   //BUSCA POR UNIDADES VENDIDAS - BAR CHART E LISTA DE PRODUTOS
@@ -165,9 +165,9 @@ class Estatisticas extends Component {
   exibeSlider(){
     return(
       <Slider
-        value={this.state.motherfuckerslidervalue}
+        value={this.state.sliderValue}
         onValueChange={(value) => {
-          this.setState({ motherfuckerslidervalue:value })
+          this.setState({ sliderValue:value })
           this.buscaValorArrecadadoPorProduto(value)
         }}
         minimumValue={1}
@@ -195,7 +195,7 @@ class Estatisticas extends Component {
                 onRefresh={() => {
                   this.setState({refreshing:true});
                   this.buscaQuantidadeVendida();
-                  this.buscaValorArrecadadoPorProduto(this.state.motherfuckerslidervalue);
+                  this.buscaValorArrecadadoPorProduto(this.state.sliderValue);
                 }}
               />
             }>
@@ -213,7 +213,7 @@ class Estatisticas extends Component {
             </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
-                Valor total arrecadado por produto nos últimos {this.state.motherfuckerslidervalue} dias
+                Valor total arrecadado por produto nos últimos {this.state.sliderValue} dias
               </Text>
               {this.exibeSlider()}
               {this.exibeValorArrecadadoPorProduto()}
