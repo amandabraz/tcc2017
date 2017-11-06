@@ -33,6 +33,7 @@ import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
+import TermoUso from '../screens/configuracao/TermoUso';
 import AceiteTermoUso from '../screens/configuracao/AceiteTermoUso';
 
 /**
@@ -80,13 +81,13 @@ export const GerenciaPedidosClientes = TabNavigator({
    backBehavior: 'none',
    tabBarOptions: {
      showLabel: true,
-     activeTintColor: '#333333',
-     inactiveTintColor: '#fff',
+     activeTintColor: 'white',
+     inactiveTintColor: 'white',
      labelStyle: {
        fontSize: 12,
      },
      style: {
-       backgroundColor: '#4682b4',
+       backgroundColor: '#624063',
      },
      indicatorStyle: {
        backgroundColor: 'white',
@@ -135,13 +136,13 @@ export const TabsCliente = TabNavigator({
     tabBarOptions: {
       showIcon: true,
       showLabel: false,
-      activeTintColor: '#8fbc8f',
-      inactiveTintColor: '#fff',
+      activeTintColor: 'white',
+      inactiveTintColor: 'white',
       labelStyle: {
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#2f4f4f',
+        backgroundColor: '#7F607B',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -186,7 +187,7 @@ export const GerenciaPedidos = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#4682b4',
+        backgroundColor: '#7A8887',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -282,7 +283,7 @@ export const TabsVendedor = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#4682b4',
+        backgroundColor: '#4FA19D',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -312,6 +313,9 @@ export const Root = StackNavigator({
   },
   LocalizacaoNaoPermitida: {
     screen: LocalizacaoNaoPermitida,
+  },
+  TermoUso: {
+    screen: TermoUso,
   },
   AceiteTermoUso: {
     screen: AceiteTermoUso,

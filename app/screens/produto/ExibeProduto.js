@@ -115,26 +115,26 @@ export default class ExibeProduto extends Component {
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeComprar', 
-    {produtoId: this.state.produtoId, 
+    this.props.navigation.navigate('ExibeComprar',
+    {produtoId: this.state.produtoId,
       clienteId: this.state.clienteId,
       userId: this.state.userId});
   };
 
-render() {  
+render() {
   const {goBack} = this.props.navigation;
 
   const images = {
   starFilled: require('./img/star_filled.png'),
   starUnfilled: require('./img/star_unfilled.png')
 }
-  
+
   return (
     <View style={styles.container}>
-      <NavigationBar 
+      <NavigationBar
         leftButton={
           <TouchableOpacity onPress={() => goBack()}>
-            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+            <MaterialsIcon name="chevron-left" size={40} color={'#624063'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }/>
       <HeaderImageScrollView
@@ -288,7 +288,7 @@ render() {
 //CSS
 const titleConfig = {
   title: 'Comprar produto',
-  tintColor: "#dc143c",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 let styles = StyleSheet.create({
@@ -301,7 +301,7 @@ let styles = StyleSheet.create({
     padding: 5,
     marginTop: 10,
     position: 'relative',
-    backgroundColor: '#dc143c'
+    backgroundColor: '#624063'
   },
   EvenBtnText: {
     fontSize: 25,
@@ -325,7 +325,7 @@ let styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 10,
     marginRight: 10,
-    backgroundColor: "#50a1e0",
+    backgroundColor: "#624063",
     alignSelf: 'stretch',
   },
   bar:{

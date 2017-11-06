@@ -187,7 +187,7 @@ class Estatisticas extends Component {
       <View style={{flex: 1}}>
         <NavigationBar
           title={titleConfig}
-          tintColor="#768888"
+          tintColor="#7A8887"
         />
           <ScrollView refreshControl={
               <RefreshControl
@@ -249,6 +249,14 @@ const styles = StyleSheet.create({
       width: '98%',
       marginRight: 5
     },
+    bar: {
+      borderRadius: 5,
+      height: 7,
+      marginRight: 5
+  },
+  points: {
+    backgroundColor: '#88557B'
+},
     pieChart_text:{
       marginTop: 8,
       fontSize: 16,

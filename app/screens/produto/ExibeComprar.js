@@ -62,7 +62,7 @@ export default class ExibeComprar extends Component {
         views.push (
             <RadioButton key = {i}
                          value = {pagamento}
-                         color = 'cadetblue'>
+                         color = '#4FA19D'>
               <Text style={styles.meiopagText}>
                 {pagamento.descricao}
               </Text>
@@ -187,7 +187,7 @@ export default class ExibeComprar extends Component {
             <NavigationBar
               leftButton={
                 <TouchableOpacity onPress={() => goBack()}>
-                  <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+                  <MaterialsIcon name="chevron-left" size={40} color={'#624063'}  style={{ padding: 3 }} />
                 </TouchableOpacity>
               }/>
 
@@ -209,7 +209,7 @@ export default class ExibeComprar extends Component {
               <View style={{width: '75%'}}>
                 <Text style={styles.compraText}>
                   Finalizando a compra com
-                  <Text style={{color: 'cadetblue', fontWeight: 'bold'}}>
+                  <Text style={{color: '#4FA19D', fontWeight: 'bold'}}>
                      {' ' + this.state.produto.vendedor.usuario.nome}
                    </Text>
                 </Text>
@@ -246,7 +246,7 @@ export default class ExibeComprar extends Component {
                           this.setState({precoTotalText: precoCalculado});
                   }
                 }}>
-                <FontAwesomeIcon name="minus" size={30} color={'cadetblue'}/>
+                <FontAwesomeIcon name="minus" size={30} color={'#4FA19D'}/>
               </TouchableOpacity>
               <Text style={styles.baseText}>
                 {this.state.quantidadeSelecionada}
@@ -260,7 +260,7 @@ export default class ExibeComprar extends Component {
                           this.setState({precoTotalText: precoCalculado});
                         }
                       }}>
-                <FontAwesomeIcon name="plus" size={30} color={'cadetblue'}/>
+                <FontAwesomeIcon name="plus" size={30} color={'#4FA19D'}/>
               </TouchableOpacity>
               </View>
             </View>
@@ -327,7 +327,7 @@ quantidadeText: {
 },
 precoText: {
   fontFamily: 'Roboto',
-  color: 'cadetblue',
+  color: '#4FA19D',
   fontSize: 25,
 },
 produtoText: {
@@ -350,7 +350,7 @@ EvenBtn: {
   padding: 5,
   marginTop: 10,
   position: 'relative',
-  backgroundColor: 'lightcoral'
+  backgroundColor: '#624063'
 },
 EvenBtnText: {
   fontSize: 25,

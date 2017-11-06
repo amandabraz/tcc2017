@@ -19,6 +19,7 @@ import CheckBox from 'react-native-check-box';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
+import Popup from 'react-native-popup';
 
 const { width, height } = Dimensions.get("window");
 
@@ -195,7 +196,7 @@ export default class PerfilVendedor extends Component {
         label={'Meios de Pagamento'}
         iconClass={FontAwesomeIcon}
         iconName={'asterisk'}
-        iconColor={'darkslategrey'}
+        iconColor={'#7A8887'}
         value={this.state.meiosPagamentoText}
         multiline={true}
         editable={false}
@@ -228,7 +229,7 @@ export default class PerfilVendedor extends Component {
       views.push(
         <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
           <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
-          <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
+          <Text style={{fontFamily: 'Roboto', color: '#7A8887', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
         </View>
       );
       for (i in pagamentosVendedor) {
@@ -292,6 +293,46 @@ export default class PerfilVendedor extends Component {
     });
   }
 
+  desejaSair() {
+    this.popup.confirm({
+      title: 'Logout',
+      content: ['Tem certeza que deseja sair?'],
+      ok: {
+        text: 'Sim',
+        style: {
+          color: 'gray',
+          fontWeight: 'bold'
+        },
+        callback: () => {
+          {this.logout()}
+        }
+      },
+      cancel: {
+        text: 'Não',
+        style: {
+          color: 'gray',
+          fontWeight: 'bold'
+        }
+      }
+    });
+  }
+
+  logout() {
+    ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+    this.props.navigation.navigate('Login');
+  }
+
+  sobreColaboradores() {
+    this.popup.tip({
+      title: 'Trabalho de Conclusão de Curso',
+         content: [' ', 'Aline Bender Dias', 'Amanda Barbosa Braz', 'Larissa Sitta Espinosa', 'Maiara de Oliveira Rodrigues', ' ', 'amoratcc@gmail.com', ' ', 'PUC - CAMPINAS', '2017'],
+    });
+  }
+
+  abrirTermos() {
+    this.props.navigation.navigate('TermoUso');
+  }
+
   render () {
     return (
       <View style={{ flex: 1 }}>
@@ -316,18 +357,6 @@ export default class PerfilVendedor extends Component {
             ref={navTitleView => {
               this.navTitleView = navTitleView;
             }}>
-            <View style={styles.bar}>
-            <View style={{alignItems: 'flex-start', width: '80%'}}>
-              <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{alignItems: 'flex-end', width: '20%'}}>
-              <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-                <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-              </TouchableOpacity>
-            </View>
-          </View>
           </Animatable.View>
           }>
           <TriggeringView
@@ -336,16 +365,18 @@ export default class PerfilVendedor extends Component {
             onDisplay={() => this.navTitleView.fadeOut(100)
             }>
             <View style={styles.bar}>
-              <View style={{alignItems: 'flex-start', width: '80%'}}>
-                <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                  <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{alignItems: 'flex-end', width: '20%'}}>
-                <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-                  <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity onPress={() => this.habilitaEdicao()}>
+                <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.abrirTermos()}>
+                <FontAwesomeIcon name="file-text" size={20} color={this.state.pencilColor} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.sobreColaboradores()}>
+                <FontAwesomeIcon name="question" size={20} color={this.state.pencilColor} />
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this.desejaSair()}>
+                <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
+              </TouchableOpacity>
             </View>
           </TriggeringView>
 
@@ -357,7 +388,7 @@ export default class PerfilVendedor extends Component {
                 iconClass={FontAwesomeIcon}
                 iconSize={20}
                 iconName={'user'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.nomeText}
                 editable={this.state.editavel}
                 inputStyle={this.state.titleTextClass}
@@ -368,7 +399,7 @@ export default class PerfilVendedor extends Component {
                 label={'CPF'}
                 iconClass={FontAwesomeIcon}
                 iconName={'info'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.CPFText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -378,7 +409,7 @@ export default class PerfilVendedor extends Component {
                 label={'Data de Nascimento'}
                 iconClass={FontAwesomeIcon}
                 iconName={'calendar'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.dataNascimentoText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -388,7 +419,7 @@ export default class PerfilVendedor extends Component {
                 label={'Email'}
                 iconClass={FontAwesomeIcon}
                 iconName={'at'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.emailText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -398,7 +429,7 @@ export default class PerfilVendedor extends Component {
                 label={'Celular'}
                 iconClass={FontAwesomeIcon}
                 iconName={'mobile'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.celularText}
                 editable={this.state.editavel}
                 inputStyle={this.state.baseTextClass}
@@ -410,7 +441,7 @@ export default class PerfilVendedor extends Component {
                 label={'Nome da loja'}
                 iconClass={MaterialsIcon}
                 iconName={'store'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.nomeFantasiaText}
                 editable={this.state.editavel}
                 inputStyle={this.state.baseTextClass}
@@ -420,6 +451,7 @@ export default class PerfilVendedor extends Component {
               {this.mostraBotaoSalvar()}
           </ScrollView>
         </HeaderImageScrollView>
+        <Popup ref={popup => this.popup = popup }/>
       </View>
     );
   }
@@ -463,12 +495,13 @@ export default class PerfilVendedor extends Component {
   bar:{
     width,
     padding: '5%',
-    backgroundColor: 'darkslategrey',
-    flexDirection: 'row'
+    backgroundColor: '#7A8887',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   baseText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontSize: 20,
   },
   baseTextEdit: {
@@ -484,7 +517,7 @@ export default class PerfilVendedor extends Component {
   },
   listText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontSize: 16,
   },
   barText: {
@@ -495,7 +528,7 @@ export default class PerfilVendedor extends Component {
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontFamily: 'Roboto',
   },
   titleTextEdit: {
@@ -509,7 +542,7 @@ export default class PerfilVendedor extends Component {
     justifyContent: 'center',
     height: 35,
     width: 200,
-    backgroundColor: "darkslategrey",
+    backgroundColor: "#7A8887",
     alignSelf: 'stretch',
     marginBottom: 20
   },

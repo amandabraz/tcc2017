@@ -10,6 +10,7 @@ import {
   Text,
   TextInput,
   ToastAndroid,
+  TouchableOpacity,
   View
 } from 'react-native';
 import {
@@ -19,65 +20,32 @@ import {
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
 import Popup from 'react-native-popup';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 
 class TermoUso extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       };
     };
 
-  naoAceito() {
-    this.popup.confirm({
-      title: 'Aceite de Termos',
-      content: ['Para acesso à aplicação é necessário aceitar os Termos de Uso. Tem certeza que deseja sair?'],
-      ok: {
-        text: 'Continuar',
-        style: {
-          color: 'blue',
-          fontWeight: 'bold'
-        }
-      },
-      cancel: {
-        text: 'Sair',
-        style: {
-          color: 'red'
-        },
-        callback: () => {
-          {this.logout()}
-        }
-      }
-    });
-  }
-
-  logout() {
-    ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-    this.props.navigation.navigate('Login');
-  }
-
-  login = () => {
-    this.props.navigation.navigate('Cadastro');
-  };
-
   render() {
+
+    const {goBack} = this.props.navigation;
+
     return (
       <View style={{flex: 1}}>
+      <NavigationBar
+        title={titleConfig}
+        tintColor="skyblue"
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'white'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }/>
+
       <ScrollView>
         <View style={styles.oneResult1}>
-          <View style={{borderWidth: 1,
-                        borderRadius: 10,
-                        borderColor: '#fff',
-                        padding: 10,
-                        margin: 10}}>
-            <Text style={{fontSize: 20,
-                          padding: 5,
-                          color: '#88557B',
-                          alignSelf: 'center'}}>
-                          Termos de Uso
-            </Text>
-          </View>
-
           <View>
             <Text style={styles.baseText}>
               {'\n'}
@@ -222,24 +190,6 @@ class TermoUso extends Component {
             {'\n'}
           </Text>
           </View>
-
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Button buttonStyle={{width: '75%'}}
-                    title ="Não aceito"
-                    color="#fff"
-                    backgroundColor="#768888"
-                    borderRadius={10}
-                    onPress={this.naoAceito.bind(this)}
-            />
-
-            <Button buttonStyle={{width: '75%'}}
-                    title="Aceito"
-                    color="#fff"
-                    backgroundColor="#88557B"
-                    borderRadius={10}
-                    onPress={() => this.login()}
-            />
-          </View>
         </View>
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>
@@ -250,7 +200,7 @@ class TermoUso extends Component {
 
 const titleConfig = {
   title: 'Termos de Uso',
-  tintColor: "#DCDCDC",
+  tintColor: "white",
   fontFamily: 'Roboto',
 };
 
