@@ -24,7 +24,7 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
 
     Pedido findFirstByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(String status, long vendedorId);
 
-    List<Pedido> findByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(String status, long vendedorId);
+    List<Pedido> findFirst6ByStatusAndProdutoVendedorIdAndDataSolicitadaBeforeOrderByDataSolicitadaDesc(String status, long vendedorId, Date data);
 
     @Query(value = "SELECT * FROM pedido\n" +
             "JOIN produto on pedido.fk_produto = produto.id_produto\n" +

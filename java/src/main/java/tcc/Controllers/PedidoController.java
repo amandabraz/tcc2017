@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.CustomQueryHelpers.QuantidadePedidos;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Pedido;
-import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,11 +80,12 @@ public class PedidoController {
     }
 
     @Transactional
-    @RequestMapping(value = "/vendedor/{vendedorId}/status/{status}", method = RequestMethod.GET)
+    @RequestMapping(value = "/vendedor/{vendedorId}/status/{status}/from/{data}", method = RequestMethod.GET)
     public ResponseEntity buscaPedidosPorStatusVendedor(@PathVariable("status") String status,
-                                                        @PathVariable("vendedorId") Long vendedorId) {
+                                                        @PathVariable("vendedorId") Long vendedorId,
+                                                        @PathVariable("data") Date data) {
         try {
-            List<Pedido> pedidos = pedidoService.buscaPedidosPorStatusVendedor(status, vendedorId);
+            List<Pedido> pedidos = pedidoService.buscaPedidosPorStatusVendedor(status, vendedorId, data);
             return new ResponseEntity<List<Pedido>>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar pedidos"), HttpStatus.BAD_REQUEST);

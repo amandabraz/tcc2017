@@ -36,12 +36,14 @@ class PedidosFinalizadosVendedor extends Component {
       pedidosRecusados: [],
       pedidosCancelados: [],
       refreshing: false,
+      maisPedidosFinalizados: false
     };
     this.buscaDadosPedidosVendedor();
   };
 
   buscaDadosPedidosVendedor() {
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Finalizado')
+    fetch(constante.ENDPOINT + 'pedido/vendedor/' + this.state.vendedorId 
+          + '/status/' + 'Finalizado' + '/from/' + new Date())
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -49,7 +51,7 @@ class PedidosFinalizadosVendedor extends Component {
         }
       });
 
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Recusado')
+    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Recusado' + '/from/' + new Date())
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -57,7 +59,7 @@ class PedidosFinalizadosVendedor extends Component {
         }
       });
 
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Cancelado')
+    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Cancelado' + '/from/' + new Date())
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {

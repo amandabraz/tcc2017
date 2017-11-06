@@ -108,9 +108,9 @@ public class PedidoService {
         }
     }
 
-    public List<Pedido> buscaPedidosPorStatusVendedor(String status, Long vendedorId) {
+    public List<Pedido> buscaPedidosPorStatusVendedor(String status, Long vendedorId, Date data) {
         try {
-            return pedidoDAO.findByStatusAndProdutoVendedorIdOrderByDataSolicitadaDesc(status, vendedorId);
+            return pedidoDAO.findFirst5ByStatusAndProdutoVendedorIdAndDataSolicitadaBeforeOrderByDataSolicitadaDesc(status, vendedorId, data);
         } catch (Exception e) {
             throw e;
         }
