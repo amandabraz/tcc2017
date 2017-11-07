@@ -41,8 +41,6 @@ public class ClienteController {
         return new ResponseEntity<>(novoCliente, HttpStatus.OK);
     }
 
-
-
     @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity buscaClientePorUsuario(@PathVariable("id") Long usuarioId) {
         try {

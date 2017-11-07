@@ -8,6 +8,7 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
+import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
 
 
@@ -29,7 +30,8 @@ export default class ExibeVendedor extends Component {
       },
       celularText: '',
       resultadoProduto: [],
-      imagemPerfil: require('./img/camera11.jpg')
+      imagemPerfil: require('./img/camera11.jpg'),
+      favoritoColor: 'white'
     };
     this.buscaDadosVendedor();
     this.buscaProdutos();
@@ -113,19 +115,44 @@ onButtonOpenProduct = (produto) => {
   this.props.navigation.navigate('ExibeProduto', {produtoId: produto.id, clienteId: this.state.clienteId});
 };
 
+favoritaVendedor(){
+  if(this.state.favoritoColor == 'white'){
+    this.setState({favoritoColor: '#990000'})
+  } else {
+    this.setState({favoritoColor: 'white'})
+  }
+}
+
   render () {
+    const {goBack} = this.props.navigation;    
     return (
       <View style={styles.container}>
+      <NavigationBar
+       tintColor="transparent"
+      leftButton={
+        <TouchableOpacity onPress={() => goBack()}>
+          <MaterialsIcon name="chevron-left" size={40} color={'#624063'}  style={{ padding: 3 }} />
+        </TouchableOpacity>
+      }/>
         <View style={styles.header}>
           <View style={styles.profilepicWrap}>
           <Image
             style={styles.profilepic}
             source={this.state.imagemPerfil}/>
           </View>
-          <View style={{alignItems: 'center'}}>
-          <Text style={styles.titleText}>
-          {this.state.nomeText}
-          </Text>
+          <View style={{flexDirection: 'row'}}>
+          <View style={{alignItems: 'center', width: '100%'}}>
+            <Text style={styles.titleText}>
+              {this.state.nomeText}
+            </Text>
+          </View>
+          <View style={{justifyContent: 'flex-end', width: '10%'}}>
+              <Icon name='heart' 
+                    size={30}
+                    type='font-awesome' 
+                    color={this.state.favoritoColor}
+                    onPress={() => this.favoritaVendedor()}/>
+          </View>
           </View>
           </View>
 

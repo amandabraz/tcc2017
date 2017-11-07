@@ -117,7 +117,7 @@ export const TabsCliente = TabNavigator({
     Favoritos: {
       screen: ProdutosFavoritos,
       navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="heart" size={22} color={tintColor} />
       },
     },
     Ranking: {
