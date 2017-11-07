@@ -93,7 +93,7 @@ pedidoConfirmado(){
               <Button buttonStyle={{width: 150}}
                   title="Validar Token"
                   color="#fff"
-                  backgroundColor="#768888"
+                  backgroundColor="#885581"
                   borderRadius={10}
                   onPress={() =>
                     {

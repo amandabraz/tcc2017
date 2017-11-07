@@ -124,7 +124,7 @@ class GerenciaProduto extends Component {
                     produto.quantidade += 1;
                     this.alteraQuantidade(produto);
                   }}>
-                    <FontAwesomeIcon name="plus" size={20} color={'darkblue'}/>
+                    <FontAwesomeIcon name="plus" size={20} color={'#885581'}/>
                   </TouchableOpacity>
                   <Text style={styles.text}> {produto.quantidade} </Text>
                   <TouchableOpacity onPress={() => {
@@ -133,7 +133,7 @@ class GerenciaProduto extends Component {
                       this.alteraQuantidade(produto);
                     }
                   }}>
-                    <FontAwesomeIcon name="minus" size={20} color={'darkblue'}/>
+                    <FontAwesomeIcon name="minus" size={20} color={'#885581'}/>
                   </TouchableOpacity>
                 </View>
 
@@ -173,7 +173,7 @@ class GerenciaProduto extends Component {
         <View style={{flex: 1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="#768888"
+            tintColor="#7A8887"
           />
           <View style={{flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#ccc'}}>
             <Text style={{fontWeight: 'bold', fontSize: 12}}>
@@ -187,7 +187,7 @@ class GerenciaProduto extends Component {
             {this.mostraProdutos()}
           </ScrollView>
           <ActionButton
-            buttonColor="rgba(231,76,60,1)"
+            buttonColor="#885581"
             onPress={this.adicionarProduto}
           />
         </View>
