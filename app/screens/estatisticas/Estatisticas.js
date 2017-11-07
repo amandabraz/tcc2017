@@ -164,21 +164,25 @@ class Estatisticas extends Component {
 
   exibeSlider(){
     return(
-      <Slider
-        value={this.state.sliderValue}
-        onValueChange={(value) => {
-          this.setState({ sliderValue:value })
-          this.buscaValorArrecadadoPorProduto(value)
-        }}
-        minimumValue={1}
-        maximumValue={30}
-        step={1}
-      />
+      <View>
+        <Slider
+          value={this.state.sliderValue}
+          onValueChange={(value) => {
+            this.setState({ sliderValue:value })
+          }}
+          minimumValue={1}
+          maximumValue={30}
+          step={1}
+          onSlidingComplete = {(value) => {
+            this.buscaValorArrecadadoPorProduto(value)
+          }}
+        />
+      </View>
     );
   }
 
   render() {
-    const titleConfig = {
+    const titleConfig = { 
       title: 'Estatísticas',
       tintColor: "#fff",
       fontFamily: 'Roboto',
@@ -215,8 +219,10 @@ class Estatisticas extends Component {
               <Text style={styles.pieChart_text}>
                 Valor total arrecadado por produto nos últimos {this.state.sliderValue} dias
               </Text>
-              {this.exibeSlider()}
-              {this.exibeValorArrecadadoPorProduto()}
+              <View>
+                {this.exibeSlider()}
+              </View>
+                {this.exibeValorArrecadadoPorProduto()}
             </View>
           </ScrollView>
       </View>
@@ -225,67 +231,72 @@ class Estatisticas extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        backgroundColor: '#D9DBDB',
-        marginRight: 5
-    },
-    chart: {
-        width: 350,
-        height: 350,
-        flex:1,
-        marginRight: 5,
-    },
-    produtosV:{
-      margin: 6,
-      padding: 10,
-      borderWidth: 1,
-      borderRadius: 10,
-      borderColor: '#fff',
-      width: '98%',
+  container: {
+      width,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+      backgroundColor: '#D9DBDB',
       marginRight: 5
-    },
-    bar: {
-      borderRadius: 5,
-      height: 7,
-      marginRight: 5
+  },
+  chart: {
+      width: 350,
+      height: 350,
+      flex:1,
+      marginRight: 5,
+  },
+  produtosV:{
+    margin: 6,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#fff',
+    width: '98%',
+    marginRight: 5
+  },
+  bar: {
+    borderRadius: 5,
+    height: 7,
+    marginRight: 5
   },
   points: {
     backgroundColor: '#88557B'
-},
-    pieChart_text:{
-      marginTop: 8,
-      fontSize: 16,
-      justifyContent: 'center',
-      color: '#406161',
-      fontWeight: 'bold',
-      marginRight: 5
-    },
-    pieChart_viewStyle:{
-      margin: 10,
-      marginTop: 15,
-      marginRight: 5,
-      fontWeight: 'bold'
-    },
-    pieChart_viewStyle:{
-      margin: 10,
-      marginTop: 15
-    },
-    pieChart_description:{
+  },
+  pieChart_text:{
+    marginTop: 8,
+    fontSize: 16,
+    justifyContent: 'center',
+    color: '#406161',
+    fontWeight: 'bold',
+    marginRight: 5
+  },
+  pieChart_viewStyle:{
+    margin: 10,
+    marginTop: 15,
+    marginRight: 5,
+    fontWeight: 'bold'
+  },
+  pieChart_viewStyle:{
+    margin: 10,
+    marginTop: 15
+  },
+  pieChart_description:{
       marginTop: 8,
       fontSize: 14,
-      justifyContent: 'center'
-    },
-    pieChart_textAlign:{
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }
+    justifyContent: 'center'
+  },
+  pieChart_textAlign:{
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  slider:{
+    width:'100%',
+    alignItems:'center',
+    flexDirection:'column'
+  }
 });
 
 const twentyColorsForPieChart = [
