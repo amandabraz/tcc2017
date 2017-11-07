@@ -5,10 +5,19 @@ public class RankingProdutosVendidos {
 
 
     private String nomeProduto;
+    private String nomeVendedor;
     private int quantidadeVendida;
 
     public RankingProdutosVendidos() {
 
+    }
+
+    public String getNomeVendedor() {
+        return nomeVendedor;
+    }
+
+    public void setNomeVendedor(String nomeVendedor) {
+        this.nomeVendedor = nomeVendedor;
     }
 
     public int getQuantidadeVendida() {
