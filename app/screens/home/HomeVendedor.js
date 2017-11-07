@@ -252,7 +252,7 @@ render() {
         <View style={{flex:1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="#768888"/>
+            tintColor="#7A8887"/>
             <View style={styles.container}>
             <ScrollView refreshControl={
                 <RefreshControl

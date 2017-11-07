@@ -80,13 +80,13 @@ export const GerenciaPedidosClientes = TabNavigator({
    backBehavior: 'none',
    tabBarOptions: {
      showLabel: true,
-     activeTintColor: '#333333',
-     inactiveTintColor: '#fff',
+     activeTintColor: 'white',
+     inactiveTintColor: 'white',
      labelStyle: {
        fontSize: 12,
      },
      style: {
-       backgroundColor: '#4682b4',
+       backgroundColor: '#624063',
      },
      indicatorStyle: {
        backgroundColor: 'white',
@@ -135,13 +135,13 @@ export const TabsCliente = TabNavigator({
     tabBarOptions: {
       showIcon: true,
       showLabel: false,
-      activeTintColor: '#8fbc8f',
-      inactiveTintColor: '#fff',
+      activeTintColor: 'white',
+      inactiveTintColor: 'white',
       labelStyle: {
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#2f4f4f',
+        backgroundColor: '#7F607B',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -186,7 +186,7 @@ export const GerenciaPedidos = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#4682b4',
+        backgroundColor: '#7A8887',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -282,7 +282,7 @@ export const TabsVendedor = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#4682b4',
+        backgroundColor: '#4FA19D',
       },
       indicatorStyle: {
         backgroundColor: 'white',
