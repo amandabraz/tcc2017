@@ -139,7 +139,8 @@ export default class PerfilVendedor extends Component {
   }
 
   salvaEdicaoVendedor() {
-    this.pagamentoEscolhido;
+    var escolhido = this.pagamentoEscolhido();
+    if (escolhido){
 
     const {
       state: {
@@ -190,6 +191,9 @@ export default class PerfilVendedor extends Component {
           ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
+    } else {
+      ToastAndroid.showWithGravity('Erro!', ToastAndroid.LONG, ToastAndroid.CENTER);
+    }
   }
 
   meiosPagamento() {
@@ -259,7 +263,7 @@ export default class PerfilVendedor extends Component {
   }
 
  pagamentoEscolhido = () => {
-     if (this.state.meiosPagamentos.length > 0) {
+     if (this.state.meiosPagamentoVendedor.length > 0) {
        return true;
      }
      else {
