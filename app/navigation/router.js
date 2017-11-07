@@ -12,7 +12,7 @@ import PerfilVendedor from '../screens/perfil/PerfilVendedor';
 import HomeVendedor from '../screens/home/HomeVendedor';
 import HomeCliente from '../screens/home/HomeCliente';
 import ProdutosFavoritos from '../screens/produto/ProdutosFavoritos';
-import RankingProdutos from '../screens/produto/RankingProdutos';
+import RankingProdutos from '../screens/ranking/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
