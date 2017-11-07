@@ -16,8 +16,6 @@ class RankingProdutos extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       clienteId: this.props.navigation.state.params.clienteId,
-      imagemProduto: require('./img/camera2.jpg'),
-      imagemCliente: require('./img/camera2.jpg'),
       refreshing: false,
       informacoes: '',
       clientesMantidos: '',

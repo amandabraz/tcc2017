@@ -192,11 +192,11 @@ public class PedidoController {
         try {
             List<RankingProdutosVendidos> pedidos = pedidoService.rankingProdutosVendidos(filtroMensal);
             if (CollectionUtils.isEmpty(pedidos)) {
-                return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos"), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos 1"), HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity <List<RankingProdutosVendidos>>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos 2"), HttpStatus.BAD_REQUEST);
         }
     }
 
