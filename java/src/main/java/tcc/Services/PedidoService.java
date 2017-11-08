@@ -110,7 +110,7 @@ public class PedidoService {
 
     public List<Pedido> buscaPedidosPorStatusVendedor(String status, Long vendedorId, Date data) {
         try {
-            return pedidoDAO.findFirst5ByStatusAndProdutoVendedorIdAndDataSolicitadaBeforeOrderByDataSolicitadaDesc(status, vendedorId, data);
+            return pedidoDAO.findFirst6ByStatusAndProdutoVendedorIdAndDataSolicitadaBeforeOrderByDataSolicitadaDesc(status, vendedorId, data);
         } catch (Exception e) {
             throw e;
         }

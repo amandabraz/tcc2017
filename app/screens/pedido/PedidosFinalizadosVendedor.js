@@ -35,34 +35,59 @@ class PedidosFinalizadosVendedor extends Component {
       pedidosRecusados: [],
       pedidosCancelados: [],
       refreshing: false,
-      maisPedidosFinalizados: false
+      maisPedidosFinalizados: false,
+      maisPedidosRecusados: false,
+      maisPedidosCancelados: false,
+      dataBuscaFinalizados: new Date(),
+      dataBuscaRecusados: new Date(),
+      dataBuscaCancelados: new Date()
     };
     this.buscaDadosPedidosVendedor();
   };
 
   buscaDadosPedidosVendedor() {
     fetch(constante.ENDPOINT + 'pedido/vendedor/' + this.state.vendedorId 
-          + '/status/' + 'Finalizado' + '/from/' + new Date())
+          + '/status/' + 'Finalizado' + '/from/' + this.state.dataBuscaFinalizados)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
-              this.setState({pedidosFinalizados: responseJson});
+            if (responseJson.length > 5) {
+              this.setState({maisPedidosFinalizados: true});
+              responseJson.pop();
+            }
+            var pedidosFinalizadosPesquisados = this.state.pedidosFinalizados;
+            pedidosFinalizadosPesquisados.concat(responseJson);
+            this.setState({pedidosFinalizados: pedidosFinalizadosPesquisados});
+          }
+      });
+
+    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Recusado' 
+          + '/from/' + this.state.dataBuscaRecusados)
+    .then((response) => response.json())
+      .then((responseJson) => {
+          if (!responseJson.errorMessage) {
+            if (responseJson.length > 5) {
+              this.setState({maisPedidosRecusados: true});
+              responseJson.pop();
+            }
+            var pedidosRecusadosPesquisados = this.state.pedidosRecusados;
+            pedidosRecusadosPesquisados.concat(responseJson);
+            this.setState({pedidosRecusados: pedidosRecusadosPesquisados});
         }
       });
 
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Recusado' + '/from/' + new Date())
+    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Cancelado' 
+            + '/from/' + this.state.dataBuscaCancelados)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
-              this.setState({pedidosRecusados: responseJson});
-        }
-      });
-
-    fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Cancelado' + '/from/' + new Date())
-    .then((response) => response.json())
-      .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-              this.setState({pedidosCancelados: responseJson});
+            if (responseJson.length > 5) {
+              this.setState({maisPedidosCancelados: true});
+              responseJson.pop();
+            }
+            var pedidosCanceladosPesquisados = this.state.pedidosCancelados;
+            pedidosCanceladosPesquisados.concat(responseJson);
+            this.setState({pedidosCancelados: pedidosCanceladosPesquisados});
         }
         this.setState({refreshing: false});
       });
@@ -85,15 +110,15 @@ class PedidosFinalizadosVendedor extends Component {
 
 pedidoFinalizado(){
   var views = [];
-  if(this.state.pedidosFinalizados.length > 0){
+  if (this.state.pedidosFinalizados.length > 0) {
     for (i in this.state.pedidosFinalizados) {
       let imagemPrincipalP = require('./img/camera11.jpg');
       let imagemPrincipalC = require('./img/camera11.jpg');
       let pedidoF = this.state.pedidosFinalizados[i];
-      if (pedidoF.produto.imagemPrincipal) {
+      if (pedidoF.produto.imagemPrincipal != null && typeof pedidoF.produto.imagemPrincipal !== "undefined") {
         imagemPrincipalP = {uri: pedidoF.produto.imagemPrincipal};
-      }
-      if (pedidoF.cliente.usuario.imagemPerfil) {
+      } 
+      if (pedidoF.cliente.usuario.imagemPerfil != null && typeof pedidoF.cliente.usuario.imagemPerfil !== "undefined") {
         imagemPrincipalC = {uri: pedidoF.cliente.usuario.imagemPerfil};
       }
       var dataNormal = new Date(pedidoF.dataFinalizacao);
@@ -139,6 +164,17 @@ pedidoFinalizado(){
           easing="easeOutCubic"/>
         </View>
       )}
+      if (this.state.maisPedidosFinalizados) {
+        var ultimo = this.state.pedidosFinalizados.length - 1;
+        this.setState({dataBuscaFinalizados: this.state.pedidosFinalizados[ultimo].dataFinalizacao});
+        views.push(
+          <TouchableOpacity onPress={() => this.buscaDadosPedidosVendedor()}>
+            <View style={styles.button}>
+              <Text>Carregar mais</Text>
+            </View>
+          </TouchableOpacity>
+        );
+      }
    } else {
         views.push(
           <View key={0} style={{alignItems: 'center'}}>
@@ -158,10 +194,10 @@ pedidoFinalizado(){
         let imagemPrincipalP = require('./img/camera11.jpg');
         let imagemPrincipalC = require('./img/camera11.jpg');
         let pedidoR = this.state.pedidosRecusados[i];
-        if (pedidoR.produto.imagemPrincipal) {
+        if (pedidoR.produto.imagemPrincipal != null && typeof pedidoR.produto.imagemPrincipal !== "undefined") {
           imagemPrincipalP = {uri: pedidoR.produto.imagemPrincipal};
         }
-        if (pedidoR.cliente.usuario.imagemPerfil) {
+        if (pedidoR.cliente.usuario.imagemPerfil != null && typeof pedidoR.cliente.usuario.imagemPerfil !== "undefined") {
           imagemPrincipalC = {uri: pedidoR.cliente.usuario.imagemPerfil};
         }
         views.push(
@@ -221,10 +257,10 @@ pedidoFinalizado(){
           let imagemPrincipalP = require('./img/camera11.jpg');
           let imagemPrincipalC = require('./img/camera11.jpg');
           let pedidoC = this.state.pedidosCancelados[i];
-          if (pedidoC.produto.imagemPrincipal) {
+          if (pedidoC.produto.imagemPrincipal != null && typeof pedidoC.produto.imagemPrincipal !== "undefined") {
             imagemPrincipalP = {uri: pedidoC.produto.imagemPrincipal};
           }
-          if (pedidoC.cliente.usuario.imagemPerfil) {
+          if (pedidoC.cliente.usuario.imagemPerfil != null && typeof pedidoC.cliente.usuario.imagemPerfil !== "undefined") {
             imagemPrincipalC = {uri: pedidoC.cliente.usuario.imagemPerfil};
           }
           views.push(

@@ -99,7 +99,7 @@ class PedidosFinalizadosCliente extends Component {
               starSize={25}
               starColor={'#e6b800'}
               rating={parseInt(pedido.nota)}
-              />
+            />
           </View>
         </View>
       );
