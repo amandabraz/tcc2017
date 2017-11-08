@@ -218,7 +218,8 @@ class Estatisticas extends Component {
             </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
-                Valor total arrecadado por produto nos últimos [{this.state.sliderValue}] dias
+                Valor total arrecadado por produto nos últimos <Text style={styles.corzinhaDestaque}>
+                {this.state.sliderValue}</Text> dias
               </Text>
               <Text style={styles.pieChart_smallText}>
                 Arraste o slider abaixo para alterar a quantidade de dias a serem pesquisados
@@ -307,6 +308,10 @@ const styles = StyleSheet.create({
     width:'100%',
     alignItems:'center',
     flexDirection:'column'
+  },
+  corzinhaDestaque:{
+    color:'#359e9a',
+    fontSize: 18
   }
 });
 
