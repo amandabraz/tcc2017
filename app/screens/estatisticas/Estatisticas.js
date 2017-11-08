@@ -172,6 +172,7 @@ class Estatisticas extends Component {
           }}
           minimumValue={1}
           maximumValue={30}
+          minimumTrackTintColor={'#448484'}
           step={1}
           onSlidingComplete = {(value) => {
             this.buscaValorArrecadadoPorProduto(value)
@@ -217,7 +218,10 @@ class Estatisticas extends Component {
             </View>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
-                Valor total arrecadado por produto nos últimos {this.state.sliderValue} dias
+                Valor total arrecadado por produto nos últimos [{this.state.sliderValue}] dias
+              </Text>
+              <Text style={styles.pieChart_smallText}>
+                Arraste o slider abaixo para alterar a quantidade de dias a serem pesquisados
               </Text>
               <View>
                 {this.exibeSlider()}
@@ -269,6 +273,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     color: '#406161',
     fontWeight: 'bold',
+    marginRight: 5
+  },
+  pieChart_smallText:{
+    marginTop: 5,
+    fontSize: 14,
+    justifyContent: 'center',
+    color: '#448484',
     marginRight: 5
   },
   pieChart_viewStyle:{
