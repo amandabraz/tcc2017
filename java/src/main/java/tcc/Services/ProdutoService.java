@@ -171,9 +171,15 @@ public class ProdutoService {
     }
 
     @Transactional
-    public List<Produto> buscaProdutosPorPreferenciasCliente(Long clienteId) {
+    public List<Produto> buscaProdutosPorPreferenciasCliente(Long clienteId, double lat, double lng, double alt) {
         try {
-            return produtoDAO.findByPreferenciasCliente(clienteId);
+            List<Produto> listaProdutos = produtoDAO.findByPreferenciasCliente(clienteId);
+
+            // remove resultados duplicados
+            List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
+            listaProdutosFiltrada = organizaPorDistancia(listaProdutosFiltrada, lat, lng, alt);
+
+            return listaProdutosFiltrada;
         } catch (Exception e) {
             throw e;
         }
