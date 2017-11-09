@@ -69,10 +69,10 @@ public class ClienteController {
     public ResponseEntity salvaVendedorFavorito(@PathVariable("clienteId") Long clienteId,
                                                 @PathVariable("vendedorId") Long vendedorId) {
         try {
-            clienteService.salvaVendedorFavorito(clienteId, vendedorId);
-            return new ResponseEntity("Favoritado!", HttpStatus.OK);
+            Cliente cliente = clienteService.salvaVendedorFavorito(clienteId, vendedorId);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar favorito! Tente novamente");
+            return new ResponseEntity<>(new CustomError("Erro ao salvar favorito"), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -80,10 +80,10 @@ public class ClienteController {
     public ResponseEntity deletarVendedorFavorito(@PathVariable("clienteId") Long clienteId,
                                                 @PathVariable("vendedorId") Long vendedorId) {
         try {
-            clienteService.deletaVendedorFavorito(clienteId, vendedorId);
-            return new ResponseEntity("Desfavoritado!", HttpStatus.OK);
+            Cliente cliente = clienteService.deletaVendedorFavorito(clienteId, vendedorId);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar favorito! Tente novamente");
+            return new ResponseEntity<>(new CustomError("Erro ao deletar favorito"), HttpStatus.NOT_FOUND);
         }
     }
 

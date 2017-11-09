@@ -96,25 +96,25 @@ public class ClienteService {
         }
     }
 
-    public void salvaVendedorFavorito(Long clienteId, Long vendedorId) {
+    public Cliente salvaVendedorFavorito(Long clienteId, Long vendedorId) {
         try {
             Cliente cliente = this.buscaCliente(clienteId);
             Set<Vendedor> vendedoresFavoritos = cliente.getVendedoresFavoritos();
             vendedoresFavoritos.add(vendedorService.buscaVendedor(vendedorId));
             cliente.setVendedoresFavoritos(vendedoresFavoritos);
-            this.salvaCliente(cliente);
+            return this.salvaCliente(cliente);
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public void deletaVendedorFavorito(Long clienteId, Long vendedorId) {
+    public Cliente deletaVendedorFavorito(Long clienteId, Long vendedorId) {
         try {
             Cliente cliente = this.buscaCliente(clienteId);
             Set<Vendedor> vendedoresFavoritos = cliente.getVendedoresFavoritos();
             vendedoresFavoritos.remove(vendedorService.buscaVendedor(vendedorId));
             cliente.setVendedoresFavoritos(vendedoresFavoritos);
-            this.salvaCliente(cliente);
+            return this.salvaCliente(cliente);
         } catch (Exception e) {
             throw e;
         }

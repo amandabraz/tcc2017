@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
+import { Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ToastAndroid, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -38,7 +38,7 @@ export default class ExibeVendedor extends Component {
   }
 
   buscaDadosVendedor() {
-    fetch(constante.ENDPOINT+'vendedor/usuario/' + this.state.selectUserId)
+    fetch(constante.ENDPOINT + 'vendedor/' + this.state.vendedorId + '/cliente/' + this.state.clienteId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -57,6 +57,9 @@ export default class ExibeVendedor extends Component {
             }
             pagamentos = pagamentos.slice(0, -3);
             this.setState({meiosPagamentoText: pagamentos});
+            if (responseJson.favoritoDoCliente) {
+              this.setState({favoritoColor: '#990000'});              
+            }
           }
         }
       });
@@ -117,23 +120,27 @@ onButtonOpenProduct = (produto) => {
 
 favoritaVendedor(){
   if(this.state.favoritoColor == 'gray'){
+    this.setState({favoritoColor: '#990000'});
     fetch(constante.ENDPOINT + 'cliente/' + this.state.clienteId + '/favoritos/' + this.state.vendedorId,
           {method: 'PUT'})
     .then((response) => response.json())
     .then((responseJson) => {
-      if (responseJson === "Favoritado") {
-        this.setState({favoritoColor: '#990000'});
+      if (!responseJson.errorMessage) {
         ToastAndroid.showWithGravity('Vendedor favoritado <3', ToastAndroid.SHORT, ToastAndroid.CENTER);        
+      } else {
+        this.setState({favoritoColor: 'gray'});        
       }
     });
   } else {
+    this.setState({favoritoColor: 'gray'});
     fetch(constante.ENDPOINT + 'cliente/' + this.state.clienteId + '/favoritos/' + this.state.vendedorId,
            {method: 'DELETE'})
     .then((response) => response.json())
     .then((responseJson) => {
       if (!responseJson.errorMessage) {
-        this.setState({favoritoColor: 'gray'});
         ToastAndroid.showWithGravity('Vendedor desfavoritado </3', ToastAndroid.SHORT, ToastAndroid.CENTER);        
+      } else {
+        this.setState({favoritoColor: '#990000'});
       }
     });
   }
