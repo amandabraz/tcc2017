@@ -44,7 +44,12 @@ export default class BuscaProduto extends Component {
     if (this.state.resultadoPesquisaProduto.length > 0) {
       this.setState({resultadoPesquisaProduto: []});
     }
-    fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
+    fetch(constante.ENDPOINT+'produto/cliente/' 
+    + this.state.clienteId
+    + '?&latitude=' + this.state.gps.coords.latitude
+    + '&longitude=' + this.state.gps.coords.longitude
+    + '&altitude=' + this.state.gps.coords.altitude, 
+    {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
