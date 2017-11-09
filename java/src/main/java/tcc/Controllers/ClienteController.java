@@ -64,6 +64,16 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
         }
     }
+
+    @RequestMapping(value="/{clienteId}/favoritos", method = RequestMethod.GET)
+    public ResponseEntity buscaVendedoresFavoritos(@PathVariable("clienteId") Long clienteId) {
+        try {
+            Cliente cliente = clienteService.buscaCliente(clienteId);
+            return new ResponseEntity<>(cliente.getVendedoresFavoritos(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao carregar vendedores favoritos do cliente"), HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
 
