@@ -64,6 +64,29 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
         }
     }
+
+    @RequestMapping(value = "{clienteId}/favoritos/{vendedorId}", method = RequestMethod.PUT)
+    public ResponseEntity salvaVendedorFavorito(@PathVariable("clienteId") Long clienteId,
+                                                @PathVariable("vendedorId") Long vendedorId) {
+        try {
+            Cliente cliente = clienteService.salvaVendedorFavorito(clienteId, vendedorId);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao salvar favorito"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "{clienteId}/favoritos/{vendedorId}", method = RequestMethod.DELETE)
+    public ResponseEntity deletarVendedorFavorito(@PathVariable("clienteId") Long clienteId,
+                                                @PathVariable("vendedorId") Long vendedorId) {
+        try {
+            Cliente cliente = clienteService.deletaVendedorFavorito(clienteId, vendedorId);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao deletar favorito"), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
 
 

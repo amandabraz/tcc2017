@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.VendedorDAO;
 import tcc.ErrorHandling.CustomError;
-import tcc.Models.Usuario;
+import tcc.Models.Cliente;
 import tcc.Models.Vendedor;
+import tcc.Services.ClienteService;
 import tcc.Services.VendedorService;
 
 import javax.transaction.Transactional;
@@ -29,6 +30,9 @@ public class VendedorController {
 
     @Autowired
     private VendedorService vendedorService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
@@ -48,11 +52,22 @@ public class VendedorController {
         return new ResponseEntity<>(novoVendedor, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity procuraVendedorPorUsuario(@PathVariable("id") Long usuarioId) {
+    /**
+     * Busca Vendedor para exibir ao Cliente e busca se o vendedor está favoritado pelo cliente
+     * @param vendedorId
+     * @return
+     */
+    @RequestMapping(value = "/{vendedorId}/cliente/{clienteId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity procuraVendedorPorUsuario(@PathVariable("vendedorId") Long vendedorId,
+                                                    @PathVariable("clienteId") Long clienteId) {
         try {
-            Usuario usuario = new Usuario(usuarioId);
-            Vendedor vendedor = vendedorService.procuraVendedorPorUsuario(usuario);
+            Vendedor vendedor = vendedorService.buscaVendedor(vendedorId);
+            Cliente cliente = clienteService.buscaCliente(clienteId);
+            if (cliente.getVendedoresFavoritos().contains(vendedor)) {
+                vendedor.setFavoritoDoCliente(true);
+            } else  {
+                vendedor.setFavoritoDoCliente(false);
+            }
             return new ResponseEntity<Vendedor>(vendedor, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao carregar dados do vendedor"), HttpStatus.NOT_FOUND);
