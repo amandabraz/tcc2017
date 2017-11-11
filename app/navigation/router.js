@@ -13,6 +13,7 @@ import HomeVendedor from '../screens/home/HomeVendedor';
 import HomeCliente from '../screens/home/HomeCliente';
 import ProdutosFavoritos from '../screens/produto/ProdutosFavoritos';
 import RankingProdutos from '../screens/ranking/RankingProdutos';
+import RankingVendedores from '../screens/ranking/RankingVendedores';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
@@ -95,6 +96,36 @@ export const GerenciaPedidosClientes = TabNavigator({
    }
 });
 
+export const GerenciaRankingClientes = TabNavigator({
+  Produtos: {
+    screen: RankingProdutos
+  },
+  Vendedores: {
+    screen: RankingVendedores
+  },
+ },
+ {
+   tabBarPosition: 'top',
+   lazy: true,
+   swipeEnabled: false,
+   animationEnabled: false,
+   backBehavior: 'none',
+   tabBarOptions: {
+     showLabel: true,
+     activeTintColor: 'white',
+     inactiveTintColor: 'white',
+     labelStyle: {
+       fontSize: 12,
+     },
+     style: {
+       backgroundColor: '#624063',
+     },
+     indicatorStyle: {
+       backgroundColor: 'white',
+     }
+   }
+});
+
 export const TabsCliente = TabNavigator({
     PerfilCliente: {
       screen: PerfilCliente,
@@ -121,7 +152,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Ranking: {
-      screen: RankingProdutos,
+      screen: GerenciaRankingClientes,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
       },
