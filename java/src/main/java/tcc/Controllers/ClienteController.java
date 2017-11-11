@@ -87,6 +87,15 @@ public class ClienteController {
         }
     }
 
+ @RequestMapping(value="/{clienteId}/favoritos", method = RequestMethod.GET)
+    public ResponseEntity buscaVendedoresFavoritos(@PathVariable("clienteId") Long clienteId) {
+        try {
+            Cliente cliente = clienteService.buscaCliente(clienteId);
+            return new ResponseEntity<>(cliente.getVendedoresFavoritos(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao carregar vendedores favoritos do cliente"), HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
 
