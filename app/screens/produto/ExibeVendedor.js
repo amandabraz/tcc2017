@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
+import { Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ToastAndroid, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -11,8 +11,8 @@ import CheckBox from 'react-native-check-box';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
 
+const { width, height } = Dimensions.get("window");
 
-//TODO: Pegar dados do vendedor certo, o que o clique foi feito
 
 export default class ExibeVendedor extends Component {
   constructor(props) {
@@ -31,14 +31,14 @@ export default class ExibeVendedor extends Component {
       celularText: '',
       resultadoProduto: [],
       imagemPerfil: require('./img/camera11.jpg'),
-      favoritoColor: 'white'
+      favoritoColor: 'gray'
     };
     this.buscaDadosVendedor();
     this.buscaProdutos();
   }
 
   buscaDadosVendedor() {
-    fetch(constante.ENDPOINT+'vendedor/usuario/' + this.state.selectUserId)
+    fetch(constante.ENDPOINT + 'vendedor/' + this.state.vendedorId + '/cliente/' + this.state.clienteId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -57,6 +57,9 @@ export default class ExibeVendedor extends Component {
             }
             pagamentos = pagamentos.slice(0, -3);
             this.setState({meiosPagamentoText: pagamentos});
+            if (responseJson.favoritoDoCliente) {
+              this.setState({favoritoColor: '#990000'});              
+            }
           }
         }
       });
@@ -116,10 +119,30 @@ onButtonOpenProduct = (produto) => {
 };
 
 favoritaVendedor(){
-  if(this.state.favoritoColor == 'white'){
-    this.setState({favoritoColor: '#990000'})
+  if(this.state.favoritoColor == 'gray'){
+    this.setState({favoritoColor: '#990000'});
+    fetch(constante.ENDPOINT + 'cliente/' + this.state.clienteId + '/favoritos/' + this.state.vendedorId,
+          {method: 'PUT'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        ToastAndroid.showWithGravity('Vendedor favoritado <3', ToastAndroid.SHORT, ToastAndroid.CENTER);        
+      } else {
+        this.setState({favoritoColor: 'gray'});        
+      }
+    });
   } else {
-    this.setState({favoritoColor: 'white'})
+    this.setState({favoritoColor: 'gray'});
+    fetch(constante.ENDPOINT + 'cliente/' + this.state.clienteId + '/favoritos/' + this.state.vendedorId,
+           {method: 'DELETE'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        ToastAndroid.showWithGravity('Vendedor desfavoritado </3', ToastAndroid.SHORT, ToastAndroid.CENTER);        
+      } else {
+        this.setState({favoritoColor: '#990000'});
+      }
+    });
   }
 }
 
@@ -141,20 +164,21 @@ favoritaVendedor(){
             source={this.state.imagemPerfil}/>
           </View>
           <View style={{flexDirection: 'row'}}>
-          <View style={{alignItems: 'center', width: '100%'}}>
-            <Text style={styles.titleText}>
-              {this.state.nomeText}
-            </Text>
+            <View style={{alignItems: 'center', justifyContent: 'center', width: '80%'}}>
+              <Text style={styles.titleText}>
+                {this.state.nomeText}
+              </Text>
+            </View>
+            <View style={{alignSelf: 'flex-end',  padding: 10}}>
+                <Icon name='heart' 
+                      size={30}
+                      raised
+                      type='font-awesome' 
+                      color={this.state.favoritoColor}
+                      onPress={() => this.favoritaVendedor()}/>
+            </View>
           </View>
-          <View style={{justifyContent: 'flex-end', width: '10%'}}>
-              <Icon name='heart' 
-                    size={30}
-                    type='font-awesome' 
-                    color={this.state.favoritoColor}
-                    onPress={() => this.favoritaVendedor()}/>
-          </View>
-          </View>
-          </View>
+        </View>
 
         <ScrollView>
         <Fumi
@@ -202,6 +226,7 @@ favoritaVendedor(){
     alignSelf: 'stretch',
   },
   header:{
+    width,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
