@@ -2,9 +2,7 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tcc.CustomQueryHelpers.RankingProdutosVendidos;
-import tcc.CustomQueryHelpers.QuantidadePedidos;
-import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
+import tcc.CustomQueryHelpers.*;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
@@ -265,6 +263,33 @@ public class PedidoService {
     public List<RankingProdutosVendidos> rankingProdutosVendidos (Boolean filtroMensal) {
         try {
             return (List<RankingProdutosVendidos>) pedidoDAO.findByProdutosMaisVendidos(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<RankingQuantidadeProdutosVendidos> rankingQuantidadeProdutosVendidos (Boolean filtroMensal) {
+        try {
+            return (List<RankingQuantidadeProdutosVendidos>) pedidoDAO.findByQuantidadeProdutosVendidos(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<RankingQuantidadeVendas> rankingQuantidadeVendas (Boolean filtroMensal) {
+        try {
+            return (List<RankingQuantidadeVendas>) pedidoDAO.findByQuantidadeVendas(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<RankingQuantidadeClientes> rankingQuantidadeClientes (Boolean filtroMensal) {
+        try {
+            return (List<RankingQuantidadeClientes>) pedidoDAO.findByQuantidadeClientes(buscaData(filtroMensal));
         } catch (Exception e) {
             throw e;
         }
