@@ -243,6 +243,9 @@ carregarCategoriasArray() {
      var dataNormal = new Date(this.state.dataOriginal);
      var dataAlterada = new Date(this.state.dataPreparacao);
      var dataSalvar = '';
+     if (!this.state.imagemProduto) {
+        this.setState({imagemProduto: this.state.imagemPrincipal.uri});
+     }
      if(dataAlterada!=dataNormal){
        dataSalvar = dataAlterada;
      } else {

@@ -33,9 +33,10 @@ public class ProdutoService {
         try {
             if (Objects.nonNull(produto.getId())) {
                 Produto updateProduto = produtoDAO.findOne(produto.getId());
-                if (Objects.nonNull(updateProduto.getImagemPrincipal()) &&
-                        Objects.nonNull(produto.getImagemPrincipal())) {
-                    if (!updateProduto.getImagemPrincipal().equals(produto.getImagemPrincipal())) {
+                if (!StringUtils.isEmpty(produto.getImagemPrincipal())) {
+                    if (produto.getImagemPrincipal().equals(updateProduto.getImagemPrincipal())) {
+                        produto.setImagemPrincipal(updateProduto.getImagemPrincipal());
+                    } else {
                         produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
                     }
                 }
