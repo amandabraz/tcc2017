@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -24,7 +25,6 @@ import {
 import Popup from 'react-native-popup';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Accordion from 'react-native-accordion';
@@ -43,41 +43,20 @@ class RankingProdutos extends Component {
       refreshing: false,
       produtosMaisVendidos: [],
       quantidadeProdutosVendidos: [],
+      quantidadeVendas: [],
+      quantidadeClientes: [],
       quantidadeVendida: '',
       filtroMensal: true,
       alturaPedido: '100%',
       alturaResumo: '100%',
       dataNascimentoText: '',
-      imagemPerfil: require('./img/fundof.png'),
-      tags: [],
-      nomeText: '',
-      tagsText: "Nenhuma tag inserida",
-      tagEstilo: {
-        color: '#CCCCCC',
-        fontStyle: 'italic'
-      },
-      restricoesDieteticas: [],
-      restricoesCliente: [],
-      restricoesDieteticasText: "Nenhuma restrição escolhida",
-      restricaoEstilo: {
-        color: '#CCCCCC',
-        fontStyle: 'italic'
-      },
-      celularText: '',
-      confText: '  Configuração',
-      titleTextClass: styles.titleText,
-      baseTextClass: styles.baseText,
-      pencilColor: '#fff',
-      editavel: false,
-      cliente: {
-        usuario: {
-          nome: '',
-          cpf: '',
-          email: '',
-        },
-      }
+      imagemHeader: require('./img/fundof.png'),
+      imagemProduto: require('./img/camera.jpg'),
+      imagemPremiacao: require('./img/camera.jpg')
     };
     this.buscaQuantidadeProdutosVendidos();
+    this.buscaQuantidadeVendas();
+    this.buscaQuantidadeClientes();
     this.buscaProdutosMaisVendidos();
   };
 
@@ -107,29 +86,74 @@ class RankingProdutos extends Component {
       }});
   }
 
-  produtosMaisVendidos() {
-      var views = [];
-      if (this.state.informacoes.length > 0) {
-        for (i in this.state.informacoes) {
-          let produtoVendido = this.state.informacoes[i];
-          views.push(
-            <View key={i}>
-                <Text style={{fontSize: 13, justifyContent: 'space-between'}}>
-                  {produtoVendido[1]} {produtoVendido[2]} {produtoVendido[0]}
-                </Text>
-           </View>
-          )
+  buscaQuantidadeVendas(){
+    fetch(constante.ENDPOINT + 'pedido/ranking/venda/quantidade/' + this.state.filtroMensal, {method: 'GET'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        this.setState({quantidadeVendas: responseJson});
+        this.setState({refreshing:false});
+      }});
+  }
+
+  buscaQuantidadeClientes(){
+    fetch(constante.ENDPOINT + 'pedido/ranking/cliente/quantidade/' + this.state.filtroMensal, {method: 'GET'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        this.setState({quantidadeClientes: responseJson});
+        this.setState({refreshing:false});
+      }});
+  }
+
+
+  buscaProduto() {
+    var views = [];
+    if (this.state.produtosMaisVendidos.length > 0) {
+      let imagemPrincipal = require('./img/camera.jpg');
+      for(i in this.state.produtosMaisVendidos) {
+        let produto = this.state.produtosMaisVendidos[i];
+
+        if(produto[3]){
+          imagemPrincipal = {uri: produto[3]};
         }
-      } else {
-        views.push(
-          <View key={0} style={{alignItems: 'center'}}>
-            <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-              Você não tem produtos vendidos! :(
-            </Text>
+        else {
+          imagemPrincipal = require('./img/camera.jpg');
+        }
+
+
+        views.push (
+          <View key={i}>
+          <Text>{'\n'}</Text>
+          <TouchableHighlight
+            underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
+          >
+              <View>
+                <View style={styles.oneResult}>
+                  <View style={{width: "30%"}}>
+                    <Image source={imagemPrincipal}
+                          style={styles.imageResultSearch}
+                          justifyContent='flex-start'/>
+                  </View>
+                  <View style={{width: "50%"}}>
+                    <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto[1]}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>Quantidade vendida: {produto[2]}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>Vendido por: {produto[0]}</Text>
+                  </View>
+                  <View style={{width: "20%"}}>
+                  <Image source={imagemPrincipal}
+                        style={styles.imageResultSearch}
+                        justifyContent='flex-end'/>
+                  </View>
+                </View>
+                <Text>{'\n'}</Text>
+              </View>
+            </TouchableHighlight>
           </View>
-        )
+        );
       }
-      return views;
+    }
+    return views;
   }
 
   render() {
@@ -144,10 +168,10 @@ class RankingProdutos extends Component {
               minOverlayOpacity = {0.3}
               fadeOutForeground
               renderHeader = { () =>
-                <Image source={this.state.imagemPerfil} style={styles.image}>
+                <Image source={this.state.imagemHeader} style={styles.image}>
                   <View style = {{alignItems: 'center'}}>
                     <Text style={{marginTop: 8, fontSize: 27, justifyContent: 'center', color: 'white', fontWeight: 'bold'}}>
-                      {'\n'}{'\n'} Ranking Produtos Vendidos {'\n'} {'\n'}
+                      {'\n'}{'\n'} Produtos Mais Vendidos {'\n'} {'\n'}
                     </Text>
                   </View>
                   <View style = {{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -159,12 +183,12 @@ class RankingProdutos extends Component {
                             <Text style={styles.totalFont}>{this.state.quantidadeProdutosVendidos}</Text>
                           </View>
                           <View style={{alignSelf:'center', flexDirection: 'column'}}>
-                            <Text style={styles.oneResultfont}>Produtos</Text>
-                            <Text style={styles.totalFont}>{this.state.quantidadeProdutosVendidos}</Text>
+                            <Text style={styles.oneResultfont}>Vendas</Text>
+                            <Text style={styles.totalFont}>{this.state.quantidadeVendas}</Text>
                           </View>
                           <View style={{alignSelf:'center', flexDirection: 'column'}}>
-                            <Text style={styles.oneResultfont}>Produtos</Text>
-                            <Text style={styles.totalFont}>{this.state.quantidadeProdutosVendidos}</Text>
+                            <Text style={styles.oneResultfont}>Clientes</Text>
+                            <Text style={styles.totalFont}>{this.state.quantidadeClientes}</Text>
                           </View>
                         </View>
                       } content={
@@ -177,90 +201,29 @@ class RankingProdutos extends Component {
                   </View>
                 </Image>
               }
-          renderForeground={() =>
-            <Animatable.View
-            style={styles.navTitleView}
-            ref={navTitleView => {
-              this.navTitleView = navTitleView;
-            }}>
-          </Animatable.View>
-          }>
+              renderForeground = {() =>
+                <Animatable.View
+                  style = {styles.navTitleView}
+                  ref = {navTitleView => {
+                    this.navTitleView = navTitleView;
+                  }}>
+                </Animatable.View>
+              }>
           <TriggeringView
             style={styles.section}
             onHide={() => this.navTitleView.fadeInUp(200)}
             onDisplay={() => this.navTitleView.fadeOut(100)
             }>
             <View style={styles.bar}>
-                <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-                  <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.abrirTermos()}>
-                  <FontAwesomeIcon name="file-text" size={20} color={this.state.pencilColor} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.sobreColaboradores()}>
-                  <FontAwesomeIcon name="question" size={20} color={this.state.pencilColor} />
-                </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this.desejaSair()}>
-                  <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
-                </TouchableOpacity>
             </View>
           </TriggeringView>
-              <Fumi
-                style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                label={'Nome'}
-                iconClass={FontAwesomeIcon}
-                iconSize={20}
-                iconName={'user'}
-                iconColor={'#4A4A4A'}
-                value={this.state.nomeText}
-                onChangeText={(nome) => this.setState({nomeText: nome})}
-                editable={this.state.editavel}
-                inputStyle={this.state.titleTextClass}/>
-
-              <Fumi
-                  style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                  label={'CPF'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'info'}
-                  iconColor={'#4A4A4A'}
-                  value={this.state.cliente.usuario.cpf}
-                  editable={false}
-                  inputStyle={styles.baseText}/>
-
-              <Fumi
-                  style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                  label={'Celular'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'mobile'}
-                  iconColor={'#4A4A4A'}
-                  value={this.state.celularText}
-                  onChange={(celular) => this.setState({celularText: celular})}
-                  editable={this.state.editavel}
-                  inputStyle={this.state.baseTextClass}/>
-
-              <Fumi
-                  style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                  label={'Data de Nascimento'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'calendar'}
-                  iconColor={'#4A4A4A'}
-                  value={this.state.dataNascimentoText}
-                  editable={false}
-                  inputStyle={styles.baseText}/>
-
-              <Fumi
-                  style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
-                  label={'Email'}
-                  iconClass={FontAwesomeIcon}
-                  iconName={'at'}
-                  iconColor={'#4A4A4A'}
-                  value={this.state.cliente.usuario.email}
-                  editable={false}
-                  inputStyle={styles.baseText}/>
-
         </HeaderImageScrollView>
+        <View style={styles.centralView}>
+          <View style={styles.results}>
+            {this.buscaProduto()}
+          </View>
+        </View>
         </ScrollView>
-        <Popup ref={popup => this.popup = popup }/>
       </View>
     );
   }
@@ -393,6 +356,16 @@ oneResult1:{
    margin: 10,
    width: '95%'
 },
+oneResult:{
+   width: '95%',
+   flexDirection: 'row',
+   backgroundColor: 'rgba(255, 255, 255, 0.55)',
+   borderWidth: 10,
+   borderRadius: 10,
+   borderColor: '#fff',
+   padding: 10,
+   margin: 3,
+},
 oneResultfont:{
   fontSize: 14,
   textAlign: 'center',
@@ -402,7 +375,30 @@ totalFont:{
   fontSize: 20,
   textAlign: 'center',
   fontWeight: 'bold',
-}
+},
+imageResultSearch:{
+  width: 70,
+  height: 70,
+  alignItems:  'center',
+  justifyContent: 'center',
+  borderRadius: 100,
+},
+results:{
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+centralView: {
+  alignItems: 'center'
+},
+oneResultfontTitle:{
+  color: '#4A4A4A',
+  fontWeight: 'bold',
+  fontSize: 18,
+},
+oneResultfont:{
+  color: '#4A4A4A',
+  fontSize: 15,
+},
 });
 
 RankingProdutos.defaultProps = { ...RankingProdutos };
