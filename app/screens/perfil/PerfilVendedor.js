@@ -50,7 +50,8 @@ export default class PerfilVendedor extends Component {
       titleTextClass: styles.titleText,
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
-      meiosPagamento: []
+      meiosPagamento: [],
+      escolhido: ''
     };
     this.buscaDadosVendedor();
     this.buscaMeiosPagamento();
@@ -101,6 +102,9 @@ export default class PerfilVendedor extends Component {
         meioPagVendedor.push(responseJson.meiosPagamentos[j]);
       }
       this.setState({meiosPagamentoVendedor: meioPagVendedor});
+    } else {
+      pagamentos = "Nenhum pagamento escolhido.";
+      this.setState({meiosPagamentoText: pagamentos});
     }
   }
 
@@ -125,7 +129,7 @@ export default class PerfilVendedor extends Component {
         <View style={{alignSelf: 'center'}}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.salvaEdicaoVendedor()}>
+            onPress={() => this.pagamentoEscolhido()}>
             <Text style={styles.buttonText}>SALVAR</Text>
           </TouchableOpacity>
 
@@ -136,8 +140,6 @@ export default class PerfilVendedor extends Component {
   }
 
   salvaEdicaoVendedor() {
-    this.pagamentoEscolhido;
-
     const {
       state: {
         vendedorId,
@@ -216,10 +218,12 @@ export default class PerfilVendedor extends Component {
     var pagamentos = this.state.meiosPagamentoVendedor;
     if (meioPag.checked) {
       pagamentos.push(objMeioPag);
+      this.setState({ meiosPagamentoVendedor: pagamentos });
     } else {
       pagamentos.pop(objMeioPag);
+      this.setState({ meiosPagamentoVendedor: pagamentos });
     }
-    this.setState({ meiosPagamentoVendedor: pagamentos });
+
   }
 
   mostrarCheckboxesPagamento() {
@@ -256,12 +260,11 @@ export default class PerfilVendedor extends Component {
   }
 
  pagamentoEscolhido = () => {
-     if (this.state.meiosPagamentos.length > 0) {
-       return true;
+     if (this.state.meiosPagamentoVendedor.length > 0) {
+       this.salvaEdicaoVendedor();
      }
      else {
        ToastAndroid.showWithGravity('Escolha ao menos um meio de pagamento', ToastAndroid.LONG, ToastAndroid.CENTER);
-       return false;
      }
  }
 
