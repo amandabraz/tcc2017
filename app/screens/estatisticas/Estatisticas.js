@@ -72,7 +72,7 @@ class Estatisticas extends Component {
       return(
         <View key={0} style={{alignItems: 'center', marginRight: 5}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Não há produtos vendidos para estatísticas.
+          Não há produtos vendidos para gerar estatísticas.
         </Text>
         </View>
       )
@@ -98,7 +98,7 @@ class Estatisticas extends Component {
       views.push(
         <View key={0} style={{alignItems: 'center'}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Você não tem produtos vendidos! :(
+          Não há produtos vendidos para gerar estatísticas.
         </Text>
         </View>
       )
@@ -155,7 +155,7 @@ class Estatisticas extends Component {
       return(
         <View key={keyOfPieChart+0} style={{alignItems: 'center'}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Não há valor total de venda para estatísticas.
+          Não há valor total de venda para gerar estatísticas.
         </Text>
         </View>
       )
@@ -183,17 +183,8 @@ class Estatisticas extends Component {
   }
 
   render() {
-    const titleConfig = { 
-      title: 'Estatísticas',
-      tintColor: "#fff",
-      fontFamily: 'Roboto',
-    }
     return(
       <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="#7A8887"
-        />
           <ScrollView refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}

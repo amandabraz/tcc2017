@@ -126,7 +126,6 @@ class RankingVendedores extends Component {
               easing="easeOutCubic"/>
             </View>
           </View>
-          <Text>{'\n'}</Text>
               <View>
                 <View style={styles.oneResult}>
                   <View style={{width: "30%"}}>
@@ -144,6 +143,7 @@ class RankingVendedores extends Component {
                         justifyContent='flex-end'/>
                   </View>
                 </View>
+                <Text>{'\n'}</Text>
               </View>
           </View>
         );
