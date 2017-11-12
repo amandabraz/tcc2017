@@ -134,7 +134,8 @@ export default class Login extends Component {
                   source={require('./img/amora-logo.png')}/>
               </View>
             <View style={{height: '60%', alignItems: 'center', padding:10}}>
-             <Text style={styles.title}>{'AMORA'}</Text>
+            <Image
+                  source={require('./img/amora-text.png')}/>
 
              <View style={{flexDirection:'row', alignItems: 'center', paddingTop: 16}}>
               <FontAwesomeIcon
@@ -203,11 +204,6 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 3,
-  },
-  title: {
-    fontFamily: 'Roboto',
-    color: '#471C56',
-    fontSize: 30,
   },
   background: { //tornando a imagem do tamanho da tela
     width,
