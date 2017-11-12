@@ -58,4 +58,14 @@ public class UsuarioService {
             throw e;
         }
     }
+
+    public Usuario reativarPerfil(Long id) {
+        try {
+            Usuario reativarPerfil = usuarioDAO.findOne(id);
+            reativarPerfil.setDeletado(false);
+            return usuarioDAO.save(reativarPerfil);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

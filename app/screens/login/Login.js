@@ -17,6 +17,7 @@ import {
 
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
+import Popup from 'react-native-popup';
 import * as constante from '../../constantes';
 
 //dimensão da janela
@@ -29,6 +30,7 @@ export default class Login extends Component {
    super(props);
 
    this.state = {
+     userId: '',
      email: '',
      senha: ''
    }
@@ -64,6 +66,40 @@ export default class Login extends Component {
     this.props.navigation.navigate('AceiteTermoUso');
   };
 
+  reativarPress = () => {
+    fetch(constante.ENDPOINT + 'usuario/reativar/' + this.state.userId, {method: 'PUT'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        ToastAndroid.showWithGravity('Cadastro Reativado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        this.eventLogin();
+      }
+    });
+};
+
+  ativarPerfil() {
+    this.popup.confirm({
+        title: 'Ativar Conta',
+        content: ['Você deseja reativar sua conta?'],
+        ok: {
+            text: 'Sim',
+            style: {
+                color: 'gray',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              {this.reativarPress()}
+            }
+        },
+        cancel: {
+            text: 'Não',
+            style: {
+                color: 'gray'
+            }
+        }
+    });
+}
+
   //evento no click do botão
   eventLogin = () => {
     const {
@@ -94,18 +130,23 @@ export default class Login extends Component {
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
             if (responseJson != null) {
-              ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-              if (responseJson.usuario.perfil == "V") {
-                this.props.navigation.navigate('TabsVendedor', {
-                  userId: responseJson.usuario.id,
-                  vendedorId: responseJson.id
-                });
-              } else if (responseJson.usuario.perfil == "C") {
-                this.props.navigation.navigate('TabsCliente', {
-                  userId: responseJson.usuario.id,
-                  clienteId: responseJson.id
-                });
-              }
+              if(responseJson.usuario.deletado == 1){
+                this.setState({userId: responseJson.usuario.id})
+                this.ativarPerfil();
+              } else {
+                ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                if (responseJson.usuario.perfil == "V") {
+                 this.props.navigation.navigate('TabsVendedor', {
+                   userId: responseJson.usuario.id,
+                   vendedorId: responseJson.id
+                 });
+               } else if (responseJson.usuario.perfil == "C") {
+                 this.props.navigation.navigate('TabsCliente', {
+                   userId: responseJson.usuario.id,
+                   clienteId: responseJson.id
+                 });
+               }
+              }              
             }
           } else {
               Alert.alert("E-mail ou senha inválidos!");
@@ -183,6 +224,7 @@ export default class Login extends Component {
             </View>
         </Image>
       </View>
+      <Popup ref={popup => this.popup = popup }/>
       </ScrollView>
     );
   }

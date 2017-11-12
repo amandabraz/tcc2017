@@ -483,10 +483,11 @@ export default class PerfilVendedor extends Component {
 
               {this.meiosPagamento()}
               {this.mostraBotaoSalvar()}
-              <View style={{width:'98%', alignItems:'center', padding:10}}>
-              <TouchableOpacity style={styles.EvenBtn} onPress={this.excluirUsuario.bind(this)}>
-              <Text style={styles.EvenBtnText}>Desativar Conta</Text>
-            </TouchableOpacity>
+              <View style={{width:'98%', alignItems:'flex-end', padding:10}}>
+                <Icon name="trash" size={25} 
+                      color={'#7A8887'} 
+                      type='font-awesome'
+                      onPress={this.excluirUsuario.bind(this)}/>
             </View>
           </ScrollView>
         </HeaderImageScrollView>

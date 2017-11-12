@@ -89,7 +89,7 @@ public class UsuarioController {
     public ResponseEntity efetuaLogin(@RequestBody Usuario usuario) {
         try {
             Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
-            if (usuarioBd != null && !(usuarioBd.isDeletado())) {
+            if (usuarioBd != null) {
                 //TODO: retornar ou outra opcao caso o usuario esteja DELETADO ou BLOQUEADO
                 if (VENDEDOR == usuarioBd.getPerfil()) {
                     Vendedor vendedor = vendedorService.buscaVendedorPorUsuario(usuarioBd);
@@ -156,6 +156,16 @@ public class UsuarioController {
             return new ResponseEntity<Usuario>(usuarioDeletado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao deletar perfil"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/reativar/{id}", method = RequestMethod.PUT)
+    public ResponseEntity reativarPerfil(@PathVariable("id") Long id) {
+        try {
+            Usuario usuarioReativado = usuarioService.reativarPerfil(id);
+            return new ResponseEntity<Usuario>(usuarioReativado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao reativar perfil"), HttpStatus.BAD_REQUEST);
         }
     }
 }
