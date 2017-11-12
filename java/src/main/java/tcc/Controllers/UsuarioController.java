@@ -89,7 +89,7 @@ public class UsuarioController {
     public ResponseEntity efetuaLogin(@RequestBody Usuario usuario) {
         try {
             Usuario usuarioBd = usuarioDao.findUsuarioByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
-            if (usuarioBd != null) {
+            if (usuarioBd != null && !(usuarioBd.isDeletado())) {
                 //TODO: retornar ou outra opcao caso o usuario esteja DELETADO ou BLOQUEADO
                 if (VENDEDOR == usuarioBd.getPerfil()) {
                     Vendedor vendedor = vendedorService.buscaVendedorPorUsuario(usuarioBd);
@@ -146,6 +146,16 @@ public class UsuarioController {
             return new ResponseEntity<Iterable<Usuario>>(usuarioDao.findUsuarioByNome(nome), HttpStatus.OK);
         }catch(NullPointerException | IndexOutOfBoundsException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
+        }
+    }
+
+    @RequestMapping(value = "/deletar/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deletaPerfil(@PathVariable("id") Long id) {
+        try {
+            Usuario usuarioDeletado = usuarioService.deletaUsuario(id);
+            return new ResponseEntity<Usuario>(usuarioDeletado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao deletar perfil"), HttpStatus.BAD_REQUEST);
         }
     }
 }

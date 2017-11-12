@@ -317,6 +317,40 @@ export default class PerfilVendedor extends Component {
     });
   }
 
+  handleFinalizarPress = () => {
+    fetch(constante.ENDPOINT + 'usuario/deletar/' + this.state.userId, {method: 'DELETE'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        {this.logout()}
+      }
+    });
+};
+
+  excluirUsuario() {
+    this.popup.confirm({
+        title: 'Desativar Conta',
+        content: ['Tem certeza que deseja desativar sua conta?'],
+        ok: {
+            text: 'Sim',
+            style: {
+                color: 'gray',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              {this.handleFinalizarPress()}
+            }
+        },
+        cancel: {
+            text: 'Não',
+            style: {
+                color: 'gray'
+            }
+        }
+    });
+}
+
+
   logout() {
     ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
     this.props.navigation.navigate('Login');
@@ -449,6 +483,11 @@ export default class PerfilVendedor extends Component {
 
               {this.meiosPagamento()}
               {this.mostraBotaoSalvar()}
+              <View style={{width:'98%', alignItems:'center', padding:10}}>
+              <TouchableOpacity style={styles.EvenBtn} onPress={this.excluirUsuario.bind(this)}>
+              <Text style={styles.EvenBtnText}>Desativar Conta</Text>
+            </TouchableOpacity>
+            </View>
           </ScrollView>
         </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
@@ -484,6 +523,18 @@ export default class PerfilVendedor extends Component {
     height: 180,
     borderRadius: 100,
     borderColor: 'rgba(0,0,0,0.4)',
+  },
+  EvenBtnText: {
+    fontSize: 18,
+    color: 'white',
+    textAlign: 'center'
+  },
+  EvenBtn: {
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    position: 'relative',
+    backgroundColor: '#88557B'
   },
   profilepic:{
     flex: 1,
