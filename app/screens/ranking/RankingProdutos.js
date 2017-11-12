@@ -37,10 +37,6 @@ class RankingProdutos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.navigation.state.params.userId,
-      vendedorId: this.props.navigation.state.params.vendedorId,
-      clienteId: this.props.navigation.state.params.clienteId,
-      refreshing: false,
       produtosMaisVendidos: [],
       quantidadeProdutosVendidos: [],
       quantidadeVendas: [],
@@ -232,105 +228,6 @@ class RankingProdutos extends Component {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-},
-headerBackground: {
-  flex: 1,
-  width: null,
-  alignSelf: 'stretch',
-},
-header:{
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 20,
-  backgroundColor: 'rgba(0,0,0,0.2)',
-},
-profilepicWrap:{
-  width: 180,
-  height: 180,
-  borderRadius: 100,
-  borderColor: 'rgba(0,0,0,0.4)',
-},
-profilepic:{
-  flex: 1,
-  width: null,
-  alignSelf: 'stretch',
-  borderRadius: 100,
-  borderWidth: 4
-},
-bar:{
-  width,
-  padding: '5%',
-  backgroundColor: '#624063',
-  flexDirection: 'row',
-  justifyContent: 'space-between'
-},
-barItem:{
-  padding: 18,
-  alignItems: 'center'
-},
-baseText: {
-  fontFamily: 'Roboto',
-  color: '#4A4A4A',
-  fontSize: 20,
-},
-baseTextEdit: {
-  fontFamily: 'Roboto',
-  color: '#333d47',
-  fontSize: 20,
-},
-baseTextNaoEditavel: {
-  fontFamily: 'Roboto',
-  color: '#808080',
-  fontStyle: 'italic',
-  fontSize: 16,
-},
-listText: {
-  fontFamily: 'Roboto',
-  color: '#4A4A4A',
-  fontSize: 14,
-},
-barText: {
-  fontFamily: 'Roboto',
-  color: '#fff',
-  fontSize: 18,
-},
-titleText: {
-  fontSize: 30,
-  fontWeight: 'bold',
-  color: '#4A4A4A',
-  fontFamily: 'Roboto',
-},
-titleTextEdit: {
-  fontSize: 30,
-  fontWeight: 'bold',
-  color: '#333d47',
-  fontFamily: 'Roboto',
-},
-titleText: {
-  fontSize: 30,
-  fontWeight: 'bold',
-  color: '#4A4A4A',
-  fontFamily: 'Roboto',
-},
-button: {
-  borderRadius: 5,
-  justifyContent: 'center',
-  height: 35,
-  width: 200,
-  backgroundColor: "#7A8887",
-  alignSelf: 'stretch',
-  marginBottom: 20
-},
-buttonText: {
-  fontWeight: 'bold',
-  fontSize: 16,
-  color:'white',
-  alignSelf: 'center',
-},
 image: {
   height: MAX_HEIGHT,
   width,

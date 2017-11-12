@@ -1,41 +1,56 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
 import {
+  Animated,
   AppRegistry,
+  Dimensions,
+  Image,
+  RefreshControl,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TextInput,
-  View,
-  Alert,
-  Dimensions,
-  Image,
-  ScrollView,
-  ToastAndroid,
   TouchableHighlight,
   TouchableOpacity,
-  RefreshControl
+  View
 } from 'react-native';
-import StartTimerLocation from '../localizacao/TimerGeolocation.js';
-import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
-import {Icon,Button} from 'react-native-elements';
-import Popup from 'react-native-popup';
-import NavigationBar from 'react-native-navbar';
-import QRCode from 'react-native-qrcode';
-import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
-import Camera from 'react-native-camera';
+import NavigationBar from 'react-native-navbar';
+import Switch from 'react-native-customisable-switch';
+import {
+  Button
+} from 'react-native-elements';
+import Popup from 'react-native-popup';
+import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Icon } from 'react-native-elements';
+import * as Animatable from 'react-native-animatable';
+import Accordion from 'react-native-accordion';
+
 
 const { width, height } = Dimensions.get("window");
 
-class PedidosConfirmadosCliente extends Component {
+const MAX_HEIGHT = 250;
+
+class RankingVendedores extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.navigation.state.params.userId,
-      clienteId: this.props.navigation.state.params.clienteId,
-      pedidosConfirmados: [],
-      refreshing: false,
+      produtosMaisVendidos: [],
+      quantidadeProdutosVendidos: [],
+      quantidadeVendas: [],
+      quantidadeClientes: [],
+      quantidadeVendida: '',
+      filtroMensal: true,
+      alturaPedido: '100%',
+      alturaResumo: '100%',
+      dataNascimentoText: '',
+      imagemHeader: require('./img/fundof.png'),
+      imagemProduto: require('./img/camera.jpg'),
+      imagemPremiacao: require('./img/camera.jpg')
     };
-    this.buscaDadosPedidosCliente();
   };
 
   buscaDadosPedidosCliente() {
@@ -136,34 +151,93 @@ pedidoConfirmado(){
 
   render() {
     return(
-      <View style={styles.container}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={() => {
-              this.setState({refreshing:true});
-              this.buscaDadosPedidosCliente();
-            }}
-          />
-        }>
-        <View style = {{margin: 5}}>
-          <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#6E6362', fontWeight: 'bold'}}>
-            Pedidos Confirmados
-          </Text>
+      <View style = {{ flex: 1 }}>
+        <ScrollView>
+          <StatusBar barStyle="light-content"/>
+            <HeaderImageScrollView
+              maxHeight = {MAX_HEIGHT}
+              minHeight = {1}
+              maxOverlayOpacity = {0.6}
+              minOverlayOpacity = {0.3}
+              fadeOutForeground
+              renderHeader = { () =>
+                <Image source={this.state.imagemHeader} style={styles.image}>
+                  <View style = {{alignItems: 'center'}}>
+                    <Text style={{marginTop: 8, fontSize: 27, justifyContent: 'center', color: 'white', fontWeight: 'bold'}}>
+                      {'\n'}{'\n'} Vendedores em Destaque {'\n'} {'\n'}
+                    </Text>
+                  </View>
+                  <View style = {{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <View key={i} style={styles.oneResult1}>
+                      <Accordion header={
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                          <View style={{alignSelf:'center', flexDirection: 'column'}}>
+                            <Text style={styles.oneResultfont}>Produtos</Text>
+                            <Text style={styles.totalFont}>{this.state.quantidadeProdutosVendidos}</Text>
+                          </View>
+                          <View style={{alignSelf:'center', flexDirection: 'column'}}>
+                            <Text style={styles.oneResultfont}>Vendas</Text>
+                            <Text style={styles.totalFont}>{this.state.quantidadeVendas}</Text>
+                          </View>
+                          <View style={{alignSelf:'center', flexDirection: 'column'}}>
+                            <Text style={styles.oneResultfont}>Clientes</Text>
+                            <Text style={styles.totalFont}>{this.state.quantidadeClientes}</Text>
+                          </View>
+                        </View>
+                      } content={
+                        <View style={{margin: 15, alignItems:'center'}}>
+                        </View>
+                      }
+                      underlayColor="white"
+                      easing="easeOutCubic"/>
+                    </View>
+                  </View>
+                </Image>
+              }
+              renderForeground = {() =>
+                <Animatable.View
+                  style = {styles.navTitleView}
+                  ref = {navTitleView => {
+                    this.navTitleView = navTitleView;
+                  }}>
+                </Animatable.View>
+              }>
+          <TriggeringView
+            style={styles.section}
+            onHide={() => this.navTitleView.fadeInUp(200)}
+            onDisplay={() => this.navTitleView.fadeOut(100)
+            }>
+            <View style={styles.bar}>
+            </View>
+          </TriggeringView>
+        </HeaderImageScrollView>
+        <View style={styles.centralView}>
+          <View style={styles.results}>
+          </View>
         </View>
-        {this.pedidoConfirmado()}
-      </ScrollView>
-      <Popup ref={popup => this.popup = popup }/>
-    </View>
+        </ScrollView>
+      </View>
     );
   }
 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  image: {
+    height: MAX_HEIGHT,
+    width,
+    alignSelf: 'stretch',
+    resizeMode: 'cover',
+  },navTitleView: {
+    height: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 16,
+    opacity: 0,
+  },section: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#cccccc',
+    backgroundColor: 'white',
   },
   oneResult1:{
      backgroundColor: 'rgba(255, 255, 255, 0.55)',
@@ -174,24 +248,51 @@ const styles = StyleSheet.create({
      margin: 10,
      width: '95%'
   },
+  oneResult:{
+     width: '95%',
+     flexDirection: 'row',
+     backgroundColor: 'rgba(255, 255, 255, 0.55)',
+     borderWidth: 10,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 3,
+  },
   oneResultfont:{
-    color: '#1C1C1C',
     fontSize: 14,
-    textAlign: 'left',
+    textAlign: 'center',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 14,
-    textAlign: 'left',
+    fontSize: 20,
+    textAlign: 'center',
     fontWeight: 'bold',
   },
-  imagemPrincipal:{
-    width: '98%',
-    height: 80,
-    borderRadius: 10
-  }
+  imageResultSearch:{
+    width: 70,
+    height: 70,
+    alignItems:  'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+  },
+  results:{
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centralView: {
+    alignItems: 'center'
+  },
+  oneResultfontTitle:{
+    color: '#4A4A4A',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  oneResultfont:{
+    color: '#4A4A4A',
+    fontSize: 15,
+  },
 });
 
-PedidosConfirmadosCliente.defaultProps = { ...PedidosConfirmadosCliente };
+RankingVendedores.defaultProps = { ...RankingVendedores };
 
-export default PedidosConfirmadosCliente;
+export default RankingVendedores;
