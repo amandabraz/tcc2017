@@ -243,49 +243,50 @@ carregarCategoriasArray() {
      var dataNormal = new Date(this.state.dataOriginal);
      var dataAlterada = new Date(this.state.dataPreparacao);
      var dataSalvar = '';
-     if (!this.state.imagemProduto) {
-        this.setState({imagemProduto: this.state.imagemPrincipal.uri});
+     var imagem = this.state.imagemProduto;
+    if (!imagem) {
+       imagem = this.state.imagemPrincipal.uri;
      }
      if(dataAlterada!=dataNormal){
        dataSalvar = dataAlterada;
      } else {
-       dataSalvar = dataNormal;}
-        const {
-          state: {
-            produtoId,
-            vendedorId,
-            nome,
-            quantidade,
-            preco,
-            observacao,
-            categoria,
-            ingredientes,
-            tags,
-            restricoesDieteticas,
-            imagemProduto
-          }
-        } = this;
+       dataSalvar = dataNormal;
+    }
+    const {
+      state: {
+        produtoId,
+        vendedorId,
+        nome,
+        quantidade,
+        preco,
+        observacao,
+        categoria,
+        ingredientes,
+        tags,
+        restricoesDieteticas
+      }
+    } = this;
 
-        produtoEditado = {
-          "id": produtoId,
-          "vendedor": vendedorId,
-          "nome": nome,
-          "dataPreparacao": dataSalvar,
-          "quantidade": quantidade,
-          "preco": preco,
-          "observacao": observacao,
-          "categoria": categoria,
-          "ingredientes": ingredientes,
-          "tags": tags,
-          "restricoesDieteticas": restricoesDieteticas,
-          "imagemPrincipal": imagemProduto,
-          "deletado": false,
-          "score": 0,
-        }
+    produtoEditado = {
+      "id": produtoId,
+      "vendedor": vendedorId,
+      "nome": nome,
+      "dataPreparacao": dataSalvar,
+      "quantidade": quantidade,
+      "preco": preco,
+      "observacao": observacao,
+      "categoria": categoria,
+      "ingredientes": ingredientes,
+      "tags": tags,
+      "restricoesDieteticas": restricoesDieteticas,
+      "imagemPrincipal": imagem,
+      "deletado": false,
+      "score": 0,
+    }
 
-        let continuar = this.validaCampos(produtoEditado);
+    let continuar = this.validaCampos(produtoEditado);
 
-      if (continuar){
+      if (continuar) {
         fetch(constante.ENDPOINT + 'produto', {
           method: 'PUT',
           headers: {
