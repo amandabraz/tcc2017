@@ -44,6 +44,7 @@ export default class AlteraProduto extends Component {
      preco: '',
      observacao: '',
      imagemPrincipal: require('./img/camera11.jpg'),
+     imagemProduto: '',
      backgroundColorPreco: "transparent",
      restricoesProdutos: [],
      dataOriginal: ''
@@ -242,6 +243,9 @@ carregarCategoriasArray() {
      var dataNormal = new Date(this.state.dataOriginal);
      var dataAlterada = new Date(this.state.dataPreparacao);
      var dataSalvar = '';
+     if (!this.state.imagemProduto) {
+        this.setState({imagemProduto: this.state.imagemPrincipal.uri});
+     }
      if(dataAlterada!=dataNormal){
        dataSalvar = dataAlterada;
      } else {
@@ -258,7 +262,7 @@ carregarCategoriasArray() {
             ingredientes,
             tags,
             restricoesDieteticas,
-            imagemPrincipal
+            imagemProduto
           }
         } = this;
 
@@ -274,7 +278,7 @@ carregarCategoriasArray() {
           "ingredientes": ingredientes,
           "tags": tags,
           "restricoesDieteticas": restricoesDieteticas,
-          "imagemPrincipal": imagemPrincipal.uri,
+          "imagemPrincipal": imagemProduto,
           "deletado": false,
           "score": 0,
         }
@@ -300,6 +304,32 @@ carregarCategoriasArray() {
             }
           });
       }
+    }
+
+    selecionarFoto() {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPrincipal: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemProduto: source});
+        }
+      });
     }
 
 render() {
@@ -341,8 +371,11 @@ return (
         <View style={styles.container}>
         <View style={{ alignItems: 'center'}}>
         <View style={styles.profilepicWrap}>
-            <Image style={styles.profilepic}
-                   source={this.state.imagemPrincipal}/>
+        <TouchableOpacity style={styles.profilepicWrap} onPress={this.selecionarFoto.bind(this)}>
+          <Image style={styles.profilepic}
+                 source={this.state.imagemPrincipal}
+                 justifyContent='flex-start'/>
+        </TouchableOpacity>
         </View>
         </View>
 
