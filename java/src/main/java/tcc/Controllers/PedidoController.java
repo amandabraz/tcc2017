@@ -240,4 +240,18 @@ public class PedidoController {
         }
     }
 
+    @Transactional
+    @RequestMapping(value = "ranking/vendedor/{filtroMensal}", method = RequestMethod.GET)
+    public ResponseEntity rankingMaioresVendedores (@PathVariable("filtroMensal") Boolean filtroMensal) {
+        try {
+            List<RankingMaioresVendedores> pedidos = pedidoService.rankingMaioresVendedores(filtroMensal);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar ranking de vendedores."), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<RankingMaioresVendedores>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar ranking de vendedores."), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

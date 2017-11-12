@@ -295,6 +295,15 @@ public class PedidoService {
         }
     }
 
+    @Transactional
+    public List<RankingMaioresVendedores> rankingMaioresVendedores (Boolean filtroMensal) {
+        try {
+            return (List<RankingMaioresVendedores>) pedidoDAO.findByMaioresVendedores(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     private Date buscaData (Boolean filtroMensal){
         new Date();
         Date referenceDate = new Date();
