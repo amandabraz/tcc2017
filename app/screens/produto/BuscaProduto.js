@@ -222,14 +222,16 @@ export default class BuscaProduto extends Component {
             >
               <View>
                 <View style={styles.oneResult}>
+                <View style={{width:'25%'}}>
                   <Image source={imagemPerfil}
                         style={styles.imageResultSearch}
                         justifyContent='flex-start'/>
-
-                  <View style={{width: 210, margin: 10}}>
+                </View>
+                  <View style={{width: '60%'}}>
                     <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
                   </View>
+                <View style={{width:'15%'}}>
                   <Icon
                     name='person'
                     type=' material-community'
@@ -238,7 +240,7 @@ export default class BuscaProduto extends Component {
                     style={styles.imageResultSearch}
                     />
                 </View>
-                <Text>{'\n'}</Text>
+                </View>
               </View>
             </TouchableHighlight>
           </View>
