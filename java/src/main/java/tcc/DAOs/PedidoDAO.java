@@ -97,7 +97,7 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "HAVING COUNT(n_clientes)>1", nativeQuery = true)
     Integer findByQtdClientesConquistados(long vendedorId, Date filtroMensal);
 
-    @Query(value = "SELECT usuario.nome as nomeVendedor, produto.nome as nomeProduto, SUM(pedido.quantidade) as quantidadeVendida from pedido\n" +
+    @Query(value = "SELECT usuario.nome as nomeVendedor, produto.nome as nomeProduto, SUM(pedido.quantidade) as quantidadeVendida, produto.imagem_principal from pedido\n" +
             "JOIN produto on produto.id_produto = pedido.fk_produto\n" +
             "JOIN vendedor on vendedor.id_vendedor = produto.fk_vendedor\n" +
             "JOIN usuario on usuario.id_usuario = vendedor.fk_usuario\n" +
