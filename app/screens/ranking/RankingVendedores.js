@@ -32,122 +32,125 @@ import Accordion from 'react-native-accordion';
 
 const { width, height } = Dimensions.get("window");
 
-const MAX_HEIGHT = 250;
+const MAX_HEIGHT = 200;
 
 class RankingVendedores extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      produtosMaisVendidos: [],
-      quantidadeProdutosVendidos: [],
-      quantidadeVendas: [],
-      quantidadeClientes: [],
-      quantidadeVendida: '',
       filtroMensal: true,
       alturaPedido: '100%',
       alturaResumo: '100%',
-      dataNascimentoText: '',
-      imagemHeader: require('./img/fundof.png'),
-      imagemProduto: require('./img/camera.jpg'),
+      maioresVendedores: [],
+      imagemHeader: require('./img/vendedores.png'),
+      imagemPerfil: require('./img/camera.jpg'),
+      imagemPerfilOuro: require('./img/camera.jpg'),
+      imagemPerfilPrata: require('./img/camera.jpg'),
+      imagemPerfilBronze: require('./img/camera.jpg'),
       imagemPremiacao: require('./img/camera.jpg')
     };
+    this.buscaMaioresVendedores();
+    this.buscaVendedores();
   };
 
-  buscaDadosPedidosCliente() {
-    fetch(constante.ENDPOINT+'pedido/cliente/' + this.state.clienteId + '/status/' + 'Confirmado')
+  buscaMaioresVendedores(){
+    fetch(constante.ENDPOINT + 'pedido/ranking/vendedor/' + this.state.filtroMensal, {method: 'GET'})
     .then((response) => response.json())
-      .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-              this.setState({pedidosConfirmados: responseJson});
-        }
-        this.setState({refreshing: false});
-      });
-  };
-
-  atualizaStatus(pedido) {
-    fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/status/' + pedido.status, {method: 'PUT'})
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (!responseJson.errorMessage) {
-          this.buscaDadosPedidosCliente();
-          this.setState({pedidosConfirmados: []});
-          this.pedidoConfirmado();
-          ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-        } else {
-          Alert.alert("Houve um erro ao atualizar os pedidos, tente novamente");
-        }
-      });
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        this.setState({maioresVendedores: responseJson});
+        this.setState({refreshing:false});
+      }});
   }
 
+  buscaVendedores() {
+    var views = [];
+    if (this.state.maioresVendedores.length > 0) {
+      let imagemPerfil = require('./img/camera.jpg');
+      for(i in this.state.maioresVendedores) {
+        let vendedorOuro = this.state.maioresVendedores[0];
+        let vendedorPrata = this.state.maioresVendedores[1];
+        let vendedorBronze = this.state.maioresVendedores[2];
+        let vendedor = this.state.maioresVendedores[i];
 
-pedidoConfirmado(){
-  var views = [];
-  if(this.state.pedidosConfirmados.length > 0){
-    for (i in this.state.pedidosConfirmados) {
-      let imagemPrincipalV = require('./img/camera.jpg');
-      let pedidoC = this.state.pedidosConfirmados[i];
+        if(vendedorOuro[2]){
+          imagemPerfilOuro = {uri: vendedorOuro[2]};
+        }
+        if(vendedorPrata[2]){
+          imagemPerfilPrata = {uri: vendedorPrata[2]};
+        }
+        if(vendedorBronze[2]){
+          imagemPerfilBronze = {uri: vendedorBronze[2]};
+        }
+        if(vendedor[2]){
+          imagemPerfil = {uri: vendedor[2]};
+        }
+        else {
+          imagemPerfil = require('./img/camera.jpg');
+        }
 
-      if (pedidoC.produto.vendedor.usuario.imagemPerfil) {
-        imagemPrincipalV = {uri: pedidoC.produto.vendedor.usuario.imagemPerfil};
-      }
 
-      var dataNormal = new Date(pedidoC.dataConfirmacao);
-      let dataConfirmado = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() +
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
-
-      views.push(
-        <View key={i} style={styles.oneResult1}>
-        <Accordion header={
-          <View style={{flexDirection: 'row'}}>
-          <View style = {{ width: '20%'}}>
-          <Image source={imagemPrincipalV}
-                 style={styles.imagemPrincipal}/>
-          </View>
-        <View style={{width: '65%', alignSelf:'center'}}>
-           <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
-           <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
-           <Text style={styles.oneResultfont}> Receber:
-           <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
-           </Text>
-           <Text style={styles.oneResultfont}> Produto:
-           <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
-           </Text>
-           <Text style={styles.oneResultfont}> Pagar {pedidoC.pagamento.descricao}:
-           <Text style={styles.totalFont}> R$  {pedidoC.valorCompra}</Text>
-           </Text>
-        </View>
-        <View style={{width: '5%',justifyContent: 'center'}}>
-        <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
-        </View>
-    </View>
-        } content={
-          <View style={{margin: 15, alignItems:'center'}}>
-          <View style = {{ alignItems: 'center'}}>
-          <QRCode
-            value={this.state.tokenText}
-            size={200}
-            bgColor='black'
-            fgColor='white'/>
+        views.push (
+          <View key={i}>
+          <View style = {{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={styles.oneResult1}>
+              <Accordion header={
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <View style={{alignSelf:'center', flexDirection: 'column', justifyContent: 'center', width: "30%"}}>
+                    <Image source={imagemPerfilPrata}
+                          style={styles.imageResultSearchMenor}
+                          justifyContent='flex-start'/>
+                    <Text style={styles.totalFont}>{vendedorPrata[0]}</Text>
+                    <Text style={styles.oneResultfont}>{vendedorPrata[1]} vendas</Text>
+                  </View>
+                  <View style={{alignSelf:'center', flexDirection: 'column', justifyContent: 'center', width: "40%"}}>
+                    <Image source={imagemPerfilOuro}
+                          style={styles.imageResultSearchPrincipal}
+                          justifyContent='flex-start'/>
+                    <Text style={styles.totalFont}>{vendedorOuro[0]}</Text>
+                    <Text style={styles.oneResultfont}>{vendedorOuro[1]} vendas</Text>
+                  </View>
+                  <View style={{alignSelf:'center', flexDirection: 'column', justifyContent: 'center', width: "30%"}}>
+                    <Image source={imagemPerfilBronze}
+                          style={styles.imageResultSearchMenor}
+                          justifyContent='flex-start'/>
+                    <Text style={styles.totalFont}>{vendedorBronze[0]}</Text>
+                    <Text style={styles.oneResultfont}>{vendedorBronze[1]} vendas</Text>
+                  </View>
+                </View>
+              } content={
+                <View style={{margin: 15, alignItems:'center'}}>
+                </View>
+              }
+              underlayColor="white"
+              easing="easeOutCubic"/>
             </View>
-          <Text style={styles.tokenfont}> {pedidoC.token}</Text>
-        </View>
-
-            }
-        underlayColor="white"
-        easing="easeOutCubic"/>
-    </View>
-    )}
- } else {
-   views.push(
-     <View key={0} style={{alignItems: 'center'}}>
-     <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
-       Nenhum pedido confirmado.
-     </Text>
-     </View>
-   )
- }
- return views;
-}
+          </View>
+          <Text>{'\n'}</Text>
+              <View>
+                <View style={styles.oneResult}>
+                  <View style={{width: "30%"}}>
+                    <Image source={imagemPerfil}
+                          style={styles.imageResultSearch}
+                          justifyContent='flex-start'/>
+                  </View>
+                  <View style={{width: "50%"}}>
+                    <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor[0]}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{vendedor[1]} produtos vendidos</Text>
+                  </View>
+                  <View style={{width: "20%"}}>
+                  <Image source={imagemPerfil}
+                        style={styles.imageResultSearch}
+                        justifyContent='flex-end'/>
+                  </View>
+                </View>
+              </View>
+          </View>
+        );
+      }
+    }
+    return views;
+  }
 
   render() {
     return(
@@ -166,31 +169,6 @@ pedidoConfirmado(){
                     <Text style={{marginTop: 8, fontSize: 27, justifyContent: 'center', color: 'white', fontWeight: 'bold'}}>
                       {'\n'}{'\n'} Vendedores em Destaque {'\n'} {'\n'}
                     </Text>
-                  </View>
-                  <View style = {{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <View key={i} style={styles.oneResult1}>
-                      <Accordion header={
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                          <View style={{alignSelf:'center', flexDirection: 'column'}}>
-                            <Text style={styles.oneResultfont}>Produtos</Text>
-                            <Text style={styles.totalFont}>{this.state.quantidadeProdutosVendidos}</Text>
-                          </View>
-                          <View style={{alignSelf:'center', flexDirection: 'column'}}>
-                            <Text style={styles.oneResultfont}>Vendas</Text>
-                            <Text style={styles.totalFont}>{this.state.quantidadeVendas}</Text>
-                          </View>
-                          <View style={{alignSelf:'center', flexDirection: 'column'}}>
-                            <Text style={styles.oneResultfont}>Clientes</Text>
-                            <Text style={styles.totalFont}>{this.state.quantidadeClientes}</Text>
-                          </View>
-                        </View>
-                      } content={
-                        <View style={{margin: 15, alignItems:'center'}}>
-                        </View>
-                      }
-                      underlayColor="white"
-                      easing="easeOutCubic"/>
-                    </View>
                   </View>
                 </Image>
               }
@@ -213,6 +191,7 @@ pedidoConfirmado(){
         </HeaderImageScrollView>
         <View style={styles.centralView}>
           <View style={styles.results}>
+            {this.buscaVendedores()}
           </View>
         </View>
         </ScrollView>
@@ -259,16 +238,32 @@ const styles = StyleSheet.create({
      margin: 3,
   },
   oneResultfont:{
-    fontSize: 14,
+    fontSize: 10,
     textAlign: 'center',
+    justifyContent: 'center',
   },
   totalFont:{
     color: '#1C1C1C',
-    fontSize: 20,
+    fontSize: 14,
     textAlign: 'center',
     fontWeight: 'bold',
+    justifyContent: 'center',
   },
   imageResultSearch:{
+    width: 70,
+    height: 70,
+    alignItems:  'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+  },
+  imageResultSearchMenor:{
+    width: 50,
+    height: 50,
+    alignItems:  'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+  },
+  imageResultSearchPrincipal:{
     width: 70,
     height: 70,
     alignItems:  'center',
@@ -281,15 +276,6 @@ const styles = StyleSheet.create({
   },
   centralView: {
     alignItems: 'center'
-  },
-  oneResultfontTitle:{
-    color: '#4A4A4A',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  oneResultfont:{
-    color: '#4A4A4A',
-    fontSize: 15,
   },
 });
 

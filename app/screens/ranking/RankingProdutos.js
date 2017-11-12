@@ -54,6 +54,7 @@ class RankingProdutos extends Component {
     this.buscaQuantidadeVendas();
     this.buscaQuantidadeClientes();
     this.buscaProdutosMaisVendidos();
+    this.buscaProduto();
   };
 
   escolherData(value) {
@@ -133,8 +134,8 @@ class RankingProdutos extends Component {
                   </View>
                   <View style={{width: "50%"}}>
                     <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto[1]}</Text>
-                    <Text style={styles.oneResultfont} justifyContent='center'>Quantidade vendida: {produto[2]}</Text>
-                    <Text style={styles.oneResultfont} justifyContent='center'>Vendido por: {produto[0]}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{produto[2]} vendidos</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>By: {produto[0]}</Text>
                   </View>
                   <View style={{width: "20%"}}>
                   <Image source={imagemPrincipal}
@@ -142,7 +143,6 @@ class RankingProdutos extends Component {
                         justifyContent='flex-end'/>
                   </View>
                 </View>
-                <Text>{'\n'}</Text>
               </View>
             </TouchableHighlight>
           </View>
@@ -171,7 +171,7 @@ class RankingProdutos extends Component {
                     </Text>
                   </View>
                   <View style = {{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <View key={i} style={styles.oneResult1}>
+                    <View style={styles.oneResult1}>
                       <Accordion header={
                         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                           <View style={{alignSelf:'center', flexDirection: 'column'}}>
