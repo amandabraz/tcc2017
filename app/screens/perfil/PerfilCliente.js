@@ -521,12 +521,16 @@ export default class PerfilCliente extends Component {
               {this.mostraRestricaoDietetica()}
 
               {this.mostraBotaoSalvar()}
-              <View style={{width:'98%', alignItems:'flex-end', padding:10}}>
-              <Icon name="trash" size={25} 
-                      color={'#4A4A4A'} 
-                      type='font-awesome'
-                      onPress={this.excluirUsuario.bind(this)}/>
-            </View>
+              <View style={{width:'98%'}}>
+                <TouchableOpacity 
+                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                    onPress={this.excluirUsuario.bind(this)}>
+                  <Icon name="trash" size={25} 
+                        color={'#4A4A4A'} 
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text>Desativar conta</Text>
+                </TouchableOpacity>
+              </View>
           </ScrollView>
         </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
