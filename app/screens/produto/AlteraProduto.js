@@ -75,11 +75,7 @@ export default class AlteraProduto extends Component {
          this.setState({dataOriginal: rJson.dataPreparacao});
          this.setState({dataPreparacao: dataPrep});
          if (rJson.restricoesDieteticas.length > 0) {
-           var restricoes = [];
-           for(i in rJson.restricoesDieteticas) {
-             restricoes.push(rJson.restricoesDieteticas[i]);
-           }
-           this.setState({restricoesProdutos: restricoes});
+           this.setState({restricoesProdutos: rJson.restricoesDieteticas});
          }
 
          if (rJson.tags.length > 0) {
@@ -263,7 +259,7 @@ carregarCategoriasArray() {
         categoria,
         ingredientes,
         tags,
-        restricoesDieteticas
+        restricoesProdutos
       }
     } = this;
 
@@ -278,7 +274,7 @@ carregarCategoriasArray() {
       "categoria": categoria,
       "ingredientes": ingredientes,
       "tags": tags,
-      "restricoesDieteticas": restricoesDieteticas,
+      "restricoesDieteticas": restricoesProdutos,
       "imagemPrincipal": imagem,
       "deletado": false,
       "score": 0,
