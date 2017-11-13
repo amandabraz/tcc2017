@@ -135,7 +135,7 @@ export default class Login extends Component {
               </View>
             <View style={{height: '60%', alignItems: 'center', padding:10}}>
             <Image
-                  source={require('./img/amora-text.png')}/>
+                  source={require('./img/amora-text-small.png')}/>
 
              <View style={{flexDirection:'row', alignItems: 'center', paddingTop: 16}}>
               <FontAwesomeIcon
