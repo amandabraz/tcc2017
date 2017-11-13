@@ -109,7 +109,7 @@ pedidoConfirmado(){
           <View style={{margin: 15, alignItems:'center'}}>
           <View style = {{ alignItems: 'center'}}>
           <QRCode
-            value={this.state.tokenText}
+            value={pedidoC.token}
             size={200}
             bgColor='black'
             fgColor='white'/>
