@@ -99,21 +99,21 @@ class RankingVendedores extends Component {
                   <View style={{alignSelf:'center', flexDirection: 'column', justifyContent: 'center', width: "30%"}}>
                     <Image source={imagemPerfilPrata}
                           style={styles.imageResultSearchMenor}
-                          justifyContent='flex-start'/>
+                          justifyContent='center'/>
                     <Text style={styles.totalFont}>{vendedorPrata[0]}</Text>
                     <Text style={styles.oneResultfont}>{vendedorPrata[1]} vendas</Text>
                   </View>
                   <View style={{alignSelf:'center', flexDirection: 'column', justifyContent: 'center', width: "40%"}}>
                     <Image source={imagemPerfilOuro}
                           style={styles.imageResultSearchPrincipal}
-                          justifyContent='flex-start'/>
+                          justifyContent='center'/>
                     <Text style={styles.totalFont}>{vendedorOuro[0]}</Text>
                     <Text style={styles.oneResultfont}>{vendedorOuro[1]} vendas</Text>
                   </View>
                   <View style={{alignSelf:'center', flexDirection: 'column', justifyContent: 'center', width: "30%"}}>
                     <Image source={imagemPerfilBronze}
                           style={styles.imageResultSearchMenor}
-                          justifyContent='flex-start'/>
+                          justifyContent='center'/>
                     <Text style={styles.totalFont}>{vendedorBronze[0]}</Text>
                     <Text style={styles.oneResultfont}>{vendedorBronze[1]} vendas</Text>
                   </View>

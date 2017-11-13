@@ -118,7 +118,6 @@ class RankingProdutos extends Component {
           imagemPrincipal = require('./img/camera.jpg');
         }
 
-
         views.push (
           <View key={i}>
           <Text>{'\n'}</Text>
