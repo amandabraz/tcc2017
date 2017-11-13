@@ -100,6 +100,39 @@ export default class PerfilCliente extends Component {
     }
   }
 
+  handleFinalizarPress = () => {
+    fetch(constante.ENDPOINT + 'usuario/deletar/' + this.state.userId, {method: 'DELETE'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        {this.logout()}
+      }
+    });
+};
+
+  excluirUsuario() {
+    this.popup.confirm({
+        title: 'Desativar Conta',
+        content: ['Tem certeza que deseja desativar sua conta?'],
+        ok: {
+            text: 'Sim',
+            style: {
+                color: 'gray',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              {this.handleFinalizarPress()}
+            }
+        },
+        cancel: {
+            text: 'Não',
+            style: {
+                color: 'gray'
+            }
+        }
+    });
+}
+
   mostraTags() {
     if (this.state.editavel == false) {
       return (
@@ -488,6 +521,16 @@ export default class PerfilCliente extends Component {
               {this.mostraRestricaoDietetica()}
 
               {this.mostraBotaoSalvar()}
+              <View style={{width:'98%'}}>
+                <TouchableOpacity 
+                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                    onPress={this.excluirUsuario.bind(this)}>
+                  <Icon name="trash" size={25} 
+                        color={'#4A4A4A'} 
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text>Desativar conta</Text>
+                </TouchableOpacity>
+              </View>
           </ScrollView>
         </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
@@ -525,6 +568,18 @@ export default class PerfilCliente extends Component {
     alignSelf: 'stretch',
     borderRadius: 100,
     borderWidth: 4
+  },
+  EvenBtnText: {
+    fontSize: 18,
+    color: 'white',
+    textAlign: 'center'
+  },
+  EvenBtn: {
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    position: 'relative',
+    backgroundColor: '#7A8887'
   },
   bar:{
     width,
@@ -601,13 +656,15 @@ export default class PerfilCliente extends Component {
     width,
     alignSelf: 'stretch',
     resizeMode: 'cover',
-  },navTitleView: {
+  },
+  navTitleView: {
     height: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 16,
     opacity: 0,
-  },section: {
+  },
+  section: {
     borderBottomWidth: 1,
     borderBottomColor: '#cccccc',
     backgroundColor: 'white',
