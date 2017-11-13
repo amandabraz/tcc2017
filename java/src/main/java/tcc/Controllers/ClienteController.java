@@ -41,8 +41,6 @@ public class ClienteController {
         return new ResponseEntity<>(novoCliente, HttpStatus.OK);
     }
 
-
-
     @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity buscaClientePorUsuario(@PathVariable("id") Long usuarioId) {
         try {
@@ -64,6 +62,38 @@ public class ClienteController {
             return new ResponseEntity(clienteEditado, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
+        }
+    }
+
+    @RequestMapping(value = "{clienteId}/favoritos/{vendedorId}", method = RequestMethod.PUT)
+    public ResponseEntity salvaVendedorFavorito(@PathVariable("clienteId") Long clienteId,
+                                                @PathVariable("vendedorId") Long vendedorId) {
+        try {
+            Cliente cliente = clienteService.salvaVendedorFavorito(clienteId, vendedorId);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao salvar favorito"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "{clienteId}/favoritos/{vendedorId}", method = RequestMethod.DELETE)
+    public ResponseEntity deletarVendedorFavorito(@PathVariable("clienteId") Long clienteId,
+                                                @PathVariable("vendedorId") Long vendedorId) {
+        try {
+            Cliente cliente = clienteService.deletaVendedorFavorito(clienteId, vendedorId);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao deletar favorito"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+ @RequestMapping(value="/{clienteId}/favoritos", method = RequestMethod.GET)
+    public ResponseEntity buscaVendedoresFavoritos(@PathVariable("clienteId") Long clienteId) {
+        try {
+            Cliente cliente = clienteService.buscaCliente(clienteId);
+            return new ResponseEntity<>(cliente.getVendedoresFavoritos(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao carregar vendedores favoritos do cliente"), HttpStatus.NOT_FOUND);
         }
     }
 }

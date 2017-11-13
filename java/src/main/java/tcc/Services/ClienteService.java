@@ -7,6 +7,7 @@ import tcc.DAOs.ClienteDAO;
 import tcc.Models.Cliente;
 import tcc.Models.Tag;
 import tcc.Models.Usuario;
+import tcc.Models.Vendedor;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -23,6 +24,9 @@ public class ClienteService {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private VendedorService vendedorService;
 
     @Transactional
     public Cliente salvaCliente(Cliente cliente) {
@@ -89,6 +93,30 @@ public class ClienteService {
         }
         if (!tagsSalvas.isEmpty()) {
             cliente.setTags(tagsSalvas);
+        }
+    }
+
+    public Cliente salvaVendedorFavorito(Long clienteId, Long vendedorId) {
+        try {
+            Cliente cliente = this.buscaCliente(clienteId);
+            Set<Vendedor> vendedoresFavoritos = cliente.getVendedoresFavoritos();
+            vendedoresFavoritos.add(vendedorService.buscaVendedor(vendedorId));
+            cliente.setVendedoresFavoritos(vendedoresFavoritos);
+            return this.salvaCliente(cliente);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Cliente deletaVendedorFavorito(Long clienteId, Long vendedorId) {
+        try {
+            Cliente cliente = this.buscaCliente(clienteId);
+            Set<Vendedor> vendedoresFavoritos = cliente.getVendedoresFavoritos();
+            vendedoresFavoritos.remove(vendedorService.buscaVendedor(vendedorId));
+            cliente.setVendedoresFavoritos(vendedoresFavoritos);
+            return this.salvaCliente(cliente);
+        } catch (Exception e) {
+            throw e;
         }
     }
 }

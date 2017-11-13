@@ -11,7 +11,7 @@ import PerfilCliente from '../screens/perfil/PerfilCliente';
 import PerfilVendedor from '../screens/perfil/PerfilVendedor';
 import HomeVendedor from '../screens/home/HomeVendedor';
 import HomeCliente from '../screens/home/HomeCliente';
-import ProdutosFavoritos from '../screens/produto/ProdutosFavoritos';
+import VendedoresFavoritos from '../screens/produto/VendedoresFavoritos';
 import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
@@ -115,9 +115,9 @@ export const TabsCliente = TabNavigator({
       },
     },
     Favoritos: {
-      screen: ProdutosFavoritos,
+      screen: VendedoresFavoritos,
       navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="heart" size={22} color={tintColor} />
       },
     },
     Ranking: {
