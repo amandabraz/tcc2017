@@ -177,7 +177,7 @@ selecionarFoto() {
       this.setState({
         image: {uri: response.uri, width: 200, height: 200, changed: true}
       });
-      this.setState({imagemProduto: source})
+      this.setState({imagemProduto: source});
     }
   });
 }
@@ -221,7 +221,7 @@ selecionarFoto() {
       "ingredientes": ingredientes,
       "categoria": categoria,
       "observacao": observacao,
-      "imagemPrincipal": imagemProduto
+      "imagemPrincipal": imagemProduto,
     }
     let continuar = this.validaCampos(produto);
 
