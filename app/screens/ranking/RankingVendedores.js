@@ -88,6 +88,7 @@ class RankingVendedores extends Component {
           imagemPerfil = require('./img/camera.jpg');
         }
 
+
         views.push (
           <View key={-1}>
           <View style = {{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -127,33 +128,43 @@ class RankingVendedores extends Component {
         </View>
       );
 
-      dadosVendedores.pop(vendedorOuro);
-      dadosVendedores.pop(vendedorPrata);
-      dadosVendedores.pop(vendedorBronze);
-
-      dadosVendedorArray = this.state.maioresVendedores;
-      for(i in dadosVendedorArray) {
-        let vendedor = dadosVendedorArray[i];
+      dadosVendedores = this.state.maioresVendedores;
+      for(i in dadosVendedores) {
+        let vendedor = dadosVendedores[i];
+        let imagemPremiacao = require('./img/camera.jpg');
 
         if(vendedor[2]){
           imagemPerfil = {uri: vendedor[2]};
         }
 
+        if (i == 0){
+          imagemPremiacao = require('./img/gold.png');
+        }
+        if (i == 1){
+          imagemPremiacao = require('./img/silver.png');
+        }
+        if (i == 2){
+          imagemPremiacao = require('./img/bronze.png');
+        }
+        if (i > 2){
+          imagemPremiacao = require('./img/branco.png');
+        }
+
         views.push (
           <View key={i}>
-                <View style={styles.oneResult}>
+                <View style={styles.oneResults}>
                   <View style={{width: "30%"}}>
                     <Image source={imagemPerfil}
                           style={styles.imageResultSearch}
                           justifyContent='flex-start'/>
                   </View>
                   <View style={{width: "50%"}}>
-                    <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor[0]}</Text>
-                    <Text style={styles.oneResultfont} justifyContent='center'>{vendedor[1]} produtos vendidos</Text>
+                    <Text style={styles.totalFont}>{vendedor[0]}</Text>
+                    <Text style={styles.oneResultfont}>{vendedor[1]} produtos vendidos</Text>
                   </View>
                   <View style={{width: "20%"}}>
-                  <Image source={imagemPerfil}
-                        style={styles.imageResultSearch}
+                  <Image source={imagemPremiacao}
+                        style={styles.imageResultSearchPremiacao}
                         justifyContent='flex-end'/>
                   </View>
                 </View>
@@ -251,6 +262,16 @@ const styles = StyleSheet.create({
      padding: 10,
      margin: 3,
   },
+  oneResults:{
+     width: '95%',
+     flexDirection: 'row',
+     backgroundColor: 'white',
+     borderWidth: 10,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 3,
+  },
   oneResultfont:{
     fontSize: 10,
     textAlign: 'center',
@@ -261,7 +282,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     fontWeight: 'bold',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   imageResultSearch:{
     width: 70,
@@ -269,6 +290,12 @@ const styles = StyleSheet.create({
     alignItems:  'center',
     justifyContent: 'center',
     borderRadius: 100,
+  },
+  imageResultSearchPremiacao:{
+    width: 50,
+    height: 60,
+    alignItems:  'center',
+    justifyContent: 'center'
   },
   imageResultSearchMenor:{
     width: 50,

@@ -47,8 +47,7 @@ class RankingProdutos extends Component {
       alturaResumo: '100%',
       dataNascimentoText: '',
       imagemHeader: require('./img/fundof.png'),
-      imagemProduto: require('./img/camera.jpg'),
-      imagemPremiacao: require('./img/gold.png')
+      imagemProduto: require('./img/camera.jpg')
     };
     this.buscaQuantidadeProdutosVendidos();
     this.buscaQuantidadeVendas();
@@ -112,14 +111,17 @@ class RankingProdutos extends Component {
       for(i in this.state.produtosMaisVendidos) {
         let produto = this.state.produtosMaisVendidos[i];
 
-        if (produto[0]){
-          imagemPremiacao = {uri: require('./img/gold.png')};
+        if (i == 0){
+          imagemPremiacao = require('./img/gold.png');
         }
-        if (produto[1]){
+        if (i == 1){
           imagemPremiacao = require('./img/silver.png');
         }
-        else {
+        if (i == 2){
           imagemPremiacao = require('./img/bronze.png');
+        }
+        if (i > 2){
+          imagemPremiacao = require('./img/branco.png');
         }
 
         if(produto[3]){
@@ -149,7 +151,7 @@ class RankingProdutos extends Component {
                   </View>
                   <View style={{width: "20%"}}>
                   <Image source={imagemPremiacao}
-                        style={styles.imageResultSearch}
+                        style={styles.imageResultSearchPremiacao}
                         justifyContent='flex-end'/>
                   </View>
                 </View>
@@ -266,7 +268,7 @@ oneResult1:{
 oneResult:{
    width: '95%',
    flexDirection: 'row',
-   backgroundColor: 'rgba(255, 255, 255, 0.55)',
+   backgroundColor: 'white',
    borderWidth: 10,
    borderRadius: 10,
    borderColor: '#fff',
@@ -289,6 +291,12 @@ imageResultSearch:{
   alignItems:  'center',
   justifyContent: 'center',
   borderRadius: 100,
+},
+imageResultSearchPremiacao:{
+  width: 50,
+  height: 60,
+  alignItems:  'center',
+  justifyContent: 'center'
 },
 results:{
   justifyContent: 'center',
