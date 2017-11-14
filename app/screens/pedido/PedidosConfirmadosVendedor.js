@@ -107,6 +107,20 @@ pedidoConfirmado(){
           }
           underlayColor="white"
           easing="easeOutCubic"/>
+    <TouchableOpacity 
+          style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+          onPress={() =>
+                    {
+                      this.props.navigation.navigate('Chat', {
+                        userId: this.state.userId,
+                        vendedorId: this.state.vendedorId,
+                        pedidoId: pedidoC.id});
+                    }}>
+        <Icon name="comments-o" size={25} 
+              color={'#4A4A4A'} 
+              type='font-awesome'
+              style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
+     </TouchableOpacity>
     </View>
     )}
  } else {

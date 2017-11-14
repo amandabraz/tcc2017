@@ -70,6 +70,9 @@ export const GerenciaPedidosClientes = TabNavigator({
   Confirmados: {
     screen: PedidosConfirmadosCliente
   },
+  Chat:{
+    screen: Chat
+  },
   Finalizados: {
     screen: PedidosFinalizadosCliente
   },
@@ -170,6 +173,9 @@ export const GerenciaPedidos = TabNavigator({
     },
     Confirmados: {
       screen: GerenciaPedidosConfirmados
+    },
+    Chat:{
+      screen: Chat
     },
     Finalizados: {
       screen: PedidosFinalizadosVendedor
@@ -293,9 +299,7 @@ export const TabsVendedor = TabNavigator({
 });
 
 export const Root = StackNavigator({
-  Chat: {
-    screen: Chat
-  },
+
   Login: {
     screen: Login,
   },
