@@ -251,7 +251,7 @@ selecionarFoto() {
   onChangePreco = (preco) => {
     const precoFormatado = this.moneyMask(preco);
     if(precoFormatado == null){
-      return '0.00';
+      return '0.00'
     }
     this.setState({
       preco: preco,
@@ -259,28 +259,12 @@ selecionarFoto() {
     });
   }
 
-
-
   moneyMask(value){
-    console.log(this.state.preco)
-
-    if(!value.match(/([\d]|[\.])/)||
-       !value.match(/([\.])/).length>1){
+    if((!value.match(/([\d]|[\.])/)&&           //se não encontrar 'xx.x'
+       !value.match(/([\d])/))||                //nem 'x'
+       value.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
+       value.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
       return null
-    }
-    if(!value.match(/([\.])/)){
-      if(!value.match(/([\.])([\d]+)/).length>3)
-        return null
-      return preco
-    }
-
-
-    //nao pode ter outro poonto
-    //nao pode digitar +  q dois nuero depois do pono
-
-
-    if(!isNaN(value)){
-      return parseFloat(value).toFixed(2).replace()
     }
     return value
   };
