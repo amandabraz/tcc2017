@@ -40,6 +40,7 @@ export default class CadastroProduto extends Component {
      categoriasArray: [],
      nome: '',
      preco: '',
+     precoConvertido:'',
      observacao: '',
      image: require('./img/camera11.jpg'),
      imagemProduto: '',
@@ -247,6 +248,43 @@ selecionarFoto() {
   }
   };
 
+  onChangePreco = (preco) => {
+    const precoFormatado = this.moneyMask(preco);
+    if(precoFormatado == null){
+      return '0.00';
+    }
+    this.setState({
+      preco: preco,
+      precoConvertido: precoFormatado
+    });
+  }
+
+
+
+  moneyMask(value){
+    console.log(this.state.preco)
+
+    if(!value.match(/([\d]|[\.])/)||
+       !value.match(/([\.])/).length>1){
+      return null
+    }
+    if(!value.match(/([\.])/)){
+      if(!value.match(/([\.])([\d]+)/).length>3)
+        return null
+      return preco
+    }
+
+
+    //nao pode ter outro poonto
+    //nao pode digitar +  q dois nuero depois do pono
+
+
+    if(!isNaN(value)){
+      return parseFloat(value).toFixed(2).replace()
+    }
+    return value
+  };
+
 render() {
     const {goBack} = this.props.navigation;
     const inputIngredientes = {
@@ -300,9 +338,11 @@ return (
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
+                  keyboardType={'numbers-and-punctuation'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
-                  onChangeText={(preco) => this.setState({preco: preco})}
+                  onChangeText={this.onChangePreco}
+                  value={this.state.precoConvertido}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
                   iconColor={'#7A8887'}/>
@@ -413,6 +453,7 @@ return (
 
     );
   }
+
 }
 
 const titleConfig = {
