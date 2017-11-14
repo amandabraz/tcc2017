@@ -31,6 +31,11 @@ public class Cliente implements Serializable {
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+    @JoinTable(name="VENDEDORES_FAVORITOS", joinColumns =
+            {@JoinColumn(name="ID_CLIENTE", referencedColumnName = "ID_CLIENTE")}, inverseJoinColumns =
+            {@JoinColumn(name="ID_VENDEDOR", referencedColumnName = "ID_VENDEDOR")})
+    private Set<Vendedor> vendedoresFavoritos;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JoinTable(name="CLIENTE_TAG", joinColumns =
@@ -101,5 +106,13 @@ public class Cliente implements Serializable {
 
     public void setRestricoesDieteticas(Set<RestricaoDietetica> restricoesDieteticas) {
         this.restricoesDieteticas = restricoesDieteticas;
+    }
+
+    public Set<Vendedor> getVendedoresFavoritos() {
+        return vendedoresFavoritos;
+    }
+
+    public void setVendedoresFavoritos(Set<Vendedor> vendedoresFavoritos) {
+        this.vendedoresFavoritos = vendedoresFavoritos;
     }
 }

@@ -48,4 +48,24 @@ public class UsuarioService {
             throw e;
         }
     }
+
+    public Usuario deletaUsuario(Long id) {
+        try {
+            Usuario deletarPerfil = usuarioDAO.findOne(id);
+                deletarPerfil.setDeletado(true);
+            return usuarioDAO.save(deletarPerfil);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Usuario reativarPerfil(Long id) {
+        try {
+            Usuario reativarPerfil = usuarioDAO.findOne(id);
+            reativarPerfil.setDeletado(false);
+            return usuarioDAO.save(reativarPerfil);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
