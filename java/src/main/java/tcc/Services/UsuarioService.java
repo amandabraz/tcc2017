@@ -43,8 +43,8 @@ public class UsuarioService {
 
     public Usuario editaUsuario(Usuario usuario) throws IOException {
         try {
-            Usuario usuarioExistente = buscaUsuario(usuario.getId();
-            if (Objects.isNull(usuarioExistente))) {
+            Usuario usuarioExistente = buscaUsuario(usuario.getId());
+            if (Objects.isNull(usuarioExistente)) {
                 return null;
             }
             if (!StringUtils.isEmpty(usuario.getImagemPerfil()) &&

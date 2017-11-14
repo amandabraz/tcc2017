@@ -61,7 +61,8 @@ export default class PerfilVendedor extends Component {
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
       meiosPagamento: [],
-      escolhido: ''
+      escolhido: '',
+      cameraVisivel: 'transparent'
     };
     this.buscaDadosVendedor();
     this.buscaMeiosPagamento();
@@ -86,6 +87,7 @@ export default class PerfilVendedor extends Component {
         }
       });
   }
+
   prepararVendedor(responseJson) {
     this.setState({vendedor: responseJson});
     if (responseJson.usuario.imagemPerfil) {
@@ -123,12 +125,14 @@ export default class PerfilVendedor extends Component {
       this.setState({editavel: true,
         titleTextClass: styles.titleTextEdit,
         baseTextClass: styles.baseTextEdit,
-        pencilColor: '#ccc'});
+        pencilColor: '#ccc',
+        cameraVisivel: 'gray'});
     } else {
       this.setState({editavel: false,
         titleTextClass: styles.titleText,
         baseTextClass: styles.baseText,
-        pencilColor: '#fff'});
+        pencilColor: '#fff',
+        cameraVisivel: 'transparent'});
     }
 
   }
@@ -150,6 +154,10 @@ export default class PerfilVendedor extends Component {
   }
 
   salvaEdicaoVendedor() {
+    var imagem = this.state.imagemEditada;
+    if (!this.state.imagemEditada) {
+      imagem = this.state.imagemPerfil.uri;
+    }
     const {
       state: {
         vendedorId,
@@ -158,7 +166,6 @@ export default class PerfilVendedor extends Component {
         vendedor,
         celularText,
         nomeFantasiaText,
-        imagemEditada,
         meiosPagamentoVendedor
       }
     } = this;
@@ -178,7 +185,7 @@ export default class PerfilVendedor extends Component {
           "telefone": celularText.substr(2,10),
           "notificacao": false,
           "bloqueado": false,
-          "imagemPerfil": imagemEditada
+          "imagemPerfil": imagem
       },
       "nomeFantasia": nomeFantasiaText,
       "meiosPagamentos": meiosPagamentoVendedor
@@ -195,7 +202,8 @@ export default class PerfilVendedor extends Component {
       .then((rJson) => {
         if (!rJson.errorMessage) {
           this.prepararVendedor(rJson);
-          this.setState({editavel: false});
+          this.setState({editavel: false,
+                        cameraVisivel: 'transparent'});
           ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
@@ -395,7 +403,7 @@ export default class PerfilVendedor extends Component {
             <Image source={this.state.imagemPerfil} style={styles.image}>
               <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
                   onPress={this.trocaImagemPerfil.bind(this)}>
-                <FontAwesomeIcon name="camera" size={22} color={'gray'}/>
+                <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
               </TouchableOpacity>
             </Image>
             <View style={styles.bar}>
