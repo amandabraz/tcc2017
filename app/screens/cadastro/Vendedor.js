@@ -120,7 +120,7 @@ class Vendedor extends Component {
       <View style={{flex: 1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="aquamarine"
+            tintColor="#7A8887"
           />
         <View style={styles.container}>
           <ScrollView style={{ backgroundColor: '#fff' }}>
@@ -161,7 +161,7 @@ class Vendedor extends Component {
 
 const titleConfig = {
   title: 'Cadastro do Vendedor',
-  tintColor: "darkblue",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 

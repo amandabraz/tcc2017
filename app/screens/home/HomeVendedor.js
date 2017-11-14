@@ -53,10 +53,14 @@ class HomeVendedor extends Component {
           }
         },
         refreshing: false,
-        informacoes: '',
-        clientes: '',
-        clientesMantidos: '',
-        produtoVendido: '',
+        numeroClientes: 0,
+        quantidadeVendida: 0,
+        valorRecebido: 0,
+        clienteConquistados: 0,
+        ticketMedio: 0,
+        clientes: 'Cliente Conquistado',
+        clientesMantidos: 'Cliente Mantido',
+        produtoVendido: 'Produto vendido',
         filtroMensal: true,
         alturaPedido: '1%',
         alturaResumo: '100%'
@@ -92,7 +96,11 @@ class HomeVendedor extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
-          this.setState({informacoes: responseJson});
+            this.setState({numeroClientes: responseJson.numeroClientes});
+            this.setState({quantidadeVendida: responseJson.quantidadeVendida});
+            this.setState({valorRecebido: responseJson.valorRecebido});
+            this.setState({clienteConquistados: responseJson.clienteConquistados});
+            this.setState({ticketMedio: responseJson.ticketMedio});
           if (responseJson.quantidadeVendida > 1) {
             var qnt = "";
               qnt = "Produtos vendidos";
@@ -137,7 +145,11 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({pedidoSolicitado: []})
-          this.setState({informacoes: []})
+          this.setState({numeroClientes: 0});
+          this.setState({quantidadeVendida: 0});
+          this.setState({valorRecebido: 0});
+          this.setState({clienteConquistados: 0});
+          this.setState({ticketMedio: 0});
           this.buscaDadosPedido();
           this.pedidoSolicitado();
           this.buscaInformacoes();
@@ -252,7 +264,7 @@ render() {
         <View style={{flex:1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="#768888"/>
+            tintColor="#7A8887"/>
             <View style={styles.container}>
             <ScrollView refreshControl={
                 <RefreshControl
@@ -289,13 +301,13 @@ render() {
                 <View style={{width: '50%', alignItems: 'center'}}>
                   <Text style={{fontSize: 14, alignSelf: 'center'}}>
                     <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
-                      {this.state.informacoes.numeroClientes + ' '}
+                      {this.state.numeroClientes + ' '}
                     </Text>
                        {this.state.clientes}
                     </Text>
                     <Text style={{fontSize: 14, alignSelf: 'center'}}>
                       <Text style={{fontWeight: 'bold', fontSize: 14, color: 'crimson'}}>
-                        {this.state.informacoes.clienteConquistados + ' '}
+                        {this.state.clienteConquistados + ' '}
                       </Text>
                          {this.state.clientesMantidos}
                       </Text>
@@ -304,7 +316,7 @@ render() {
                <View style={{width: '50%', alignItems: 'center'}}>
                <Text style={{fontSize: 14, alignSelf: 'center'}}>
                 <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
-                  {this.state.informacoes.quantidadeVendida + ' '}
+                  {this.state.quantidadeVendida + ' '}
                 </Text>
                      {this.state.produtoVendido}
                 </Text>
@@ -317,14 +329,14 @@ render() {
                 </View>
                 <View style={{width: '50%', alignItems: 'center'}}>
                   <Text style={{fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: 'cadetblue'}}>
-                    R$ {this.state.informacoes.valorRecebido}
+                    R$ {this.state.valorRecebido}
                   </Text>
                   <Text style={{fontSize: 18, alignSelf: 'center'}}>
                      Reais obtidos {'\n'}
                   </Text>
                   <Text style={{fontSize: 18, alignSelf: 'center'}}>
                   <Text style={{fontWeight: 'bold', alignSelf: 'center', color: 'cadetblue'}}>
-                    R$ {this.state.informacoes.ticketMedio + ' '}
+                    R$ {this.state.ticketMedio + ' '}
                   </Text>
                      por cliente
                   </Text>

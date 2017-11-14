@@ -39,7 +39,8 @@ class PedidosFinalizadosCliente extends Component {
       pedidosCancelados: [],
       refreshing: false,
       starCount: 0,
-      isModalVisible: false,      
+      isModalVisible: false,  
+      pedidoParaAvaliar: 0,    
     };
     this.buscaDadosPedidosCliente();
   };
@@ -70,12 +71,13 @@ class PedidosFinalizadosCliente extends Component {
   };
 
   avaliarPedido(pedido) {
-    fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/produto/avaliacao/' + parseInt(this.state.starCount), {method: 'PUT'})
+    fetch(constante.ENDPOINT + 'pedido/' + this.state.pedidoParaAvaliar + '/produto/avaliacao/' + parseInt(this.state.starCount), {method: 'PUT'})
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           ToastAndroid.showWithGravity('Avaliação realizada, obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
-          this.setState({refreshing: true});
+          this.setState({pedidoParaAvaliar: 0});
+          this._hideModal();
           this.buscaDadosPedidosCliente();
         } else {
           Alert.alert("Houve um erro ao realizar a avaliação, tente novamente");
@@ -111,37 +113,10 @@ class PedidosFinalizadosCliente extends Component {
             color="#fff"
             backgroundColor="#88557B"
             borderRadius={10}
-            onPress={() => this._showModal()}
-          />
-          <Modal
-            isVisible={this.state.isModalVisible}
-            animationIn={'slideInLeft'}
-            animationOut={'slideOutRight'}
-            backdropOpacity={0.3}>
-            <View style={styles.modalContent}>
-            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Avalie este produto: </Text>              
-              <View style={{width: '60%', margin: 10}}>
-                <StarRating
-                  maxStars={5}
-                  starSize={25}
-                  starColor={'#e6b800'}
-                  rating={this.state.starCount}
-                  selectedStar={(rating) => this.setState({starCount: rating})}/>
-              </View>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <TouchableOpacity onPress={() => this._hideModal()}>
-                  <View style={styles.button}>
-                    <Text>Cancelar</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.avaliarPedido(pedido)}>
-                    <View style={styles.button}>
-                      <Text>Salvar</Text>
-                    </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+            onPress={() => {
+              this.setState({pedidoParaAvaliar: pedido.id});
+              this._showModal();
+            }} />
         </View>
       );
     }
@@ -366,6 +341,39 @@ pedidoFinalizado(){
         </Text>
         </View>
         {this.pedidoFinalizado()}
+
+
+        <Modal
+        isVisible={this.state.isModalVisible}
+        animationIn={'slideInLeft'}
+        animationOut={'slideOutRight'}
+        backdropOpacity={0.3}>
+        <View style={styles.modalContent}>
+        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Avalie este produto: </Text>              
+          <View style={{width: '60%', margin: 10}}>
+            <StarRating
+              maxStars={5}
+              starSize={25}
+              starColor={'#e6b800'}
+              rating={this.state.starCount}
+              selectedStar={(rating) => this.setState({starCount: rating})}/>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => this._hideModal()}>
+              <View style={styles.button}>
+                <Text>Cancelar</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.avaliarPedido()}>
+                <View style={styles.button}>
+                  <Text>Salvar</Text>
+                </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+
         <View style = {{margin: 5}}>
         <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#A1453E', fontWeight: 'bold'}}>
           Pedidos Recusados
