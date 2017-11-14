@@ -20,7 +20,6 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import PedidoCliente from '../screens/pedido/PedidoCliente';
 import PedidosSolicitadosVendedor from '../screens/pedido/PedidosSolicitadosVendedor';
 import PedidosConfirmadosVendedor from '../screens/pedido/PedidosConfirmadosVendedor';
 import PedidosFinalizadosVendedor from '../screens/pedido/PedidosFinalizadosVendedor';
@@ -35,6 +34,8 @@ import Vendedor from '../screens/cadastro/Vendedor';
 import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
 import TermoUso from '../screens/configuracao/TermoUso';
 import AceiteTermoUso from '../screens/configuracao/AceiteTermoUso';
+import Chat from '../screens/pedido/Chat';
+
 
 /**
 MENU SOMENTE PARA CLIENTE
@@ -62,12 +63,27 @@ export const BuscaPro = StackNavigator({
   headerMode: 'none',
 });
 
+
+export const GerenciaPedidosConfirmadosCliente = StackNavigator({
+  Confirmados: {
+    screen: PedidosConfirmadosCliente
+  },
+  Chat:{
+    screen: Chat
+  },
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+
 export const GerenciaPedidosClientes = TabNavigator({
   Solicitados: {
     screen: PedidosSolicitadosCliente
   },
   Confirmados: {
-    screen: PedidosConfirmadosCliente
+    screen: GerenciaPedidosConfirmadosCliente,
   },
   Finalizados: {
     screen: PedidosFinalizadosCliente
@@ -156,7 +172,10 @@ export const GerenciaPedidosConfirmados = StackNavigator({
     },
     LerToken: {
       screen: LerTokenPedido
-    }
+    },
+    Chat:{
+      screen: Chat
+    },
   }, {
       mode: 'card',
       headerMode: 'none',
