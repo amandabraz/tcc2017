@@ -126,13 +126,17 @@ class Estatisticas extends Component {
     });
   }
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   exibeValorArrecadadoPorProduto(){
     if(this.state.valorTotalArrecadadoPorProduto.length > 0){
       var textDescriptions = []
       for(let i = 0; i<this.state.nomeProduto.length; i++){
         textDescriptions.push(
           <Text key={keyOfPieChart+"_desc_"+i} style={styles.pieChart_description}>
-            <Text style={{color: twentyColorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
+            <Text style={{color: twentyColorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.arredondaValores(this.state.valorTotalArrecadadoPorProduto[i])+") "}
           </Text>
         )
       }
