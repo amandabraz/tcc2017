@@ -48,7 +48,7 @@ class RankingProdutos extends Component {
       dataNascimentoText: '',
       imagemHeader: require('./img/fundof.png'),
       imagemProduto: require('./img/camera.jpg'),
-      imagemPremiacao: require('./img/camera.jpg')
+      imagemPremiacao: require('./img/gold.png')
     };
     this.buscaQuantidadeProdutosVendidos();
     this.buscaQuantidadeVendas();
@@ -108,8 +108,19 @@ class RankingProdutos extends Component {
     var views = [];
     if (this.state.produtosMaisVendidos.length > 0) {
       let imagemPrincipal = require('./img/camera.jpg');
+      let imagemPremiacao = require('./img/camera.jpg');
       for(i in this.state.produtosMaisVendidos) {
         let produto = this.state.produtosMaisVendidos[i];
+
+        if (produto[0]){
+          imagemPremiacao = {uri: require('./img/gold.png')};
+        }
+        if (produto[1]){
+          imagemPremiacao = require('./img/silver.png');
+        }
+        else {
+          imagemPremiacao = require('./img/bronze.png');
+        }
 
         if(produto[3]){
           imagemPrincipal = {uri: produto[3]};
@@ -137,7 +148,7 @@ class RankingProdutos extends Component {
                     <Text style={styles.oneResultfont} justifyContent='center'>By: {produto[0]}</Text>
                   </View>
                   <View style={{width: "20%"}}>
-                  <Image source={imagemPrincipal}
+                  <Image source={imagemPremiacao}
                         style={styles.imageResultSearch}
                         justifyContent='flex-end'/>
                   </View>

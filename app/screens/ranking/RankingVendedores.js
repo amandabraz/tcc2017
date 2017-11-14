@@ -47,7 +47,8 @@ class RankingVendedores extends Component {
       imagemPerfilOuro: require('./img/camera.jpg'),
       imagemPerfilPrata: require('./img/camera.jpg'),
       imagemPerfilBronze: require('./img/camera.jpg'),
-      imagemPremiacao: require('./img/camera.jpg')
+      imagemPremiacao: require('./img/camera.jpg'),
+      vendedorPrata: []
     };
     this.buscaMaioresVendedores();
     this.buscaVendedores();
@@ -63,15 +64,16 @@ class RankingVendedores extends Component {
       }});
   }
 
+
   buscaVendedores() {
     var views = [];
-    if (this.state.maioresVendedores.length > 0) {
+
+    var dadosVendedores = this.state.maioresVendedores;
+    if (dadosVendedores.length > 0) {
       let imagemPerfil = require('./img/camera.jpg');
-      for(i in this.state.maioresVendedores) {
-        let vendedorOuro = this.state.maioresVendedores[0];
-        let vendedorPrata = this.state.maioresVendedores[1];
-        let vendedorBronze = this.state.maioresVendedores[2];
-        let vendedor = this.state.maioresVendedores[i];
+      let vendedorOuro = dadosVendedores[0];
+      let vendedorPrata = dadosVendedores[1];
+      let vendedorBronze = dadosVendedores[2];
 
         if(vendedorOuro[2]){
           imagemPerfilOuro = {uri: vendedorOuro[2]};
@@ -82,16 +84,12 @@ class RankingVendedores extends Component {
         if(vendedorBronze[2]){
           imagemPerfilBronze = {uri: vendedorBronze[2]};
         }
-        if(vendedor[2]){
-          imagemPerfil = {uri: vendedor[2]};
-        }
         else {
           imagemPerfil = require('./img/camera.jpg');
         }
 
-
         views.push (
-          <View key={i}>
+          <View key={-1}>
           <View style = {{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={styles.oneResult1}>
               <Accordion header={
@@ -126,7 +124,23 @@ class RankingVendedores extends Component {
               easing="easeOutCubic"/>
             </View>
           </View>
-              <View>
+        </View>
+      );
+
+      dadosVendedores.pop(vendedorOuro);
+      dadosVendedores.pop(vendedorPrata);
+      dadosVendedores.pop(vendedorBronze);
+
+      dadosVendedorArray = this.state.maioresVendedores;
+      for(i in dadosVendedorArray) {
+        let vendedor = dadosVendedorArray[i];
+
+        if(vendedor[2]){
+          imagemPerfil = {uri: vendedor[2]};
+        }
+
+        views.push (
+          <View key={i}>
                 <View style={styles.oneResult}>
                   <View style={{width: "30%"}}>
                     <Image source={imagemPerfil}
@@ -144,10 +158,10 @@ class RankingVendedores extends Component {
                   </View>
                 </View>
                 <Text>{'\n'}</Text>
-              </View>
           </View>
         );
       }
+
     }
     return views;
   }
@@ -261,6 +275,8 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems:  'center',
     justifyContent: 'center',
+    alignSelf:'center',
+    flexDirection: 'column',
     borderRadius: 100,
   },
   imageResultSearchPrincipal:{
@@ -268,6 +284,8 @@ const styles = StyleSheet.create({
     height: 70,
     alignItems:  'center',
     justifyContent: 'center',
+    alignSelf:'center',
+    flexDirection: 'column',
     borderRadius: 100,
   },
   results:{
