@@ -50,7 +50,8 @@ export default class PerfilVendedor extends Component {
       titleTextClass: styles.titleText,
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
-      meiosPagamento: []
+      meiosPagamento: [],
+      escolhido: ''
     };
     this.buscaDadosVendedor();
     this.buscaMeiosPagamento();
@@ -101,6 +102,9 @@ export default class PerfilVendedor extends Component {
         meioPagVendedor.push(responseJson.meiosPagamentos[j]);
       }
       this.setState({meiosPagamentoVendedor: meioPagVendedor});
+    } else {
+      pagamentos = "Nenhum pagamento escolhido.";
+      this.setState({meiosPagamentoText: pagamentos});
     }
   }
 
@@ -125,7 +129,7 @@ export default class PerfilVendedor extends Component {
         <View style={{alignSelf: 'center'}}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.salvaEdicaoVendedor()}>
+            onPress={() => this.pagamentoEscolhido()}>
             <Text style={styles.buttonText}>SALVAR</Text>
           </TouchableOpacity>
 
@@ -136,8 +140,6 @@ export default class PerfilVendedor extends Component {
   }
 
   salvaEdicaoVendedor() {
-    this.pagamentoEscolhido;
-
     const {
       state: {
         vendedorId,
@@ -216,10 +218,12 @@ export default class PerfilVendedor extends Component {
     var pagamentos = this.state.meiosPagamentoVendedor;
     if (meioPag.checked) {
       pagamentos.push(objMeioPag);
+      this.setState({ meiosPagamentoVendedor: pagamentos });
     } else {
       pagamentos.pop(objMeioPag);
+      this.setState({ meiosPagamentoVendedor: pagamentos });
     }
-    this.setState({ meiosPagamentoVendedor: pagamentos });
+
   }
 
   mostrarCheckboxesPagamento() {
@@ -256,12 +260,11 @@ export default class PerfilVendedor extends Component {
   }
 
  pagamentoEscolhido = () => {
-     if (this.state.meiosPagamentos.length > 0) {
-       return true;
+     if (this.state.meiosPagamentoVendedor.length > 0) {
+       this.salvaEdicaoVendedor();
      }
      else {
        ToastAndroid.showWithGravity('Escolha ao menos um meio de pagamento', ToastAndroid.LONG, ToastAndroid.CENTER);
-       return false;
      }
  }
 
@@ -316,6 +319,40 @@ export default class PerfilVendedor extends Component {
       }
     });
   }
+
+  handleFinalizarPress = () => {
+    fetch(constante.ENDPOINT + 'usuario/deletar/' + this.state.userId, {method: 'DELETE'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        {this.logout()}
+      }
+    });
+};
+
+  excluirUsuario() {
+    this.popup.confirm({
+        title: 'Desativar Conta',
+        content: ['Tem certeza que deseja desativar sua conta?'],
+        ok: {
+            text: 'Sim',
+            style: {
+                color: 'gray',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              {this.handleFinalizarPress()}
+            }
+        },
+        cancel: {
+            text: 'Não',
+            style: {
+                color: 'gray'
+            }
+        }
+    });
+}
+
 
   logout() {
     ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -449,6 +486,16 @@ export default class PerfilVendedor extends Component {
 
               {this.meiosPagamento()}
               {this.mostraBotaoSalvar()}
+              <View style={{width:'98%'}}>
+                <TouchableOpacity 
+                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                    onPress={this.excluirUsuario.bind(this)}>
+                  <Icon name="trash" size={25} 
+                        color={'#7A8887'} 
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Desativar conta</Text>
+                </TouchableOpacity>
+            </View>
           </ScrollView>
         </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
@@ -484,6 +531,18 @@ export default class PerfilVendedor extends Component {
     height: 180,
     borderRadius: 100,
     borderColor: 'rgba(0,0,0,0.4)',
+  },
+  EvenBtnText: {
+    fontSize: 18,
+    color: 'white',
+    textAlign: 'center'
+  },
+  EvenBtn: {
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    position: 'relative',
+    backgroundColor: '#88557B'
   },
   profilepic:{
     flex: 1,

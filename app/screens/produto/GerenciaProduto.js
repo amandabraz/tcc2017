@@ -155,7 +155,7 @@ class GerenciaProduto extends Component {
      views.push(
        <View key={0} style={{alignItems: 'center'}}>
        <Text style={styles.texto}>
-         Você não tem produtos cadastrados! :(
+         Você não tem produtos cadastrados!
        </Text>
        </View>
      )

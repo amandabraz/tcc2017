@@ -17,6 +17,7 @@ import {
 
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Kohana } from 'react-native-textinput-effects';
+import Popup from 'react-native-popup';
 import * as constante from '../../constantes';
 
 //dimensão da janela
@@ -29,6 +30,7 @@ export default class Login extends Component {
    super(props);
 
    this.state = {
+     userId: '',
      email: '',
      senha: ''
    }
@@ -64,6 +66,40 @@ export default class Login extends Component {
     this.props.navigation.navigate('AceiteTermoUso');
   };
 
+  reativarPress = () => {
+    fetch(constante.ENDPOINT + 'usuario/reativar/' + this.state.userId, {method: 'PUT'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        ToastAndroid.showWithGravity('Cadastro Reativado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        this.eventLogin();
+      }
+    });
+};
+
+  ativarPerfil() {
+    this.popup.confirm({
+        title: 'Ativar Conta',
+        content: ['Você deseja reativar sua conta?'],
+        ok: {
+            text: 'Sim',
+            style: {
+                color: 'gray',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              {this.reativarPress()}
+            }
+        },
+        cancel: {
+            text: 'Não',
+            style: {
+                color: 'gray'
+            }
+        }
+    });
+}
+
   //evento no click do botão
   eventLogin = () => {
     const {
@@ -94,18 +130,23 @@ export default class Login extends Component {
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
             if (responseJson != null) {
-              ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-              if (responseJson.usuario.perfil == "V") {
-                this.props.navigation.navigate('TabsVendedor', {
-                  userId: responseJson.usuario.id,
-                  vendedorId: responseJson.id
-                });
-              } else if (responseJson.usuario.perfil == "C") {
-                this.props.navigation.navigate('TabsCliente', {
-                  userId: responseJson.usuario.id,
-                  clienteId: responseJson.id
-                });
-              }
+              if(responseJson.usuario.deletado == 1){
+                this.setState({userId: responseJson.usuario.id})
+                this.ativarPerfil();
+              } else {
+                ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                if (responseJson.usuario.perfil == "V") {
+                 this.props.navigation.navigate('TabsVendedor', {
+                   userId: responseJson.usuario.id,
+                   vendedorId: responseJson.id
+                 });
+               } else if (responseJson.usuario.perfil == "C") {
+                 this.props.navigation.navigate('TabsCliente', {
+                   userId: responseJson.usuario.id,
+                   clienteId: responseJson.id
+                 });
+               }
+              }              
             }
           } else {
               Alert.alert("E-mail ou senha inválidos!");
@@ -126,10 +167,22 @@ export default class Login extends Component {
 
       <ScrollView>
       <View style={styles.container}>
-        <Image source={require('./img/cupcakes.jpg')} style={styles.background}>
+        <Image source={require('./img/fofo.jpg')} style={styles.background}>
             <View style={styles.centralView}>
-              <Text style={styles.title}>Bem-Vindo(a)!{'\n'}{'\n'}</Text>
+              <View style={{height: '32%', paddingTop: 20}}>
+              <Image
+                  style={styles.profilepic}
+                  source={require('./img/amora-logo.png')}/>
+              </View>
+            <View style={{height: '60%', alignItems: 'center', padding:10}}>
+            <Image
+                  source={require('./img/amora-text-small.png')}/>
 
+             <View style={{flexDirection:'row', alignItems: 'center', paddingTop: 16}}>
+              <FontAwesomeIcon
+                name='at'
+                color='#0B2F3A'
+                size = {18}/>
               <TextInput
                 style={styles.input}
                 onChangeText = {
@@ -137,13 +190,18 @@ export default class Login extends Component {
                     this.setState({email: email});
                   }
                 }
-                underlineColorAndroid={'#e2b1a3'}
+                underlineColorAndroid={'#0B2F3A'}
                 maxLength={40}
-                placeholder = "seu_email@provedorbacana.com"
-                placeholderTextColor = "#e2b1a3"
+                placeholder = " seu_email@provedor.com"
+                placeholderTextColor = "#0B2F3A"
                 keyboardType={'email-address'}
               />
-
+              </View>
+              <View style={{flexDirection:'row', alignItems: 'center'}}>
+                <FontAwesomeIcon
+                  name='lock'
+                  color='#0B2F3A'
+                  size = {18}/>
               <TextInput
                 style={styles.input}
                 onChangeText = {
@@ -151,13 +209,14 @@ export default class Login extends Component {
                     senha: senha
                   })
                 }
-                underlineColorAndroid={'#e2b1a3'}
+                underlineColorAndroid={'#0B2F3A'}
                 maxLength={10}
                 secureTextEntry={true}
-                placeholder = "Senha"
-                placeholderTextColor = "#e2b1a3"
+                placeholder = " senha"
+                placeholderTextColor = "#0B2F3A"
                 onSubmitEditing={this.eventLogin}
               />
+              </View>
 
               <TouchableOpacity
               style={styles.button}
@@ -166,23 +225,18 @@ export default class Login extends Component {
                   <Text style={styles.font}>{'Entrar'}</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
-              style={styles.button}
-              onPress={this.cadastrar}
+            <View style={{paddingTop:30}}>
+            <Text style={styles.fonteNovo}>{'Novo por aqui?'}</Text>
+            <TouchableOpacity
               accessibilityLabel={'Botão de cadastro'}>
-                  <Text style={styles.font}>{'Cadastre-se!'}</Text>
+                  <Text style={styles.fontC}>{'Cadastre-se'}</Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-              style={styles.buttonEsqueceuSenha}
-              onPress={this.esqueceuSenha}
-              accessibilityLabel={'Esqueceu sua senha'}>
-                  <Text style={styles.fontEsqueciSenha}>{'\n'}{'Esqueci minha senha'}</Text>
-              </TouchableOpacity>
-
+              </View>
+              </View>
             </View>
         </Image>
       </View>
+      <Popup ref={popup => this.popup = popup }/>
       </ScrollView>
     );
   }
@@ -193,12 +247,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 3,
   },
-  title: {
-    fontFamily: 'Roboto',
-    color: '#95c9db',
-    fontWeight: 'bold',
-    fontSize: 40,
-  },
   background: { //tornando a imagem do tamanho da tela
     width,
     height,
@@ -207,32 +255,25 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   centralView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(100, 108, 122, 0.7)',
-  },
-  buttonEsqueceuSenha: {
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
+    width: '100%',
+    height:'100%'
   },
   input:{
     width: 300,
     height: 60,
     borderColor: 'gray',
     fontFamily: 'Roboto',
-    color: '#e2b1a3',
+    color: '#0B2F3A',
     fontWeight: 'bold',
     fontSize: 18,
-    textAlign: 'center',
+  },
+  profilepic:{
+    width: 180,
+    height: 180,
+    alignSelf: 'center',
+    borderRadius: 100
   },
   button: {
     justifyContent: 'center',
@@ -240,8 +281,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 10,
     marginRight: 10,
-    backgroundColor: "#50a1e0",
+    backgroundColor: "#80C1C4",
     alignSelf: 'stretch',
+    borderRadius: 25
   },
   font: {
     fontWeight: 'bold',
@@ -249,14 +291,18 @@ const styles = StyleSheet.create({
     color:'white',
     alignSelf: 'center',
   },
-  fontEsqueciSenha: {
-    width: 300,
-    height: 60,
+  fontC: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color:'#0B2F3A',
+    alignSelf: 'center',
+    textDecorationLine: 'underline'
+  },
+  fonteNovo: {
     borderColor: 'gray',
     fontFamily: 'Roboto',
     color: 'white',
-    fontSize: 13,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
+    fontSize: 14,
+    alignSelf: 'center'
   },
 });
