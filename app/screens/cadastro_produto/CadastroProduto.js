@@ -260,10 +260,13 @@ selecionarFoto() {
   }
 
   moneyMask(value){
+    if(value==null) //se for nulo
+      return null
+    value = parseFloat(value)
     if((!value.match(/([\d]|[\.])/)&&           //se não encontrar 'xx.x'
-       !value.match(/([\d])/))||                //nem 'x'
-       value.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
-       value.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
+      !value.match(/([\d])/))||                //nem 'x'
+      value.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
+      value.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
       return null
     }
     return value
