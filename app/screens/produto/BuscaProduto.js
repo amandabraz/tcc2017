@@ -36,27 +36,34 @@ export default class BuscaProduto extends Component {
       textoBusca: '',
       semProdutos: false,
     }
-    this.buscaPedidosIndicados();
+    this.buscaInicialPedidos();
   }
 
+  buscaInicialPedidos() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({ gps: position })
 
-  buscaPedidosIndicados() {
-    if (this.state.resultadoPesquisaProduto.length > 0) {
-      this.setState({resultadoPesquisaProduto: []});
-    }
-    fetch(constante.ENDPOINT+'produto/cliente/' 
-    + this.state.clienteId
-    + '?&latitude=' + this.state.gps.coords.latitude
-    + '&longitude=' + this.state.gps.coords.longitude
-    + '&altitude=' + this.state.gps.coords.altitude, 
-    {method: 'GET'})
-    .then((response) => response.json())
-      .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-            this.setState({resultadoPesquisaProduto: responseJson});
-          }
-      });
-  };
+      if (this.state.resultadoPesquisaProduto.length > 0) {
+        this.setState({resultadoPesquisaProduto: []})
+      }
+
+      fetch(constante.ENDPOINT+'produto/cliente/' 
+      + this.state.clienteId
+      + '?&latitude=' + this.state.gps.coords.latitude
+      + '&longitude=' + this.state.gps.coords.longitude
+      + '&altitude=' + this.state.gps.coords.altitude, 
+      {method: 'GET'})
+      .then((response) => response.json())
+        .then((responseJson) => {
+            if (!responseJson.errorMessage) {
+              this.setState({resultadoPesquisaProduto: responseJson});
+            }
+        })
+
+    }, (error) => {
+      this.setState({ gps: 0 });
+    })
+  }
 
   setSearchText(searchText) {
     // zerando listas antes de criar nova lista
@@ -73,6 +80,7 @@ export default class BuscaProduto extends Component {
       this.setState({gps: false});
     });
     if (this.state.gps) {
+      console.log(gps)
       fetch(constante.ENDPOINT + 'produto?filtro=' + searchText
                                + '&latitude=' + this.state.gps.coords.latitude
                                + '&longitude=' + this.state.gps.coords.longitude
@@ -249,17 +257,17 @@ export default class BuscaProduto extends Component {
           </View>
         );
     }
+    } 
+    return views;
   }
-  return views;
-}
 
-componentWillMount() {
-  navigator.geolocation.getCurrentPosition((position) => {
-    this.setState({gps: position});
-  }, (error) => {
-    this.setState({gps: 0});
-  });
-}
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({gps: position});
+    }, (error) => {
+      this.setState({gps: 0});
+    });
+  }
 
 
   render() {
