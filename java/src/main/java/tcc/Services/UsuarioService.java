@@ -2,10 +2,13 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import tcc.DAOs.UsuarioDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Usuario;
+import tcc.Utils.UploadUtil;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Service
@@ -38,10 +41,16 @@ public class UsuarioService {
         return null;
     }
 
-    public Usuario editaUsuario(Usuario usuario) {
+    public Usuario editaUsuario(Usuario usuario) throws IOException {
         try {
-            if (Objects.isNull(buscaUsuario(usuario.getId()))) {
+            Usuario usuarioExistente = buscaUsuario(usuario.getId();
+            if (Objects.isNull(usuarioExistente))) {
                 return null;
+            }
+            if (!StringUtils.isEmpty(usuario.getImagemPerfil()) &&
+                    (Objects.isNull(usuario.getId()) ||
+                            !usuario.getImagemPerfil().equals(usuarioExistente.getImagemPerfil()))) {
+                usuario.setImagemPerfil(UploadUtil.uploadFoto(usuario.getImagemPerfil()));
             }
             return usuarioDAO.save(usuario);
         } catch (Exception e) {
