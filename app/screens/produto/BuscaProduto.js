@@ -80,7 +80,6 @@ export default class BuscaProduto extends Component {
       this.setState({gps: false});
     });
     if (this.state.gps) {
-      console.log(gps)
       fetch(constante.ENDPOINT + 'produto?filtro=' + searchText
                                + '&latitude=' + this.state.gps.coords.latitude
                                + '&longitude=' + this.state.gps.coords.longitude
