@@ -217,7 +217,7 @@ pedidoSolicitado(){
               <Text style={styles.totalFont}> {this.state.pedidoSolicitado.quantidade}{'\n'}</Text>
             </Text>
             <Text style={styles.oneResultfont}>Total a pagar em {this.state.pedidoSolicitado.pagamento.descricao}:
-            <Text style={styles.totalFont}> R$ {this.state.pedidoSolicitado.valorCompra}{'\n'}</Text>
+            <Text style={styles.totalFont}> R$ {this.arredondaValores(this.state.pedidoSolicitado.valorCompra)}{'\n'}</Text>
             </Text>
 
           </View>
