@@ -75,11 +75,7 @@ export default class AlteraProduto extends Component {
          this.setState({dataOriginal: rJson.dataPreparacao});
          this.setState({dataPreparacao: dataPrep});
          if (rJson.restricoesDieteticas.length > 0) {
-           var restricoes = [];
-           for(i in rJson.restricoesDieteticas) {
-             restricoes.push(rJson.restricoesDieteticas[i]);
-           }
-           this.setState({restricoesProdutos: restricoes});
+           this.setState({restricoesProdutos: rJson.restricoesDieteticas});
          }
 
          if (rJson.tags.length > 0) {
@@ -243,49 +239,50 @@ carregarCategoriasArray() {
      var dataNormal = new Date(this.state.dataOriginal);
      var dataAlterada = new Date(this.state.dataPreparacao);
      var dataSalvar = '';
-     if (!this.state.imagemProduto) {
-        this.setState({imagemProduto: this.state.imagemPrincipal.uri});
+     var imagem = this.state.imagemProduto;
+    if (!imagem) {
+       imagem = this.state.imagemPrincipal.uri;
      }
      if(dataAlterada!=dataNormal){
        dataSalvar = dataAlterada;
      } else {
-       dataSalvar = dataNormal;}
-        const {
-          state: {
-            produtoId,
-            vendedorId,
-            nome,
-            quantidade,
-            preco,
-            observacao,
-            categoria,
-            ingredientes,
-            tags,
-            restricoesDieteticas,
-            imagemProduto
-          }
-        } = this;
+       dataSalvar = dataNormal;
+    }
+    const {
+      state: {
+        produtoId,
+        vendedorId,
+        nome,
+        quantidade,
+        preco,
+        observacao,
+        categoria,
+        ingredientes,
+        tags,
+        restricoesProdutos
+      }
+    } = this;
 
-        produtoEditado = {
-          "id": produtoId,
-          "vendedor": vendedorId,
-          "nome": nome,
-          "dataPreparacao": dataSalvar,
-          "quantidade": quantidade,
-          "preco": preco,
-          "observacao": observacao,
-          "categoria": categoria,
-          "ingredientes": ingredientes,
-          "tags": tags,
-          "restricoesDieteticas": restricoesDieteticas,
-          "imagemPrincipal": imagemProduto,
-          "deletado": false,
-          "score": 0,
-        }
+    produtoEditado = {
+      "id": produtoId,
+      "vendedor": vendedorId,
+      "nome": nome,
+      "dataPreparacao": dataSalvar,
+      "quantidade": quantidade,
+      "preco": preco,
+      "observacao": observacao,
+      "categoria": categoria,
+      "ingredientes": ingredientes,
+      "tags": tags,
+      "restricoesDieteticas": restricoesProdutos,
+      "imagemPrincipal": imagem,
+      "deletado": false,
+      "score": 0,
+    }
 
-        let continuar = this.validaCampos(produtoEditado);
+    let continuar = this.validaCampos(produtoEditado);
 
-      if (continuar){
+      if (continuar) {
         fetch(constante.ENDPOINT + 'produto', {
           method: 'PUT',
           headers: {
