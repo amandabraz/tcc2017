@@ -179,6 +179,11 @@ export default class ExibeComprar extends Component {
         });
     }
 
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
     render() {
 
       const {goBack} = this.props.navigation
@@ -298,7 +303,7 @@ export default class ExibeComprar extends Component {
               </View>
             <View style={{width: '25%', alignSelf:'flex-end'}}>
               <Text style={styles.precoText}>
-                R$ {this.state.precoTotalText}
+                R$ {this.arredondaValores(this.state.precoTotalText)}
               </Text>
             </View>
             </View>

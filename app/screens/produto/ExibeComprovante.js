@@ -71,6 +71,11 @@ export default class ExibeComprovante extends Component {
     this.props.navigation.navigate('ExibeComprovante');
   };
 
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   render() {
 
     const {goBack} = this.props.navigation;
@@ -103,7 +108,7 @@ export default class ExibeComprovante extends Component {
                 </Text>
                 <Text>{'\n'}{'\n'}</Text>
                 <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
-                  <Text style={styles.totalFont}> R$ {this.state.precoText}</Text>
+                  <Text style={styles.totalFont}> R$ {this.arredondaValores(this.state.precoText)}</Text>
                 </Text>
                 <Text>{'\n'}{'\n'}</Text>
                 <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com

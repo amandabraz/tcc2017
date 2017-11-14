@@ -100,6 +100,10 @@ class PedidoCliente extends Component {
       });
   }
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(<LocalizacaoNaoPermitida
@@ -137,7 +141,7 @@ class PedidoCliente extends Component {
                       </Text>
                       <Text style={styles.oneResultfont}>Status da compra: {this.state.statusPedidoText}
                       </Text>
-                      <Text style={styles.totalFont}> R$ {this.state.precoText}{'\n'}</Text>
+                      <Text style={styles.totalFont}> R$ {this.arredondaValores(this.state.precoText)}{'\n'}</Text>
                       <Text style={styles.oneResultfont}>Solicitado em:
                         <Text style={styles.totalFont}> {this.state.dataSolicitacaoText}{'\n'}</Text>
                       </Text>
