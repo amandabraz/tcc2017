@@ -50,7 +50,7 @@ export default class ExibeComprar extends Component {
             pagamentosArray: [],
             meiosPagamentos: [],
             meioPagamentoEscolhido: '',
-            precoTotalText: ''
+            precoTotalText: 0
         }
         this.buscaProduto();
     }
@@ -296,12 +296,12 @@ export default class ExibeComprar extends Component {
             </View>
 
             <View style={{flexDirection: 'row', paddingTop:10}}>
-            <View style={{width: '75%'}}>
+            <View style={{width: '60%'}}>
               <Text style={styles.baseText}>
                 Total
               </Text>
               </View>
-            <View style={{width: '25%', alignSelf:'flex-end'}}>
+            <View style={{width: '35%', alignSelf:'flex-end'}}>
               <Text style={styles.precoText}>
                 R$ {this.arredondaValores(this.state.precoTotalText)}
               </Text>

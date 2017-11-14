@@ -36,7 +36,7 @@ class PedidoCliente extends Component {
         gps: 0,
         nomeProdutoText: '',
         quantidadeText: '',
-        precoText: '',
+        precoText: 0,
         dataSolicitacaoText: '',
         meioPagamentoText: '',
         nomeVendedorText: '',

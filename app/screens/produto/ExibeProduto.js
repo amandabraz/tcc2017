@@ -35,7 +35,7 @@ export default class ExibeProduto extends Component {
           imagemVendedor: require('./img/camera11.jpg'),
           produto: {
             nome: '',
-            preco: '',
+            preco: 0,
             categoria: {
               descricao: ''
             },

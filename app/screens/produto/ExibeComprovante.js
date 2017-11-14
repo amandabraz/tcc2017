@@ -39,7 +39,7 @@ export default class ExibeComprovante extends Component {
      userId: this.props.navigation.state.params.userId,
      nomeProdutoText: '',
      quantidadeText: '',
-     precoText: '',
+     precoText: 0,
      meioPagamentoText: '',
      tokenText: '',
      nomeVendedorText: '',
