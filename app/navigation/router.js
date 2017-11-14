@@ -63,15 +63,27 @@ export const BuscaPro = StackNavigator({
   headerMode: 'none',
 });
 
-export const GerenciaPedidosClientes = TabNavigator({
-  Solicitados: {
-    screen: PedidosSolicitadosCliente
-  },
+
+export const GerenciaPedidosConfirmadosCliente = StackNavigator({
   Confirmados: {
     screen: PedidosConfirmadosCliente
   },
   Chat:{
     screen: Chat
+  },
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+
+export const GerenciaPedidosClientes = TabNavigator({
+  Solicitados: {
+    screen: PedidosSolicitadosCliente
+  },
+  Confirmados: {
+    screen: GerenciaPedidosConfirmadosCliente,
   },
   Finalizados: {
     screen: PedidosFinalizadosCliente
@@ -160,7 +172,10 @@ export const GerenciaPedidosConfirmados = StackNavigator({
     },
     LerToken: {
       screen: LerTokenPedido
-    }
+    },
+    Chat:{
+      screen: Chat
+    },
   }, {
       mode: 'card',
       headerMode: 'none',
@@ -173,9 +188,6 @@ export const GerenciaPedidos = TabNavigator({
     },
     Confirmados: {
       screen: GerenciaPedidosConfirmados
-    },
-    Chat:{
-      screen: Chat
     },
     Finalizados: {
       screen: PedidosFinalizadosVendedor

@@ -9,7 +9,6 @@ import {
   Dimensions,
   Image,
   ScrollView,
-  ToastAndroid,
   TouchableHighlight,
   TouchableOpacity
 } from 'react-native';
@@ -17,6 +16,7 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
+import { Keyboard } from 'react-native'
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,13 +24,14 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: 'this.props.navigation.state.params.userId',
-      clienteId: 'this.props.navigation.state.params.clienteId',      
-      vendedorId: 'this.props.navigation.state.params.vendedorId',
-      pedidoId: 'this.props.navigation.state.params.pedidoId',
+      userId: this.props.navigation.state.params.userId,
+      otherUserId: this.props.navigation.state.params.otherUserId,
+      otherUserName: this.props.navigation.state.params.otherUserName,   
+      pedidoId: this.props.navigation.state.params.pedidoId,
       mensagemEnviada: '',
-      mensagensRecebidas: [],
+      mensagens: [],
     }
+    this.buscaMensagens();
   };
 
   buscaMensagens() {
@@ -38,33 +39,44 @@ class Chat extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
-            this.setState({mensagensRecebidas: responseJson})
+            this.setState({mensagens: responseJson})
           }
       });
   };
-  
-  //"dataMsg": "2017-11-13",
-  //"pedido": 102,
-  //"receiver": 97,
-  //"sender": 88,
-  //"conteudo": "teste 3"
 
-  enviarMensagens() {
+  enviarMensagem() {
+    Keyboard.dismiss();
+    const {
+      state: {
+        userId,
+        otherUserId,
+        pedidoId,
+        mensagemEnviada
+      }
+    } = this;
+    mensagem = {
+      "dataMsg": new Date(),
+      "pedido": pedidoId,
+      "receiver": otherUserId,
+      "sender": userId,
+      "conteudo": mensagemEnviada
+    };
     fetch(constante.ENDPOINT + 'mensagem', {method: 'POST',
     headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     },
-    body: JSON.stringify(pedido)
+    body: JSON.stringify(mensagem)
   })
   .then((response) => response.json())
   .then((responseJson) => {
     if (!responseJson.errorMessage) {
-      ToastAndroid.showWithGravity('Mensagem Enviada!', ToastAndroid.LONG, ToastAndroid.CENTER);
-      this.props.navigation.navigate('ExibeComprovante',
-      {pedidoId: responseJson.id,
-      userId: this.state.userId,
-      clienteId: this.state.clienteId});
+      this.setState({mensagemEnviada: ''});
+      var msgs = this.state.mensagens;
+      msgs.push(responseJson);
+      this.setState({mensagens: msgs});
+      this.mensagens();
+      // todo: adicionar view na tela pra parecer chat 
     } else {
       Alert.alert("Houve um erro ao enviar a mensagem, tente novamente");
     }
@@ -74,55 +86,81 @@ class Chat extends Component {
   });
 };
 
-  mensagemRecebida(){
-      var views = [];
-      if(this.state.mensagensRecebidas.length > 0){
-        for (i in this.state.mensagensRecebidas) {
-      views.push(
-      <View key={i} style={{padding: 10}}>
-        <View style={{width: '75%', backgroundColor: '#f2f3f4', borderRadius: 10, justifyContent: 'flex-start'}}>
-          <Text style={{margin: 10}}>{this.state.mensagensRecebidas.conteudo}</Text>
-        </View>
-          <Text style={{fontSize: 11, justifyContent: 'flex-end', color: '#ccc'}}>{this.state.mensagensRecebidas.dataMsg}</Text>
-    </View>
-   );}
-  }
+  mensagens(){
+    var views = [];
+    if (this.state.mensagens.length > 0) {
+      for (i in this.state.mensagens) {
+        let msg = this.state.mensagens[i];
+        let data = new Date(msg.dataMsg);
+        let dataEnv = (data.getDate() < 10 ? "0" + data.getDate() : data.getDate()) + "/" + (data.getMonth() + 1 < 10 ? "0" + data.getMonth() + 1 : data.getMonth() + 1) + "/" + data.getFullYear() +
+        " - " + data.getHours() + ":" + (data.getMinutes() < 10 ? "0" + data.getMinutes() : data.getMinutes());
+  
+        if (msg.sender === this.state.userId) {
+          views.push(
+            <View key={i} style={{padding: 10, alignItems: 'flex-end'}}>
+              <View style={{width: '75%', backgroundColor: '#fcf3cf', borderRadius: 10}}>
+                <Text style={{margin: 10}}>{msg.conteudo}</Text>
+              </View>
+                <Text style={{fontSize: 11, color: '#ccc', alignItems: 'flex-end'}}>{dataEnv}</Text>
+            </View>
+          );
+        } else {
+          views.push(
+            <View key={i} style={{padding: 10}}>
+                <View style={{width: '75%', backgroundColor: '#f2f3f4', borderRadius: 10, justifyContent: 'flex-start'}}>
+                  <Text style={{margin: 10}}>{msg.conteudo}</Text>
+                </View>
+                  <Text style={{fontSize: 11, justifyContent: 'flex-end', color: '#ccc'}}>{dataEnv}</Text>
+            </View>
+          );
+        }
+      }
+    }
   return views;
 }
-  mensagemEnviada(){
-  return(
-  <View style={{padding: 10, alignItems: 'flex-end'}}>
-    <View style={{width: '75%', backgroundColor: '#fcf3cf', borderRadius: 10}}>
-      <Text style={{margin: 10}}>{this.state.mensagemEnviada}</Text>
-    </View>
-      <Text style={{fontSize: 11, color: '#ccc', alignItems: 'flex-end'}}>18:23</Text>
-  </View>
-  )}
+
 render() {
+  const titleConfig = {
+    title: this.state.otherUserName,
+    tintColor: "#4A4A4A",
+    fontFamily: 'Roboto',
+  };
   const {goBack} = this.props.navigation
+  var DismissKeyboard = require('dismissKeyboard');
+  
   return(
     <View style={{flex: 1}}>
     <NavigationBar
-              leftButton={
-                <TouchableOpacity onPress={() => goBack()}>
-                  <MaterialsIcon name="chevron-left" size={40} color={'#4A4A4A'}  style={{ padding: 3 }} />
-                </TouchableOpacity>
-              }/>
-        {this.mensagemRecebida()}
-        {this.mensagemEnviada()}
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'#4A4A4A'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }
+        title={titleConfig}
+        />
+      <View style={{height: '82%'}}>
+        <ScrollView>
+          {this.mensagens()}
+        </ScrollView>
+      </View>
+      <View style={{height: '10%'}}>
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <View style={{flexDirection: 'row'}}>
-        <View style={{width: '90%'}}>
-          <TextInput
-            style={{height: 50, borderColor: '#ccd1d1', borderWidth: 1}}
-            onChangeText={(text) => this.setState({mensagemEnviada})}
-            placeholder='Digite aqui'
-            placeholderTextColor='#ccd1d1'/>
-        </View> 
-        <View style={{width: '10%'}}>
-          <TouchableOpacity style={styles.EvenBtn}>
-              <MaterialsIcon name="send" size={20} color={'#fff'} style={{ alignSelf: 'center', paddingTop: 15, paddingLeft: 5}}/>
-          </TouchableOpacity>
+          <View style={{width: '90%'}}>
+            <TextInput
+              style={{height: 50, borderColor: '#ccd1d1', borderWidth: 1}}
+              onChangeText={(text) => this.setState({mensagemEnviada: text})}
+              placeholder='Digite aqui'
+              placeholderTextColor='#ccd1d1'
+              onSubmitEditing={() => this.enviarMensagem()}
+              value={this.state.mensagemEnviada}
+              />
+          </View> 
+          <View style={{width: '10%'}}>
+            <TouchableOpacity onPress={() => this.enviarMensagem()} style={styles.EvenBtn}>
+                <MaterialsIcon name="send" size={20} color={'#fff'} style={{ alignSelf: 'center', paddingTop: 15, paddingLeft: 5}}/>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>     
       </View>
@@ -130,6 +168,7 @@ render() {
     );
   }
 }
+
 
 let styles = StyleSheet.create({
 EvenBtn: {
