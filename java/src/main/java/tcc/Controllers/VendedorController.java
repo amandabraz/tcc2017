@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tcc.DAOs.VendedorDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Cliente;
+import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 import tcc.Services.ClienteService;
 import tcc.Services.VendedorService;
@@ -94,6 +95,17 @@ public class VendedorController {
             return new ResponseEntity(vendedorEditado, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
+        }
+    }
+
+    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+     public ResponseEntity procuraVendedorPorUsuario(@PathVariable("id") Long usuarioId) {
+        try {
+            Usuario usuario = new Usuario(usuarioId);
+            Vendedor vendedor = vendedorService.procuraVendedorPorUsuario(usuario);
+            return new ResponseEntity<Vendedor>(vendedor, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao carregar dados do vendedor"), HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -7,6 +7,7 @@ import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -72,7 +73,7 @@ public class VendedorService {
         }
     }
 
-    public Vendedor editaVendedor(Vendedor vendedor) {
+    public Vendedor editaVendedor(Vendedor vendedor) throws IOException {
         try {
             Vendedor vendedorEditado = null;
             if (Objects.isNull(buscaVendedor(vendedor.getId()))) {
