@@ -121,6 +121,10 @@ export default class ExibeProduto extends Component {
       userId: this.state.userId});
   };
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
 render() {
   const {goBack} = this.props.navigation;
 
@@ -168,7 +172,7 @@ render() {
           </View>
           <View style={{width: '35%', justifyContent: 'flex-end'}}>
             <Text style={styles.precoStyle}>
-              R$ {this.state.produto.preco}
+              R$ {this.arredondaValores(this.state.produto.preco)}
             </Text>
           </View>
         </View>
