@@ -11,8 +11,9 @@ import PerfilCliente from '../screens/perfil/PerfilCliente';
 import PerfilVendedor from '../screens/perfil/PerfilVendedor';
 import HomeVendedor from '../screens/home/HomeVendedor';
 import HomeCliente from '../screens/home/HomeCliente';
+import RankingProdutos from '../screens/ranking/RankingProdutos';
+import RankingVendedores from '../screens/ranking/RankingVendedores';
 import VendedoresFavoritos from '../screens/produto/VendedoresFavoritos';
-import RankingProdutos from '../screens/produto/RankingProdutos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
@@ -111,6 +112,69 @@ export const GerenciaPedidosClientes = TabNavigator({
    }
 });
 
+export const GerenciaRankingClientes = TabNavigator({
+  Produtos: {
+    screen: RankingProdutos
+  },
+  Vendedores: {
+    screen: RankingVendedores
+  },
+ },
+ {
+   tabBarPosition: 'top',
+   lazy: true,
+   swipeEnabled: false,
+   animationEnabled: false,
+   backBehavior: 'none',
+   tabBarOptions: {
+     showLabel: true,
+     activeTintColor: 'white',
+     inactiveTintColor: 'white',
+     labelStyle: {
+       fontSize: 12,
+     },
+     style: {
+       backgroundColor: '#624063',
+     },
+     indicatorStyle: {
+       backgroundColor: 'white',
+     }
+   }
+});
+
+export const GerenciaRankingVendedores = TabNavigator({
+  Estatisticas: {
+    screen: Estatisticas
+  },
+  Produtos: {
+    screen: RankingProdutos
+  },
+  Vendedores: {
+    screen: RankingVendedores
+  },
+ },
+ {
+   tabBarPosition: 'top',
+   lazy: true,
+   swipeEnabled: false,
+   animationEnabled: false,
+   backBehavior: 'none',
+   tabBarOptions: {
+     showLabel: true,
+     activeTintColor: '#333333',
+     inactiveTintColor: '#fff',
+     labelStyle: {
+       fontSize: 12,
+     },
+     style: {
+       backgroundColor: '#7A8887',
+     },
+     indicatorStyle: {
+       backgroundColor: 'white',
+      }
+   }
+});
+
 export const TabsCliente = TabNavigator({
     PerfilCliente: {
       screen: PerfilCliente,
@@ -137,7 +201,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Ranking: {
-      screen: RankingProdutos,
+      screen: GerenciaRankingClientes,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
       },
@@ -256,24 +320,6 @@ BuscaPro.router.getStateForAction = (passedAction, state) => {
 MENU SOMENTE PARA VENDEDORES
 **/
 export const TabsVendedor = TabNavigator({
-    GerenciaProdutos: {
-      screen: GerenciaProdutos,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
-      },
-    },
-    Estatisticas: {
-      screen: Estatisticas,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-      },
-    },
-    Home: {
-      screen: HomeVendedor,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
-      },
-    },
     PerfilVendedor: {
       screen: PerfilVendedor,
       navigationOptions: {
@@ -284,6 +330,24 @@ export const TabsVendedor = TabNavigator({
       screen: GerenciaPedidos,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
+      },
+    },
+    Home: {
+      screen: HomeVendedor,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
+      },
+    },
+    GerenciaProdutos: {
+      screen: GerenciaProdutos,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
+      },
+    },
+    Estatisticas: {
+      screen: GerenciaRankingVendedores,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
       },
     }
   },{
