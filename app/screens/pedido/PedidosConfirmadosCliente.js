@@ -115,9 +115,27 @@ pedidoConfirmado(){
             fgColor='white'/>
             </View>
           <Text style={styles.tokenfont}> {pedidoC.token}</Text>
+
+          <View style={{width:'98%'}}>
+            <TouchableOpacity 
+                style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                onPress={() =>
+                          {
+                            this.props.navigation.navigate('Chat', {
+                              userId: this.state.userId,
+                              otherUserId: pedidoC.produto.vendedor.usuario.id,
+                              otherUserName: pedidoC.produto.vendedor.usuario.nome,
+                              pedidoId: pedidoC.id});
+                          }}>
+              <Icon name="comments-o" size={25} 
+                    color={'#4A4A4A'} 
+                    type='font-awesome'
+                    style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-            }
+        }
         underlayColor="white"
         easing="easeOutCubic"/>
     </View>
