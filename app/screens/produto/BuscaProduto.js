@@ -144,6 +144,10 @@ export default class BuscaProduto extends Component {
     }
   }
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   buscaProduto() {
     var views = [];
     if (this.state.resultadoPesquisaProduto.length > 0) {
@@ -191,7 +195,7 @@ export default class BuscaProduto extends Component {
                   </View>
                   <View style={{width: "45%"}}>
                     <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                    <Text style={styles.oneResultfont} justifyContent='center'>R$ {produto.preco}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>R$ {this.arredondaValores(produto.preco)}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{produto.quantidade} disponíveis</Text>
                   </View>

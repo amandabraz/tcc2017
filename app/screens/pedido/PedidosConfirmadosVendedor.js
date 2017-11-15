@@ -48,6 +48,11 @@ class PedidosConfirmadosVendedor extends Component {
       });
   };
 
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
 pedidoConfirmado(){
   var views = [];
   if(this.state.pedidosConfirmados.length > 0){
@@ -81,7 +86,7 @@ pedidoConfirmado(){
               <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
               </Text>
               <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
-              <Text style={styles.totalFont}> R$  {pedidoC.valorCompra}</Text>
+              <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
               </Text>
             </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
@@ -103,6 +108,21 @@ pedidoConfirmado(){
                         token: pedidoC.token,
                         pedidoId: pedidoC.id});
                     }}/>
+              <TouchableOpacity 
+                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                    onPress={() =>
+                              {
+                                this.props.navigation.navigate('Chat', {
+                                  userId: this.state.userId,
+                                  otherUserId: pedidoC.cliente.usuario.id,
+                                  otherUserName: pedidoC.cliente.usuario.nome,                                  
+                                  pedidoId: pedidoC.id});
+                              }}>
+                  <Icon name="comments-o" size={25} 
+                        color={'#4A4A4A'} 
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
+              </TouchableOpacity>
             </View>
           }
           underlayColor="white"
