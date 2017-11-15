@@ -14,6 +14,7 @@ import {
 import { Icon } from 'react-native-elements';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,7 +25,8 @@ class VendedoresFavoritos extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       vendedoresFavoritos: [],
-      refreshing: false
+      refreshing: false,
+      carregou: true
     }
     this.buscaVendedoresFavoritos();
   }
@@ -38,6 +40,7 @@ class VendedoresFavoritos extends Component {
           this.setState({vendedoresFavoritos: responseJson});
       }
       this.setState({refreshing: false});
+      this.setState({carregou: false});
     });
   };
 
@@ -87,7 +90,14 @@ class VendedoresFavoritos extends Component {
           </View>
         );
     }
-  }
+  } else {
+    views.push(
+      <View key={0} style={{alignItems: 'center'}}>
+      <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
+        Nenhum vendedor favorito!
+      </Text>
+      </View>
+    )}
   return views;
 }
 
@@ -110,6 +120,7 @@ class VendedoresFavoritos extends Component {
         }>
             <View style={styles.centralView}>
               <View style={styles.results}>
+              <Spinner visible={this.state.carregou}/>
                 {this.buscaVendedor()}
               </View>
             </View>

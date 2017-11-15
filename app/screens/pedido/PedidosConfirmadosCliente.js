@@ -23,6 +23,7 @@ import QRCode from 'react-native-qrcode';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,6 +35,7 @@ class PedidosConfirmadosCliente extends Component {
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosConfirmados: [],
       refreshing: false,
+      carregou: true
     };
     this.buscaDadosPedidosCliente();
   };
@@ -46,6 +48,7 @@ class PedidosConfirmadosCliente extends Component {
               this.setState({pedidosConfirmados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
@@ -176,6 +179,7 @@ pedidoConfirmado(){
             Pedidos Confirmados
           </Text>
         </View>
+        <Spinner visible={this.state.carregou}/>
         {this.pedidoConfirmado()}
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>

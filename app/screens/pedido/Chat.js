@@ -16,7 +16,8 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
-import { Keyboard } from 'react-native'
+import { Keyboard } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +31,7 @@ class Chat extends Component {
       pedidoId: this.props.navigation.state.params.pedidoId,
       mensagemEnviada: '',
       mensagens: [],
+      carregou: true
     }
     this.buscaMensagens();
   };
@@ -40,6 +42,7 @@ class Chat extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
             this.setState({mensagens: responseJson})
+            this.setState({carregou: false});
           }
       });
   };
@@ -143,6 +146,7 @@ render() {
           {this.mensagens()}
         </ScrollView>
       </View>
+      <Spinner visible={this.state.carregou}/>
       <View style={{height: '10%'}}>
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <View style={{flexDirection: 'row'}}>

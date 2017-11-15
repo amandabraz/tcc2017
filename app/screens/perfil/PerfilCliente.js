@@ -29,6 +29,7 @@ import CheckBox from 'react-native-check-box';
 import TagInput from 'react-native-tag-input';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import Popup from 'react-native-popup';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -70,7 +71,8 @@ export default class PerfilCliente extends Component {
           email: '',
         },
       },
-      cameraVisivel: 'transparent'
+      cameraVisivel: 'transparent',
+      carregou: true
     };
     this.buscaDadosCliente();
     this.preencherDietasArray();
@@ -92,6 +94,7 @@ export default class PerfilCliente extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
             this.preparaCliente(responseJson);
+            this.setState({carregou: false});
           }
       });
   };
@@ -524,6 +527,7 @@ export default class PerfilCliente extends Component {
 
               {this.mostraTags()}
               {this.mostraRestricaoDietetica()}
+              <Spinner visible={this.state.carregou}/>
 
               {this.mostraBotaoSalvar()}
               <View style={{width:'98%'}}>
