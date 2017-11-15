@@ -38,7 +38,7 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
     @Query(value = "SELECT produto.nome, SUM(pedido.quantidade) as qtd_vendida from pedido\n" +
             "JOIN produto on produto.id_produto = pedido.fk_produto\n"+
             "WHERE produto.fk_vendedor = ?1 \n"+
-            "AND pedido.status != 'Recusado' AND pedido.status != 'Cancelado'\n" +
+            "AND pedido.status = 'Finalizado'\n" +
             "GROUP BY produto.id_produto", nativeQuery = true)
     List<?> findByQuantidadeVendidaProduto(long vendedorId);
 
@@ -96,4 +96,45 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "GROUP BY pedido.fk_cliente\n" +
             "HAVING COUNT(n_clientes)>1", nativeQuery = true)
     Integer findByQtdClientesConquistados(long vendedorId, Date filtroMensal);
+
+    @Query(value = "SELECT usuario.nome as nomeVendedor, produto.nome as nomeProduto, SUM(pedido.quantidade) as quantidadeVendida, produto.imagem_principal from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n" +
+            "JOIN vendedor on vendedor.id_vendedor = produto.fk_vendedor\n" +
+            "JOIN usuario on usuario.id_usuario = vendedor.fk_usuario\n" +
+            "WHERE pedido.data_finalizacao >= ?1 \n" +
+            "AND pedido.status = 'Finalizado'\n" +
+            "GROUP BY produto.id_produto \n" +
+            "ORDER BY 3 DESC \n" +
+            "LIMIT 10", nativeQuery = true)
+    List<?> findByProdutosMaisVendidos(Date filtroMensal);
+
+    @Query(value = "SELECT SUM(pedido.quantidade) as quantidadeVendida from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n" +
+            "WHERE pedido.data_finalizacao >= ?1 \n" +
+            "AND pedido.status = 'Finalizado'", nativeQuery = true)
+    List<?> findByQuantidadeProdutosVendidos(Date filtroMensal);
+
+    @Query(value = "SELECT COUNT(*) as quantidadeVendas from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n" +
+            "WHERE pedido.data_finalizacao >= ?1 \n" +
+            "AND pedido.status = 'Finalizado'", nativeQuery = true)
+    List<?> findByQuantidadeVendas(Date filtroMensal);
+
+    @Query(value = "SELECT COUNT(DISTINCT pedido.fk_cliente) as quantidadeClientes from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n" +
+            "JOIN cliente on cliente.id_cliente = pedido.fk_cliente\n" +
+            "WHERE pedido.data_finalizacao >= ?1 \n" +
+            "AND pedido.status = 'Finalizado'", nativeQuery = true)
+    List<?> findByQuantidadeClientes(Date filtroMensal);
+
+    @Query(value = "SELECT usuario.nome as nomeVendedor, SUM(pedido.quantidade) as quantidadeVendida, usuario.imagem_perfil from pedido\n" +
+            "JOIN produto on produto.id_produto = pedido.fk_produto\n" +
+            "JOIN vendedor on vendedor.id_vendedor = produto.fk_vendedor\n" +
+            "JOIN usuario on usuario.id_usuario = vendedor.fk_usuario\n" +
+            "WHERE pedido.data_finalizacao >= ?1 \n" +
+            "AND pedido.status = 'Finalizado'\n" +
+            "GROUP BY produto.fk_vendedor \n" +
+            "ORDER BY 2 DESC \n" +
+            "LIMIT 10", nativeQuery = true)
+    List<?> findByMaioresVendedores(Date filtroMensal);
 }

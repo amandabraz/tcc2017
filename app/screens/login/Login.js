@@ -228,7 +228,8 @@ export default class Login extends Component {
             <View style={{paddingTop:30}}>
             <Text style={styles.fonteNovo}>{'Novo por aqui?'}</Text>
             <TouchableOpacity
-              accessibilityLabel={'Botão de cadastro'}>
+              accessibilityLabel={'Botão de cadastro'}
+              onPress={this.cadastrar}>
                   <Text style={styles.fontC}>{'Cadastre-se'}</Text>
               </TouchableOpacity>
               </View>

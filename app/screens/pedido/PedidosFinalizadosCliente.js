@@ -122,6 +122,10 @@ class PedidosFinalizadosCliente extends Component {
     }
   }
 
+arredondaValores(num){
+  return num.toFixed(2)
+};
+
 pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
@@ -170,7 +174,7 @@ pedidoFinalizado(){
                 <Text style={styles.totalFont}> {pedidoF.quantidade}{'\n'}</Text>
                 </Text>
                 <Text style={styles.oneResultfont}>Total pago com {pedidoF.pagamento.descricao}:
-                <Text style={styles.totalFont}> R$ {pedidoF.valorCompra}{'\n'}</Text>
+                <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoF.valorCompra)}{'\n'}</Text>
                 </Text>
               </View>
               </View>
@@ -236,7 +240,7 @@ pedidoFinalizado(){
               <Text style={styles.totalFont}> {pedidoR.quantidade}{'\n'}</Text>
               </Text>
               <Text style={styles.oneResultfont}>Valor do pedido:
-              <Text style={styles.totalFont}> R$ {pedidoR.valorCompra}{'\n'}</Text>
+              <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoR.valorCompra)}{'\n'}</Text>
               </Text>
             </View>
             </View>
@@ -299,7 +303,7 @@ pedidoFinalizado(){
                 <Text style={styles.totalFont}> {pedidoC.quantidade}{'\n'}</Text>
                 </Text>
                 <Text style={styles.oneResultfont}>Valor do pedido:
-                <Text style={styles.totalFont}> R$ {pedidoC.valorCompra}{'\n'}</Text>
+                <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoC.valorCompra)}{'\n'}</Text>
                 </Text>
               </View>
               </View>

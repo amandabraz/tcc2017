@@ -86,6 +86,11 @@ class PedidosSolicitadosCliente extends Component {
   }
 
 
+arredondaValores(num){
+  return num.toFixed(2)
+}
+
+
 pedidoSolicitado(){
   var views = [];
   if(this.state.pedidosSolicitados.length > 0){
@@ -135,7 +140,7 @@ pedidoSolicitado(){
               <Text style={styles.totalFont}> {pedidoS.quantidade}{'\n'}</Text>
             </Text>
             <Text style={styles.oneResultfont}>Total a pagar {pedidoS.pagamento.descricao}:</Text>
-            <Text style={styles.totalFont}> R$ {pedidoS.valorCompra}{'\n'}</Text>
+            <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoS.valorCompra)}{'\n'}</Text>
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
