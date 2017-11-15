@@ -91,7 +91,9 @@ class GerenciaProduto extends Component {
         let imagemPrincipal = require('./img/camera11.jpg');
         let produto = this.state.listaProdutos[i];
         var dataNormal = new Date(produto.dataPreparacao);
-        var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+        var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + 
+                       (dataNormal.getMonth()+1<10?"0"+(dataNormal.getMonth()+1):dataNormal.getMonth()+1) +
+                       "/" + dataNormal.getFullYear();
         produto.dataPreparacao = dataPrep;
         if (produto.imagemPrincipal) {
           imagemPrincipal = {uri: produto.imagemPrincipal};

@@ -107,8 +107,11 @@ pedidoSolicitado(){
       }
 
       let dataNormal = new Date(pedidoS.dataSolicitada);
-      let dataSolicitada = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+      let dataSolicitada = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + 
+                           (dataNormal.getMonth()+1<10?"0"+(dataNormal.getMonth()+1):dataNormal.getMonth()+1) +
+                           "/" + dataNormal.getFullYear() +
+                           " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+
+                           dataNormal.getMinutes():dataNormal.getMinutes());
 
       views.push(
         <View key={i} style={styles.oneResult1}>
