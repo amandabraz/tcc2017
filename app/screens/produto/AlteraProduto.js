@@ -21,6 +21,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class AlteraProduto extends Component {
   constructor(props) {
@@ -47,7 +48,8 @@ export default class AlteraProduto extends Component {
      imagemProduto: '',
      backgroundColorPreco: "transparent",
      restricoesProdutos: [],
-     dataOriginal: ''
+     dataOriginal: '',
+     carregou: true
     }
     this.buscaProduto();
     this.carregarCategoriasArray();
@@ -93,6 +95,7 @@ export default class AlteraProduto extends Component {
              ingredientes.push(ingredienteEncontrado[i].item);
            }
            this.setState({ingredientes: ingredientes});
+           this.setState({carregou: false});
          }
        }
      });
@@ -475,6 +478,7 @@ return (
                 Tags relacionadas:
               </Text>
             </View>
+            <Spinner visible={this.state.carregou}/>
             <View style={{ width: 378, height: 86, alignItems: 'center'}}>
              <TagInput
                 value={this.state.tags}

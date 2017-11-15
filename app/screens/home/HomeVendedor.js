@@ -154,7 +154,6 @@ class HomeVendedor extends Component {
           this.setState({valorRecebido: 0});
           this.setState({clienteConquistados: 0});
           this.setState({ticketMedio: 0});
-          this.setState({carregou:false});
           this.buscaDadosPedido();
           this.pedidoSolicitado();
           this.buscaInformacoes();

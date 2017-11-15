@@ -22,6 +22,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,6 +36,7 @@ class PedidosFinalizadosVendedor extends Component {
       pedidosRecusados: [],
       pedidosCancelados: [],
       refreshing: false,
+      carregou: true
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -63,6 +65,7 @@ class PedidosFinalizadosVendedor extends Component {
               this.setState({pedidosCancelados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
@@ -294,6 +297,7 @@ pedidoFinalizado(){
         </Text>
         </View>
         {this.pedidoFinalizado()}
+        <Spinner visible={this.state.carregou}/>
         <View style = {{margin: 5}}>
         <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#A1453E', fontWeight: 'bold'}}>
           Pedidos Recusados

@@ -17,6 +17,7 @@ import Chart from 'react-native-chart';
 import NavigationBar from 'react-native-navbar';
 import PieChart from 'react-native-pie-chart';
 import Slider from "react-native-slider";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,6 +36,7 @@ class Estatisticas extends Component {
         nomeProduto: [],
         refreshing: false,
         sliderValue: 30,
+        carregou: true
     };
     this.buscaQuantidadeVendida();
     this.buscaValorArrecadadoPorProduto(this.state.sliderValue);
@@ -56,6 +58,7 @@ class Estatisticas extends Component {
   buscaProdutosVendidosVendedor(){
     if(this.state.quantidadeVendida.length > 0){
       return(
+      <View style = {{width: '90%', marginRight: 5}}>
       <View style={styles.container}>
         <View style={{width: this.state.quantidadeVendida.length}}/>
         <Chart
@@ -65,7 +68,9 @@ class Estatisticas extends Component {
           }
           type = "bar"
           verticalGridStep = {1}
+          color={'#624063'}
         />
+      </View>
       </View>
       )
     } else {
@@ -123,6 +128,7 @@ class Estatisticas extends Component {
           this.setState({nomeProduto: nomeProdutoVendidoResponse})
         }
         this.setState({refreshing:false})
+        this.setState({carregou: false});
     });
   }
 
@@ -211,11 +217,12 @@ class Estatisticas extends Component {
               {this.produtosVendidos()}
             </View>
             <View style = {{margin: 10, flexDirection: 'column', marginTop: 15, marginRight: 15}}>
-              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', marginRight: 5, color: '#0000CD', fontWeight: 'bold'}}>
+              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', marginRight: 5, fontWeight: 'bold'}}>
                 Representação gráfica:
               </Text>
               {this.buscaProdutosVendidosVendedor()}
             </View>
+            <Spinner visible={this.state.carregou}/>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
                 Valor total arrecadado por produto nos últimos <Text style={styles.corzinhaDestaque}>
@@ -316,7 +323,7 @@ const styles = StyleSheet.create({
 });
 
 const twentyColorsForPieChart = [
-  '#F44336','#2196F3','#d1bc0c','#4CAF50','#Fd720f','#776567',
+  '#2196F3','#F44336','#d1bc0c','#4CAF50','#Fd720f','#776567',
   '#e6194b','#911eb4','#46f0f0','#f032e6','#d2f53c','e0b5b5',
   '#008080','#aa6e28','#ac96ba','#808080','#800000','#aaffc3',
   '#808000',"#000080"

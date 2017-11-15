@@ -20,6 +20,7 @@ import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import Popup from 'react-native-popup';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -51,7 +52,8 @@ export default class PerfilVendedor extends Component {
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
       meiosPagamento: [],
-      escolhido: ''
+      escolhido: '',
+      carregou: true
     };
     this.buscaDadosVendedor();
     this.buscaMeiosPagamento();
@@ -63,6 +65,7 @@ export default class PerfilVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
             this.prepararVendedor(responseJson);
+            this.setState({carregou: false});
         }
       });
   };
@@ -450,7 +453,9 @@ export default class PerfilVendedor extends Component {
                 value={this.state.dataNascimentoText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
-
+            
+            <Spinner visible={this.state.carregou}/>
+            
               <Fumi
                 style={styles.inputDimensions}
                 label={'Email'}
