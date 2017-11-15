@@ -9,6 +9,7 @@ import tcc.Models.Tag;
 import tcc.Models.Usuario;
 import tcc.Models.Vendedor;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class ClienteService {
         }
     }
 
-    public Cliente editaCliente(Cliente cliente) {
+    public Cliente editaCliente(Cliente cliente) throws IOException {
         try {
             Cliente clienteEditado = null;
             if (Objects.isNull(buscaCliente(cliente.getId()))) {

@@ -36,6 +36,10 @@ class PedidosSolicitadosVendedor extends Component {
     this.buscaDadosPedidosVendedor();
   };
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   buscaDadosPedidosVendedor() {
     fetch(constante.ENDPOINT+'pedido/vendedor/' + this.state.vendedorId + '/status/' + 'Solicitado')
     .then((response) => response.json())
@@ -111,8 +115,8 @@ pedidoSolicitado(){
             <Text style={styles.oneResultfont}>Quantidade:
               <Text style={styles.totalFont}> {pedidoS.quantidade}{'\n'}</Text>
             </Text>
-            <Text style={styles.oneResultfont}>Total a pagar {pedidoS.pagamento.descricao}:</Text>
-            <Text style={styles.totalFont}> R$ {pedidoS.valorCompra}{'\n'}</Text>
+            <Text style={styles.oneResultfont}>Total a pagar: {pedidoS.pagamento.descricao}</Text>
+            <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoS.valorCompra)}{'\n'}</Text>
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>

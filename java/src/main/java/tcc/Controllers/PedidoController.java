@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tcc.CustomQueryHelpers.QuantidadePedidos;
+import tcc.CustomQueryHelpers.*;
 import tcc.DAOs.PedidoDAO;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Pedido;
-import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
@@ -182,6 +181,76 @@ public class PedidoController {
             return new ResponseEntity <QuantidadeVendidaCliente>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar quantidades vendidas"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "ranking/produto/{filtroMensal}", method = RequestMethod.GET)
+    public ResponseEntity rankingProdutosVendidos(@PathVariable("filtroMensal") Boolean filtroMensal) {
+        try {
+            List<RankingProdutosVendidos> pedidos = pedidoService.rankingProdutosVendidos(filtroMensal);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos"), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<RankingProdutosVendidos>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar produtos mais vendidos"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "ranking/produto/quantidade/{filtroMensal}", method = RequestMethod.GET)
+    public ResponseEntity rankingQuantidadeProdutosVendidos(@PathVariable("filtroMensal") Boolean filtroMensal) {
+        try {
+            List<RankingQuantidadeProdutosVendidos> pedidos = pedidoService.rankingQuantidadeProdutosVendidos(filtroMensal);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar quantidade de produtos vendidos."), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<RankingQuantidadeProdutosVendidos>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar quantidade de produtos vendidos."), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "ranking/venda/quantidade/{filtroMensal}", method = RequestMethod.GET)
+    public ResponseEntity rankingQuantidadeVendas (@PathVariable("filtroMensal") Boolean filtroMensal) {
+        try {
+            List<RankingQuantidadeVendas> pedidos = pedidoService.rankingQuantidadeVendas(filtroMensal);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar quantidade de vendas."), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<RankingQuantidadeVendas>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar quantidade de vendas."), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "ranking/cliente/quantidade/{filtroMensal}", method = RequestMethod.GET)
+    public ResponseEntity rankingQuantidadeClientes (@PathVariable("filtroMensal") Boolean filtroMensal) {
+        try {
+            List<RankingQuantidadeClientes> pedidos = pedidoService.rankingQuantidadeClientes(filtroMensal);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar quantidade de clientes."), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<RankingQuantidadeClientes>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar quantidade de clientes."), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "ranking/vendedor/{filtroMensal}", method = RequestMethod.GET)
+    public ResponseEntity rankingMaioresVendedores (@PathVariable("filtroMensal") Boolean filtroMensal) {
+        try {
+            List<RankingMaioresVendedores> pedidos = pedidoService.rankingMaioresVendedores(filtroMensal);
+            if (CollectionUtils.isEmpty(pedidos)) {
+                return new ResponseEntity<>(new CustomError("Erro ao buscar ranking de vendedores."), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity <List<RankingMaioresVendedores>>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar ranking de vendedores."), HttpStatus.BAD_REQUEST);
         }
     }
 

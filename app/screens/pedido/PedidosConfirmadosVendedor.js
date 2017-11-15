@@ -51,6 +51,11 @@ class PedidosConfirmadosVendedor extends Component {
       });
   };
 
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
 pedidoConfirmado(){
   var views = [];
   if(this.state.pedidosConfirmados.length > 0){
@@ -84,7 +89,7 @@ pedidoConfirmado(){
               <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
               </Text>
               <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
-              <Text style={styles.totalFont}> R$  {pedidoC.valorCompra}</Text>
+              <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
               </Text>
             </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
