@@ -39,13 +39,18 @@ class Chat extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
-            this.setState({mensagens: responseJson})
+            this.setState({mensagens: responseJson});
+          } else {
+
           }
       });
   };
 
   enviarMensagem() {
     Keyboard.dismiss();
+    if (!this.state.mensagemEnviada) {
+      return;
+    }
     const {
       state: {
         userId,
@@ -76,7 +81,6 @@ class Chat extends Component {
       msgs.push(responseJson);
       this.setState({mensagens: msgs});
       this.mensagens();
-      // todo: adicionar view na tela pra parecer chat 
     } else {
       Alert.alert("Houve um erro ao enviar a mensagem, tente novamente");
     }
@@ -141,6 +145,7 @@ render() {
       <View style={{height: '82%'}}>
         <ScrollView>
           {this.mensagens()}
+          {ScrollView.scrollToEnd({animated: false})}
         </ScrollView>
       </View>
       <View style={{height: '10%'}}>
