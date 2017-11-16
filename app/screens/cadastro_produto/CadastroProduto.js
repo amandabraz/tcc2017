@@ -40,7 +40,6 @@ export default class CadastroProduto extends Component {
      categoriasArray: [],
      nome: '',
      preco: '',
-     precoConvertido:'',
      observacao: '',
      image: require('./img/camera11.jpg'),
      imagemProduto: '',
@@ -139,7 +138,7 @@ validaCampos = (produto) => {
   }
 
   if (camposVazios.length) {
-    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
     return false;
   }
   if (erros.length) {
@@ -249,55 +248,20 @@ selecionarFoto() {
   };
 
   precoValido(preco){
-    if(preco.match(/^[0-9.]*$/)){
-      if(preco==null) //se for nulo
+    if(preco==null) //se for nulo
+      return false
+    
+    if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
+      return false;
+
+    if(preco.match(/([\d]|[\.])/)){
+      if(preco.match(/([\.])/).length>1 ||         //ou se a string for 'x.xx.x'
+        preco.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
         return false
-      if(!preco.match(/([\d]|[\.])/)&&           //se não encontrar 'xx.x'
-        !preco.match(/([\d])/))                  //nem 'x'
-        return false;
-      if(!preco.match(/([\d]|[\.])/)){
-        if(preco.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
-          preco.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
-          return false
-        }  
-      }
-      return true
-    }else
-    return false
-  }
-
-  onChangePreco = (preco) => {
-    const precoFormatado = this.moneyMask(preco);
-    if(precoFormatado == null){
-      this.setState({
-        preco: '0.00',
-        precoConvertido: '0.00'
-      });
+      }  
     }
-    this.setState({
-      preco: preco,
-      precoConvertido: precoFormatado
-    });
+    return true
   }
-
-  moneyMask(value){
-    if(/^[0-9.]*$/){
-      if(value==null) //se for nulo
-        return null
-      
-      if(!value.match(/([\d]|[\.])/)&&           //se não encontrar 'xx.x'
-        !value.match(/([\d])/))                  //nem 'x'
-        return null;
-      if(!value.match(/([\d]|[\.])/)){
-        if(value.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
-          value.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
-          return null
-        }  
-      }
-      return value
-  }else
-    return null
-  };
 
 render() {
     const {goBack} = this.props.navigation;
@@ -355,8 +319,7 @@ return (
                   keyboardType={'numbers-and-punctuation'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
-                  onChangeText={this.onChangePreco}
-                  value={this.state.precoConvertido}
+                  onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
                   iconColor={'#7A8887'}/>
