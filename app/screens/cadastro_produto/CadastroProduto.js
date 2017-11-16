@@ -120,7 +120,7 @@ validaCampos = (produto) => {
       camposVazios.push("nome");
   }
   //validar preco
-  if (!produto.preco) {
+  if (!produto.preco || !this.precoValido(produto.preco)) {
     camposVazios.push("preço");
   }
   //validar data de preparo
@@ -248,10 +248,31 @@ selecionarFoto() {
   }
   };
 
+  precoValido(preco){
+    if(preco.match(/^[0-9.]*$/)){
+      if(preco==null) //se for nulo
+        return false
+      if(!preco.match(/([\d]|[\.])/)&&           //se não encontrar 'xx.x'
+        !preco.match(/([\d])/))                  //nem 'x'
+        return false;
+      if(!preco.match(/([\d]|[\.])/)){
+        if(preco.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
+          preco.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
+          return false
+        }  
+      }
+      return true
+    }else
+    return false
+  }
+
   onChangePreco = (preco) => {
     const precoFormatado = this.moneyMask(preco);
     if(precoFormatado == null){
-      return '0.00'
+      this.setState({
+        preco: '0.00',
+        precoConvertido: '0.00'
+      });
     }
     this.setState({
       preco: preco,
@@ -260,16 +281,22 @@ selecionarFoto() {
   }
 
   moneyMask(value){
-    if(value==null) //se for nulo
-      return null
-    value = parseFloat(value)
-    if((!value.match(/([\d]|[\.])/)&&           //se não encontrar 'xx.x'
-      !value.match(/([\d])/))||                //nem 'x'
-      value.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
-      value.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
-      return null
-    }
-    return value
+    if(/^[0-9.]*$/){
+      if(value==null) //se for nulo
+        return null
+      
+      if(!value.match(/([\d]|[\.])/)&&           //se não encontrar 'xx.x'
+        !value.match(/([\d])/))                  //nem 'x'
+        return null;
+      if(!value.match(/([\d]|[\.])/)){
+        if(value.match(/([\.])/).length>1||         //ou se a string for 'x.xx.x'
+          value.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
+          return null
+        }  
+      }
+      return value
+  }else
+    return null
   };
 
 render() {
