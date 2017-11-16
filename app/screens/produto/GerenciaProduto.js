@@ -90,9 +90,13 @@ class GerenciaProduto extends Component {
       for (i in this.state.listaProdutos) {
         let imagemPrincipal = require('./img/camera11.jpg');
         let produto = this.state.listaProdutos[i];
+        
         var dataNormal = new Date(produto.dataPreparacao);
-        var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
-        produto.dataPreparacao = dataPrep;
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let dataPrep = dia + "/" + mes + "/" + ano;
+
         if (produto.imagemPrincipal) {
           imagemPrincipal = {uri: produto.imagemPrincipal};
         }
@@ -144,7 +148,7 @@ class GerenciaProduto extends Component {
             </View>
             <View style={{paddingLeft:10, alignSelf: 'flex-start'}}>
               <Text style={styles.textoMenor}>
-                Preparado no dia {produto.dataPreparacao}
+                Preparado no dia {dataPrep}
                 {'\n'}{'\n'}
               </Text>
             </View>

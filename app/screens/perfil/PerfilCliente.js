@@ -1,24 +1,33 @@
-import React, { Component } from 'react';
-import { AppRegistry,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  ScrollView,
+import React, {
+  Component
+} from 'react';
+import {
+  AppRegistry,
+  Alert,
   Dimensions,
+  Image,
+  Picker,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
   ToastAndroid,
-  StatusBar
+  TouchableOpacity,
+  View
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Fumi } from 'react-native-textinput-effects';
-import { Icon } from 'react-native-elements';
+import {
+  Fumi
+} from 'react-native-textinput-effects';
+import {
+  Icon
+} from 'react-native-elements';
 import * as constante from '../../constantes';
-import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import CheckBox from 'react-native-check-box';
 import TagInput from 'react-native-tag-input';
+import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import Popup from 'react-native-popup';
 
 const { width, height } = Dimensions.get("window");
@@ -32,7 +41,8 @@ export default class PerfilCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       dataNascimentoText: '',
-      imagemPerfil: require('./img/camera2.jpg'),
+      imagemPerfil: require('./img/camera11.jpg'),
+      imagemEditada: '',
       tags: [],
       nomeText: '',
       tagsText: "Nenhuma tag inserida",
@@ -59,7 +69,8 @@ export default class PerfilCliente extends Component {
           cpf: '',
           email: '',
         },
-      }
+      },
+      cameraVisivel: 'transparent'
     };
     this.buscaDadosCliente();
     this.preencherDietasArray();
@@ -91,12 +102,14 @@ export default class PerfilCliente extends Component {
       this.setState({editavel: true,
         titleTextClass: styles.titleTextEdit,
         baseTextClass: styles.baseTextEdit,
-        pencilColor: '#ccc'});
+        pencilColor: '#ccc',
+        cameraVisivel: 'gray'});
     } else {
       this.setState({editavel: false,
         titleTextClass: styles.titleText,
         baseTextClass: styles.baseText,
-        pencilColor: '#fff'});
+        pencilColor: '#fff',
+        cameraVisivel: 'transparent'});
     }
   }
 
@@ -270,7 +283,11 @@ export default class PerfilCliente extends Component {
     }
 
     var dataNormal = new Date(responseJson.usuario.dataNasc);
-    var dataNasc = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+    let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+    let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+    let ano = dataNormal.getFullYear();
+    let dataNasc = dia + "/" + mes + "/" + ano;
+    
     this.setState({nomeText: responseJson.usuario.nome,
                   dataNascimentoText: dataNasc,
                   celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
@@ -299,6 +316,10 @@ export default class PerfilCliente extends Component {
   }
 
   salvaEdicaoCliente() {
+    var imagem = this.state.imagemEditada;
+    if (!this.state.imagemEditada) {
+      imagem = this.state.imagemPerfil.uri;
+    }
     const {
       state: {
         clienteId,
@@ -306,11 +327,11 @@ export default class PerfilCliente extends Component {
         cliente,
         nomeText,
         celularText,
-        imagemPerfil,
         tags,
         restricoesCliente
       }
     } = this;
+
     clienteEditado = {
       "id": clienteId,
       "usuario": {
@@ -326,11 +347,12 @@ export default class PerfilCliente extends Component {
         "telefone": celularText.substr(2,10),
         "notificacao": false,
         "bloqueado": false,
-        "imagemPerfil": imagemPerfil.uri
+        "imagemPerfil": imagem
       },
       "restricoesDieteticas": restricoesCliente,
       "tags": tags
     };
+
     fetch(constante.ENDPOINT + 'cliente', {
       method: 'PUT',
       headers: {
@@ -342,7 +364,8 @@ export default class PerfilCliente extends Component {
       .then((rJson) => {
         if (!rJson.errorMessage) {
           this.preparaCliente(rJson);
-          this.setState({editavel: false});
+          this.setState({editavel: false,
+                        cameraVisivel: 'transparent'});
           ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
@@ -350,29 +373,32 @@ export default class PerfilCliente extends Component {
 
 
   trocaImagemPerfil() {
-    var options = {
-      title: 'Selecione sua foto',
-      takePhotoButtonTitle: 'Tirar uma foto',
-      chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
-      cancelButtonTitle: 'Cancelar',
-      storageOptions: {
-        skipBackup: false,
-        path: 'images'
-      }
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        //do nothing
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        let source = 'data:image/jpeg;base64,' + response.data;
-        this.setState({
-          image: {uri: response.uri, width: 200, height: 200, changed: true}
-        });
-        this.setState({imagemPerfil: source});
-      }
-    });
+    if (this.state.editavel == false) {
+    } else {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPerfil: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemEditada: source});
+        }
+      });
+    }
   }
 
 
@@ -419,34 +445,19 @@ export default class PerfilCliente extends Component {
   render () {
     return (
       <View style={{ flex: 1 }}>
+        <ScrollView>
         <StatusBar barStyle="light-content" />
-        <HeaderImageScrollView
-          maxHeight={MAX_HEIGHT}
-          minHeight={1}
-          maxOverlayOpacity={0.6}
-          minOverlayOpacity={0.3}
-          fadeOutForeground
-          renderHeader={() =>
-              <Image source={this.state.imagemPerfil} style={styles.image}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
-                    onPress={this.trocaImagemPerfil.bind(this)}>
-                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>
-                </TouchableOpacity>
-              </Image>
-          }
-          renderForeground={() =>
-            <Animatable.View
-            style={styles.navTitleView}
-            ref={navTitleView => {
-              this.navTitleView = navTitleView;
-            }}>
-          </Animatable.View>
-          }>
           <TriggeringView
             style={styles.section}
             onHide={() => this.navTitleView.fadeInUp(200)}
             onDisplay={() => this.navTitleView.fadeOut(100)
             }>
+            <Image source={this.state.imagemPerfil} style={styles.image}>
+              <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+                  onPress={this.trocaImagemPerfil.bind(this)}>
+                <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
+              </TouchableOpacity>
+            </Image>
             <View style={styles.bar}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                   <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
@@ -462,8 +473,6 @@ export default class PerfilCliente extends Component {
                 </TouchableOpacity>
             </View>
           </TriggeringView>
-
-            <ScrollView>
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome'}
@@ -532,7 +541,6 @@ export default class PerfilCliente extends Component {
                 </TouchableOpacity>
               </View>
           </ScrollView>
-        </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
       </View>
     );

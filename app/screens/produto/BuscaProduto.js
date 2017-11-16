@@ -36,22 +36,34 @@ export default class BuscaProduto extends Component {
       textoBusca: '',
       semProdutos: false,
     }
-    this.buscaPedidosIndicados();
+    this.buscaInicialPedidos();
   }
 
+  buscaInicialPedidos() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({ gps: position })
 
-  buscaPedidosIndicados() {
-    if (this.state.resultadoPesquisaProduto.length > 0) {
-      this.setState({resultadoPesquisaProduto: []});
-    }
-    fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
-    .then((response) => response.json())
-      .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-            this.setState({resultadoPesquisaProduto: responseJson});
-          }
-      });
-  };
+      if (this.state.resultadoPesquisaProduto.length > 0) {
+        this.setState({resultadoPesquisaProduto: []})
+      }
+
+      fetch(constante.ENDPOINT+'produto/cliente/' 
+      + this.state.clienteId
+      + '?&latitude=' + this.state.gps.coords.latitude
+      + '&longitude=' + this.state.gps.coords.longitude
+      + '&altitude=' + this.state.gps.coords.altitude, 
+      {method: 'GET'})
+      .then((response) => response.json())
+        .then((responseJson) => {
+            if (!responseJson.errorMessage) {
+              this.setState({resultadoPesquisaProduto: responseJson});
+            }
+        })
+
+    }, (error) => {
+      this.setState({ gps: 0 });
+    })
+  }
 
   setSearchText(searchText) {
     // zerando listas antes de criar nova lista
@@ -132,6 +144,10 @@ export default class BuscaProduto extends Component {
     }
   }
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   buscaProduto() {
     var views = [];
     if (this.state.resultadoPesquisaProduto.length > 0) {
@@ -179,7 +195,7 @@ export default class BuscaProduto extends Component {
                   </View>
                   <View style={{width: "45%"}}>
                     <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                    <Text style={styles.oneResultfont} justifyContent='center'>R$ {produto.preco}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>R$ {this.arredondaValores(produto.preco)}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{produto.quantidade} disponíveis</Text>
                   </View>
@@ -246,17 +262,17 @@ export default class BuscaProduto extends Component {
           </View>
         );
     }
+    } 
+    return views;
   }
-  return views;
-}
 
-componentWillMount() {
-  navigator.geolocation.getCurrentPosition((position) => {
-    this.setState({gps: position});
-  }, (error) => {
-    this.setState({gps: 0});
-  });
-}
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({gps: position});
+    }, (error) => {
+      this.setState({gps: 0});
+    });
+  }
 
 
   render() {

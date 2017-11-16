@@ -122,6 +122,10 @@ class PedidosFinalizadosCliente extends Component {
     }
   }
 
+arredondaValores(num){
+  return num.toFixed(2)
+};
+
 pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
@@ -136,8 +140,13 @@ pedidoFinalizado(){
         imagemPrincipalV = {uri: pedidoF.produto.vendedor.usuario.imagemPerfil};
       }
       let dataNormal = new Date(pedidoF.dataFinalizacao);
-      let dataFinalizacao = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataFinalizacao = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+      
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion 
@@ -170,7 +179,7 @@ pedidoFinalizado(){
                 <Text style={styles.totalFont}> {pedidoF.quantidade}{'\n'}</Text>
                 </Text>
                 <Text style={styles.oneResultfont}>Total pago com {pedidoF.pagamento.descricao}:
-                <Text style={styles.totalFont}> R$ {pedidoF.valorCompra}{'\n'}</Text>
+                <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoF.valorCompra)}{'\n'}</Text>
                 </Text>
               </View>
               </View>
@@ -236,7 +245,7 @@ pedidoFinalizado(){
               <Text style={styles.totalFont}> {pedidoR.quantidade}{'\n'}</Text>
               </Text>
               <Text style={styles.oneResultfont}>Valor do pedido:
-              <Text style={styles.totalFont}> R$ {pedidoR.valorCompra}{'\n'}</Text>
+              <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoR.valorCompra)}{'\n'}</Text>
               </Text>
             </View>
             </View>
@@ -299,7 +308,7 @@ pedidoFinalizado(){
                 <Text style={styles.totalFont}> {pedidoC.quantidade}{'\n'}</Text>
                 </Text>
                 <Text style={styles.oneResultfont}>Valor do pedido:
-                <Text style={styles.totalFont}> R$ {pedidoC.valorCompra}{'\n'}</Text>
+                <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoC.valorCompra)}{'\n'}</Text>
                 </Text>
               </View>
               </View>

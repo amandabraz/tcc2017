@@ -35,7 +35,7 @@ export default class ExibeProduto extends Component {
           imagemVendedor: require('./img/camera11.jpg'),
           produto: {
             nome: '',
-            preco: '',
+            preco: 0,
             categoria: {
               descricao: ''
             },
@@ -107,7 +107,10 @@ export default class ExibeProduto extends Component {
             this.setState({ingredientesText: ingredientes});
           }
           var dataNormal = new Date(rJson.dataPreparacao);
-          var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+          let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+          let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+          let ano = dataNormal.getFullYear();
+          let dataPrep = dia + "/" + mes + "/" + ano;
           this.setState({dateText: dataPrep});
         }
       });
@@ -119,6 +122,10 @@ export default class ExibeProduto extends Component {
     {produtoId: this.state.produtoId,
       clienteId: this.state.clienteId,
       userId: this.state.userId});
+  };
+
+  arredondaValores(num){
+    return num.toFixed(2)
   };
 
 render() {
@@ -168,7 +175,7 @@ render() {
           </View>
           <View style={{width: '35%', justifyContent: 'flex-end'}}>
             <Text style={styles.precoStyle}>
-              R$ {this.state.produto.preco}
+              R$ {this.arredondaValores(this.state.produto.preco)}
             </Text>
           </View>
         </View>

@@ -1,19 +1,28 @@
-import React, { Component } from 'react';
-import { AppRegistry,
+import React, {
+  Component
+} from 'react';
+import {
+  AppRegistry,
+  Alert,
   Button,
-  Text,
-  StyleSheet,
-  StatusBar,
-  TouchableOpacity,
-  View,
+  Dimensions,
   Image,
   ScrollView,
-  Dimensions,
-  ToastAndroid } from 'react-native';
+  StatusBar,
+  StyleSheet,
+  Text,
+  ToastAndroid ,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
-import { Fumi } from 'react-native-textinput-effects';
-import { Icon } from 'react-native-elements';
+import {
+  Fumi
+} from 'react-native-textinput-effects';
+import {
+  Icon
+} from 'react-native-elements';
 import * as constante from '../../constantes';
 import CheckBox from 'react-native-check-box';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
@@ -35,7 +44,8 @@ export default class PerfilVendedor extends Component {
       nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
-      imagemPerfil: require('./img/camera2.jpg'),
+      imagemPerfil: require('./img/camera11.jpg'),
+      imagemEditada: '',
       meiosPagamentoText: "Nenhum meio de pagamento escolhido",
       pagamentoEstilo: {
         color: '#CCCCCC',
@@ -51,7 +61,8 @@ export default class PerfilVendedor extends Component {
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
       meiosPagamento: [],
-      escolhido: ''
+      escolhido: '',
+      cameraVisivel: 'transparent'
     };
     this.buscaDadosVendedor();
     this.buscaMeiosPagamento();
@@ -76,6 +87,7 @@ export default class PerfilVendedor extends Component {
         }
       });
   }
+
   prepararVendedor(responseJson) {
     this.setState({vendedor: responseJson});
     if (responseJson.usuario.imagemPerfil) {
@@ -84,7 +96,10 @@ export default class PerfilVendedor extends Component {
     this.setState({nomeText: responseJson.usuario.nome});
     this.setState({nomeFantasiaText: responseJson.nomeFantasia});
     var dataNormal = new Date(responseJson.usuario.dataNasc);
-    var dataNasc = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+    let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+    let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+    let ano = dataNormal.getFullYear();
+    let dataNasc = dia + "/" + mes + "/" + ano;
     this.setState({dataNascimentoText: dataNasc});
     this.setState({emailText: responseJson.usuario.email});
     this.setState({CPFText: responseJson.usuario.cpf});
@@ -113,12 +128,14 @@ export default class PerfilVendedor extends Component {
       this.setState({editavel: true,
         titleTextClass: styles.titleTextEdit,
         baseTextClass: styles.baseTextEdit,
-        pencilColor: '#ccc'});
+        pencilColor: '#ccc',
+        cameraVisivel: 'gray'});
     } else {
       this.setState({editavel: false,
         titleTextClass: styles.titleText,
         baseTextClass: styles.baseText,
-        pencilColor: '#fff'});
+        pencilColor: '#fff',
+        cameraVisivel: 'transparent'});
     }
 
   }
@@ -140,6 +157,10 @@ export default class PerfilVendedor extends Component {
   }
 
   salvaEdicaoVendedor() {
+    var imagem = this.state.imagemEditada;
+    if (!this.state.imagemEditada) {
+      imagem = this.state.imagemPerfil.uri;
+    }
     const {
       state: {
         vendedorId,
@@ -148,7 +169,6 @@ export default class PerfilVendedor extends Component {
         vendedor,
         celularText,
         nomeFantasiaText,
-        imagemPerfil,
         meiosPagamentoVendedor
       }
     } = this;
@@ -168,7 +188,7 @@ export default class PerfilVendedor extends Component {
           "telefone": celularText.substr(2,10),
           "notificacao": false,
           "bloqueado": false,
-          "imagemPerfil": imagemPerfil.uri
+          "imagemPerfil": imagem
       },
       "nomeFantasia": nomeFantasiaText,
       "meiosPagamentos": meiosPagamentoVendedor
@@ -185,7 +205,8 @@ export default class PerfilVendedor extends Component {
       .then((rJson) => {
         if (!rJson.errorMessage) {
           this.prepararVendedor(rJson);
-          this.setState({editavel: false});
+          this.setState({editavel: false,
+                        cameraVisivel: 'transparent'});
           ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
@@ -271,29 +292,32 @@ export default class PerfilVendedor extends Component {
 
 
   trocaImagemPerfil() {
-    var options = {
-      title: 'Selecione sua foto',
-      takePhotoButtonTitle: 'Tirar uma foto',
-      chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
-      cancelButtonTitle: 'Cancelar',
-      storageOptions: {
-        skipBackup: false,
-        path: 'images'
-      }
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        //do nothing
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        let source = 'data:image/jpeg;base64,' + response.data;
-        this.setState({
-          image: {uri: response.uri, width: 200, height: 200, changed: true}
-        });
-        this.setState({imagemPerfil: source});
-      }
-    });
+    if (this.state.editavel == false) {
+    } else {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPerfil: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemEditada: source});
+        }
+      });
+    }
   }
 
   desejaSair() {
@@ -374,33 +398,17 @@ export default class PerfilVendedor extends Component {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar barStyle="light-content" />
-        <HeaderImageScrollView
-          maxHeight={MAX_HEIGHT}
-          minHeight={1}
-          maxOverlayOpacity={0.6}
-          minOverlayOpacity={0.3}
-          fadeOutForeground
-          renderHeader={() =>
-              <Image source={this.state.imagemPerfil} style={styles.image}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
-                    onPress={this.trocaImagemPerfil.bind(this)}>
-                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>
-                </TouchableOpacity>
-              </Image>
-          }
-          renderForeground={() =>
-            <Animatable.View
-            style={styles.navTitleView}
-            ref={navTitleView => {
-              this.navTitleView = navTitleView;
-            }}>
-          </Animatable.View>
-          }>
           <TriggeringView
             style={styles.section}
             onHide={() => this.navTitleView.fadeInUp(200)}
             onDisplay={() => this.navTitleView.fadeOut(100)
             }>
+            <Image source={this.state.imagemPerfil} style={styles.image}>
+              <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+                  onPress={this.trocaImagemPerfil.bind(this)}>
+                <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
+              </TouchableOpacity>
+            </Image>
             <View style={styles.bar}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                 <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
@@ -497,7 +505,6 @@ export default class PerfilVendedor extends Component {
                 </TouchableOpacity>
             </View>
           </ScrollView>
-        </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
       </View>
     );

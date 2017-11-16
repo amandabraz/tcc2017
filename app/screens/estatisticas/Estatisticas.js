@@ -72,7 +72,7 @@ class Estatisticas extends Component {
       return(
         <View key={0} style={{alignItems: 'center', marginRight: 5}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Não há produtos vendidos para estatísticas.
+          Não há produtos vendidos para gerar estatísticas.
         </Text>
         </View>
       )
@@ -98,7 +98,7 @@ class Estatisticas extends Component {
       views.push(
         <View key={0} style={{alignItems: 'center'}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Você não tem produtos vendidos! :(
+          Não há produtos vendidos para gerar estatísticas.
         </Text>
         </View>
       )
@@ -126,13 +126,17 @@ class Estatisticas extends Component {
     });
   }
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   exibeValorArrecadadoPorProduto(){
     if(this.state.valorTotalArrecadadoPorProduto.length > 0){
       var textDescriptions = []
       for(let i = 0; i<this.state.nomeProduto.length; i++){
         textDescriptions.push(
           <Text key={keyOfPieChart+"_desc_"+i} style={styles.pieChart_description}>
-            <Text style={{color: twentyColorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
+            <Text style={{color: twentyColorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.arredondaValores(this.state.valorTotalArrecadadoPorProduto[i])+") "}
           </Text>
         )
       }
@@ -155,7 +159,7 @@ class Estatisticas extends Component {
       return(
         <View key={keyOfPieChart+0} style={{alignItems: 'center'}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Não há valor total de venda para estatísticas.
+          Não há valor total de venda para gerar estatísticas.
         </Text>
         </View>
       )
@@ -183,17 +187,8 @@ class Estatisticas extends Component {
   }
 
   render() {
-    const titleConfig = { 
-      title: 'Estatísticas',
-      tintColor: "#fff",
-      fontFamily: 'Roboto',
-    }
     return(
       <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="#7A8887"
-        />
           <ScrollView refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
