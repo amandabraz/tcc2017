@@ -71,9 +71,10 @@ export default class AlteraProduto extends Component {
          this.setState({categoria: rJson.categoria});
          this.setState({observacao: rJson.observacao});
          var dataNormal = new Date(rJson.dataPreparacao);
-         var dataPrep = dataNormal.getFullYear() + "/" + 
-                        (dataNormal.getMonth()+1<10?"0"+(dataNormal.getMonth()+1):dataNormal.getMonth()+1) + "/" +
-                        (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate());
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let dataPrep = dia + "/" + mes + "/" + ano;
          this.setState({dataOriginal: rJson.dataPreparacao});
          this.setState({dataPreparacao: dataPrep});
          if (rJson.restricoesDieteticas.length > 0) {

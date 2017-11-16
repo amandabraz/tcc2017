@@ -92,10 +92,13 @@ class Chat extends Component {
       for (i in this.state.mensagens) {
         let msg = this.state.mensagens[i];
         let dataNormal = new Date(msg.dataMsg);
-        let dataEnv = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + 
-                      (dataNormal.getMonth()+1<10?"0"+(dataNormal.getMonth()+1):dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear()+
-                      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
-  
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let hora = dataNormal.getHours();
+        let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+        let dataEnv = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+        
         if (msg.sender === this.state.userId) {
           views.push(
             <View key={i} style={{padding: 10, alignItems: 'flex-end'}}>

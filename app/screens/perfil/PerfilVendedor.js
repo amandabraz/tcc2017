@@ -96,9 +96,10 @@ export default class PerfilVendedor extends Component {
     this.setState({nomeText: responseJson.usuario.nome});
     this.setState({nomeFantasiaText: responseJson.nomeFantasia});
     var dataNormal = new Date(responseJson.usuario.dataNasc);
-    var dataNasc =  (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + 
-                    (dataNormal.getMonth()+1<10?"0"+(dataNormal.getMonth()+1):dataNormal.getMonth()+1) +
-                    "/" + dataNormal.getFullYear();
+    let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+    let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+    let ano = dataNormal.getFullYear();
+    let dataNasc = dia + "/" + mes + "/" + ano;
     this.setState({dataNascimentoText: dataNasc});
     this.setState({emailText: responseJson.usuario.email});
     this.setState({CPFText: responseJson.usuario.cpf});
