@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  Alert
+  Alert,
+  RefreshControl
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
@@ -24,7 +25,8 @@ class GerenciaProduto extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
-      listaProdutos: []
+      listaProdutos: [],
+      refreshing: false,
     };
     this.buscaProdutos();
   };
@@ -36,6 +38,7 @@ class GerenciaProduto extends Component {
         if (!responseJson.errorMessage) {
           this.setState({listaProdutos: responseJson});
         }
+        this.setState({refreshing: false});
     });
   };
 
@@ -187,7 +190,15 @@ class GerenciaProduto extends Component {
               QUANTIDADE
             </Text>
           </View>
-          <ScrollView>
+          <ScrollView
+           refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={() => {
+                this.setState({refreshing:true});
+                this.buscaProdutos();
+              }}/>
+              }>
             {this.mostraProdutos()}
           </ScrollView>
           <ActionButton
