@@ -109,7 +109,10 @@ export default class ExibeProduto extends Component {
             this.setState({ingredientesText: ingredientes});
           }
           var dataNormal = new Date(rJson.dataPreparacao);
-          var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+          let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+          let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+          let ano = dataNormal.getFullYear();
+          let dataPrep = dia + "/" + mes + "/" + ano;
           this.setState({dateText: dataPrep});
           this.setState({carregou: false});
         }

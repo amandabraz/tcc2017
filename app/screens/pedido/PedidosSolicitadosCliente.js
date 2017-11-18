@@ -110,9 +110,13 @@ pedidoSolicitado(){
       }
 
       let dataNormal = new Date(pedidoS.dataSolicitada);
-      let dataSolicitada = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
-
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataSolicitada = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+      
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
