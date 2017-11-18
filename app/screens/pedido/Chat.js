@@ -9,14 +9,16 @@ import {
   Dimensions,
   Image,
   ScrollView,
-  TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
 import { Keyboard } from 'react-native'
+import {Icon} from 'react-native-elements';
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +32,7 @@ class Chat extends Component {
       pedidoId: this.props.navigation.state.params.pedidoId,
       mensagemEnviada: '',
       mensagens: [],
+      refreshing: false,      
     }
     this.buscaMensagens();
   };
@@ -38,11 +41,10 @@ class Chat extends Component {
     fetch(constante.ENDPOINT + 'mensagem/pedido/' + this.state.pedidoId, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMessage) {
+          if (responseJson && !responseJson.errorMessage) {
             this.setState({mensagens: responseJson});
-          } else {
-
           }
+          this.setState({refreshing: false});          
       });
   };
 
@@ -123,6 +125,19 @@ class Chat extends Component {
           );
         }
       }
+    } else {
+      views.push(
+        <View key={0} style={{
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'}}>
+          <Icon name="comments-o" size={40} 
+          color={'#ccc'} 
+          type='font-awesome'
+          style={{margin: 10}}/>
+          <Text style={{color: "#ccc", fontSize: 15}}>Entre em contato!</Text>
+        </View>
+      );
     }
   return views;
 }
@@ -147,9 +162,16 @@ render() {
         title={titleConfig}
         />
       <View style={{height: '82%'}}>
-        <ScrollView>
+        <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaMensagens();
+            }}
+          />
+        }>
           {this.mensagens()}
-          {ScrollView.scrollToEnd({animated: false})}
         </ScrollView>
       </View>
       <View style={{height: '10%'}}>
