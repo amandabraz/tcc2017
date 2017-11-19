@@ -86,6 +86,7 @@ class PedidosFinalizadosCliente extends Component {
           Alert.alert("Houve um erro ao realizar a avaliação, tente novamente");
         }
     });
+    this.setState({starCount: 0});
   }
 
   _showModal = () => this.setState({ isModalVisible: true })

@@ -49,13 +49,13 @@ class RankingProdutos extends Component {
       dataNascimentoText: '',
       imagemHeader: require('./img/fundof.png'),
       imagemProduto: require('./img/camera.jpg'),
-      carregou: true
+      carregou: true,
+      refreshing: false,      
     };
     this.buscaQuantidadeProdutosVendidos();
     this.buscaQuantidadeVendas();
     this.buscaQuantidadeClientes();
     this.buscaProdutosMaisVendidos();
-    this.buscaProduto();
   };
 
   escolherData(value) {
@@ -128,7 +128,7 @@ class RankingProdutos extends Component {
         }
 
         if(produto[3]){
-          imagemPrincipal = {uri: produto[3]};
+          imagemPrincipal = {uri: produto[3], cache: "reload"};
         }
         else {
           imagemPrincipal = require('./img/camera.jpg');
@@ -170,7 +170,19 @@ class RankingProdutos extends Component {
   render() {
     return(
       <View style = {{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaQuantidadeProdutosVendidos();
+              this.buscaQuantidadeVendas();
+              this.buscaQuantidadeClientes();
+              this.buscaProdutosMaisVendidos();
+              this.buscaProduto();
+            }}/>
+            }>
           <StatusBar barStyle="light-content"/>
             <HeaderImageScrollView
               maxHeight = {MAX_HEIGHT}
