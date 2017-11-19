@@ -122,7 +122,7 @@ validaCampos = (produto) => {
       camposVazios.push("nome");
   }
   //validar preco
-  if (!produto.preco) {
+  if (!produto.preco || !this.precoValido(produto.preco)) {
     camposVazios.push("preço");
   }
   //validar data de preparo
@@ -141,7 +141,7 @@ validaCampos = (produto) => {
   }
 
   if (camposVazios.length) {
-    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
     return false;
   }
   if (erros.length) {
@@ -250,6 +250,22 @@ selecionarFoto() {
   }
   };
 
+  precoValido(preco){
+    if(preco==null) //se for nulo
+      return false
+    
+    if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
+      return false;
+
+    if(preco.match(/([\d]|[\.])/)){
+      if(preco.match(/([\.])/).length>1 ||         //ou se a string for 'x.xx.x'
+        preco.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
+        return false
+      }  
+    }
+    return true
+  }
+
 render() {
     const {goBack} = this.props.navigation;
     const inputIngredientes = {
@@ -303,6 +319,7 @@ return (
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
+                  keyboardType={'numbers-and-punctuation'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
                   onChangeText={(preco) => this.setState({preco: preco})}
@@ -416,6 +433,7 @@ return (
 
     );
   }
+
 }
 
 const titleConfig = {
