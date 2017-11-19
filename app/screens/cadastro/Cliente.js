@@ -15,6 +15,7 @@ import NavigationBar from 'react-native-navbar';
 import TagInput from 'react-native-tag-input';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const {width, height} = Dimensions.get("window");
 
@@ -25,7 +26,8 @@ class Cliente extends Component {
         userId: this.props.navigation.state.params.userId,
         dietasArray: [],
         restricoesDieteticas: [],
-        tags: []
+        tags: [],
+        carregou: true
     }
     this.preencherDietasArray();
   };
@@ -39,6 +41,7 @@ class Cliente extends Component {
               dietasBuscadas.push(responseJson[i]);
             }
             this.setState({dietasArray: dietasBuscadas});
+            this.setState({carregou: false});
         });
   };
 
@@ -133,7 +136,7 @@ class Cliente extends Component {
                 Adicione suas tags:
               </Text>
           <View style={{ flexDirection: 'column', flex: 1}}>
-
+          <Spinner visible={this.state.carregou}/>
           <TagInput
             value={this.state.tags}
             onChange={(tags) => this.setState({tags,})}

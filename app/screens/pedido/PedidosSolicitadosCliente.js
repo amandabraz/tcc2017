@@ -19,6 +19,7 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +31,7 @@ class PedidosSolicitadosCliente extends Component {
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosSolicitados: [],
       refreshing: false,
+      carregou: true
     };
     this.buscaDadosPedidosCliente();
   };
@@ -42,6 +44,7 @@ class PedidosSolicitadosCliente extends Component {
             this.setState({pedidosSolicitados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
@@ -192,6 +195,7 @@ pedidoSolicitado(){
           Pedidos Solicitados
         </Text>
         </View>
+        <Spinner visible={this.state.carregou}/>
         {this.pedidoSolicitado()}
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>

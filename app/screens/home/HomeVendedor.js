@@ -22,6 +22,8 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import Switch from 'react-native-customisable-switch';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,7 +65,8 @@ class HomeVendedor extends Component {
         produtoVendido: 'Produto vendido',
         filtroMensal: true,
         alturaPedido: '1%',
-        alturaResumo: '100%'
+        alturaResumo: '100%',
+        carregou: true
     };
     this.buscaDadosPedido();
     this.buscaInformacoes();
@@ -130,6 +133,7 @@ class HomeVendedor extends Component {
               this.setState({clientesMantidos: clientec});
             }
           this.setState({refreshing:false});
+          this.setState({carregou: false});
       }});
   }
 
@@ -287,6 +291,7 @@ render() {
                 <View style={{height: this.state.alturaPedido}}>
                   {this.pedidoSolicitado()}
                 </View>
+                <Spinner visible={this.state.carregou}/>
                 <View style={{height:this.state.alturaResumo}}>
                 <View style={styles.oneResultResumo}>
                 <View style={{alignItems: 'flex-end'}}>

@@ -29,6 +29,7 @@ import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import Popup from 'react-native-popup';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -62,6 +63,7 @@ export default class PerfilVendedor extends Component {
       pencilColor: '#fff',
       meiosPagamento: [],
       escolhido: '',
+      carregou: true,
       cameraVisivel: 'transparent'
     };
     this.buscaDadosVendedor();
@@ -74,6 +76,7 @@ export default class PerfilVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
             this.prepararVendedor(responseJson);
+            this.setState({carregou: false});
         }
       });
   };
@@ -398,17 +401,18 @@ export default class PerfilVendedor extends Component {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar barStyle="light-content" />
-          <TriggeringView
-            style={styles.section}
-            onHide={() => this.navTitleView.fadeInUp(200)}
-            onDisplay={() => this.navTitleView.fadeOut(100)
-            }>
+        <HeaderImageScrollView
+              maxHeight={styles.image}
+              minHeight ={100}
+          renderHeader={() => (
             <Image source={this.state.imagemPerfil} style={styles.image}>
               <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
                   onPress={this.trocaImagemPerfil.bind(this)}>
                 <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
               </TouchableOpacity>
             </Image>
+            )}>
+         <TriggeringView> 
             <View style={styles.bar}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                 <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
@@ -423,10 +427,6 @@ export default class PerfilVendedor extends Component {
                 <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
               </TouchableOpacity>
             </View>
-          </TriggeringView>
-
-
-            <ScrollView >
               <Fumi
                 style={styles.inputDimensions}
                 label={'Nome'}
@@ -458,7 +458,9 @@ export default class PerfilVendedor extends Component {
                 value={this.state.dataNascimentoText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
-
+            
+            <Spinner visible={this.state.carregou}/>
+            
               <Fumi
                 style={styles.inputDimensions}
                 label={'Email'}
@@ -504,7 +506,8 @@ export default class PerfilVendedor extends Component {
                         style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Desativar conta</Text>
                 </TouchableOpacity>
             </View>
-          </ScrollView>
+          </TriggeringView>
+        </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
       </View>
     );

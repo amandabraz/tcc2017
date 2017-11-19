@@ -28,6 +28,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Icon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Accordion from 'react-native-accordion';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 const { width, height } = Dimensions.get("window");
@@ -48,7 +49,8 @@ class RankingVendedores extends Component {
       imagemPerfilPrata: require('./img/camera.jpg'),
       imagemPerfilBronze: require('./img/camera.jpg'),
       imagemPremiacao: require('./img/camera.jpg'),
-      vendedorPrata: []
+      vendedorPrata: [],
+      carregou: true
     };
     this.buscaMaioresVendedores();
     this.buscaVendedores();
@@ -61,6 +63,7 @@ class RankingVendedores extends Component {
       if (!responseJson.errorMessage) {
         this.setState({maioresVendedores: responseJson});
         this.setState({refreshing:false});
+        this.setState({carregou: false});
       }});
   }
 
@@ -216,6 +219,7 @@ class RankingVendedores extends Component {
         </HeaderImageScrollView>
         <View style={styles.centralView}>
           <View style={styles.results}>
+          <Spinner visible={this.state.carregou}/>
             {this.buscaVendedores()}
           </View>
         </View>

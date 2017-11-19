@@ -24,7 +24,8 @@ import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
 import StarRating from 'react-native-star-rating';
-import Modal from 'react-native-modal'
+import Modal from 'react-native-modal';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -40,7 +41,8 @@ class PedidosFinalizadosCliente extends Component {
       refreshing: false,
       starCount: 0,
       isModalVisible: false,  
-      pedidoParaAvaliar: 0,    
+      pedidoParaAvaliar: 0,
+      carregou: true    
     };
     this.buscaDadosPedidosCliente();
   };
@@ -67,6 +69,7 @@ class PedidosFinalizadosCliente extends Component {
               this.setState({pedidosCancelados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
@@ -349,6 +352,7 @@ pedidoFinalizado(){
           Pedidos Finalizados
         </Text>
         </View>
+        <Spinner visible={this.state.carregou}/>
         {this.pedidoFinalizado()}
 
 

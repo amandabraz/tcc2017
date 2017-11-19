@@ -18,7 +18,7 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
 import { Keyboard } from 'react-native'
 import {Icon} from 'react-native-elements';
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,6 +33,7 @@ class Chat extends Component {
       mensagemEnviada: '',
       mensagens: [],
       refreshing: false,      
+      carregou: true
     }
     this.buscaMensagens();
   };
@@ -44,6 +45,7 @@ class Chat extends Component {
           if (responseJson && !responseJson.errorMessage) {
             this.setState({mensagens: responseJson});
           }
+          this.setState({carregou: false});
           this.setState({refreshing: false});          
       });
   };
@@ -174,6 +176,7 @@ render() {
           {this.mensagens()}
         </ScrollView>
       </View>
+      <Spinner visible={this.state.carregou}/>
       <View style={{height: '10%'}}>
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <View style={{flexDirection: 'row'}}>
