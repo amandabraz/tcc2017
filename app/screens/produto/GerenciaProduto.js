@@ -197,6 +197,7 @@ class GerenciaProduto extends Component {
               onRefresh={() => {
                 this.setState({refreshing:true});
                 this.buscaProdutos();
+                this.mostraProdutos();
               }}/>
               }>
             {this.mostraProdutos()}
