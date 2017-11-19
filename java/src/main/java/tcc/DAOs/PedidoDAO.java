@@ -102,6 +102,8 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "JOIN vendedor on vendedor.id_vendedor = produto.fk_vendedor\n" +
             "JOIN usuario on usuario.id_usuario = vendedor.fk_usuario\n" +
             "WHERE pedido.data_finalizacao >= ?1 \n" +
+            "AND usuario.bloqueado = 0 " +
+            "AND usuario.deletado = 0 " +
             "AND pedido.status = 'Finalizado'\n" +
             "GROUP BY produto.id_produto \n" +
             "ORDER BY 3 DESC \n" +
@@ -132,6 +134,8 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "JOIN vendedor on vendedor.id_vendedor = produto.fk_vendedor\n" +
             "JOIN usuario on usuario.id_usuario = vendedor.fk_usuario\n" +
             "WHERE pedido.data_finalizacao >= ?1 \n" +
+            "AND usuario.bloqueado = 0 " +
+            "AND usuario.deletado = 0 " +
             "AND pedido.status = 'Finalizado'\n" +
             "GROUP BY produto.fk_vendedor \n" +
             "ORDER BY 2 DESC \n" +
