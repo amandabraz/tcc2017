@@ -412,7 +412,7 @@ export default class PerfilVendedor extends Component {
               </TouchableOpacity>
             </Image>
             )}>
-         <TriggeringView> 
+         <TriggeringView>
             <View style={styles.bar}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                 <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
@@ -458,9 +458,9 @@ export default class PerfilVendedor extends Component {
                 value={this.state.dataNascimentoText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
-            
+
             <Spinner visible={this.state.carregou}/>
-            
+
               <Fumi
                 style={styles.inputDimensions}
                 label={'Email'}
@@ -497,11 +497,11 @@ export default class PerfilVendedor extends Component {
               {this.meiosPagamento()}
               {this.mostraBotaoSalvar()}
               <View style={{width:'98%'}}>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
                     onPress={this.excluirUsuario.bind(this)}>
-                  <Icon name="trash" size={25} 
-                        color={'#7A8887'} 
+                  <Icon name="trash" size={25}
+                        color={'#7A8887'}
                         type='font-awesome'
                         style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Desativar conta</Text>
                 </TouchableOpacity>
