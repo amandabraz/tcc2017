@@ -141,7 +141,7 @@ validaCampos = (produto) => {
   }
 
   if (camposVazios.length) {
-    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento obrigatório e correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
     return false;
   }
   if (erros.length) {
