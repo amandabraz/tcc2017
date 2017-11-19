@@ -128,7 +128,7 @@ class RankingProdutos extends Component {
         }
 
         if(produto[3]){
-          imagemPrincipal = {uri: produto[3]};
+          imagemPrincipal = {uri: produto[3], cache: "reload"};
         }
         else {
           imagemPrincipal = require('./img/camera.jpg');

@@ -79,19 +79,19 @@ class RankingVendedores extends Component {
       let vendedorBronze = dadosVendedores[2];
 
         if(vendedorOuro[2]){
-          imagemPerfilOuro = {uri: vendedorOuro[2]};
+          imagemPerfilOuro = {uri: vendedorOuro[2], cache: "reload"};
         } else {
           imagemPerfilOuro = imagemPerfil;
         }
 
         if(vendedorPrata[2]){
-          imagemPerfilPrata = {uri: vendedorPrata[2]};
+          imagemPerfilPrata = {uri: vendedorPrata[2], cache: "reload"};
         } else {
           imagemPerfilPrata = imagemPerfil;
         }
 
         if(vendedorBronze[2]){
-          imagemPerfilBronze = {uri: vendedorBronze[2]};
+          imagemPerfilBronze = {uri: vendedorBronze[2], cache: "reload"};
         } else {
           imagemPerfilBronze = imagemPerfil;
         }
@@ -140,7 +140,7 @@ class RankingVendedores extends Component {
         let imagemPremiacao = require('./img/camera.jpg');
 
         if(vendedor[2]){
-          imagemPerfil = {uri: vendedor[2]};
+          imagemPerfil = {uri: vendedor[2], cache: "reload"};
         }
 
         if (i == 0){
