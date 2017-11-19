@@ -24,6 +24,7 @@ import NavigationActions from 'react-navigation';
 import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
@@ -43,7 +44,8 @@ export default class ExibeComprovante extends Component {
      meioPagamentoText: '',
      tokenText: '',
      nomeVendedorText: '',
-     imagemProduto: require('./img/camera11.jpg')
+     imagemProduto: require('./img/camera11.jpg'),
+     carregou: true
    };
    this.buscaDadosPedido();
   }
@@ -63,6 +65,7 @@ export default class ExibeComprovante extends Component {
           this.setState({meioPagamentoText: responseJson.pagamento.descricao});
           this.setState({tokenText: responseJson.token});
           this.setState({nomeVendedorText: responseJson.produto.vendedor.usuario.nome});
+          this.setState({carregou: false});
         }
       });
   };
@@ -110,6 +113,7 @@ export default class ExibeComprovante extends Component {
                 <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
                   <Text style={styles.totalFont}> R$ {this.arredondaValores(this.state.precoText)}</Text>
                 </Text>
+                <Spinner visible={this.state.carregou}/>
                 <Text>{'\n'}{'\n'}</Text>
                 <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com
                   <Text style={styles.totalFont}> {this.state.nomeVendedorText}</Text>:

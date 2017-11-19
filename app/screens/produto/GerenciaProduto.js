@@ -16,6 +16,7 @@ import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as constante from '../../constantes';
 import StarRating from 'react-native-star-rating';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,6 +27,7 @@ class GerenciaProduto extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       listaProdutos: [],
+      carregou: true,
       refreshing: false,
     };
     this.buscaProdutos();
@@ -37,6 +39,7 @@ class GerenciaProduto extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({listaProdutos: responseJson});
+          this.setState({carregou: false});
         }
         this.setState({refreshing: false});
     });
@@ -190,6 +193,7 @@ class GerenciaProduto extends Component {
               QUANTIDADE
             </Text>
           </View>
+          <Spinner visible={this.state.carregou}/>
           <ScrollView
            refreshControl={
             <RefreshControl

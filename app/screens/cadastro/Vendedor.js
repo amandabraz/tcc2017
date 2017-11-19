@@ -6,6 +6,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -16,7 +17,8 @@ class Vendedor extends Component {
         userId: this.props.navigation.state.params.userId,
         pagamentosArray: [],
         nomeLoja: '',
-        meiosPagamentos: []
+        meiosPagamentos: [],
+        carregou: true
     }
     this.preencherPagamentosArray();
   }
@@ -30,6 +32,7 @@ class Vendedor extends Component {
               pagamentosBuscados.push(responseJson[i]);
           }
           this.setState({pagamentosArray: pagamentosBuscados});
+          this.setState({carregou: false});
         });
   }
 
@@ -137,6 +140,7 @@ class Vendedor extends Component {
                 value={this.state.nomeLoja}
                 returnKeyType="next"
               />
+              <Spinner visible={this.state.carregou}/>
               <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
                   Meios de pagamento aceitos
               </Text>
