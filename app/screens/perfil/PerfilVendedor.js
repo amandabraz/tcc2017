@@ -398,17 +398,18 @@ export default class PerfilVendedor extends Component {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar barStyle="light-content" />
-          <TriggeringView
-            style={styles.section}
-            onHide={() => this.navTitleView.fadeInUp(200)}
-            onDisplay={() => this.navTitleView.fadeOut(100)
-            }>
+        <HeaderImageScrollView
+              maxHeight={styles.image}
+              minHeight ={100}
+          renderHeader={() => (
             <Image source={this.state.imagemPerfil} style={styles.image}>
               <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
                   onPress={this.trocaImagemPerfil.bind(this)}>
                 <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
               </TouchableOpacity>
             </Image>
+            )}>
+         <TriggeringView> 
             <View style={styles.bar}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                 <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
@@ -423,10 +424,6 @@ export default class PerfilVendedor extends Component {
                 <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
               </TouchableOpacity>
             </View>
-          </TriggeringView>
-
-
-            <ScrollView >
               <Fumi
                 style={styles.inputDimensions}
                 label={'Nome'}
@@ -504,7 +501,8 @@ export default class PerfilVendedor extends Component {
                         style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Desativar conta</Text>
                 </TouchableOpacity>
             </View>
-          </ScrollView>
+          </TriggeringView>
+        </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
       </View>
     );
