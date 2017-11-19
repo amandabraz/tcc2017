@@ -165,6 +165,7 @@ export default class Login extends Component {
     //retorno
     return (
       <View style={styles.container}>
+        <ScrollView>
         <Image source={require('./img/fofo.jpg')} style={styles.background}>
             <View style={styles.centralView}>
               <View style={{height: '32%', paddingTop: 20}}>
@@ -234,6 +235,7 @@ export default class Login extends Component {
               </View>
             </View>
         </Image>
+      </ScrollView>
         <Popup ref={popup => this.popup = popup }/>
       </View>
     );
