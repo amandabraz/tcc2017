@@ -251,15 +251,18 @@ selecionarFoto() {
   };
 
   precoValido(preco){
-    if(preco==null) //se for nulo
+    if(preco.includes(","))
+      preco = preco.replace(",", ".")
+    
+    if(preco==null || preco=='') //se for nulo
       return false
     
     if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
       return false;
 
     if(preco.match(/([\d]|[\.])/)){
-      if(preco.match(/([\.])/).length>1 ||         //ou se a string for 'x.xx.x'
-        preco.match(/([\.])([\d]+)/).length>3){  //ou for 'x.xxx'
+      if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
+        preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
         return false
       }  
     }
