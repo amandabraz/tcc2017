@@ -448,19 +448,19 @@ export default class PerfilCliente extends Component {
   render () {
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView>
-        <StatusBar barStyle="light-content" />
-          <TriggeringView
-            style={styles.section}
-            onHide={() => this.navTitleView.fadeInUp(200)}
-            onDisplay={() => this.navTitleView.fadeOut(100)
-            }>
-            <Image source={this.state.imagemPerfil} style={styles.image}>
-              <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
-                  onPress={this.trocaImagemPerfil.bind(this)}>
-                <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
-              </TouchableOpacity>
-            </Image>
+        <StatusBar barStyle="light-content"/>
+          <HeaderImageScrollView
+              maxHeight={styles.image}
+              minHeight ={100}
+          renderHeader={() => (
+         <Image source={this.state.imagemPerfil} style={styles.image}>
+           <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+               onPress={this.trocaImagemPerfil.bind(this)}>
+             <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
+           </TouchableOpacity>
+         </Image>
+      )}>
+      <TriggeringView>
             <View style={styles.bar}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                   <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
@@ -475,7 +475,6 @@ export default class PerfilCliente extends Component {
                   <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
                 </TouchableOpacity>
             </View>
-          </TriggeringView>
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome'}
@@ -544,9 +543,10 @@ export default class PerfilCliente extends Component {
                         style={{margin: 10}}/><Text>Desativar conta</Text>
                 </TouchableOpacity>
               </View>
-          </ScrollView>
+        </TriggeringView>
+      </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
-      </View>
+     </View>
     );
   }
 }
