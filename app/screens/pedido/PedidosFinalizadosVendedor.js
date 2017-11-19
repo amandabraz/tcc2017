@@ -197,7 +197,7 @@ pedidoFinalizado(){
                        style={styles.imagemCliente}/>
               </View>
             <View style={{width: '80%', paddingLeft: 6}}>
-              <Text style={styles.totalFont}> {pedidoR.produto.vendedor.usuario.nome}</Text>
+              <Text style={styles.totalFont}> {pedidoR.cliente.usuario.nome}</Text>
               <Text style={styles.oneResultfont}>Quantidade solicitada:
               <Text style={styles.totalFont}> {pedidoR.quantidade}{'\n'}</Text>
               </Text>

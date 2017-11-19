@@ -130,6 +130,14 @@ arredondaValores(num){
   return num.toFixed(2)
 };
 
+onPressOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
+  this.props.navigation.navigate('ExibeVendedor',
+        {selectUserId: usuarioSelecionado,
+          vendedorId: vendedorIdSelecionado,
+          clienteId: this.state.clienteId
+        });
+};
+
 pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
@@ -174,8 +182,11 @@ pedidoFinalizado(){
             <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
+              <TouchableHighlight
+                onPress={() => this.onPressOpenVendedor(pedidoF.produto.vendedor.usuario.id, pedidoF.produto.vendedor.id)} >
                 <Image source={imagemPrincipalV}
                       style={styles.imagemVendedor}/>
+             </TouchableHighlight>
               </View>
               <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoF.produto.vendedor.usuario.nome}</Text>
@@ -240,8 +251,11 @@ pedidoFinalizado(){
               <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
-                <Image source={imagemPrincipalV}
-                       style={styles.imagemVendedor}/>
+                <TouchableHighlight
+                  onPress={() => this.onPressOpenVendedor(pedidoR.produto.vendedor.usuario.id, pedidoR.produto.vendedor.id)} >
+                  <Image source={imagemPrincipalV}
+                        style={styles.imagemVendedor}/>
+               </TouchableHighlight>
               </View>
             <View style={{width: '80%', paddingLeft: 6}}>
               <Text style={styles.totalFont}> {pedidoR.produto.vendedor.usuario.nome}</Text>
@@ -303,9 +317,12 @@ pedidoFinalizado(){
                 <View style={{paddingTop: 15}}>
                 <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
                 <View style = {{ width: '20%'}}>
-                  <Image source={imagemPrincipalV}
-                         style={styles.imagemVendedor}/>
-                </View>
+                <TouchableHighlight
+                onPress={() => this.onPressOpenVendedor(pedidoC.produto.vendedor.usuario.id, pedidoC.produto.vendedor.id)} >
+                <Image source={imagemPrincipalV}
+                      style={styles.imagemVendedor}/>
+               </TouchableHighlight>
+              </View>
               <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
                 <Text style={styles.oneResultfont}>Quantidade solicitada:
