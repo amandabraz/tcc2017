@@ -50,10 +50,10 @@ class RankingVendedores extends Component {
       imagemPerfilBronze: require('./img/camera.jpg'),
       imagemPremiacao: require('./img/camera.jpg'),
       vendedorPrata: [],
-      carregou: true
+      carregou: true,
+      refreshing: false,      
     };
     this.buscaMaioresVendedores();
-    this.buscaVendedores();
   };
 
   buscaMaioresVendedores(){
@@ -80,17 +80,21 @@ class RankingVendedores extends Component {
 
         if(vendedorOuro[2]){
           imagemPerfilOuro = {uri: vendedorOuro[2]};
-        }
-        if(vendedorPrata[2]){
-          imagemPerfilPrata = {uri: vendedorPrata[2]};
-        }
-        if(vendedorBronze[2]){
-          imagemPerfilBronze = {uri: vendedorBronze[2]};
-        }
-        else {
-          imagemPerfil = require('./img/camera.jpg');
+        } else {
+          imagemPerfilOuro = imagemPerfil;
         }
 
+        if(vendedorPrata[2]){
+          imagemPerfilPrata = {uri: vendedorPrata[2]};
+        } else {
+          imagemPerfilPrata = imagemPerfil;
+        }
+
+        if(vendedorBronze[2]){
+          imagemPerfilBronze = {uri: vendedorBronze[2]};
+        } else {
+          imagemPerfilBronze = imagemPerfil;
+        }
 
         views.push (
           <View key={-1}>
@@ -131,7 +135,6 @@ class RankingVendedores extends Component {
         </View>
       );
 
-      dadosVendedores = this.state.maioresVendedores;
       for(i in dadosVendedores) {
         let vendedor = dadosVendedores[i];
         let imagemPremiacao = require('./img/camera.jpg');
@@ -183,7 +186,16 @@ class RankingVendedores extends Component {
   render() {
     return(
       <View style = {{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaMaioresVendedores();
+              this.buscaVendedores();
+            }}/>
+            }>
           <StatusBar barStyle="light-content"/>
             <HeaderImageScrollView
               maxHeight = {MAX_HEIGHT}
