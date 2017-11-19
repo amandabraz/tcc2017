@@ -50,13 +50,13 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "    GROUP BY produto.id_produto;", nativeQuery = true)
     List<?> findByValorTotalVendaPedidos(Long vendedorId, Integer diasParaBusca);
     
-    @Query(value = "SELECT SUM(nota) from pedido WHERE fk_produto = ?1",
-            countQuery = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+    @Query(value = "SELECT SUM(nota) from pedido WHERE fk_produto = ?1 AND nota > 0 AND status = 'Finalizado'",
+            countQuery = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1 AND nota > 0 AND status = 'Finalizado'",
             countName = "countSelectSomaNotasPorProduto",
             nativeQuery = true)
     long selectSomaNotasPorProduto(long produtoId);
 
-    @Query(value = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1",
+    @Query(value = "SELECT COUNT(nota) from pedido WHERE fk_produto = ?1 AND nota > 0 AND status = 'Finalizado'",
             nativeQuery = true)
     long countNotasPorProduto(long produtoId);
     
