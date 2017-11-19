@@ -233,8 +233,12 @@ class Cadastro extends Component {
               if (responseJson.errorMessage) {
                 Alert.alert(responseJson.errorMessage);
               } else {
-                ToastAndroid.showWithGravity('Cadastro de Cliente iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this.props.navigation.navigate('Cliente', {userId: responseJson.id});
+                if(responseJson.status >= 500){
+                  Alert.alert('Erro no servidor: '+responseJson.error, responseJson.message);
+                }else{
+                  ToastAndroid.showWithGravity('Cadastro de Cliente iniciado!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                  this.props.navigation.navigate('Cliente', {userId: responseJson.id});
+                }
               }
             })
             .catch((error) => {
