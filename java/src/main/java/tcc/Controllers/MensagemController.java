@@ -53,7 +53,7 @@ public class MensagemController {
             if (Objects.nonNull(pedido)) {
                 Set<Mensagem> mensagens = mensagemService.buscaPorPedido(pedido);
                 if (mensagens.isEmpty()) {
-                    return new ResponseEntity<>(new CustomError("Não há mensagens"), HttpStatus.NO_CONTENT);
+                    return new ResponseEntity<>(new CustomError("Não há mensagens"), HttpStatus.NOT_FOUND);
                 }
                 return new ResponseEntity<Set<Mensagem>>(mensagens, HttpStatus.OK);
             } else {
