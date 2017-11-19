@@ -290,7 +290,7 @@ export default class PerfilCliente extends Component {
     let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
     let ano = dataNormal.getFullYear();
     let dataNasc = dia + "/" + mes + "/" + ano;
-    
+
     this.setState({nomeText: responseJson.usuario.nome,
                   dataNascimentoText: dataNasc,
                   celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
@@ -502,11 +502,12 @@ export default class PerfilCliente extends Component {
                   label={'Celular'}
                   iconClass={FontAwesomeIcon}
                   iconName={'mobile'}
-                  iconColor={'#4A4A4A'}
+                  iconColor={'#7A8887'}
                   value={this.state.celularText}
-                  onChange={(celular) => this.setState({celularText: celular})}
                   editable={this.state.editavel}
-                  inputStyle={this.state.baseTextClass}/>
+                  inputStyle={this.state.baseTextClass}
+                  maxLength={11}
+                  onChangeText={(celular) => this.setState({celularText: celular})}/>
 
               <Fumi
                   style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
@@ -534,11 +535,11 @@ export default class PerfilCliente extends Component {
 
               {this.mostraBotaoSalvar()}
               <View style={{width:'98%'}}>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
                     onPress={this.excluirUsuario.bind(this)}>
-                  <Icon name="trash" size={25} 
-                        color={'#4A4A4A'} 
+                  <Icon name="trash" size={25}
+                        color={'#4A4A4A'}
                         type='font-awesome'
                         style={{margin: 10}}/><Text>Desativar conta</Text>
                 </TouchableOpacity>
