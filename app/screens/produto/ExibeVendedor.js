@@ -10,6 +10,7 @@ import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,7 +32,8 @@ export default class ExibeVendedor extends Component {
       celularText: '',
       resultadoProduto: [],
       imagemPerfil: require('./img/camera11.jpg'),
-      favoritoColor: 'gray'
+      favoritoColor: 'gray',
+      carregou: true
     };
     this.buscaDadosVendedor();
     this.buscaProdutos();
@@ -61,6 +63,7 @@ export default class ExibeVendedor extends Component {
               this.setState({favoritoColor: '#990000'});              
             }
           }
+          this.setState({carregou: false});
         }
       });
   };
@@ -171,7 +174,7 @@ favoritaVendedor(){
             </View>
             <View style={{alignSelf: 'flex-end',  padding: 10}}>
                 <Icon name='heart' 
-                      size={30}
+                      size={25}
                       raised
                       type='font-awesome' 
                       color={this.state.favoritoColor}
@@ -179,7 +182,7 @@ favoritaVendedor(){
             </View>
           </View>
         </View>
-
+        <Spinner visible={this.state.carregou}/>
         <ScrollView>
         <Fumi
             style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
@@ -229,11 +232,11 @@ favoritaVendedor(){
     width,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 5,
   },
   profilepicWrap:{
-    width: 180,
-    height: 180,
+    width: 170,
+    height: 170,
     borderRadius: 100,
     borderColor: 'rgba(0,0,0,0.4)',
   },
@@ -247,7 +250,7 @@ favoritaVendedor(){
   oneResultfontTitle:{
     color: '#4A4A4A',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 17,
   },
   oneResultfont:{
     color: '#4A4A4A',
@@ -287,7 +290,7 @@ favoritaVendedor(){
     fontSize: 16,
   },
   titleText: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#4A4A4A',
     fontFamily: 'Roboto',

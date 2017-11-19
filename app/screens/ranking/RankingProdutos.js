@@ -28,6 +28,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Icon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Accordion from 'react-native-accordion';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,7 +48,8 @@ class RankingProdutos extends Component {
       alturaResumo: '100%',
       dataNascimentoText: '',
       imagemHeader: require('./img/fundof.png'),
-      imagemProduto: require('./img/camera.jpg')
+      imagemProduto: require('./img/camera.jpg'),
+      carregou: true
     };
     this.buscaQuantidadeProdutosVendidos();
     this.buscaQuantidadeVendas();
@@ -69,6 +71,7 @@ class RankingProdutos extends Component {
       if (!responseJson.errorMessage) {
         this.setState({produtosMaisVendidos: responseJson});
         this.setState({refreshing:false});
+        this.setState({carregou: false});
       }});
   }
 
@@ -228,6 +231,7 @@ class RankingProdutos extends Component {
         </HeaderImageScrollView>
         <View style={styles.centralView}>
           <View style={styles.results}>
+          <Spinner visible={this.state.carregou}/>
             {this.buscaProduto()}
           </View>
         </View>

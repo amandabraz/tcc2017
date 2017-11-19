@@ -21,6 +21,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export default class CadastroProduto extends Component {
@@ -43,7 +44,8 @@ export default class CadastroProduto extends Component {
      observacao: '',
      image: require('./img/camera11.jpg'),
      imagemProduto: '',
-     backgroundColorPreco: "transparent"
+     backgroundColorPreco: "transparent",
+     carregou: true
     }
     this.preencherDietasArray();
     this.carregarCategoriasArray();
@@ -71,6 +73,7 @@ export default class CadastroProduto extends Component {
               categoriasBuscadas.push(responseJson[i]);
             }
             this.setState({categoriasArray: categoriasBuscadas});
+            this.setState({carregou: false});
         });
   }
   onChangeTags = (tags) => {
@@ -332,7 +335,7 @@ return (
                     keyboardType={'numeric'}
                     iconName={'shopping-cart'}
                     iconColor={'#7A8887'}/>
-
+        <Spinner visible={this.state.carregou}/>
                     <View style={{flexDirection:'row', padding: 18, alignItems: 'center'}}>
                       <FontAwesomeIcon
                         name='calendar'

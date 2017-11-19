@@ -22,6 +22,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,6 +36,7 @@ class PedidosFinalizadosVendedor extends Component {
       pedidosRecusados: [],
       pedidosCancelados: [],
       refreshing: false,
+      carregou: true
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -63,6 +65,7 @@ class PedidosFinalizadosVendedor extends Component {
               this.setState({pedidosCancelados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
@@ -99,8 +102,13 @@ pedidoFinalizado(){
         imagemPrincipalC = {uri: pedidoF.cliente.usuario.imagemPerfil};
       }
       var dataNormal = new Date(pedidoF.dataFinalizacao);
-      var dataFinalizacao = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() +
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataFinalizacao = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+      
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
@@ -298,6 +306,7 @@ pedidoFinalizado(){
         </Text>
         </View>
         {this.pedidoFinalizado()}
+        <Spinner visible={this.state.carregou}/>
         <View style = {{margin: 5}}>
         <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: '#A1453E', fontWeight: 'bold'}}>
           Pedidos Recusados

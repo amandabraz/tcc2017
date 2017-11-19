@@ -9,14 +9,16 @@ import {
   Dimensions,
   Image,
   ScrollView,
-  TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
 import { Keyboard } from 'react-native'
+import {Icon} from 'react-native-elements';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +32,8 @@ class Chat extends Component {
       pedidoId: this.props.navigation.state.params.pedidoId,
       mensagemEnviada: '',
       mensagens: [],
+      refreshing: false,      
+      carregou: true
     }
     this.buscaMensagens();
   };
@@ -38,14 +42,19 @@ class Chat extends Component {
     fetch(constante.ENDPOINT + 'mensagem/pedido/' + this.state.pedidoId, {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-            this.setState({mensagens: responseJson})
+          if (responseJson && !responseJson.errorMessage) {
+            this.setState({mensagens: responseJson});
           }
+          this.setState({carregou: false});
+          this.setState({refreshing: false});          
       });
   };
 
   enviarMensagem() {
     Keyboard.dismiss();
+    if (!this.state.mensagemEnviada) {
+      return;
+    }
     const {
       state: {
         userId,
@@ -76,7 +85,6 @@ class Chat extends Component {
       msgs.push(responseJson);
       this.setState({mensagens: msgs});
       this.mensagens();
-      // todo: adicionar view na tela pra parecer chat 
     } else {
       Alert.alert("Houve um erro ao enviar a mensagem, tente novamente");
     }
@@ -91,10 +99,14 @@ class Chat extends Component {
     if (this.state.mensagens.length > 0) {
       for (i in this.state.mensagens) {
         let msg = this.state.mensagens[i];
-        let data = new Date(msg.dataMsg);
-        let dataEnv = (data.getDate() < 10 ? "0" + data.getDate() : data.getDate()) + "/" + (data.getMonth() + 1 < 10 ? "0" + data.getMonth() + 1 : data.getMonth() + 1) + "/" + data.getFullYear() +
-        " - " + data.getHours() + ":" + (data.getMinutes() < 10 ? "0" + data.getMinutes() : data.getMinutes());
-  
+        let dataNormal = new Date(msg.dataMsg);
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let hora = dataNormal.getHours();
+        let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+        let dataEnv = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+        
         if (msg.sender === this.state.userId) {
           views.push(
             <View key={i} style={{padding: 10, alignItems: 'flex-end'}}>
@@ -115,6 +127,19 @@ class Chat extends Component {
           );
         }
       }
+    } else {
+      views.push(
+        <View key={0} style={{
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'}}>
+          <Icon name="comments-o" size={40} 
+          color={'#ccc'} 
+          type='font-awesome'
+          style={{margin: 10}}/>
+          <Text style={{color: "#ccc", fontSize: 15}}>Entre em contato!</Text>
+        </View>
+      );
     }
   return views;
 }
@@ -139,10 +164,19 @@ render() {
         title={titleConfig}
         />
       <View style={{height: '82%'}}>
-        <ScrollView>
+        <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.setState({refreshing:true});
+              this.buscaMensagens();
+            }}
+          />
+        }>
           {this.mensagens()}
         </ScrollView>
       </View>
+      <Spinner visible={this.state.carregou}/>
       <View style={{height: '10%'}}>
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <View style={{flexDirection: 'row'}}>

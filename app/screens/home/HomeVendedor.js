@@ -22,6 +22,8 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import Switch from 'react-native-customisable-switch';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,7 +65,8 @@ class HomeVendedor extends Component {
         produtoVendido: 'Produto vendido',
         filtroMensal: true,
         alturaPedido: '1%',
-        alturaResumo: '100%'
+        alturaResumo: '100%',
+        carregou: true
     };
     this.buscaDadosPedido();
     this.buscaInformacoes();
@@ -84,8 +87,12 @@ class HomeVendedor extends Component {
               this.setState({imagemProduto:{ uri: responseJson.produto.imagemPrincipal }})
             }
             var dataNormal = new Date(responseJson.dataSolicitada);
-            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() +
-                        " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+            let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+            let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+            let ano = dataNormal.getFullYear();
+            let hora = dataNormal.getHours();
+            let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+            let dataS = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
             this.setState({dataSolicitada: dataS})
             this.setState({refreshing:false});
       }});
@@ -126,6 +133,7 @@ class HomeVendedor extends Component {
               this.setState({clientesMantidos: clientec});
             }
           this.setState({refreshing:false});
+          this.setState({carregou: false});
       }});
   }
 
@@ -283,6 +291,7 @@ render() {
                 <View style={{height: this.state.alturaPedido}}>
                   {this.pedidoSolicitado()}
                 </View>
+                <Spinner visible={this.state.carregou}/>
                 <View style={{height:this.state.alturaResumo}}>
                 <View style={styles.oneResultResumo}>
                 <View style={{alignItems: 'flex-end'}}>

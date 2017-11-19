@@ -21,6 +21,7 @@ import NavigationBar from 'react-native-navbar';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import Rating from 'react-native-rating';
 import StarRating from 'react-native-star-rating';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -57,7 +58,8 @@ export default class ExibeProduto extends Component {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
-          dateText: ''
+          dateText: '',
+          carregou: true
         };
         this.buscaProduto();
     }
@@ -107,8 +109,12 @@ export default class ExibeProduto extends Component {
             this.setState({ingredientesText: ingredientes});
           }
           var dataNormal = new Date(rJson.dataPreparacao);
-          var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+          let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+          let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+          let ano = dataNormal.getFullYear();
+          let dataPrep = dia + "/" + mes + "/" + ano;
           this.setState({dateText: dataPrep});
+          this.setState({carregou: false});
         }
       });
     }
@@ -176,6 +182,7 @@ render() {
             </Text>
           </View>
         </View>
+        <Spinner visible={this.state.carregou}/>
         <View style={{ margin: 10 }}>
          <View style={{ margin: 10}}>
           <Text style={styles.baseText}>

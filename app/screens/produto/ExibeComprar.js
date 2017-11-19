@@ -22,6 +22,7 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
 import StarRating from 'react-native-star-rating';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -50,7 +51,8 @@ export default class ExibeComprar extends Component {
             pagamentosArray: [],
             meiosPagamentos: [],
             meioPagamentoEscolhido: '',
-            precoTotalText: 0
+            precoTotalText: 0,
+            carregou: true
         }
         this.buscaProduto();
     }
@@ -106,6 +108,7 @@ export default class ExibeComprar extends Component {
               pagamentosBuscados.push(rJson.vendedor.meiosPagamentos[i]);
             }
             this.setState({pagamentosArray: pagamentosBuscados});
+            this.setState({carregou: false});
           }
         });
       }
@@ -277,7 +280,7 @@ export default class ExibeComprar extends Component {
               </View>
             </View>
             </View>
-
+            <Spinner visible={this.state.carregou}/>
 
             <View style={{paddingTop:10}}>
                 <Text style={styles.baseText}>
@@ -294,7 +297,7 @@ export default class ExibeComprar extends Component {
               </RadioGroup>
             </View>
             </View>
-
+            <Spinner visible={this.state.carregou}/>
             <View style={{flexDirection: 'row', paddingTop:10}}>
             <View style={{width: '60%'}}>
               <Text style={styles.baseText}>

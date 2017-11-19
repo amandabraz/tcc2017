@@ -23,6 +23,7 @@ import QRCode from 'react-native-qrcode';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,6 +35,7 @@ class PedidosConfirmadosCliente extends Component {
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosConfirmados: [],
       refreshing: false,
+      carregou: true
     };
     this.buscaDadosPedidosCliente();
   };
@@ -46,6 +48,7 @@ class PedidosConfirmadosCliente extends Component {
               this.setState({pedidosConfirmados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
@@ -83,8 +86,12 @@ pedidoConfirmado(){
       }
 
       var dataNormal = new Date(pedidoC.dataConfirmacao);
-      let dataConfirmado = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() +
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataConfirmado = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
 
       views.push(
         <View key={i} style={styles.oneResult1}>
@@ -176,6 +183,7 @@ pedidoConfirmado(){
             Pedidos Confirmados
           </Text>
         </View>
+        <Spinner visible={this.state.carregou}/>
         {this.pedidoConfirmado()}
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>

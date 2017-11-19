@@ -8,13 +8,15 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  Alert
+  Alert,
+  RefreshControl
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as constante from '../../constantes';
 import StarRating from 'react-native-star-rating';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,7 +26,9 @@ class GerenciaProduto extends Component {
     this.state = {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
-      listaProdutos: []
+      listaProdutos: [],
+      carregou: true,
+      refreshing: false,
     };
     this.buscaProdutos();
   };
@@ -35,7 +39,9 @@ class GerenciaProduto extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({listaProdutos: responseJson});
+          this.setState({carregou: false});
         }
+        this.setState({refreshing: false});
     });
   };
 
@@ -90,9 +96,13 @@ class GerenciaProduto extends Component {
       for (i in this.state.listaProdutos) {
         let imagemPrincipal = require('./img/camera11.jpg');
         let produto = this.state.listaProdutos[i];
+        
         var dataNormal = new Date(produto.dataPreparacao);
-        var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
-        produto.dataPreparacao = dataPrep;
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let dataPrep = dia + "/" + mes + "/" + ano;
+
         if (produto.imagemPrincipal) {
           imagemPrincipal = {uri: produto.imagemPrincipal};
         }
@@ -144,7 +154,7 @@ class GerenciaProduto extends Component {
             </View>
             <View style={{paddingLeft:10, alignSelf: 'flex-start'}}>
               <Text style={styles.textoMenor}>
-                Preparado no dia {produto.dataPreparacao}
+                Preparado no dia {dataPrep}
                 {'\n'}{'\n'}
               </Text>
             </View>
@@ -183,7 +193,17 @@ class GerenciaProduto extends Component {
               QUANTIDADE
             </Text>
           </View>
-          <ScrollView>
+          <Spinner visible={this.state.carregou}/>
+          <ScrollView
+           refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={() => {
+                this.setState({refreshing:true});
+                this.buscaProdutos();
+                this.mostraProdutos();
+              }}/>
+              }>
             {this.mostraProdutos()}
           </ScrollView>
           <ActionButton
