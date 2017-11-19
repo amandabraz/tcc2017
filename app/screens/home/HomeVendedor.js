@@ -283,6 +283,7 @@ render() {
                   refreshing={this.state.refreshing}
                   onRefresh={() => {
                     this.setState({refreshing:true});
+                    this.buscaDadosPedido();
                     this.pedidoSolicitado();
                     this.buscaInformacoes();
                   }}
