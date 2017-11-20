@@ -141,4 +141,9 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
             "ORDER BY 2 DESC \n" +
             "LIMIT 10", nativeQuery = true)
     List<?> findByMaioresVendedores(Date filtroMensal);
+
+    int countByClienteId(Long id);
+
+    int countByNotaGreaterThanAndClienteId(Integer numero, Long id);
+
 }

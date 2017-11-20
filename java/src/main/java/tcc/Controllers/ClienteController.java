@@ -13,6 +13,7 @@ import tcc.ErrorHandling.CustomError;
 import tcc.Models.Cliente;
 import tcc.Models.Usuario;
 import tcc.Services.ClienteService;
+import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
 import java.util.Objects;
@@ -24,10 +25,12 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private PedidoService pedidoService;
+
     /**
      * Método que recebe info via REST para inserir um novo usuário no banco de dados
      * @param
-     * @return
      */
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
@@ -46,6 +49,18 @@ public class ClienteController {
         try {
             Usuario usuario = new Usuario(usuarioId);
             Cliente cliente = clienteService.buscaClientePorUsuario(usuario);
+            return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao carregar dados do cliente"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "/{clienteId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity buscaCliente(@PathVariable("clienteId") Long clienteId) {
+        try {
+            Cliente cliente = clienteService.buscaCliente(clienteId);
+            cliente.setQtdPedidos(pedidoService.buscaQtdPedidosPorCliente(clienteId));
+            cliente.setQtdAvaliados(pedidoService.buscaQtdPedidosAvaliadosPorCliente(clienteId));
             return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao carregar dados do cliente"), HttpStatus.NOT_FOUND);

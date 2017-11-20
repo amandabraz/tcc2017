@@ -88,6 +88,10 @@ arredondaValores(num){
 };
 
 
+openCliente(cliente) {
+  this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
+}
+
 pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
@@ -130,11 +134,15 @@ pedidoFinalizado(){
             <View style={{paddingTop: 15}}>
             <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
             <View style = {{ width: '20%'}}>
-              <Image source={imagemPrincipalC}
+              <TouchableHighlight onPress={() => this.openCliente(pedidoF.cliente.id)}>                        
+                <Image source={imagemPrincipalC}
                      style={styles.imagemCliente}/>
+              </TouchableHighlight>
             </View>
           <View style={{width: '80%', paddingLeft: 6}}>
-            <Text style={styles.totalFont}> {pedidoF.cliente.usuario.nome}</Text>
+            <TouchableHighlight onPress={() => this.openCliente(pedidoF.cliente.id)}>                      
+              <Text style={styles.totalFont}> {pedidoF.cliente.usuario.nome}</Text>
+            </TouchableHighlight>
             <Text style={styles.oneResultfont}>Quantidade vendida:
             <Text style={styles.totalFont}> {pedidoF.quantidade}{'\n'}</Text>
             </Text>
