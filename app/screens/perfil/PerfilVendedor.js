@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Text,
   ToastAndroid ,
+  TouchableHighlight,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -30,6 +31,7 @@ import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import Popup from 'react-native-popup';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get("window");
 
@@ -42,6 +44,10 @@ export default class PerfilVendedor extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       nomeText: '',
+      confirmaSenha: '',
+      velhaSenha: '',
+      novaSenha: '',
+      senhaText: '',
       nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
@@ -106,6 +112,7 @@ export default class PerfilVendedor extends Component {
     this.setState({dataNascimentoText: dataNasc});
     this.setState({emailText: responseJson.usuario.email});
     this.setState({CPFText: responseJson.usuario.cpf});
+    this.setState({senhaText: responseJson.usuario.senha});
     this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
     if (responseJson.meiosPagamentos.length > 0) {
       this.setState({pagamentoEstilo: styles.listText})
@@ -397,6 +404,196 @@ export default class PerfilVendedor extends Component {
     this.props.navigation.navigate('TermoUso');
   }
 
+  validaCampos = (usuario) => {
+    let camposVazios = [];
+    let erros = [];
+
+    //validar senha
+    if (!usuario.velhaSenha) {
+      camposVazios.push("Senha Atual");
+    }
+    if (!usuario.novaSenha) {
+      camposVazios.push("Nova Senha");
+    }
+    if (!usuario.novaSenha) {
+      camposVazios.push("Confirmação de Senha");
+    } else {
+      if (usuario.novaSenha.length < 6) {
+        erros.push("Sua senha deve ter mais que 6 caracteres");
+      }
+
+      // validar com o Confirma Senha
+      if (usuario.novaSenha != this.state.confirmaSenha) {
+        erros.push("Senha e confirmação de senha não conferem");
+      }
+    }
+
+    if (camposVazios.length) {
+      ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+      return false;
+    }
+    if (erros.length) {
+      ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+      return false;
+    }
+    return true;
+  }
+
+  onButtonSalvarSenha = () => {
+    const {
+      state: {
+        senha
+      }
+    } = this;
+    usuario = {
+      "senha": novaSenha,
+      }
+    let continuar = this.validaCampos();
+
+    if (continuar) {
+      fetch(constante.ENDPOINT + 'usuario', {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(usuario)
+        })
+          .then((response) => response.json())
+            .then((responseJson) => {
+              if (responseJson.errorMessage) {
+                Alert.alert(responseJson.errorMessage);
+              } else {
+                ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                this._hideModal;
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+    }
+    };
+
+    validaCampos = () => {
+      let camposVazios = [];
+      let erros = [];
+
+      //validar senha
+      if (!this.state.velhaSenha) {
+        camposVazios.push("Senha Atual");
+      }
+      if (!this.state.novaSenha) {
+        camposVazios.push("Nova Senha");
+      }
+      if (!this.state.confirmaSenha) {
+        camposVazios.push("Confirmação de Senha");
+      } else {
+        if (this.state.novaSenha.length < 6) {
+          erros.push("Sua senha deve ter mais que 6 caracteres");
+        }
+
+        // validar com o Confirma Senha
+        if (this.state.novaSenha != this.state.confirmaSenha) {
+          erros.push("Senha e confirmação de senha não conferem");
+        }
+
+        // validar senha atual
+        if (this.state.velhaSenha != this.state.senhaText) {
+          erros.push("Senha Atual informada não corresponde à cadastrada.");
+        }
+
+        if (this.state.velhaSenha == this.state.novaSenha) {
+          erros.push("Nova senha deve ser diferente da cadastrada atualmente.");
+        }
+      }
+
+      if (camposVazios.length) {
+        ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+      if (erros.length) {
+        ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+      return true;
+    }
+
+    quebraEmLinhas(lista) {
+      var listaQuebrada = "";
+      for(item in lista) {
+        listaQuebrada += lista[item] + "\n";
+      }
+      return listaQuebrada.trim();
+    }
+
+    onButtonSalvarSenha = () => {
+      var imagem = this.state.imagemEditada;
+      if (!this.state.imagemEditada) {
+        imagem = this.state.imagemPerfil.uri;
+      }
+      const {
+        state: {
+          vendedorId,
+          userId,
+          nomeText,
+          vendedor,
+          celularText,
+          nomeFantasiaText,
+          meiosPagamentoVendedor,
+          novaSenha
+        }
+      } = this;
+      senhaEditada = {
+        "id": vendedorId,
+        "usuario": {
+            "id": userId,
+            "senha": novaSenha,
+            "deletado": false,
+            "perfil": vendedor.usuario.perfil,
+            "nome": nomeText,
+            "email": vendedor.usuario.email,
+            "dataNasc": vendedor.usuario.dataNasc,
+            "cpf": vendedor.usuario.cpf,
+            "ddd": celularText.substr(0,2),
+            "telefone": celularText.substr(2,10),
+            "notificacao": false,
+            "bloqueado": false,
+            "imagemPerfil": imagem
+        },
+        "nomeFantasia": nomeFantasiaText,
+        "meiosPagamentos": meiosPagamentoVendedor
+      };
+
+      let continuar = this.validaCampos();
+
+      if (continuar) {
+        fetch(constante.ENDPOINT + 'cliente', {
+            method: 'PUT',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(senhaEditada)
+          })
+            .then((response) => response.json())
+              .then((responseJson) => {
+                if (responseJson.errorMessage) {
+                  Alert.alert(responseJson.errorMessage);
+                } else {
+                  ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                  this.setState({ isModalVisible: false })
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+      }
+      };
+
+      _showModal = () => this.setState({ isModalVisible: true });
+
+     _hideModal = () => this.setState({ isModalVisible: false });
+
   render () {
     return (
       <View style={{ flex: 1 }}>
@@ -496,9 +693,17 @@ export default class PerfilVendedor extends Component {
 
               {this.meiosPagamento()}
               {this.mostraBotaoSalvar()}
-              <View style={{width:'98%'}}>
+              <View style={{width:'98%', flexDirection: 'row', justifyContent:'space-between'}}>
                 <TouchableOpacity
-                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                    style={{alignItems: 'center', padding:10, margin: 10}}
+                    onPress={this._showModal}>
+                  <Icon name="lock" size={25}
+                        color={'#7A8887'}
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Alterar senha</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{alignItems: 'center', padding:10, margin: 10}}
                     onPress={this.excluirUsuario.bind(this)}>
                   <Icon name="trash" size={25}
                         color={'#7A8887'}
@@ -509,6 +714,66 @@ export default class PerfilVendedor extends Component {
           </TriggeringView>
         </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
+        <Modal isVisible={this.state.isModalVisible}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.oneResult1}>
+            <Text style={{marginTop: 8, fontSize: 20, justifyContent: 'center', color:'#A1453E', fontWeight: 'bold'}}>Insira sua nova senha</Text>
+            <Text>{'\n'}</Text>
+            <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Senha Atual'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(velhaSenha) => this.setState({velhaSenha: velhaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+          <Text>{'\n'}</Text>
+
+           <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Nova Senha'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(novaSenha) => this.setState({novaSenha: novaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+            <Text>{'\n'}</Text>
+
+            <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Confirmação de Senha'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(confirmaSenha) => this.setState({confirmaSenha: confirmaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+              <Text>{'\n'}</Text>
+
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '90%'}}>
+                      <TouchableOpacity
+                        style={styles.buttonsSenha}
+                        onPress={this._hideModal}>
+                        <Text style={styles.buttonText}>Cancelar</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.buttonsSenha}
+                        onPress={() => this.onButtonSalvarSenha()}>
+                        <Text style={styles.buttonText}>Salvar</Text>
+                      </TouchableOpacity>
+                    </View>
+            </View>
+          </View>
+        </Modal>
+
       </View>
     );
   }
@@ -519,6 +784,26 @@ export default class PerfilVendedor extends Component {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+  },
+  oneResult1:{
+     backgroundColor: 'white',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 10,
+     width: '95%'
+  },
+  buttonsSenha: {
+    borderRadius: 5,
+    justifyContent: 'center',
+    height: 35,
+    width: 100,
+    backgroundColor: "#7A8887",
+    alignSelf: 'center',
+    marginBottom: 10,
+    padding:10,
+    margin: 10
   },
   inputDimensions: {
     backgroundColor: 'transparent',
