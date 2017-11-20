@@ -256,6 +256,8 @@ selecionarFoto() {
   };
 
   precoValido(preco){
+    preco = preco.toString()
+
     if(preco.includes(","))
       preco = preco.replace(",", ".")
 
@@ -265,7 +267,7 @@ selecionarFoto() {
     if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
       return false;
 
-    if(preco.match(/([\d]|[\.])/)){
+      if(preco.includes(".")){
       if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
         preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
         return false
