@@ -299,8 +299,6 @@ export default class PerfilVendedor extends Component {
      }
  }
 
-
-
   trocaImagemPerfil() {
     if (this.state.editavel == false) {
     } else {
@@ -404,7 +402,7 @@ export default class PerfilVendedor extends Component {
     this.props.navigation.navigate('TermoUso');
   }
 
-  validaCampos = (usuario) => {
+  validaCampos = () => {
     let camposVazios = [];
     let erros = [];
 
@@ -419,12 +417,12 @@ export default class PerfilVendedor extends Component {
       camposVazios.push("Confirmação de Senha");
     } else {
       if (usuario.novaSenha.length < 6) {
-        erros.push("Sua senha deve ter mais que 6 caracteres");
+        erros.push("Sua senha deve ter mais que 6 caracteres.");
       }
 
       // validar com o Confirma Senha
       if (usuario.novaSenha != this.state.confirmaSenha) {
-        erros.push("Senha e confirmação de senha não conferem");
+        erros.push("Senha e confirmação de senha não conferem.");
       }
     }
 
@@ -465,7 +463,6 @@ export default class PerfilVendedor extends Component {
                 Alert.alert(responseJson.errorMessage);
               } else {
                 ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                this._hideModal;
               }
             })
             .catch((error) => {
@@ -527,61 +524,36 @@ export default class PerfilVendedor extends Component {
     }
 
     onButtonSalvarSenha = () => {
-      var imagem = this.state.imagemEditada;
-      if (!this.state.imagemEditada) {
-        imagem = this.state.imagemPerfil.uri;
-      }
       const {
         state: {
-          vendedorId,
           userId,
-          nomeText,
-          vendedor,
-          celularText,
-          nomeFantasiaText,
-          meiosPagamentoVendedor,
           novaSenha
         }
       } = this;
-      senhaEditada = {
-        "id": vendedorId,
-        "usuario": {
-            "id": userId,
-            "senha": novaSenha,
-            "deletado": false,
-            "perfil": vendedor.usuario.perfil,
-            "nome": nomeText,
-            "email": vendedor.usuario.email,
-            "dataNasc": vendedor.usuario.dataNasc,
-            "cpf": vendedor.usuario.cpf,
-            "ddd": celularText.substr(0,2),
-            "telefone": celularText.substr(2,10),
-            "notificacao": false,
-            "bloqueado": false,
-            "imagemPerfil": imagem
-        },
-        "nomeFantasia": nomeFantasiaText,
-        "meiosPagamentos": meiosPagamentoVendedor
+      usuario = {
+          "id": userId,
+          "senha": novaSenha
       };
 
       let continuar = this.validaCampos();
 
       if (continuar) {
-        fetch(constante.ENDPOINT + 'cliente', {
-            method: 'PUT',
+        fetch(constante.ENDPOINT + 'usuario', {
+            method: 'PATCH',
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             },
-            body: JSON.stringify(senhaEditada)
+            body: JSON.stringify(usuario)
           })
             .then((response) => response.json())
               .then((responseJson) => {
                 if (responseJson.errorMessage) {
                   Alert.alert(responseJson.errorMessage);
                 } else {
+                  this.setState({senhaText: novaSenha});
                   ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                  this.setState({ isModalVisible: false })
+                  this._hideModal();
                 }
               })
               .catch((error) => {

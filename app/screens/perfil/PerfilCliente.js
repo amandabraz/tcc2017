@@ -470,12 +470,12 @@ export default class PerfilCliente extends Component {
         camposVazios.push("Confirmação de Senha");
       } else {
         if (this.state.novaSenha.length < 6) {
-          erros.push("Sua senha deve ter mais que 6 caracteres");
+          erros.push("Sua senha deve ter mais que 6 caracteres.");
         }
 
         // validar com o Confirma Senha
         if (this.state.novaSenha != this.state.confirmaSenha) {
-          erros.push("Senha e confirmação de senha não conferem");
+          erros.push("Senha e confirmação de senha não conferem.");
         }
 
         // validar senha atual
@@ -508,46 +508,22 @@ export default class PerfilCliente extends Component {
     }
 
     onButtonSalvarSenha = () => {
-      var imagem = this.state.imagemEditada;
-      if (!this.state.imagemEditada) {
-        imagem = this.state.imagemPerfil.uri;
-      }
       const {
         state: {
-          clienteId,
           userId,
-          novaSenha,
-          cliente,
-          nomeText,
-          celularText,
-          tags,
-          restricoesCliente
+          novaSenha
         }
       } = this;
       usuario = {
-        "id": clienteId,
-        "usuario": {
           "id": userId,
-          "senha": novaSenha,
-          "deletado": false,
-          "perfil": cliente.usuario.perfil,
-          "nome": nomeText,
-          "email": cliente.usuario.email,
-          "dataNasc": cliente.usuario.dataNasc,
-          "cpf": cliente.usuario.cpf,
-          "ddd": celularText.substr(0,2),
-          "telefone": celularText.substr(2,10),
-          "notificacao": false,
-          "bloqueado": false,
-          "imagemPerfil": imagem
-        }
+          "senha": novaSenha
       };
 
       let continuar = this.validaCampos();
 
       if (continuar) {
-        fetch(constante.ENDPOINT + 'cliente', {
-            method: 'PUT',
+        fetch(constante.ENDPOINT + 'usuario', {
+            method: 'PATCH',
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -559,8 +535,9 @@ export default class PerfilCliente extends Component {
                 if (responseJson.errorMessage) {
                   Alert.alert(responseJson.errorMessage);
                 } else {
+                  this.setState({senhaText: novaSenha});
                   ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                  this.setState({ isModalVisible: false })
+                  this._hideModal();
                 }
               })
               .catch((error) => {
