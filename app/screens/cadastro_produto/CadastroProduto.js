@@ -229,6 +229,11 @@ selecionarFoto() {
     let continuar = this.validaCampos(produto);
 
     if (continuar){
+      
+    //corrige preço se preciso
+    if(produto.preco.includes(","))
+      produto.preco = produto.preco.replace(",", ".")
+
     fetch(constante.ENDPOINT + 'produto', {
       method: 'POST',
       headers: {

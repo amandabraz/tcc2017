@@ -308,6 +308,11 @@ carregarCategoriasArray() {
     let continuar = this.validaCampos(produtoEditado);
 
       if (continuar) {
+        
+      //corrige preço se preciso
+      if(produtoEditado.preco.includes(","))
+        produtoEditado.preco = produtoEditado.preco.replace(",", ".")
+
         fetch(constante.ENDPOINT + 'produto', {
           method: 'PUT',
           headers: {
