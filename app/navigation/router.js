@@ -72,6 +72,35 @@ export const GerenciaPedidosConfirmadosCliente = StackNavigator({
   Chat:{
     screen: Chat
   },
+  ExibeVendedor:{
+    screen: ExibeVendedor
+  },
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+export const GerenciaPedidosSolicitadosCliente = StackNavigator({
+  Solicitados: {
+    screen: PedidosSolicitadosCliente
+  },
+  ExibeVendedor:{
+    screen: ExibeVendedor
+  },
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+export const GerenciaPedidosFinalizadosCliente = StackNavigator({
+  Finalizados: {
+    screen: PedidosFinalizadosCliente
+  },
+  ExibeVendedor:{
+    screen: ExibeVendedor
+  },
 }, {
   mode: 'card',
   headerMode: 'none',
@@ -81,13 +110,13 @@ export const GerenciaPedidosConfirmadosCliente = StackNavigator({
 
 export const GerenciaPedidosClientes = TabNavigator({
   Solicitados: {
-    screen: PedidosSolicitadosCliente
+    screen: GerenciaPedidosSolicitadosCliente
   },
   Confirmados: {
     screen: GerenciaPedidosConfirmadosCliente,
   },
   Finalizados: {
-    screen: PedidosFinalizadosCliente
+    screen: GerenciaPedidosFinalizadosCliente
   },
  },
  {
