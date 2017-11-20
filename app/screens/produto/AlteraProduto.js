@@ -43,6 +43,7 @@ export default class AlteraProduto extends Component {
      categoriasArray: [],
      nome: '',
      preco: '',
+     precoNovo: '',
      observacao: '',
      imagemPrincipal: require('./img/camera11.jpg'),
      imagemProduto: '',
@@ -68,7 +69,7 @@ export default class AlteraProduto extends Component {
            this.setState({imagemPrincipal: { uri: rJson.imagemPrincipal }});
          }
          this.setState({nome: rJson.nome});
-         this.setState({preco: rJson.preco.toString()});
+         this.setState({precoNovo: rJson.preco.toString()});
          this.setState({quantidade: rJson.quantidade.toString()});
          this.setState({categoria: rJson.categoria});
          this.setState({observacao: rJson.observacao});
@@ -282,7 +283,7 @@ carregarCategoriasArray() {
         nome,
         quantidade,
         dataPreparacao,
-        preco,
+        precoNovo,
         observacao,
         categoria,
         ingredientes,
@@ -297,7 +298,7 @@ carregarCategoriasArray() {
       "nome": nome,
       "dataPreparacao": this.state.dataPreparacao,
       "quantidade": quantidade,
-      "preco": preco,
+      "preco": precoNovo,
       "observacao": observacao,
       "categoria": categoria,
       "ingredientes": ingredientes,
@@ -422,8 +423,8 @@ return (
                   label={'Preço'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
-                  value={this.state.preco}
-                  onChangeText={(preco) => this.setState({preco: preco})}
+                  value={this.state.precoNovo}
+                  onChangeText={(preco) => this.setState({precoNovo: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
                   iconColor={'#7A8887'}/>
