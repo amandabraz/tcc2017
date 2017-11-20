@@ -94,12 +94,12 @@ export default class ExibeCliente extends Component {
   };
 
   _showModal = () => this.setState({ isModalVisible: true })
-  
+
   _hideModal = () => this.setState({ isModalVisible: false })
-  
+
   denunciaUsuario() {
     this.setState({carregou: true});
-    
+
     const {
       state: {
         motivoDenuncia,
@@ -107,14 +107,14 @@ export default class ExibeCliente extends Component {
         cliente
       }
     } = this;
-  
+
     denuncia = {
       "motivo": motivoDenuncia,
       "dataDenuncia": new Date(),
       "reportado": cliente.usuario.id,
       "denunciador": userId
     }
-  
+
     fetch(constante.ENDPOINT + 'denuncia/', {method: 'POST',
       headers: {
       'Accept': 'application/json',
@@ -127,13 +127,13 @@ export default class ExibeCliente extends Component {
       if (!responseJson.errorMessage) {
         this._hideModal();
         ToastAndroid.showWithGravity('Denúncia registrada. Assim que possível, entraremos em contato com o status da sua denúncia. Obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
-        this.setState({carregou: false});      
+        this.setState({carregou: false});
       }
     });
   }
 
   render () {
-    const {goBack} = this.props.navigation;    
+    const {goBack} = this.props.navigation;
     return (
       <View style={styles.container}>
       <NavigationBar
@@ -167,7 +167,7 @@ export default class ExibeCliente extends Component {
             <Text style={{color: '#4A4A4A', fontSize: 20, margin: 5}}>
               {this.state.qtdPedidos}
             </Text>
-            <Text style={{fontSize: 18}}> 
+            <Text style={{fontSize: 18}}>
               {this.state.comprasEfetuadas}
             </Text>
           </View>
@@ -177,11 +177,11 @@ export default class ExibeCliente extends Component {
             <Text style={{color: '#4A4A4A', fontSize: 20, margin: 5}}>
               {this.state.qtdAvaliados}
             </Text>
-            <Text style={{fontSize: 18}}> 
+            <Text style={{fontSize: 18}}>
               {this.state.pedidosAvaliados}
             </Text>
           </View>
-        </View>        
+        </View>
         <Fumi
             style={{ backgroundColor: 'transparent', width: "80%", height: 110 }}
             label={'Tags'}
@@ -213,12 +213,12 @@ export default class ExibeCliente extends Component {
             animationOut={'slideOutRight'}
             backdropOpacity={0.3}>
             <View style={styles.modalContent}>
-            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Por favor, descreva o motivo da sua denúncia, avaliaremos e entraremos em contato assim que possível! </Text>              
+            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Por favor, descreva o motivo da sua denúncia, avaliaremos e entraremos em contato assim que possível! </Text>
               <View style={{width: '90%', margin: 10}}>
               <TextInput
-                  style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}          
+                  style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}
                   multiline={true}
-                  maxLength={500}
+                  maxLength={255}
                   onChangeText={(motivo) => this.setState({motivoDenuncia: motivo})}
                 />
               </View>
@@ -314,14 +314,14 @@ export default class ExibeCliente extends Component {
     color: '#fff',
     fontFamily: 'Roboto',
   },
-  modalContent: {  
+  modalContent: {
     backgroundColor: 'white',
     padding: 22,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
-  }, 
+  },
   button: {
     backgroundColor: 'gray',
     padding: 12,
