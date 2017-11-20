@@ -102,8 +102,10 @@ export default class ExibeComprovante extends Component {
              <View style = {{ flexDirection: 'row'}}>
               <Image source={this.state.imagemProduto}
                      style={styles.imageResultSearch}/>
+              <View style={{width: '80%'}}>
                 <Text style={styles.oneResultfontTitle}>{this.state.nomeProdutoText}</Text>
                 <Text>{'\n'}{'\n'}{'\n'}</Text>
+                </View>
                 </View>
                 <View style={{paddingTop: 20}}>
                 <Text style={styles.oneResultfont}>Quantidade solicitada:
