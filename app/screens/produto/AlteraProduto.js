@@ -7,7 +7,7 @@ import {
     ScrollView,
     Alert,
     Image,
-    TouchableOpacity, 
+    TouchableOpacity,
     Picker,
     ToastAndroid
 } from 'react-native';
@@ -122,10 +122,10 @@ precoValido(preco){
 
   if(preco.includes(","))
     preco = preco.replace(",", ".")
-  
+
   if(preco==null || preco=='') //se for nulo
     return false
-  
+
   if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
     return false;
 
@@ -133,7 +133,7 @@ precoValido(preco){
     if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
       preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
       return false
-    }  
+    }
   }
   return true
 };
@@ -281,6 +281,7 @@ carregarCategoriasArray() {
         vendedorId,
         nome,
         quantidade,
+        dataPreparacao,
         preco,
         observacao,
         categoria,
@@ -294,7 +295,7 @@ carregarCategoriasArray() {
       "id": produtoId,
       "vendedor": vendedorId,
       "nome": nome,
-      "dataPreparacao": dataSalvar,
+      "dataPreparacao": this.state.dataPreparacao,
       "quantidade": quantidade,
       "preco": preco,
       "observacao": observacao,
@@ -310,7 +311,7 @@ carregarCategoriasArray() {
     let continuar = this.validaCampos(produtoEditado);
 
       if (continuar) {
-        
+
       //corrige preço se preciso
       if(produtoEditado.preco.includes(","))
         produtoEditado.preco = produtoEditado.preco.replace(",", ".")
