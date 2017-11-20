@@ -104,14 +104,14 @@ export default class ExibeCliente extends Component {
       state: {
         motivoDenuncia,
         userId,
-        clienteId
+        cliente
       }
     } = this;
   
     denuncia = {
       "motivo": motivoDenuncia,
       "dataDenuncia": new Date(),
-      "reportado": clienteId,
+      "reportado": cliente.usuario.id,
       "denunciador": userId
     }
   
