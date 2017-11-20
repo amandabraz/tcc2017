@@ -155,6 +155,7 @@ favoritaVendedor(){
       <View style={styles.container}>
       <NavigationBar
        tintColor="transparent"
+       style={{marginBottom: 20}}
       leftButton={
         <TouchableOpacity onPress={() => goBack()}>
           <MaterialsIcon name="chevron-left" size={40} color={'#624063'}  style={{ padding: 3 }} />
@@ -172,7 +173,7 @@ favoritaVendedor(){
                 {this.state.nomeText}
               </Text>
             </View>
-            <View style={{alignSelf: 'flex-end',  padding: 10}}>
+            <View style={{alignSelf: 'flex-end'}}>
                 <Icon name='heart' 
                       size={25}
                       raised
@@ -224,28 +225,22 @@ favoritaVendedor(){
       flex: 1
   },
   headerBackground: {
-    flex: 1,
-    width: null,
     alignSelf: 'stretch',
   },
   header:{
     width,
+    height: "40%",
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 5,
   },
   profilepicWrap:{
-    width: 170,
-    height: 170,
-    borderRadius: 100,
-    borderColor: 'rgba(0,0,0,0.4)',
+    width,
+    height: "85%"
   },
   profilepic:{
     flex: 1,
-    width: null,
-    alignSelf: 'stretch',
-    borderRadius: 100,
-    borderWidth: 4
+    width,
+    alignSelf: 'stretch'
   },
   oneResultfontTitle:{
     color: '#4A4A4A',

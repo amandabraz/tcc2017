@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -49,11 +50,15 @@ public class Cliente implements Serializable {
             {@JoinColumn(name="ID_RESTRICAO")})
     private Set<RestricaoDietetica> restricoesDieteticas;
 
+
+    @Transient
+    private int qtdPedidos;
+
+    @Transient
+    private int qtdAvaliados;
+
     public Cliente() {
-        this.id = id;
-        this.usuario = usuario;
-        this.tags = tags;
-        this.restricoesDieteticas = restricoesDieteticas;
+        super();
     }
 
     public Cliente(Long id) {
@@ -114,5 +119,21 @@ public class Cliente implements Serializable {
 
     public void setVendedoresFavoritos(Set<Vendedor> vendedoresFavoritos) {
         this.vendedoresFavoritos = vendedoresFavoritos;
+    }
+
+    public int getQtdPedidos() {
+        return qtdPedidos;
+    }
+
+    public void setQtdPedidos(int qtdPedidos) {
+        this.qtdPedidos = qtdPedidos;
+    }
+
+    public int getQtdAvaliados() {
+        return qtdAvaliados;
+    }
+
+    public void setQtdAvaliados(int qtdAvaliados) {
+        this.qtdAvaliados = qtdAvaliados;
     }
 }

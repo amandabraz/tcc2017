@@ -316,4 +316,20 @@ public class PedidoService {
         }
         return c.getTime();
     }
+
+    public int buscaQtdPedidosPorCliente(Long clienteId) {
+        try {
+            return pedidoDAO.countByClienteId(clienteId);
+        } catch(Exception e) {
+            throw e;
+        }
+    }
+
+    public int buscaQtdPedidosAvaliadosPorCliente(Long clienteId) {
+        try {
+            return pedidoDAO.countByNotaGreaterThanAndClienteId(0, clienteId);
+        } catch(Exception e) {
+            throw e;
+        }
+    }
 }

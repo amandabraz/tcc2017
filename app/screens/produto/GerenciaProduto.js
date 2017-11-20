@@ -41,7 +41,6 @@ class GerenciaProduto extends Component {
           this.setState({listaProdutos: responseJson});
           this.setState({carregou: false});
         }
-        this.setState({refreshing: false});
     });
   };
 
@@ -104,7 +103,7 @@ class GerenciaProduto extends Component {
         let dataPrep = dia + "/" + mes + "/" + ano;
 
         if (produto.imagemPrincipal) {
-          imagemPrincipal = {uri: produto.imagemPrincipal};
+          imagemPrincipal = {uri: produto.imagemPrincipal, cache: "reload"};
         }
         views.push(
           <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>
@@ -170,6 +169,7 @@ class GerenciaProduto extends Component {
        </View>
      )
    }
+   this.setState({refreshing: false});   
     return views;
  };
 
