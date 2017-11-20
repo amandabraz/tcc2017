@@ -66,7 +66,9 @@ class PedidosSolicitadosVendedor extends Component {
         }
       });
   }
-
+  openCliente(cliente) {
+    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
+  }
 
 pedidoSolicitado(){
   var views = [];
@@ -95,11 +97,15 @@ pedidoSolicitado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
+            <TouchableHighlight onPress={() => this.openCliente(pedidoS.cliente.id)}>
               <Image source={imagemPrincipalC}
                   style={styles.imagemPrincipal}/>
+            </TouchableHighlight>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
-            <Text style={styles.totalFont}> {pedidoS.cliente.usuario.nome}</Text>
+            <TouchableHighlight onPress={() => this.openCliente(pedidoS.cliente.id)}>          
+              <Text style={styles.totalFont}> {pedidoS.cliente.usuario.nome}</Text>
+            </TouchableHighlight>
             <Text style={styles.oneResultfont}> fez um pedido!</Text>
             <Text style={{fontSize: 14}}> {dataSolicitado}</Text>
           </View>

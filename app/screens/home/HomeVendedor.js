@@ -66,7 +66,7 @@ class HomeVendedor extends Component {
         filtroMensal: true,
         alturaPedido: '1%',
         alturaResumo: '100%',
-        carregou: true
+        carregou: true,
     };
     this.buscaDadosPedido();
     this.buscaInformacoes();
@@ -194,6 +194,9 @@ class HomeVendedor extends Component {
       });
   }
 
+  openCliente(cliente) {
+    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
+  }
 
 pedidoSolicitado(){
     var views = [];
@@ -208,11 +211,15 @@ pedidoSolicitado(){
         <View style={{width: '68%', paddingLeft: 5}}>
           <View style={{flexDirection: 'row'}}>
            <View style = {{ width: '30%'}}>
+           <TouchableHighlight onPress={() => this.openCliente(this.state.pedidoSolicitado.cliente.id)}>
              <Image source={this.state.imagemCliente}
                     style={styles.imagemCliente}/>
+          </TouchableHighlight>
            </View>
            <View style={{width: '70%'}}>
+           <TouchableHighlight onPress={() => this.openCliente(this.state.pedidoSolicitado.cliente.id)}>
              <Text style={styles.totalFont}> {this.state.pedidoSolicitado.cliente.usuario.nome}</Text>
+            </TouchableHighlight>
              <Text style={styles.oneResultfont}>Fez um pedido!</Text>
              <Text style={{fontSize:14}}>{this.state.dataSolicitada}</Text>
            </View>
