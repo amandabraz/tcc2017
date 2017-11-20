@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ToastAndroid, ScrollView } from 'react-native';
+import { TextInput, Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ToastAndroid, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -39,7 +39,8 @@ export default class ExibeCliente extends Component {
       qtdPedidos: '',
       qtdAvaliados: '',
       comprasEfetuadas: "Nenhuma compra efetuada",
-      pedidosAvaliados: "Nenhum pedido avaliado"
+      pedidosAvaliados: "Nenhum pedido avaliado",
+      motivoDenuncia: '',
     };
     this.buscaDadosCliente();
   }
@@ -91,6 +92,45 @@ export default class ExibeCliente extends Component {
         }
       });
   };
+
+  _showModal = () => this.setState({ isModalVisible: true })
+  
+  _hideModal = () => this.setState({ isModalVisible: false })
+  
+  denunciaUsuario() {
+    this.setState({carregou: true});
+    
+    const {
+      state: {
+        motivoDenuncia,
+        userId,
+        cliente
+      }
+    } = this;
+  
+    denuncia = {
+      "motivo": motivoDenuncia,
+      "dataDenuncia": new Date(),
+      "reportado": cliente.usuario.id,
+      "denunciador": userId
+    }
+  
+    fetch(constante.ENDPOINT + 'denuncia/', {method: 'POST',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(denuncia)
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        this._hideModal();
+        ToastAndroid.showWithGravity('Denúncia registrada. Assim que possível, entraremos em contato com o status da sua denúncia. Obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        this.setState({carregou: false});      
+      }
+    });
+  }
 
   render () {
     const {goBack} = this.props.navigation;    
@@ -162,6 +202,41 @@ export default class ExibeCliente extends Component {
             multiline={true}
             editable={false}
             inputStyle={this.state.restricaoEstilo}/>
+            <View style={{margin: 20}}>
+            <TouchableOpacity onPress={() => this._showModal()} style={{flexDirection: "row", alignItems:"center", justifyContent: "center"}}>
+              <MaterialsIcon name="block" size={20} color={'#624063'}  style={{ padding: 3 }} />
+              <Text style={{fontWeight: "bold"}}>Denunciar usuário</Text>
+            </TouchableOpacity>
+            <Modal
+            isVisible={this.state.isModalVisible}
+            animationIn={'slideInLeft'}
+            animationOut={'slideOutRight'}
+            backdropOpacity={0.3}>
+            <View style={styles.modalContent}>
+            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Por favor, descreva o motivo da sua denúncia, avaliaremos e entraremos em contato assim que possível! </Text>              
+              <View style={{width: '90%', margin: 10}}>
+              <TextInput
+                  style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}          
+                  multiline={true}
+                  maxLength={500}
+                  onChangeText={(motivo) => this.setState({motivoDenuncia: motivo})}
+                />
+              </View>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <TouchableOpacity onPress={() => this._hideModal()}>
+                  <View style={styles.button}>
+                    <Text style={{color: "#fff"}}>Cancelar</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.denunciaUsuario()}>
+                    <View style={styles.button}>
+                      <Text style={{color: "#fff"}}>Denunciar</Text>
+                    </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+          </View>
       </ScrollView>
       </View>
     );
@@ -239,6 +314,23 @@ export default class ExibeCliente extends Component {
     color: '#fff',
     fontFamily: 'Roboto',
   },
+  modalContent: {  
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  }, 
+  button: {
+    backgroundColor: 'gray',
+    padding: 12,
+    margin: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  }
 });
 
 AppRegistry.registerComponent('tcc2017', () => tcc2017);

@@ -95,7 +95,9 @@ arredondaValores(num){
 
 onPressOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
   this.props.navigation.navigate('ExibeVendedor',
-        {selectUserId: usuarioSelecionado,
+        {
+          userId: this.state.userId,
+          selectUserId: usuarioSelecionado,
           vendedorId: vendedorIdSelecionado,
           clienteId: this.state.clienteId
         });
