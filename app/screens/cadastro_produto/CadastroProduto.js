@@ -122,7 +122,7 @@ validaCampos = (produto) => {
       camposVazios.push("nome");
   }
   //validar preco
-  if (!produto.preco) {
+  if (!produto.preco || !this.precoValido(produto.preco)) {
     camposVazios.push("preço");
   }
   //validar data de preparo
@@ -141,7 +141,7 @@ validaCampos = (produto) => {
   }
 
   if (camposVazios.length) {
-    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento obrigatório e correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
     return false;
   }
   if (erros.length) {
@@ -229,6 +229,11 @@ selecionarFoto() {
     let continuar = this.validaCampos(produto);
 
     if (continuar){
+      
+    //corrige preço se preciso
+    if(produto.preco.includes(","))
+      produto.preco = produto.preco.replace(",", ".")
+
     fetch(constante.ENDPOINT + 'produto', {
       method: 'POST',
       headers: {
@@ -249,6 +254,25 @@ selecionarFoto() {
       });
   }
   };
+
+  precoValido(preco){
+    if(preco.includes(","))
+      preco = preco.replace(",", ".")
+    
+    if(preco==null || preco=='') //se for nulo
+      return false
+    
+    if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
+      return false;
+
+    if(preco.match(/([\d]|[\.])/)){
+      if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
+        preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
+        return false
+      }  
+    }
+    return true
+  }
 
 render() {
     const {goBack} = this.props.navigation;
@@ -303,6 +327,7 @@ return (
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
+                  keyboardType={'numbers-and-punctuation'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
                   onChangeText={(preco) => this.setState({preco: preco})}
@@ -330,6 +355,7 @@ return (
                             showIcon={false}
                             mode="date"
                             format="YYYY-MM-DD"
+                            maxDate={new Date()}
                             confirmBtnText="Confirm"
                             cancelBtnText="Cancel"
                             customStyles={{
@@ -339,7 +365,7 @@ return (
                                      fontSize: 16,
                                      color: '#7A8887'}
                                      }}
-                            onDateChange={(date) => {this.setState({date: date});}}/>
+                            onDateChange={(date) => {this.setState({dataPreparacao: date});}}/>
                       </View>
 
             <View style={styles.linhaTitulo}>
@@ -416,6 +442,7 @@ return (
 
     );
   }
+
 }
 
 const titleConfig = {

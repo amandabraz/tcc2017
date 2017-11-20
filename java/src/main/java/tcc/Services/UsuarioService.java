@@ -77,4 +77,14 @@ public class UsuarioService {
             throw e;
         }
     }
+
+    public Usuario alterarSenha(Usuario usuario) {
+        try {
+            Usuario alterarSenha = usuarioDAO.findOne(usuario.getId());
+            alterarSenha.setSenha(usuario.getSenha());
+            return usuarioDAO.save(alterarSenha);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

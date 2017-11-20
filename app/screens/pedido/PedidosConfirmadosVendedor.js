@@ -56,6 +56,10 @@ class PedidosConfirmadosVendedor extends Component {
     return num.toFixed(2)
   };
 
+  openCliente(cliente) {
+    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
+  }
+
 pedidoConfirmado(){
   var views = [];
   if(this.state.pedidosConfirmados.length > 0){
@@ -80,11 +84,15 @@ pedidoConfirmado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '20%'}}>
-            <Image source={imagemPrincipalC}
+            <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>            
+              <Image source={imagemPrincipalC}
                   style={styles.imagemPrincipal}/>
+            </TouchableHighlight>
             </View>
             <View style={{width: '65%', alignSelf:'center'}}>
-              <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
+              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>                        
+                <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
+              </TouchableHighlight>
               <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
               <Text style={styles.oneResultfont}> Entregar:
               <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
