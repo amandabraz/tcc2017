@@ -8,15 +8,13 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  Alert,
-  RefreshControl
+  Alert
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import ActionButton from 'react-native-action-button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as constante from '../../constantes';
 import StarRating from 'react-native-star-rating';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,8 +25,6 @@ class GerenciaProduto extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       listaProdutos: [],
-      carregou: true,
-      refreshing: false,
     };
     this.buscaProdutos();
   };
@@ -39,7 +35,6 @@ class GerenciaProduto extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({listaProdutos: responseJson});
-          this.setState({carregou: false});
         }
     });
   };
@@ -103,7 +98,7 @@ class GerenciaProduto extends Component {
         let dataPrep = dia + "/" + mes + "/" + ano;
 
         if (produto.imagemPrincipal) {
-          imagemPrincipal = {uri: produto.imagemPrincipal, cache: "reload"};
+          imagemPrincipal = {uri: produto.imagemPrincipal};
         }
         views.push(
           <View key={i} style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width}}>
@@ -169,7 +164,6 @@ class GerenciaProduto extends Component {
        </View>
      )
    }
-   this.setState({refreshing: false});   
     return views;
  };
 
@@ -193,18 +187,10 @@ class GerenciaProduto extends Component {
               QUANTIDADE
             </Text>
           </View>
-          <Spinner visible={this.state.carregou}/>
-          <ScrollView
-           refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => {
-                this.setState({refreshing:true});
-                this.buscaProdutos();
-                this.mostraProdutos();
-              }}/>
-              }>
+          <ScrollView>
             {this.mostraProdutos()}
+            <View style={{height: 50}}>
+            </View>
           </ScrollView>
           <ActionButton
             buttonColor="#885581"
