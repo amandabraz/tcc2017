@@ -569,18 +569,14 @@ export default class PerfilVendedor extends Component {
   render () {
     return (
       <View style={{ flex: 1 }}>
+      <ScrollView>
         <StatusBar barStyle="light-content" />
-        <HeaderImageScrollView
-              maxHeight={styles.image}
-              minHeight ={100}
-          renderHeader={() => (
             <Image source={this.state.imagemPerfil} style={styles.image}>
               <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
                   onPress={this.trocaImagemPerfil.bind(this)}>
                 <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
               </TouchableOpacity>
             </Image>
-            )}>
          <TriggeringView>
             <View style={styles.bar}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
@@ -684,8 +680,8 @@ export default class PerfilVendedor extends Component {
                 </TouchableOpacity>
             </View>
           </TriggeringView>
-        </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
+        </ScrollView>
         <Modal isVisible={this.state.isModalVisible}>
           <View style={{ flex: 1 }}>
             <View style={styles.oneResult1}>
@@ -745,7 +741,6 @@ export default class PerfilVendedor extends Component {
             </View>
           </View>
         </Modal>
-
       </View>
     );
   }

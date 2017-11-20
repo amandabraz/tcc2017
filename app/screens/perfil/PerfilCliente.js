@@ -28,9 +28,9 @@ import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import CheckBox from 'react-native-check-box';
 import TagInput from 'react-native-tag-input';
-import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import Popup from 'react-native-popup';
 import Spinner from 'react-native-loading-spinner-overlay';
+import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get("window");
@@ -549,18 +549,14 @@ export default class PerfilCliente extends Component {
   render () {
     return (
       <View style={{ flex: 1 }}>
+      <ScrollView>
         <StatusBar barStyle="light-content"/>
-          <HeaderImageScrollView
-              maxHeight={styles.image}
-              minHeight ={100}
-          renderHeader={() => (
-         <Image source={this.state.imagemPerfil} style={styles.image}>
+        <Image source={this.state.imagemPerfil} style={styles.image}>
            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
                onPress={this.trocaImagemPerfil.bind(this)}>
              <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
            </TouchableOpacity>
          </Image>
-      )}>
       <TriggeringView>
             <View style={styles.bar}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
@@ -654,8 +650,8 @@ export default class PerfilCliente extends Component {
                 </TouchableOpacity>
               </View>
         </TriggeringView>
-      </HeaderImageScrollView>
         <Popup ref={popup => this.popup = popup }/>
+        </ScrollView>
         <Modal isVisible={this.state.isModalVisible}>
           <View style={{ flex: 1 }}>
             <View style={styles.oneResult1}>
