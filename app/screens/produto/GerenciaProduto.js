@@ -189,7 +189,7 @@ class GerenciaProduto extends Component {
           </View>
           <ScrollView>
             {this.mostraProdutos()}
-            <View style={{height: 50}}>
+            <View style={{height: 70}}>
             </View>
           </ScrollView>
           <ActionButton
