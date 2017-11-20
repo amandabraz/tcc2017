@@ -62,7 +62,7 @@ export default class ExibeVendedor extends Component {
             pagamentos = pagamentos.slice(0, -3);
             this.setState({meiosPagamentoText: pagamentos});
             if (responseJson.favoritoDoCliente) {
-              this.setState({favoritoColor: '#990000'});              
+              this.setState({favoritoColor: '#990000'});
             }
           }
           this.setState({carregou: false});
@@ -131,9 +131,9 @@ favoritaVendedor(){
     .then((response) => response.json())
     .then((responseJson) => {
       if (!responseJson.errorMessage) {
-        ToastAndroid.showWithGravity('Vendedor favoritado <3', ToastAndroid.SHORT, ToastAndroid.CENTER);        
+        ToastAndroid.showWithGravity('Vendedor favoritado <3', ToastAndroid.SHORT, ToastAndroid.CENTER);
       } else {
-        this.setState({favoritoColor: 'gray'});        
+        this.setState({favoritoColor: 'gray'});
       }
     });
   } else {
@@ -143,7 +143,7 @@ favoritaVendedor(){
     .then((response) => response.json())
     .then((responseJson) => {
       if (!responseJson.errorMessage) {
-        ToastAndroid.showWithGravity('Vendedor desfavoritado </3', ToastAndroid.SHORT, ToastAndroid.CENTER);        
+        ToastAndroid.showWithGravity('Vendedor desfavoritado </3', ToastAndroid.SHORT, ToastAndroid.CENTER);
       } else {
         this.setState({favoritoColor: '#990000'});
       }
@@ -158,7 +158,7 @@ _hideModal = () => this.setState({ isModalVisible: false })
 
 denunciaUsuario() {
   this.setState({carregou: true});
-  
+
   const {
     state: {
       motivoDenuncia,
@@ -186,13 +186,13 @@ denunciaUsuario() {
     if (!responseJson.errorMessage) {
       this._hideModal();
       ToastAndroid.showWithGravity('Denúncia registrada. Assim que possível, entraremos em contato com o status da sua denúncia. Obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
-      this.setState({carregou: false});      
+      this.setState({carregou: false});
     }
   });
 }
 
   render () {
-    const {goBack} = this.props.navigation;    
+    const {goBack} = this.props.navigation;
     return (
       <View style={styles.container}>
       <NavigationBar
@@ -216,10 +216,10 @@ denunciaUsuario() {
               </Text>
             </View>
             <View style={{alignSelf: 'flex-end'}}>
-                <Icon name='heart' 
+                <Icon name='heart'
                       size={25}
                       raised
-                      type='font-awesome' 
+                      type='font-awesome'
                       color={this.state.favoritoColor}
                       onPress={() => this.favoritaVendedor()}/>
             </View>
@@ -265,12 +265,12 @@ denunciaUsuario() {
         animationOut={'slideOutRight'}
         backdropOpacity={0.3}>
         <View style={styles.modalContent}>
-        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Por favor, descreva o motivo da sua denúncia, avaliaremos e entraremos em contato assim que possível! </Text>              
+        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Por favor, descreva o motivo da sua denúncia, avaliaremos e entraremos em contato assim que possível! </Text>
           <View style={{width: '90%', margin: 10}}>
           <TextInput
-              style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}          
+              style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}
               multiline={true}
-              maxLength={500}
+              maxLength={255}
               onChangeText={(motivo) => this.setState({motivoDenuncia: motivo})}
             />
           </View>
@@ -367,14 +367,14 @@ denunciaUsuario() {
     color: '#4A4A4A',
     fontFamily: 'Roboto',
   },
-  modalContent: {   
+  modalContent: {
     backgroundColor: 'white',
     padding: 22,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
-  }, 
+  },
   button: {
     backgroundColor: 'gray',
     padding: 12,
