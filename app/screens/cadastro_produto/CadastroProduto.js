@@ -229,7 +229,7 @@ selecionarFoto() {
     let continuar = this.validaCampos(produto);
 
     if (continuar){
-      
+
     //corrige preço se preciso
     if(produto.preco.includes(","))
       produto.preco = produto.preco.replace(",", ".")
@@ -258,10 +258,10 @@ selecionarFoto() {
   precoValido(preco){
     if(preco.includes(","))
       preco = preco.replace(",", ".")
-    
+
     if(preco==null || preco=='') //se for nulo
       return false
-    
+
     if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
       return false;
 
@@ -269,7 +269,7 @@ selecionarFoto() {
       if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
         preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
         return false
-      }  
+      }
     }
     return true
   }
@@ -351,7 +351,7 @@ return (
                         size = {18}/>
                       <DatePicker
                             style={{width: 300}}
-                            date={this.state.dataPreparacao}
+                            date={this.state.date}
                             showIcon={false}
                             mode="date"
                             format="YYYY-MM-DD"
@@ -365,7 +365,7 @@ return (
                                      fontSize: 16,
                                      color: '#7A8887'}
                                      }}
-                            onDateChange={(date) => {this.setState({dataPreparacao: date});}}/>
+                            onDateChange={(date) => {this.setState({date: date});}}/>
                       </View>
 
             <View style={styles.linhaTitulo}>
