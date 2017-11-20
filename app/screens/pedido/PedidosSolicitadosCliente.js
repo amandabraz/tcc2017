@@ -93,6 +93,13 @@ arredondaValores(num){
   return num.toFixed(2)
 }
 
+onPressOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
+  this.props.navigation.navigate('ExibeVendedor',
+        {selectUserId: usuarioSelecionado,
+          vendedorId: vendedorIdSelecionado,
+          clienteId: this.state.clienteId
+        });
+};
 
 pedidoSolicitado(){
   var views = [];
@@ -122,8 +129,11 @@ pedidoSolicitado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
+            <TouchableHighlight
+                onPress={() => this.onPressOpenVendedor(pedidoS.produto.vendedor.usuario.id, pedidoS.produto.vendedor.id)} >
               <Image source={imagemPrincipalV}
-                  style={styles.imagemPrincipal}/>
+                    style={styles.imagemPrincipal}/>
+          </TouchableHighlight>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
             <Text style={styles.totalFont}> {pedidoS.produto.vendedor.usuario.nome}</Text>
