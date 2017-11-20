@@ -168,4 +168,15 @@ public class UsuarioController {
             return new ResponseEntity<>(new CustomError("Erro ao reativar perfil"), HttpStatus.BAD_REQUEST);
         }
     }
+
+
+    @RequestMapping(method = RequestMethod.PATCH)
+    public ResponseEntity alterarSenha(@RequestBody Usuario usuario) {
+        try {
+            Usuario senhaAlterada = usuarioService.alterarSenha(usuario);
+            return new ResponseEntity<Usuario>(senhaAlterada, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new CustomError("Erro ao alterar senha."), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
