@@ -100,6 +100,13 @@ export default class Login extends Component {
     });
 }
 
+usuarioBloqueado() {
+  this.popup.tip({
+    title: 'Conta Bloqueada',
+       content: [' ', 'Sua conta encontra-se bloqueada.', 'Entre em contato com os administradores:', ' ', 'amoratcc@gmail.com'],
+  });
+}
+
   //evento no click do botão
   eventLogin = () => {
     const {
@@ -130,23 +137,27 @@ export default class Login extends Component {
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
             if (responseJson != null) {
-              if(responseJson.usuario.deletado == 1){
-                this.setState({userId: responseJson.usuario.id})
-                this.ativarPerfil();
+              if(responseJson.usuario.bloqueado ==1){
+                this.usuarioBloqueado();
               } else {
-                ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                if (responseJson.usuario.perfil == "V") {
-                 this.props.navigation.navigate('TabsVendedor', {
-                   userId: responseJson.usuario.id,
-                   vendedorId: responseJson.id
-                 });
-               } else if (responseJson.usuario.perfil == "C") {
-                 this.props.navigation.navigate('TabsCliente', {
-                   userId: responseJson.usuario.id,
-                   clienteId: responseJson.id
-                 });
-               }
-              }              
+                if(responseJson.usuario.deletado == 1){
+                  this.setState({userId: responseJson.usuario.id})
+                  this.ativarPerfil();
+                } else {
+                  ToastAndroid.showWithGravity('Seja bem vindo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                  if (responseJson.usuario.perfil == "V") {
+                   this.props.navigation.navigate('TabsVendedor', {
+                     userId: responseJson.usuario.id,
+                     vendedorId: responseJson.id
+                   });
+                 } else if (responseJson.usuario.perfil == "C") {
+                   this.props.navigation.navigate('TabsCliente', {
+                     userId: responseJson.usuario.id,
+                     clienteId: responseJson.id
+                   });
+                 }
+                }
+              }
             }
           } else {
               Alert.alert("E-mail ou senha inválidos!");
