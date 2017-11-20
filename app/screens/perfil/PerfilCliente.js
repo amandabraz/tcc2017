@@ -650,7 +650,6 @@ export default class PerfilCliente extends Component {
                 </TouchableOpacity>
               </View>
         </TriggeringView>
-        <Popup ref={popup => this.popup = popup }/>
         </ScrollView>
         <Modal isVisible={this.state.isModalVisible}>
           <View style={{ flex: 1 }}>
@@ -711,6 +710,7 @@ export default class PerfilCliente extends Component {
             </View>
           </View>
         </Modal>
+        <Popup ref={popup => this.popup = popup }/>
      </View>
     );
   }
