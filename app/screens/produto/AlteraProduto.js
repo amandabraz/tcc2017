@@ -7,7 +7,7 @@ import {
     ScrollView,
     Alert,
     Image,
-    TouchableOpacity,
+    TouchableOpacity, 
     Picker,
     ToastAndroid
 } from 'react-native';
@@ -117,6 +117,25 @@ export default class AlteraProduto extends Component {
    });
 };
 
+precoValido(preco){
+  if(preco.includes(","))
+    preco = preco.replace(",", ".")
+  
+  if(preco==null || preco=='') //se for nulo
+    return false
+  
+  if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
+    return false;
+
+  if(preco.match(/([\d]|[\.])/)){
+    if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
+      preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
+      return false
+    }  
+  }
+  return true
+};
+
 validaCampos = (produto) => {
   let camposVazios = [];
   let erros = [];
@@ -125,7 +144,7 @@ validaCampos = (produto) => {
       camposVazios.push("nome");
   }
   //validar preco
-  if (!produto.preco) {
+  if (!produto.preco || !this.precoValido(produto.preco)) {
     camposVazios.push("preço");
   }
   //validar data de preparo
@@ -144,7 +163,7 @@ validaCampos = (produto) => {
   }
 
   if (camposVazios.length) {
-    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento obrigatório e correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
     return false;
   }
   if (erros.length) {
@@ -289,6 +308,11 @@ carregarCategoriasArray() {
     let continuar = this.validaCampos(produtoEditado);
 
       if (continuar) {
+        
+      //corrige preço se preciso
+      if(produtoEditado.preco.includes(","))
+        produtoEditado.preco = produtoEditado.preco.replace(",", ".")
+
         fetch(constante.ENDPOINT + 'produto', {
           method: 'PUT',
           headers: {
