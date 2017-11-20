@@ -330,6 +330,7 @@ return (
                             showIcon={false}
                             mode="date"
                             format="YYYY-MM-DD"
+                            maxDate={new Date()}
                             confirmBtnText="Confirm"
                             cancelBtnText="Cancel"
                             customStyles={{
@@ -339,7 +340,7 @@ return (
                                      fontSize: 16,
                                      color: '#7A8887'}
                                      }}
-                            onDateChange={(date) => {this.setState({date: date});}}/>
+                            onDateChange={(date) => {this.setState({dataPreparacao: date});}}/>
                       </View>
 
             <View style={styles.linhaTitulo}>

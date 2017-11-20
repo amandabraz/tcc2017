@@ -422,6 +422,7 @@ return (
               showIcon={false}
               mode="date"
               format="YYYY-MM-DD"
+              maxDate={new Date()}
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               customStyles={{
