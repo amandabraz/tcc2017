@@ -603,7 +603,7 @@ export default class PerfilCliente extends Component {
                   label={'Celular'}
                   iconClass={FontAwesomeIcon}
                   iconName={'mobile'}
-                  iconColor={'#7A8887'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.celularText}
                   editable={this.state.editavel}
                   inputStyle={this.state.baseTextClass}
@@ -640,9 +640,9 @@ export default class PerfilCliente extends Component {
                     style={{alignItems: 'center', padding:10, margin: 10}}
                     onPress={this._showModal}>
                   <Icon name="lock" size={25}
-                        color={'#7A8887'}
+                        color={'#4A4A4A'}
                         type='font-awesome'
-                        style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Alterar senha</Text>
+                        style={{margin: 10}}/><Text>Alterar senha</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{alignItems: 'center', padding:10, margin: 10}}
