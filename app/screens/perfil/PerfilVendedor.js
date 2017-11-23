@@ -1,24 +1,37 @@
-import React, { Component } from 'react';
-import { AppRegistry,
+import React, {
+  Component
+} from 'react';
+import {
+  AppRegistry,
+  Alert,
   Button,
-  Text,
-  StyleSheet,
-  StatusBar,
-  TouchableOpacity,
-  View,
+  Dimensions,
   Image,
   ScrollView,
-  Dimensions,
-  ToastAndroid } from 'react-native';
+  StatusBar,
+  StyleSheet,
+  Text,
+  ToastAndroid ,
+  TouchableHighlight,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
-import { Fumi } from 'react-native-textinput-effects';
-import { Icon } from 'react-native-elements';
+import {
+  Fumi
+} from 'react-native-textinput-effects';
+import {
+  Icon
+} from 'react-native-elements';
 import * as constante from '../../constantes';
 import CheckBox from 'react-native-check-box';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
+import Popup from 'react-native-popup';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,10 +44,15 @@ export default class PerfilVendedor extends Component {
       userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       nomeText: '',
+      confirmaSenha: '',
+      velhaSenha: '',
+      novaSenha: '',
+      senhaText: '',
       nomeFantasiaText: '',
       dataNascimentoText: '',
       emailText: '',
-      imagemPerfil: require('./img/camera2.jpg'),
+      imagemPerfil: require('./img/camera11.jpg'),
+      imagemEditada: '',
       meiosPagamentoText: "Nenhum meio de pagamento escolhido",
       pagamentoEstilo: {
         color: '#CCCCCC',
@@ -49,7 +67,10 @@ export default class PerfilVendedor extends Component {
       titleTextClass: styles.titleText,
       baseTextClass: styles.baseText,
       pencilColor: '#fff',
-      meiosPagamento: []
+      meiosPagamento: [],
+      escolhido: '',
+      carregou: true,
+      cameraVisivel: 'transparent'
     };
     this.buscaDadosVendedor();
     this.buscaMeiosPagamento();
@@ -61,6 +82,7 @@ export default class PerfilVendedor extends Component {
       .then((responseJson) => {
           if (!responseJson.errorMssage) {
             this.prepararVendedor(responseJson);
+            this.setState({carregou: false});
         }
       });
   };
@@ -74,6 +96,7 @@ export default class PerfilVendedor extends Component {
         }
       });
   }
+
   prepararVendedor(responseJson) {
     this.setState({vendedor: responseJson});
     if (responseJson.usuario.imagemPerfil) {
@@ -82,10 +105,14 @@ export default class PerfilVendedor extends Component {
     this.setState({nomeText: responseJson.usuario.nome});
     this.setState({nomeFantasiaText: responseJson.nomeFantasia});
     var dataNormal = new Date(responseJson.usuario.dataNasc);
-    var dataNasc = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+    let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+    let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+    let ano = dataNormal.getFullYear();
+    let dataNasc = dia + "/" + mes + "/" + ano;
     this.setState({dataNascimentoText: dataNasc});
     this.setState({emailText: responseJson.usuario.email});
     this.setState({CPFText: responseJson.usuario.cpf});
+    this.setState({senhaText: responseJson.usuario.senha});
     this.setState({celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
     if (responseJson.meiosPagamentos.length > 0) {
       this.setState({pagamentoEstilo: styles.listText})
@@ -100,6 +127,9 @@ export default class PerfilVendedor extends Component {
         meioPagVendedor.push(responseJson.meiosPagamentos[j]);
       }
       this.setState({meiosPagamentoVendedor: meioPagVendedor});
+    } else {
+      pagamentos = "Nenhum pagamento escolhido.";
+      this.setState({meiosPagamentoText: pagamentos});
     }
   }
 
@@ -108,12 +138,14 @@ export default class PerfilVendedor extends Component {
       this.setState({editavel: true,
         titleTextClass: styles.titleTextEdit,
         baseTextClass: styles.baseTextEdit,
-        pencilColor: '#ccc'});
+        pencilColor: '#ccc',
+        cameraVisivel: 'gray'});
     } else {
       this.setState({editavel: false,
         titleTextClass: styles.titleText,
         baseTextClass: styles.baseText,
-        pencilColor: '#fff'});
+        pencilColor: '#fff',
+        cameraVisivel: 'transparent'});
     }
 
   }
@@ -124,7 +156,7 @@ export default class PerfilVendedor extends Component {
         <View style={{alignSelf: 'center'}}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.salvaEdicaoVendedor()}>
+            onPress={() => this.pagamentoEscolhido()}>
             <Text style={styles.buttonText}>SALVAR</Text>
           </TouchableOpacity>
 
@@ -135,8 +167,10 @@ export default class PerfilVendedor extends Component {
   }
 
   salvaEdicaoVendedor() {
-    this.pagamentoEscolhido;
-
+    var imagem = this.state.imagemEditada;
+    if (!this.state.imagemEditada) {
+      imagem = this.state.imagemPerfil.uri;
+    }
     const {
       state: {
         vendedorId,
@@ -145,7 +179,6 @@ export default class PerfilVendedor extends Component {
         vendedor,
         celularText,
         nomeFantasiaText,
-        imagemPerfil,
         meiosPagamentoVendedor
       }
     } = this;
@@ -165,7 +198,7 @@ export default class PerfilVendedor extends Component {
           "telefone": celularText.substr(2,10),
           "notificacao": false,
           "bloqueado": false,
-          "imagemPerfil": imagemPerfil.uri,
+          "imagemPerfil": imagem,
           "fcmToken": vendedor.usuario.fcm_token
       },
       "nomeFantasia": nomeFantasiaText,
@@ -183,7 +216,8 @@ export default class PerfilVendedor extends Component {
       .then((rJson) => {
         if (!rJson.errorMessage) {
           this.prepararVendedor(rJson);
-          this.setState({editavel: false});
+          this.setState({editavel: false,
+                        cameraVisivel: 'transparent'});
           ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
@@ -196,7 +230,7 @@ export default class PerfilVendedor extends Component {
         label={'Meios de Pagamento'}
         iconClass={FontAwesomeIcon}
         iconName={'asterisk'}
-        iconColor={'darkslategrey'}
+        iconColor={'#7A8887'}
         value={this.state.meiosPagamentoText}
         multiline={true}
         editable={false}
@@ -216,10 +250,12 @@ export default class PerfilVendedor extends Component {
     var pagamentos = this.state.meiosPagamentoVendedor;
     if (meioPag.checked) {
       pagamentos.push(objMeioPag);
+      this.setState({ meiosPagamentoVendedor: pagamentos });
     } else {
       pagamentos.pop(objMeioPag);
+      this.setState({ meiosPagamentoVendedor: pagamentos });
     }
-    this.setState({ meiosPagamentoVendedor: pagamentos });
+
   }
 
   mostrarCheckboxesPagamento() {
@@ -229,7 +265,7 @@ export default class PerfilVendedor extends Component {
       views.push(
         <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
           <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
-          <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
+          <Text style={{fontFamily: 'Roboto', color: '#7A8887', fontSize: 16, fontWeight: "bold"}}>  Meios de pagamento</Text>
         </View>
       );
       for (i in pagamentosVendedor) {
@@ -256,109 +292,314 @@ export default class PerfilVendedor extends Component {
   }
 
  pagamentoEscolhido = () => {
-     if (this.state.meiosPagamentos.length > 0) {
-       return true;
+     if (this.state.meiosPagamentoVendedor.length > 0) {
+       this.salvaEdicaoVendedor();
      }
      else {
        ToastAndroid.showWithGravity('Escolha ao menos um meio de pagamento', ToastAndroid.LONG, ToastAndroid.CENTER);
-       return false;
      }
  }
 
-
-
   trocaImagemPerfil() {
-    var options = {
-      title: 'Selecione sua foto',
-      takePhotoButtonTitle: 'Tirar uma foto',
-      chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
-      cancelButtonTitle: 'Cancelar',
-      storageOptions: {
-        skipBackup: false,
-        path: 'images'
-      }
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        //do nothing
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        let source = 'data:image/jpeg;base64,' + response.data;
-        this.setState({
-          image: {uri: response.uri, width: 200, height: 200, changed: true}
-        });
-        this.setState({imagemPerfil: source});
+    if (this.state.editavel == false) {
+    } else {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPerfil: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemEditada: source});
+        }
+      });
+    }
+  }
+
+  desejaSair() {
+    this.popup.confirm({
+      title: 'Logout',
+      content: ['Tem certeza que deseja sair?'],
+      ok: {
+        text: 'Sim',
+        style: {
+          color: 'gray',
+          fontWeight: 'bold'
+        },
+        callback: () => {
+          {this.logout()}
+        }
+      },
+      cancel: {
+        text: 'Não',
+        style: {
+          color: 'gray',
+          fontWeight: 'bold'
+        }
       }
     });
   }
 
+  handleFinalizarPress = () => {
+    fetch(constante.ENDPOINT + 'usuario/deletar/' + this.state.userId, {method: 'DELETE'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        {this.logout()}
+      }
+    });
+};
+
+  excluirUsuario() {
+    this.popup.confirm({
+        title: 'Desativar Conta',
+        content: ['Tem certeza que deseja desativar sua conta?'],
+        ok: {
+            text: 'Sim',
+            style: {
+                color: 'gray',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              {this.handleFinalizarPress()}
+            }
+        },
+        cancel: {
+            text: 'Não',
+            style: {
+                color: 'gray'
+            }
+        }
+    });
+}
+
+
+  logout() {
+    ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+    this.props.navigation.navigate('Login');
+  }
+
+  sobreColaboradores() {
+    this.popup.tip({
+      title: 'Trabalho de Conclusão de Curso',
+         content: [' ', 'Aline Bender Dias', 'Amanda Barbosa Braz', 'Larissa Sitta Espinosa', 'Maiara de Oliveira Rodrigues', ' ', 'amoratcc@gmail.com', ' ', 'PUC - CAMPINAS', '2017'],
+    });
+  }
+
+  abrirTermos() {
+    this.props.navigation.navigate('TermoUso');
+  }
+
+  validaCampos = () => {
+    let camposVazios = [];
+    let erros = [];
+
+    //validar senha
+    if (!usuario.velhaSenha) {
+      camposVazios.push("Senha Atual");
+    }
+    if (!usuario.novaSenha) {
+      camposVazios.push("Nova Senha");
+    }
+    if (!usuario.novaSenha) {
+      camposVazios.push("Confirmação de Senha");
+    } else {
+      if (usuario.novaSenha.length < 6) {
+        erros.push("Sua senha deve ter mais que 6 caracteres.");
+      }
+
+      // validar com o Confirma Senha
+      if (usuario.novaSenha != this.state.confirmaSenha) {
+        erros.push("Senha e confirmação de senha não conferem.");
+      }
+    }
+
+    if (camposVazios.length) {
+      ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+      return false;
+    }
+    if (erros.length) {
+      ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+      return false;
+    }
+    return true;
+  }
+
+  onButtonSalvarSenha = () => {
+    const {
+      state: {
+        senha
+      }
+    } = this;
+    usuario = {
+      "senha": novaSenha,
+      }
+    let continuar = this.validaCampos();
+
+    if (continuar) {
+      fetch(constante.ENDPOINT + 'usuario', {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(usuario)
+        })
+          .then((response) => response.json())
+            .then((responseJson) => {
+              if (responseJson.errorMessage) {
+                Alert.alert(responseJson.errorMessage);
+              } else {
+                ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+    }
+    };
+
+    validaCampos = () => {
+      let camposVazios = [];
+      let erros = [];
+
+      //validar senha
+      if (!this.state.velhaSenha) {
+        camposVazios.push("Senha Atual");
+      }
+      if (!this.state.novaSenha) {
+        camposVazios.push("Nova Senha");
+      }
+      if (!this.state.confirmaSenha) {
+        camposVazios.push("Confirmação de Senha");
+      } else {
+        if (this.state.novaSenha.length < 6) {
+          erros.push("Sua senha deve ter mais que 6 caracteres");
+        }
+
+        // validar com o Confirma Senha
+        if (this.state.novaSenha != this.state.confirmaSenha) {
+          erros.push("Senha e confirmação de senha não conferem");
+        }
+
+        // validar senha atual
+        if (this.state.velhaSenha != this.state.senhaText) {
+          erros.push("Senha Atual informada não corresponde à cadastrada.");
+        }
+
+        if (this.state.velhaSenha == this.state.novaSenha) {
+          erros.push("Nova senha deve ser diferente da cadastrada atualmente.");
+        }
+      }
+
+      if (camposVazios.length) {
+        ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+      if (erros.length) {
+        ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+      return true;
+    }
+
+    quebraEmLinhas(lista) {
+      var listaQuebrada = "";
+      for(item in lista) {
+        listaQuebrada += lista[item] + "\n";
+      }
+      return listaQuebrada.trim();
+    }
+
+    onButtonSalvarSenha = () => {
+      const {
+        state: {
+          userId,
+          novaSenha
+        }
+      } = this;
+      usuario = {
+          "id": userId,
+          "senha": novaSenha
+      };
+
+      let continuar = this.validaCampos();
+
+      if (continuar) {
+        fetch(constante.ENDPOINT + 'usuario', {
+            method: 'PATCH',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(usuario)
+          })
+            .then((response) => response.json())
+              .then((responseJson) => {
+                if (responseJson.errorMessage) {
+                  Alert.alert(responseJson.errorMessage);
+                } else {
+                  this.setState({senhaText: novaSenha});
+                  ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                  this._hideModal();
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+      }
+      };
+
+      _showModal = () => this.setState({ isModalVisible: true });
+
+     _hideModal = () => this.setState({ isModalVisible: false });
+
   render () {
     return (
       <View style={{ flex: 1 }}>
+      <ScrollView>
         <StatusBar barStyle="light-content" />
-        <HeaderImageScrollView
-          maxHeight={MAX_HEIGHT}
-          minHeight={1}
-          maxOverlayOpacity={0.6}
-          minOverlayOpacity={0.3}
-          fadeOutForeground
-          renderHeader={() =>
-              <Image source={this.state.imagemPerfil} style={styles.image}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
-                    onPress={this.trocaImagemPerfil.bind(this)}>
-                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>
-                </TouchableOpacity>
-              </Image>
-          }
-          renderForeground={() =>
-            <Animatable.View
-            style={styles.navTitleView}
-            ref={navTitleView => {
-              this.navTitleView = navTitleView;
-            }}>
-            <View style={styles.bar}>
-            <View style={{alignItems: 'flex-start', width: '80%'}}>
-              <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
+            <Image source={this.state.imagemPerfil} style={styles.image}>
+              <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+                  onPress={this.trocaImagemPerfil.bind(this)}>
+                <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
               </TouchableOpacity>
-            </View>
-            <View style={{alignItems: 'flex-end', width: '20%'}}>
+            </Image>
+         <TriggeringView>
+            <View style={styles.bar}>
               <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                 <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.abrirTermos()}>
+                <FontAwesomeIcon name="file-text" size={20} color={this.state.pencilColor} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.sobreColaboradores()}>
+                <FontAwesomeIcon name="question" size={20} color={this.state.pencilColor} />
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this.desejaSair()}>
+                <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
+              </TouchableOpacity>
             </View>
-          </View>
-          </Animatable.View>
-          }>
-          <TriggeringView
-            style={styles.section}
-            onHide={() => this.navTitleView.fadeInUp(200)}
-            onDisplay={() => this.navTitleView.fadeOut(100)
-            }>
-            <View style={styles.bar}>
-              <View style={{alignItems: 'flex-start', width: '80%'}}>
-                <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                  <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{alignItems: 'flex-end', width: '20%'}}>
-                <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-                  <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </TriggeringView>
-
-
-            <ScrollView >
               <Fumi
                 style={styles.inputDimensions}
                 label={'Nome'}
                 iconClass={FontAwesomeIcon}
                 iconSize={20}
                 iconName={'user'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.nomeText}
                 editable={this.state.editavel}
                 inputStyle={this.state.titleTextClass}
@@ -369,7 +610,7 @@ export default class PerfilVendedor extends Component {
                 label={'CPF'}
                 iconClass={FontAwesomeIcon}
                 iconName={'info'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.CPFText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -379,17 +620,19 @@ export default class PerfilVendedor extends Component {
                 label={'Data de Nascimento'}
                 iconClass={FontAwesomeIcon}
                 iconName={'calendar'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.dataNascimentoText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
+
+            <Spinner visible={this.state.carregou}/>
 
               <Fumi
                 style={styles.inputDimensions}
                 label={'Email'}
                 iconClass={FontAwesomeIcon}
                 iconName={'at'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.emailText}
                 editable={false}
                 inputStyle={this.state.editavel ? styles.baseTextNaoEditavel : styles.baseText}/>
@@ -399,7 +642,7 @@ export default class PerfilVendedor extends Component {
                 label={'Celular'}
                 iconClass={FontAwesomeIcon}
                 iconName={'mobile'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.celularText}
                 editable={this.state.editavel}
                 inputStyle={this.state.baseTextClass}
@@ -411,7 +654,7 @@ export default class PerfilVendedor extends Component {
                 label={'Nome da loja'}
                 iconClass={MaterialsIcon}
                 iconName={'store'}
-                iconColor={'darkslategrey'}
+                iconColor={'#7A8887'}
                 value={this.state.nomeFantasiaText}
                 editable={this.state.editavel}
                 inputStyle={this.state.baseTextClass}
@@ -419,8 +662,86 @@ export default class PerfilVendedor extends Component {
 
               {this.meiosPagamento()}
               {this.mostraBotaoSalvar()}
-          </ScrollView>
-        </HeaderImageScrollView>
+              <View style={{width:'98%', flexDirection: 'row', justifyContent:'space-between'}}>
+                <TouchableOpacity
+                    style={{alignItems: 'center', padding:10, margin: 10}}
+                    onPress={this._showModal}>
+                  <Icon name="lock" size={25}
+                        color={'#7A8887'}
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Alterar senha</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{alignItems: 'center', padding:10, margin: 10}}
+                    onPress={this.excluirUsuario.bind(this)}>
+                  <Icon name="trash" size={25}
+                        color={'#7A8887'}
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text style={{color: '#7A8887'}}>Desativar conta</Text>
+                </TouchableOpacity>
+            </View>
+          </TriggeringView>
+        </ScrollView>
+        <Modal isVisible={this.state.isModalVisible}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.oneResult1}>
+            <Text style={{marginTop: 8, fontSize: 20, justifyContent: 'center', color:'#A1453E', fontWeight: 'bold'}}>Insira sua nova senha</Text>
+            <Text>{'\n'}</Text>
+            <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Senha Atual'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(velhaSenha) => this.setState({velhaSenha: velhaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+          <Text>{'\n'}</Text>
+
+           <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Nova Senha'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(novaSenha) => this.setState({novaSenha: novaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+            <Text>{'\n'}</Text>
+
+            <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Confirmação de Senha'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(confirmaSenha) => this.setState({confirmaSenha: confirmaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+              <Text>{'\n'}</Text>
+
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '90%'}}>
+                      <TouchableOpacity
+                        style={styles.buttonsSenha}
+                        onPress={this._hideModal}>
+                        <Text style={styles.buttonText}>Cancelar</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.buttonsSenha}
+                        onPress={() => this.onButtonSalvarSenha()}>
+                        <Text style={styles.buttonText}>Salvar</Text>
+                      </TouchableOpacity>
+                    </View>
+            </View>
+          </View>
+        </Modal>
+        <Popup ref={popup => this.popup = popup }/>
       </View>
     );
   }
@@ -431,6 +752,26 @@ export default class PerfilVendedor extends Component {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+  },
+  oneResult1:{
+     backgroundColor: 'white',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 10,
+     width: '95%'
+  },
+  buttonsSenha: {
+    borderRadius: 5,
+    justifyContent: 'center',
+    height: 35,
+    width: 100,
+    backgroundColor: "#7A8887",
+    alignSelf: 'center',
+    marginBottom: 10,
+    padding:10,
+    margin: 10
   },
   inputDimensions: {
     backgroundColor: 'transparent',
@@ -454,6 +795,18 @@ export default class PerfilVendedor extends Component {
     borderRadius: 100,
     borderColor: 'rgba(0,0,0,0.4)',
   },
+  EvenBtnText: {
+    fontSize: 18,
+    color: 'white',
+    textAlign: 'center'
+  },
+  EvenBtn: {
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    position: 'relative',
+    backgroundColor: '#88557B'
+  },
   profilepic:{
     flex: 1,
     width: null,
@@ -464,12 +817,13 @@ export default class PerfilVendedor extends Component {
   bar:{
     width,
     padding: '5%',
-    backgroundColor: 'darkslategrey',
-    flexDirection: 'row'
+    backgroundColor: '#7A8887',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   baseText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontSize: 20,
   },
   baseTextEdit: {
@@ -485,7 +839,7 @@ export default class PerfilVendedor extends Component {
   },
   listText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontSize: 16,
   },
   barText: {
@@ -496,7 +850,7 @@ export default class PerfilVendedor extends Component {
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#7A8887',
     fontFamily: 'Roboto',
   },
   titleTextEdit: {
@@ -510,7 +864,7 @@ export default class PerfilVendedor extends Component {
     justifyContent: 'center',
     height: 35,
     width: 200,
-    backgroundColor: "darkslategrey",
+    backgroundColor: "#7A8887",
     alignSelf: 'stretch',
     marginBottom: 20
   },

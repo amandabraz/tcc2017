@@ -310,7 +310,7 @@ class Cadastro extends Component {
         maxLength={50}
         onChangeText={(nome) => this.setState({nome: nome})}
         iconName={'user'}
-        iconColor={'#f5f5f5'}
+        iconColor={'#4A4A4A'}
         labelStyle={styles.texto}
         inputStyle={styles.input}/>
 
@@ -328,7 +328,7 @@ class Cadastro extends Component {
             }}
               iconName={'info'}
               keyboardType={'numeric'}
-              iconColor={'#f5f5f5'}
+              iconColor={'#4A4A4A'}
               labelStyle={styles.texto}
               inputStyle={styles.input}/>
 
@@ -339,14 +339,14 @@ class Cadastro extends Component {
               onChangeText={(celular) => this.setState({celular: celular})}
               iconName={'mobile'}
               keyboardType={'phone-pad'}
-              iconColor={'#f5f5f5'}
+              iconColor={'#4A4A4A'}
               labelStyle={styles.texto}
               inputStyle={styles.input}/>
 
       <View style={{flexDirection:'row', padding: 10, alignItems: 'center'}}>
         <FontAwesomeIcon
           name='calendar'
-          color='#f5f5f5'
+          color='#4A4A4A'
           size = {18}/>
 
           <DatePicker style={{width: 330}}
@@ -361,13 +361,13 @@ class Cadastro extends Component {
                   customStyles={{
                     dateInput: { borderWidth: 0},
                     placeholderText: {
-                      color: '#f5f5f5',
+                      color: '#4A4A4A',
                       fontFamily: 'Roboto',
                       fontSize: 16,
                       textAlign: 'left'
                     },
                     dateText: {
-                      color: '#f5f5f5',
+                      color: '#4A4A4A',
                       fontFamily: 'Roboto',
                       fontSize: 20,
                       textAlign: 'left'
@@ -388,7 +388,7 @@ class Cadastro extends Component {
                 this.setState({backgroundColorEmail: 'rgba(255, 0, 0, 0.3);'});
               }}}
               iconName={'at'}
-              iconColor={'#f5f5f5'}
+              iconColor={'#4A4A4A'}
               labelStyle={styles.texto}
               inputStyle={styles.input}/>
 
@@ -398,7 +398,7 @@ class Cadastro extends Component {
               iconClass={FontAwesomeIcon}
               iconName={'lock'}
               onChangeText={(senha) => this.setState({senha: senha})}
-              iconColor={'#f5f5f5'}
+              iconColor={'#4A4A4A'}
               labelStyle={styles.texto}
               inputStyle={styles.input}
               secureTextEntry={true}/>
@@ -409,7 +409,7 @@ class Cadastro extends Component {
               iconClass={FontAwesomeIcon}
               iconName={'lock'}
               onChangeText={(confirmaSenha) => this.setState({confirmaSenha: confirmaSenha})}
-              iconColor={'#f5f5f5'}
+              iconColor={'#4A4A4A'}
               labelStyle={styles.texto}
               inputStyle={styles.input}
               secureTextEntry={true}/>
@@ -451,13 +451,13 @@ const styles = StyleSheet.create({
   },
 
   texto: {
-    color: '#f5f5f5',
+    color: '#4A4A4A',
     fontSize: 12,
     fontFamily: 'Roboto',
   },
 
     input:{
-       color: '#f5f5f5',
+       color: '#4A4A4A',
        fontSize: 20,
        fontFamily: 'Roboto'
     },

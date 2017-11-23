@@ -15,6 +15,7 @@ import NavigationBar from 'react-native-navbar';
 import TagInput from 'react-native-tag-input';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const {width, height} = Dimensions.get("window");
 
@@ -26,7 +27,8 @@ class Cliente extends Component {
         fcm_token: this.props.navigation.state.params.fcm_token,
         dietasArray: [],
         restricoesDieteticas: [],
-        tags: []
+        tags: [],
+        carregou: true
     }
     this.preencherDietasArray();
   };
@@ -40,6 +42,7 @@ class Cliente extends Component {
               dietasBuscadas.push(responseJson[i]);
             }
             this.setState({dietasArray: dietasBuscadas});
+            this.setState({carregou: false});
         });
   };
 
@@ -123,7 +126,7 @@ class Cliente extends Component {
       <View style={{flex: 1}}>
         <NavigationBar
           title={titleConfig}
-          tintColor="#95c9db"
+          tintColor="#624063"
         />
         <View style={styles.container}>
 
@@ -139,7 +142,7 @@ class Cliente extends Component {
                 Adicione suas tags:
               </Text>
           <View style={{ flexDirection: 'column', flex: 1}}>
-
+          <Spinner visible={this.state.carregou}/>
           <TagInput
             value={this.state.tags}
             onChange={(tags) => this.setState({tags,})}
@@ -158,7 +161,7 @@ class Cliente extends Component {
 
 const titleConfig = {
   title: 'Cadastro Cliente',
-  tintColor: "#dc143c",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 

@@ -11,8 +11,9 @@ import PerfilCliente from '../screens/perfil/PerfilCliente';
 import PerfilVendedor from '../screens/perfil/PerfilVendedor';
 import HomeVendedor from '../screens/home/HomeVendedor';
 import HomeCliente from '../screens/home/HomeCliente';
-import ProdutosFavoritos from '../screens/produto/ProdutosFavoritos';
-import RankingProdutos from '../screens/produto/RankingProdutos';
+import RankingProdutos from '../screens/ranking/RankingProdutos';
+import RankingVendedores from '../screens/ranking/RankingVendedores';
+import VendedoresFavoritos from '../screens/produto/VendedoresFavoritos';
 import GerenciaProduto from '../screens/produto/GerenciaProduto';
 import BuscaProduto from '../screens/produto/BuscaProduto';
 import ExibeProduto from '../screens/produto/ExibeProduto';
@@ -20,7 +21,7 @@ import AlteraProduto from '../screens/produto/AlteraProduto';
 import ExibeComprar from '../screens/produto/ExibeComprar';
 import ExibeComprovante from '../screens/produto/ExibeComprovante';
 import ExibeVendedor from '../screens/produto/ExibeVendedor';
-import PedidoCliente from '../screens/pedido/PedidoCliente';
+import ExibeCliente from '../screens/pedido/ExibeCliente';
 import PedidosSolicitadosVendedor from '../screens/pedido/PedidosSolicitadosVendedor';
 import PedidosConfirmadosVendedor from '../screens/pedido/PedidosConfirmadosVendedor';
 import PedidosFinalizadosVendedor from '../screens/pedido/PedidosFinalizadosVendedor';
@@ -33,6 +34,10 @@ import CadastroProduto from '../screens/cadastro_produto/CadastroProduto';
 import Cadastro from '../screens/cadastro/Cadastro';
 import Vendedor from '../screens/cadastro/Vendedor';
 import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermitida';
+import TermoUso from '../screens/configuracao/TermoUso';
+import AceiteTermoUso from '../screens/configuracao/AceiteTermoUso';
+import Chat from '../screens/pedido/Chat';
+
 
 /**
 MENU SOMENTE PARA CLIENTE
@@ -60,15 +65,122 @@ export const BuscaPro = StackNavigator({
   headerMode: 'none',
 });
 
-export const GerenciaPedidosClientes = TabNavigator({
-  Solicitados: {
-    screen: PedidosSolicitadosCliente
-  },
+
+export const GerenciaPedidosConfirmadosCliente = StackNavigator({
   Confirmados: {
     screen: PedidosConfirmadosCliente
   },
+  Chat:{
+    screen: Chat
+  },
+  ExibeVendedor:{
+    screen: ExibeVendedor
+  },
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+export const GerenciaPedidosSolicitadosCliente = StackNavigator({
+  Solicitados: {
+    screen: PedidosSolicitadosCliente
+  },
+  ExibeVendedor:{
+    screen: ExibeVendedor
+  },
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+export const GerenciaPedidosFinalizadosCliente = StackNavigator({
   Finalizados: {
     screen: PedidosFinalizadosCliente
+  },
+  ExibeVendedor:{
+    screen: ExibeVendedor
+  },
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+
+export const GerenciaPedidosClientes = TabNavigator({
+  Solicitados: {
+    screen: GerenciaPedidosSolicitadosCliente
+  },
+  Confirmados: {
+    screen: GerenciaPedidosConfirmadosCliente,
+  },
+  Finalizados: {
+    screen: GerenciaPedidosFinalizadosCliente
+  },
+ },
+ {
+   tabBarPosition: 'top',
+   lazy: true,
+   swipeEnabled: false,
+   animationEnabled: false,
+   backBehavior: 'none',
+   tabBarOptions: {
+     showLabel: true,
+     activeTintColor: 'white',
+     inactiveTintColor: 'white',
+     labelStyle: {
+       fontSize: 12,
+     },
+     style: {
+       backgroundColor: '#624063',
+     },
+     indicatorStyle: {
+       backgroundColor: 'white',
+     }
+   }
+});
+
+export const GerenciaRankingClientes = TabNavigator({
+  Produtos: {
+    screen: RankingProdutos
+  },
+  Vendedores: {
+    screen: RankingVendedores
+  },
+ },
+ {
+   tabBarPosition: 'top',
+   lazy: true,
+   swipeEnabled: false,
+   animationEnabled: false,
+   backBehavior: 'none',
+   tabBarOptions: {
+     showLabel: true,
+     activeTintColor: 'white',
+     inactiveTintColor: 'white',
+     labelStyle: {
+       fontSize: 12,
+     },
+     style: {
+       backgroundColor: '#624063',
+     },
+     indicatorStyle: {
+       backgroundColor: 'white',
+     }
+   }
+});
+
+export const GerenciaRankingVendedores = TabNavigator({
+  Estatisticas: {
+    screen: Estatisticas
+  },
+  Produtos: {
+    screen: RankingProdutos
+  },
+  Vendedores: {
+    screen: RankingVendedores
   },
  },
  {
@@ -85,11 +197,11 @@ export const GerenciaPedidosClientes = TabNavigator({
        fontSize: 12,
      },
      style: {
-       backgroundColor: '#4682b4',
+       backgroundColor: '#7A8887',
      },
      indicatorStyle: {
        backgroundColor: 'white',
-     }
+      }
    }
 });
 
@@ -113,13 +225,13 @@ export const TabsCliente = TabNavigator({
       },
     },
     Favoritos: {
-      screen: ProdutosFavoritos,
+      screen: VendedoresFavoritos,
       navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="star" size={25} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="heart" size={22} color={tintColor} />
       },
     },
     Ranking: {
-      screen: RankingProdutos,
+      screen: GerenciaRankingClientes,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
       },
@@ -134,13 +246,13 @@ export const TabsCliente = TabNavigator({
     tabBarOptions: {
       showIcon: true,
       showLabel: false,
-      activeTintColor: '#8fbc8f',
-      inactiveTintColor: '#fff',
+      activeTintColor: 'white',
+      inactiveTintColor: 'white',
       labelStyle: {
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#2f4f4f',
+        backgroundColor: '#7F607B',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -148,12 +260,18 @@ export const TabsCliente = TabNavigator({
     }
   });
 
-export const GerenciaPedidosConfirmados = StackNavigator({
+export const GerenciaPedidosConfirmadosV = StackNavigator({
     Confirmados: {
       screen: PedidosConfirmadosVendedor
     },
     LerToken: {
       screen: LerTokenPedido
+    },
+    Chat:{
+      screen: Chat
+    },
+    ExibeCliente: {
+      screen: ExibeCliente
     }
   }, {
       mode: 'card',
@@ -161,15 +279,41 @@ export const GerenciaPedidosConfirmados = StackNavigator({
       lazy: true
   });
 
+export const GerenciaPedidosSolicitadosV = StackNavigator({
+  Solicitados: {
+    screen: PedidosSolicitadosVendedor
+  },
+  ExibeCliente: {
+    screen: ExibeCliente
+  }
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
+export const GerenciaPedidosFinalizadosV = StackNavigator({
+  Finalizados: {
+    screen: PedidosFinalizadosVendedor
+  },
+  ExibeCliente: {
+    screen: ExibeCliente
+  }
+}, {
+  mode: 'card',
+  headerMode: 'none',
+  lazy: true
+});
+
 export const GerenciaPedidos = TabNavigator({
     Solicitados: {
-      screen: PedidosSolicitadosVendedor
+      screen: GerenciaPedidosSolicitadosV
     },
     Confirmados: {
-      screen: GerenciaPedidosConfirmados
+      screen: GerenciaPedidosConfirmadosV
     },
     Finalizados: {
-      screen: PedidosFinalizadosVendedor
+      screen: GerenciaPedidosFinalizadosV
     }
   }, {
     tabBarPosition: 'top',
@@ -185,7 +329,7 @@ export const GerenciaPedidos = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#4682b4',
+        backgroundColor: '#7A8887',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -212,28 +356,29 @@ export const GerenciaProdutos = StackNavigator({
   lazy: true
 });
 
+//implementação para voltar duas telas
+const defaultGetStateForAction = BuscaPro.router.getStateForAction;
+
+BuscaPro.router.getStateForAction = (passedAction, state) => {
+  if(state && state.routes && state.routes.length > 2
+      && passedAction.type === 'POP_TWO_ROUTES') {
+    let routes = state.routes.slice();
+    routes.pop();
+    routes.pop();
+
+    return {
+      index: routes.length - 1,
+      routes: routes
+    };
+  }
+  // default behaviour for none custom types
+  return defaultGetStateForAction(passedAction, state);
+}
+
 /**
 MENU SOMENTE PARA VENDEDORES
 **/
 export const TabsVendedor = TabNavigator({
-    GerenciaProdutos: {
-      screen: GerenciaProdutos,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
-      },
-    },
-    Estatisticas: {
-      screen: Estatisticas,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
-      },
-    },
-    Home: {
-      screen: HomeVendedor,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
-      },
-    },
     PerfilVendedor: {
       screen: PerfilVendedor,
       navigationOptions: {
@@ -244,6 +389,24 @@ export const TabsVendedor = TabNavigator({
       screen: GerenciaPedidos,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <Icon name="receipt" size={25} color={tintColor} />
+      },
+    },
+    Home: {
+      screen: HomeVendedor,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => <Icon name="home" size={28} color={tintColor} />
+      },
+    },
+    GerenciaProdutos: {
+      screen: GerenciaProdutos,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => <Icon name="store" size={25} color={tintColor} />
+      },
+    },
+    Estatisticas: {
+      screen: GerenciaRankingVendedores,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="bar-chart" size={20} color={tintColor} />
       },
     }
   },{
@@ -262,7 +425,7 @@ export const TabsVendedor = TabNavigator({
         fontSize: 12,
       },
       style: {
-        backgroundColor: '#4682b4',
+        backgroundColor: '#4FA19D',
       },
       indicatorStyle: {
         backgroundColor: 'white',
@@ -293,6 +456,12 @@ export const Root = StackNavigator({
   LocalizacaoNaoPermitida: {
     screen: LocalizacaoNaoPermitida,
   },
+  TermoUso: {
+    screen: TermoUso,
+  },
+  AceiteTermoUso: {
+    screen: AceiteTermoUso,
+  }
 }, {
   mode: 'card',
   lazy: true,

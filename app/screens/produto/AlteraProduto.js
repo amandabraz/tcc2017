@@ -7,7 +7,7 @@ import {
     ScrollView,
     Alert,
     Image,
-    TouchableOpacity,
+    TouchableOpacity, 
     Picker,
     ToastAndroid
 } from 'react-native';
@@ -21,6 +21,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class AlteraProduto extends Component {
   constructor(props) {
@@ -44,9 +45,11 @@ export default class AlteraProduto extends Component {
      preco: '',
      observacao: '',
      imagemPrincipal: require('./img/camera11.jpg'),
+     imagemProduto: '',
      backgroundColorPreco: "transparent",
      restricoesProdutos: [],
-     dataOriginal: ''
+     dataOriginal: '',
+     carregou: true
     }
     this.buscaProduto();
     this.carregarCategoriasArray();
@@ -70,15 +73,14 @@ export default class AlteraProduto extends Component {
          this.setState({categoria: rJson.categoria});
          this.setState({observacao: rJson.observacao});
          var dataNormal = new Date(rJson.dataPreparacao);
-         var dataPrep = dataNormal.getFullYear() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getDate() ;
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let dataPrep = dia + "/" + mes + "/" + ano;
          this.setState({dataOriginal: rJson.dataPreparacao});
          this.setState({dataPreparacao: dataPrep});
          if (rJson.restricoesDieteticas.length > 0) {
-           var restricoes = [];
-           for(i in rJson.restricoesDieteticas) {
-             restricoes.push(rJson.restricoesDieteticas[i]);
-           }
-           this.setState({restricoesProdutos: restricoes});
+           this.setState({restricoesProdutos: rJson.restricoesDieteticas});
          }
 
          if (rJson.tags.length > 0) {
@@ -96,6 +98,7 @@ export default class AlteraProduto extends Component {
              ingredientes.push(ingredienteEncontrado[i].item);
            }
            this.setState({ingredientes: ingredientes});
+           this.setState({carregou: false});
          }
        }
      });
@@ -114,6 +117,25 @@ export default class AlteraProduto extends Component {
    });
 };
 
+precoValido(preco){
+  if(preco.includes(","))
+    preco = preco.replace(",", ".")
+  
+  if(preco==null || preco=='') //se for nulo
+    return false
+  
+  if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
+    return false;
+
+  if(preco.match(/([\d]|[\.])/)){
+    if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
+      preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
+      return false
+    }  
+  }
+  return true
+};
+
 validaCampos = (produto) => {
   let camposVazios = [];
   let erros = [];
@@ -122,7 +144,7 @@ validaCampos = (produto) => {
       camposVazios.push("nome");
   }
   //validar preco
-  if (!produto.preco) {
+  if (!produto.preco || !this.precoValido(produto.preco)) {
     camposVazios.push("preço");
   }
   //validar data de preparo
@@ -141,7 +163,7 @@ validaCampos = (produto) => {
   }
 
   if (camposVazios.length) {
-    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento obrigatório e correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
     return false;
   }
   if (erros.length) {
@@ -242,46 +264,55 @@ carregarCategoriasArray() {
      var dataNormal = new Date(this.state.dataOriginal);
      var dataAlterada = new Date(this.state.dataPreparacao);
      var dataSalvar = '';
+     var imagem = this.state.imagemProduto;
+    if (!imagem) {
+       imagem = this.state.imagemPrincipal.uri;
+     }
      if(dataAlterada!=dataNormal){
        dataSalvar = dataAlterada;
      } else {
-       dataSalvar = dataNormal;}
-        const {
-          state: {
-            produtoId,
-            vendedorId,
-            nome,
-            quantidade,
-            preco,
-            observacao,
-            categoria,
-            ingredientes,
-            tags,
-            restricoesDieteticas,
-            imagemPrincipal
-          }
-        } = this;
+       dataSalvar = dataNormal;
+    }
+    const {
+      state: {
+        produtoId,
+        vendedorId,
+        nome,
+        quantidade,
+        preco,
+        observacao,
+        categoria,
+        ingredientes,
+        tags,
+        restricoesProdutos
+      }
+    } = this;
 
-        produtoEditado = {
-          "id": produtoId,
-          "vendedor": vendedorId,
-          "nome": nome,
-          "dataPreparacao": dataSalvar,
-          "quantidade": quantidade,
-          "preco": preco,
-          "observacao": observacao,
-          "categoria": categoria,
-          "ingredientes": ingredientes,
-          "tags": tags,
-          "restricoesDieteticas": restricoesDieteticas,
-          "imagemPrincipal": imagemPrincipal.uri,
-          "deletado": false,
-          "score": 0,
-        }
+    produtoEditado = {
+      "id": produtoId,
+      "vendedor": vendedorId,
+      "nome": nome,
+      "dataPreparacao": dataSalvar,
+      "quantidade": quantidade,
+      "preco": preco,
+      "observacao": observacao,
+      "categoria": categoria,
+      "ingredientes": ingredientes,
+      "tags": tags,
+      "restricoesDieteticas": restricoesProdutos,
+      "imagemPrincipal": imagem,
+      "deletado": false,
+      "score": 0,
+    }
 
-        let continuar = this.validaCampos(produtoEditado);
+    let continuar = this.validaCampos(produtoEditado);
 
-      if (continuar){
+      if (continuar) {
+        
+      //corrige preço se preciso
+      if(produtoEditado.preco.includes(","))
+        produtoEditado.preco = produtoEditado.preco.replace(",", ".")
+
         fetch(constante.ENDPOINT + 'produto', {
           method: 'PUT',
           headers: {
@@ -300,6 +331,32 @@ carregarCategoriasArray() {
             }
           });
       }
+    }
+
+    selecionarFoto() {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPrincipal: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemProduto: source});
+        }
+      });
     }
 
 render() {
@@ -326,22 +383,26 @@ return (
     <View style= {{flex: 3}}>
       <NavigationBar
         title={titleConfig}
+        tintColor="#7A8887"
         leftButton={
           <TouchableOpacity onPress={() => goBack()}>
-            <MaterialsIcon name="arrow-back" size={34} color={'#8B636C'}  style={{ padding: 3 }} />
+            <MaterialsIcon name="arrow-back" size={34} color={'#fff'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }
         rightButton={
           <TouchableOpacity onPress={() => this.salvaEdicaoProduto()}>
-            <MaterialsIcon name="check" size={34} color={'#8B636C'} style={{ padding: 5 }} />
+            <MaterialsIcon name="check" size={34} color={'#fff'} style={{ padding: 5 }} />
           </TouchableOpacity>
         } />
       <ScrollView>
         <View style={styles.container}>
         <View style={{ alignItems: 'center'}}>
         <View style={styles.profilepicWrap}>
-            <Image style={styles.profilepic}
-                   source={this.state.imagemPrincipal}/>
+        <TouchableOpacity style={styles.profilepicWrap} onPress={this.selecionarFoto.bind(this)}>
+          <Image style={styles.profilepic}
+                 source={this.state.imagemPrincipal}
+                 justifyContent='flex-start'/>
+        </TouchableOpacity>
         </View>
         </View>
 
@@ -352,7 +413,7 @@ return (
                   value={this.state.nome}
                   onChangeText={(nome) => this.setState({nome: nome})}
                   iconName={'cutlery'}
-                  iconColor={'#8B636C'}/>
+                  iconColor={'#7A8887'}/>
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
@@ -362,7 +423,7 @@ return (
                   onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
-                  iconColor={'#8B636C'}/>
+                  iconColor={'#7A8887'}/>
 
          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                     label={'Quantidade disponível'}
@@ -372,12 +433,12 @@ return (
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
                     iconName={'shopping-cart'}
-                    iconColor={'#8B636C'}/>
+                    iconColor={'#7A8887'}/>
 
       <View style={{flexDirection:'row', padding: 18, alignItems: 'center'}}>
         <FontAwesomeIcon
           name='calendar'
-          color='#8B636C'
+          color='#7A8887'
           size = {18}/>
         <DatePicker
               style={{width: 300}}
@@ -385,6 +446,7 @@ return (
               showIcon={false}
               mode="date"
               format="YYYY-MM-DD"
+              maxDate={new Date()}
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               customStyles={{
@@ -392,7 +454,7 @@ return (
                    dateText: {
                        fontFamily: 'Roboto',
                        fontSize: 16,
-                       color: '#8B636C'}
+                       color: '#7A8887'}
                        }}
               onDateChange={(dataPreparacao) => {this.setState({dataPreparacao: dataPreparacao});}}/>
         </View>
@@ -430,7 +492,7 @@ return (
               <TagInput
                 value={this.state.ingredientes}
                 onChange={this.onChangeIngredientes}
-                tagColor="#8B636C"
+                tagColor="#7A8887"
                 tagTextColor="white"
                 tagAlign="center"
                 tagContainerStyle={{height: 24}}
@@ -444,11 +506,12 @@ return (
                 Tags relacionadas:
               </Text>
             </View>
+            <Spinner visible={this.state.carregou}/>
             <View style={{ width: 378, height: 86, alignItems: 'center'}}>
              <TagInput
                 value={this.state.tags}
                 onChange={this.onChangeTags}
-                tagColor="#8B636C"
+                tagColor="#7A8887"
                 tagTextColor="white"
                 tagAlign="center"
                 tagContainerStyle={{height: 24}}
@@ -467,7 +530,7 @@ return (
                       value={this.state.observacao}
                       onChangeText={(observacao) => this.setState({observacao: observacao})}
                       iconName={'pencil-square-o'}
-                      iconColor={'#8B636C'}
+                      iconColor={'#7A8887'}
                       multiline={true}
                       maxLength={255}/>
             </View>
@@ -480,7 +543,7 @@ return (
 
 const titleConfig = {
   title: 'Editar Produto',
-  tintColor: '#8B636C',
+  tintColor: '#fff',
   fontFamily: 'Roboto',
 };
 
@@ -511,7 +574,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   foto: {
-    color: '#8B636C',
+    color: '#7A8887',
     fontSize: 16,
     fontFamily: 'Roboto',
     fontWeight: 'bold',

@@ -22,6 +22,8 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import Switch from 'react-native-customisable-switch';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -54,10 +56,18 @@ class HomeVendedor extends Component {
           }
         },
         refreshing: false,
-        informacoes: '',
+        numeroClientes: 0,
+        quantidadeVendida: 0,
+        valorRecebido: 0,
+        clienteConquistados: 0,
+        ticketMedio: 0,
+        clientes: 'Cliente Conquistado',
+        clientesMantidos: 'Cliente Mantido',
+        produtoVendido: 'Produto vendido',
         filtroMensal: true,
         alturaPedido: '1%',
-        alturaResumo: '100%'
+        alturaResumo: '100%',
+        carregou: true,
     };
     this.buscaDadosPedido();
     this.buscaInformacoes();
@@ -78,8 +88,12 @@ class HomeVendedor extends Component {
               this.setState({imagemProduto:{ uri: responseJson.produto.imagemPrincipal }})
             }
             var dataNormal = new Date(responseJson.dataSolicitada);
-            var dataS = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() + 
-                        " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+            let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+            let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+            let ano = dataNormal.getFullYear();
+            let hora = dataNormal.getHours();
+            let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+            let dataS = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
             this.setState({dataSolicitada: dataS})
             this.setState({refreshing:false});
       }});
@@ -90,8 +104,37 @@ class HomeVendedor extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
-          this.setState({informacoes: responseJson});
+            this.setState({numeroClientes: responseJson.numeroClientes});
+            this.setState({quantidadeVendida: responseJson.quantidadeVendida});
+            this.setState({valorRecebido: responseJson.valorRecebido});
+            this.setState({clienteConquistados: responseJson.clienteConquistados});
+            this.setState({ticketMedio: responseJson.ticketMedio});
+          if (responseJson.quantidadeVendida > 1) {
+            var qnt = "";
+              qnt = "Produtos vendidos";
+            this.setState({produtoVendido: qnt});
+          } else {
+              qnt = "Produto vendido";
+            this.setState({produtoVendido: qnt});
+          }
+          if (responseJson.numeroClientes > 1) {
+            var cliente = "";
+              cliente = "Clientes conquistados";
+            this.setState({clientes: cliente});
+          } else {
+              cliente = "Cliente conquistado";
+          this.setState({clientes: cliente});
+          }
+          if (responseJson.clienteConquistados > 1) {
+              var clientec = "";
+                clientec = "Clientes Mantidos";
+              this.setState({clientesMantidos: clientec});
+            } else {
+                clientec = "Cliente Mantido";
+              this.setState({clientesMantidos: clientec});
+            }
           this.setState({refreshing:false});
+          this.setState({carregou: false});
       }});
   }
 
@@ -111,7 +154,11 @@ class HomeVendedor extends Component {
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           this.setState({pedidoSolicitado: []})
-          this.setState({informacoes: []})
+          this.setState({numeroClientes: 0});
+          this.setState({quantidadeVendida: 0});
+          this.setState({valorRecebido: 0});
+          this.setState({clienteConquistados: 0});
+          this.setState({ticketMedio: 0});
           this.buscaDadosPedido();
           this.pedidoSolicitado();
           this.buscaInformacoes();
@@ -179,7 +226,7 @@ pedidoSolicitado(){
               <Text style={styles.totalFont}> {this.state.pedidoSolicitado.quantidade}{'\n'}</Text>
             </Text>
             <Text style={styles.oneResultfont}>Total a pagar em {this.state.pedidoSolicitado.pagamento.descricao}:
-            <Text style={styles.totalFont}> R$ {this.state.pedidoSolicitado.valorCompra}{'\n'}</Text>
+            <Text style={styles.totalFont}> R$ {this.arredondaValores(this.state.pedidoSolicitado.valorCompra)}{'\n'}</Text>
             </Text>
 
           </View>
@@ -214,6 +261,10 @@ pedidoSolicitado(){
     this.buscaInformacoes();
   }
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
 render() {
     if (this.state.gps === 0 || typeof this.state.gps === "undefined") {
       return(<LocalizacaoNaoPermitida
@@ -226,13 +277,14 @@ render() {
         <View style={{flex:1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="#768888"/>
+            tintColor="#7A8887"/>
             <View style={styles.container}>
             <ScrollView refreshControl={
                 <RefreshControl
                   refreshing={this.state.refreshing}
                   onRefresh={() => {
                     this.setState({refreshing:true});
+                    this.buscaDadosPedido();
                     this.pedidoSolicitado();
                     this.buscaInformacoes();
                   }}
@@ -241,6 +293,7 @@ render() {
                 <View style={{height: this.state.alturaPedido}}>
                   {this.pedidoSolicitado()}
                 </View>
+                <Spinner visible={this.state.carregou}/>
                 <View style={{height:this.state.alturaResumo}}>
                 <View style={styles.oneResultResumo}>
                 <View style={{alignItems: 'flex-end'}}>
@@ -263,18 +316,24 @@ render() {
                 <View style={{width: '50%', alignItems: 'center'}}>
                   <Text style={{fontSize: 14, alignSelf: 'center'}}>
                     <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
-                      {this.state.informacoes.numeroClientes + ' '}
+                      {this.state.numeroClientes + ' '}
                     </Text>
-                       Clientes conquistados
+                       {this.state.clientes}
                     </Text>
+                    <Text style={{fontSize: 14, alignSelf: 'center'}}>
+                      <Text style={{fontWeight: 'bold', fontSize: 14, color: 'crimson'}}>
+                        {this.state.clienteConquistados + ' '}
+                      </Text>
+                         {this.state.clientesMantidos}
+                      </Text>
                   <Image source={require('./img/iconp.png')}/>
                </View>
                <View style={{width: '50%', alignItems: 'center'}}>
                <Text style={{fontSize: 14, alignSelf: 'center'}}>
                 <Text style={{fontWeight: 'bold', fontSize: 18, color: 'crimson'}}>
-                  {this.state.informacoes.quantidadeVendida + ' '}
+                  {this.state.quantidadeVendida + ' '}
                 </Text>
-                     Produtos vendidos
+                     {this.state.produtoVendido}
                 </Text>
                 <Image source={require('./img/iconf.png')}/>
               </View>
@@ -285,10 +344,16 @@ render() {
                 </View>
                 <View style={{width: '50%', alignItems: 'center'}}>
                   <Text style={{fontWeight: 'bold', fontSize: 30, alignSelf: 'center', color: 'cadetblue'}}>
-                    R$ {this.state.informacoes.valorRecebido}
+                    R$ {this.arredondaValores(this.state.valorRecebido)}
                   </Text>
                   <Text style={{fontSize: 18, alignSelf: 'center'}}>
-                     Reais obtidos
+                     Reais obtidos {'\n'}
+                  </Text>
+                  <Text style={{fontSize: 18, alignSelf: 'center'}}>
+                  <Text style={{fontWeight: 'bold', alignSelf: 'center', color: 'cadetblue'}}>
+                    R$ {this.arredondaValores(this.state.ticketMedio) + ' '}
+                  </Text>
+                     por cliente
                   </Text>
                     </View>
                   </View>

@@ -1,5 +1,5 @@
 {
-  "name": "tcc2017",
+  "name": "amora",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -25,6 +25,7 @@
     "react-native-image-crop-picker": "^0.13.0",
     "react-native-image-header-scroll-view": "^0.6.1",
     "react-native-image-picker": "^0.26.3",
+    "react-native-loading-spinner-overlay": "^0.5.2",
     "react-native-menu": "^0.20.2",
     "react-native-modal": "^2.5.0",
     "react-native-navbar": "^1.7.1",
@@ -32,6 +33,8 @@
     "react-native-popup": "^0.6.1",
     "react-native-qrcode": "^0.2.6",
     "react-native-qrcode-scanner": "0.0.22",
+    "react-native-rating": "^2.0.4",
+    "react-native-slider": "^0.11.0",
     "react-native-star-rating": "^1.0.8",
     "react-native-tag-input": "0.0.14",
     "react-native-tags": "^0.2.0",

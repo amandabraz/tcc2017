@@ -19,6 +19,7 @@ import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,7 +30,8 @@ class PedidosSolicitadosCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosSolicitados: [],
-      refreshing: false,      
+      refreshing: false,
+      carregou: true
     };
     this.buscaDadosPedidosCliente();
   };
@@ -42,6 +44,7 @@ class PedidosSolicitadosCliente extends Component {
             this.setState({pedidosSolicitados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
@@ -86,21 +89,53 @@ class PedidosSolicitadosCliente extends Component {
   }
 
 
+arredondaValores(num){
+  return num.toFixed(2)
+}
+
+onPressOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
+  this.props.navigation.navigate('ExibeVendedor',
+        {
+          userId: this.state.userId,
+          selectUserId: usuarioSelecionado,
+          vendedorId: vendedorIdSelecionado,
+          clienteId: this.state.clienteId
+        });
+};
+
 pedidoSolicitado(){
   var views = [];
   if(this.state.pedidosSolicitados.length > 0){
-    for (i in this.state.pedidosSolicitados){
+    for (i in this.state.pedidosSolicitados) {
+      let imagemPrincipalV = require('./img/camera11.jpg');
+      let imagemPrincipalP = require('./img/camera11.jpg');
       let pedidoS = this.state.pedidosSolicitados[i];
+
+      if (pedidoS.produto.vendedor.usuario.imagemPerfil) {
+        imagemPrincipalV = {uri: pedidoS.produto.vendedor.usuario.imagemPerfil};
+      }
+      if (pedidoS.produto.imagemPrincipal) {
+        imagemPrincipalP = { uri: pedidoS.produto.imagemPrincipal };
+      }
+
       let dataNormal = new Date(pedidoS.dataSolicitada);
-      let dataSolicitada = dataNormal.getDate() + "/" + (dataNormal.getMonth() + 1) + "/" + dataNormal.getFullYear() + 
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataSolicitada = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+      
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '25%'}}>
-              <Image source={{uri: pedidoS.produto.vendedor.usuario.imagemPerfil}}
-                  style={styles.imagemPrincipal}/>
+            <TouchableHighlight
+                onPress={() => this.onPressOpenVendedor(pedidoS.produto.vendedor.usuario.id, pedidoS.produto.vendedor.id)} >
+              <Image source={imagemPrincipalV}
+                    style={styles.imagemPrincipal}/>
+          </TouchableHighlight>
             </View>
           <View style={{width: '60%', alignSelf:'center'}}>
             <Text style={styles.totalFont}> {pedidoS.produto.vendedor.usuario.nome}</Text>
@@ -115,7 +150,7 @@ pedidoSolicitado(){
           <View style={{paddingTop: 15}}>
           <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
           <View style = {{ width: '20%'}}>
-          <Image source={{uri: pedidoS.produto.imagemPrincipal}}
+          <Image source={imagemPrincipalP}
                  style={styles.imagemVendedor}/>
           </View>
           <View style={{width: '80%', paddingLeft: 6}}>
@@ -124,14 +159,14 @@ pedidoSolicitado(){
               <Text style={styles.totalFont}> {pedidoS.quantidade}{'\n'}</Text>
             </Text>
             <Text style={styles.oneResultfont}>Total a pagar {pedidoS.pagamento.descricao}:</Text>
-            <Text style={styles.totalFont}> R$ {pedidoS.valorCompra}{'\n'}</Text>
+            <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoS.valorCompra)}{'\n'}</Text>
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <Button buttonStyle={{width: '80%'}}
                     title ="Cancelar"
                     color="#fff"
-                    backgroundColor="#88557B"
+                    backgroundColor="#7A8887"
                     borderRadius={10}
                     onPress={() =>this.cancelarPedido(pedidoS)}
                     />
@@ -172,6 +207,7 @@ pedidoSolicitado(){
           Pedidos Solicitados
         </Text>
         </View>
+        <Spinner visible={this.state.carregou}/>
         {this.pedidoSolicitado()}
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>
@@ -205,20 +241,15 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
   },
-  imagemVendedor:{
-    width: 60,
-    height: 60,
-    borderRadius: 100
-  },
-  imagemProduto:{
-    width: '98%',
-    height: 100,
-    borderRadius: 10
-  },
   imagemPrincipal:{
     width: '98%',
     height: 80,
     borderRadius: 10
+  },
+  imagemVendedor:{
+    width: 60,
+    height: 60,
+    borderRadius: 100
   }
 });
 

@@ -148,4 +148,35 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
         }
     }
+
+    @RequestMapping(value = "/deletar/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deletaPerfil(@PathVariable("id") Long id) {
+        try {
+            Usuario usuarioDeletado = usuarioService.deletaUsuario(id);
+            return new ResponseEntity<Usuario>(usuarioDeletado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao deletar perfil"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/reativar/{id}", method = RequestMethod.PUT)
+    public ResponseEntity reativarPerfil(@PathVariable("id") Long id) {
+        try {
+            Usuario usuarioReativado = usuarioService.reativarPerfil(id);
+            return new ResponseEntity<Usuario>(usuarioReativado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao reativar perfil"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @RequestMapping(method = RequestMethod.PATCH)
+    public ResponseEntity alterarSenha(@RequestBody Usuario usuario) {
+        try {
+            Usuario senhaAlterada = usuarioService.alterarSenha(usuario);
+            return new ResponseEntity<Usuario>(senhaAlterada, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new CustomError("Erro ao alterar senha."), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

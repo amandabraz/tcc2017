@@ -8,7 +8,6 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  TouchableOpacity,
   View,
   ScrollView
 } from 'react-native';
@@ -38,21 +37,44 @@ export default class BuscaProduto extends Component {
       textoBusca: '',
       semProdutos: false,
     }
-    this.buscaPedidosIndicados();
+    this.buscaInicialPedidos();
   }
 
+  buscaInicialPedidos() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({ gps: position })
 
-  buscaPedidosIndicados() {
-    fetch(constante.ENDPOINT+'produto/'+ '/cliente/' + this.state.clienteId, {method: 'GET'})
-    .then((response) => response.json())
-      .then((responseJson) => {
-          if (!responseJson.errorMessage) {
-            this.setState({resultadoPesquisaProduto: responseJson});
-          }
-      });
-  };
+      if (this.state.resultadoPesquisaProduto.length > 0) {
+        this.setState({resultadoPesquisaProduto: []})
+      }
+
+      fetch(constante.ENDPOINT+'produto/cliente/' 
+      + this.state.clienteId
+      + '?&latitude=' + this.state.gps.coords.latitude
+      + '&longitude=' + this.state.gps.coords.longitude
+      + '&altitude=' + this.state.gps.coords.altitude, 
+      {method: 'GET'})
+      .then((response) => response.json())
+        .then((responseJson) => {
+            if (!responseJson.errorMessage) {
+              this.setState({resultadoPesquisaProduto: responseJson});
+            }
+        })
+
+    }, (error) => {
+      this.setState({ gps: 0 });
+    })
+  }
 
   setSearchText(searchText) {
+    // zerando listas antes de criar nova lista
+    if (this.state.resultadoPesquisaProduto.length > 0) {
+      this.setState({resultadoPesquisaProduto: []});
+    }
+    if (this.state.resultadoPesquisaVendedor.length > 0) {
+      this.setState({resultadoPesquisaVendedor: []});
+    }
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({gps: position});
     }, (error) => {
@@ -95,13 +117,16 @@ export default class BuscaProduto extends Component {
   onButtonOpenProduct = (produtoIdSelecionado) => {
     this.props.navigation.navigate('ExibeProduto',
           {produtoId: produtoIdSelecionado,
-            clienteId: this.state.clienteId
+            clienteId: this.state.clienteId,
+            userId: this.state.userId
           });
   };
 
   onButtonOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
     this.props.navigation.navigate('ExibeVendedor',
-          {selectUserId: usuarioSelecionado,
+          {
+            userId: this.state.userId,
+            selectUserId: usuarioSelecionado,
             vendedorId: vendedorIdSelecionado,
             clienteId: this.state.clienteId
           });
@@ -111,19 +136,25 @@ export default class BuscaProduto extends Component {
     if (this.state.semProdutos == true) {
       if (this.state.resultadoPesquisaProduto.length < 1 && this.state.resultadoPesquisaVendedor.length < 1){
         return (
-          <View key={0} style={{alignItems: 'center'}}>
-          <Text style={styles.texto}>
-            Não há produtos cadastrados, tente outro nome!
-          </Text>
+          <View key={0} style={{width: '80%'}}>
+            <Text style={styles.texto}>
+              Não há produtos cadastrados, {'\n'}
+              tente outro nome!
+            </Text>
           </View>
         )
       }
     }
   }
 
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   buscaProduto() {
     var views = [];
     if (this.state.resultadoPesquisaProduto.length > 0) {
+      let imagemPrincipal = require('./img/camera11.jpg');
       for(i in this.state.resultadoPesquisaProduto) {
         let produto = this.state.resultadoPesquisaProduto[i];
         let distancia = parseInt(produto.distancia);
@@ -131,13 +162,16 @@ export default class BuscaProduto extends Component {
           fontWeight: 'bold',
           fontSize: 18,
           padding: 4,
-          color: '#fff',
-          backgroundColor: '#f2a59d',
-          borderColor: '#f2a59d',
+          color: '#FCFCFC',
+          backgroundColor: '#624063',
+          borderColor: '#624063',
           borderStyle: 'solid',
           borderRadius: 100,
           textAlign: 'center'
         };
+        if(produto.imagemPrincipal){
+          imagemPrincipal = {uri: produto.imagemPrincipal};
+        }
         if (distancia > -1) {
           if (distancia > 1000) {
             let convert = (distancia/1000).toString().split('.');
@@ -151,21 +185,22 @@ export default class BuscaProduto extends Component {
         }
         views.push (
           <View key={i}>
-            <TouchableHighlight 
+            <TouchableHighlight
               onPress={() => this.onButtonOpenProduct(produto.id)}
               underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
             >
               <View>
                 <View style={styles.oneResult}>
                   <View style={{width: "25%"}}>
-                    <Image source={{ uri: produto.imagemPrincipal }}
+                    <Image source={imagemPrincipal}
                           style={styles.imageResultSearch}
                           justifyContent='flex-start'/>
                   </View>
                   <View style={{width: "45%"}}>
                     <Text style={styles.oneResultfontTitle} justifyContent='center'>{produto.nome}</Text>
-                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.preco}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>R$ {this.arredondaValores(produto.preco)}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{produto.vendedor.usuario.nome}</Text>
+                    <Text style={styles.oneResultfont} justifyContent='center'>{produto.quantidade} disponíveis</Text>
                   </View>
                   <View style={{width: "15%"}} justifyContent='center'>
                     <Text style={distanciaEstilo} justifyContent='center'>{distancia}</Text>
@@ -174,7 +209,7 @@ export default class BuscaProduto extends Component {
                     <Icon
                       name='shopping-cart'
                       type=' material-community'
-                      color='#1C1C1C'
+                      color='#4A4A4A'
                       onPress={() => this.onButtonOpenProduct(produto.id)}
                       style={styles.imageResultSearch} />
                   </View>
@@ -193,48 +228,54 @@ export default class BuscaProduto extends Component {
     var views = [];
     if (this.state.resultadoPesquisaVendedor.length > 0) {
       for(i in this.state.resultadoPesquisaVendedor) {
+        let imagemPerfil = require('./img/camera11.jpg');
         let vendedor = this.state.resultadoPesquisaVendedor[i];
+        if(vendedor.usuario.imagemPerfil){
+          imagemPerfil = {uri: vendedor.usuario.imagemPerfil};
+        }
         views.push (
           <View key={i}>
-            <TouchableHighlight 
+            <TouchableHighlight
               onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
               underlayColor = 'backgroundColor: "rgba(255, 255, 255, 0.55)"'
             >
               <View>
                 <View style={styles.oneResult}>
-                  <Image source={{ uri: vendedor.usuario.imagemPerfil }}
+                <View style={{width:'25%'}}>
+                  <Image source={imagemPerfil}
                         style={styles.imageResultSearch}
                         justifyContent='flex-start'/>
-
-                  <View style={{width: 210, margin: 10}}>
+                </View>
+                  <View style={{width: '60%'}}>
                     <Text style={styles.oneResultfontTitle} justifyContent='center'>{vendedor.usuario.nome}</Text>
                     <Text style={styles.oneResultfont} justifyContent='center'>{vendedor.nomeFantasia}</Text>
                   </View>
+                <View style={{width:'15%'}}>
                   <Icon
                     name='person'
                     type=' material-community'
-                    color='#1C1C1C'
+                    color='#4A4A4A'
                     onPress={() => this.onButtonOpenVendedor(vendedor.usuario.id, vendedor.id)}
                     style={styles.imageResultSearch}
                     />
                 </View>
-                <Text>{'\n'}</Text>
+                </View>
               </View>
             </TouchableHighlight>
           </View>
         );
     }
+    } 
+    return views;
   }
-  return views;
-}
 
-componentWillMount() {
-  navigator.geolocation.getCurrentPosition((position) => {
-    this.setState({gps: position});
-  }, (error) => {
-    this.setState({gps: 0});
-  });
-}
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({gps: position});
+    }, (error) => {
+      this.setState({gps: 0});
+    });
+  }
 
 
   render() {
@@ -249,14 +290,14 @@ componentWillMount() {
         <View style={{flex: 1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="#023329"
+            tintColor="#624063"
           />
         <View style={styles.container}>
         <Hideo
             iconClass={FontAwesomeIcon}
             iconName={'search'}
-            iconColor={'white'}
-            iconBackgroundColor={'#f2a59d'}
+            iconColor={'#624063'}
+            iconBackgroundColor={'#FCFCFC'}
             inputStyle={{ color: '#464949' }}
             onChangeText={(textoBusca) => this.setState({textoBusca})}
             onSubmitEditing={() => this.setSearchText(this.state.textoBusca)}
@@ -281,7 +322,7 @@ componentWillMount() {
 
 const titleConfig = {
   title: 'Busca de Produtos',
-  tintColor: "#DCDCDC",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 
@@ -298,12 +339,12 @@ const styles = StyleSheet.create({
      margin: 3,
   },
   oneResultfontTitle:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontWeight: 'bold',
     fontSize: 18,
   },
   oneResultfont:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontSize: 15,
   },
   results:{
@@ -332,7 +373,8 @@ const styles = StyleSheet.create({
   texto: {
     marginTop: 12,
     fontSize: 18,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchBar: {
     paddingLeft: 30,

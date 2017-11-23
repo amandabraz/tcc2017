@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -31,6 +32,11 @@ public class Cliente implements Serializable {
     @JoinColumn(name = "FK_USUARIO", nullable = false)
     private Usuario usuario;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+    @JoinTable(name="VENDEDORES_FAVORITOS", joinColumns =
+            {@JoinColumn(name="ID_CLIENTE", referencedColumnName = "ID_CLIENTE")}, inverseJoinColumns =
+            {@JoinColumn(name="ID_VENDEDOR", referencedColumnName = "ID_VENDEDOR")})
+    private Set<Vendedor> vendedoresFavoritos;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
     @JoinTable(name="CLIENTE_TAG", joinColumns =
@@ -44,11 +50,15 @@ public class Cliente implements Serializable {
             {@JoinColumn(name="ID_RESTRICAO")})
     private Set<RestricaoDietetica> restricoesDieteticas;
 
+
+    @Transient
+    private int qtdPedidos;
+
+    @Transient
+    private int qtdAvaliados;
+
     public Cliente() {
-        this.id = id;
-        this.usuario = usuario;
-        this.tags = tags;
-        this.restricoesDieteticas = restricoesDieteticas;
+        super();
     }
 
     public Cliente(Long id) {
@@ -101,5 +111,29 @@ public class Cliente implements Serializable {
 
     public void setRestricoesDieteticas(Set<RestricaoDietetica> restricoesDieteticas) {
         this.restricoesDieteticas = restricoesDieteticas;
+    }
+
+    public Set<Vendedor> getVendedoresFavoritos() {
+        return vendedoresFavoritos;
+    }
+
+    public void setVendedoresFavoritos(Set<Vendedor> vendedoresFavoritos) {
+        this.vendedoresFavoritos = vendedoresFavoritos;
+    }
+
+    public int getQtdPedidos() {
+        return qtdPedidos;
+    }
+
+    public void setQtdPedidos(int qtdPedidos) {
+        this.qtdPedidos = qtdPedidos;
+    }
+
+    public int getQtdAvaliados() {
+        return qtdAvaliados;
+    }
+
+    public void setQtdAvaliados(int qtdAvaliados) {
+        this.qtdAvaliados = qtdAvaliados;
     }
 }

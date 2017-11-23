@@ -17,7 +17,11 @@ import { Fumi } from 'react-native-textinput-effects';
 import { Icon, Button } from 'react-native-elements';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import NavigationBar from 'react-native-navbar';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import Rating from 'react-native-rating';
 import StarRating from 'react-native-star-rating';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,12 +30,13 @@ export default class ExibeProduto extends Component {
         super(props, context);
         this.state = {
           produtoId: this.props.navigation.state.params.produtoId,
+          userId: this.props.navigation.state.params.userId,
           clienteId: this.props.navigation.state.params.clienteId,
           imagemPrincipal: require('./img/camera11.jpg'),
           imagemVendedor: require('./img/camera11.jpg'),
           produto: {
             nome: '',
-            preco: '',
+            preco: 0,
             categoria: {
               descricao: ''
             },
@@ -53,7 +58,8 @@ export default class ExibeProduto extends Component {
             color: '#CCCCCC',
             fontStyle: 'italic'
           },
-          dateText: ''
+          dateText: '',
+          carregou: true
         };
         this.buscaProduto();
     }
@@ -103,20 +109,44 @@ export default class ExibeProduto extends Component {
             this.setState({ingredientesText: ingredientes});
           }
           var dataNormal = new Date(rJson.dataPreparacao);
-          var dataPrep = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+          let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+          let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+          let ano = dataNormal.getFullYear();
+          let dataPrep = dia + "/" + mes + "/" + ano;
           this.setState({dateText: dataPrep});
+          this.setState({carregou: false});
         }
       });
     }
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
-    this.props.navigation.navigate('ExibeComprar', {produtoId: this.state.produtoId, clienteId: this.state.clienteId});
+    this.props.navigation.navigate('ExibeComprar',
+    {produtoId: this.state.produtoId,
+      clienteId: this.state.clienteId,
+      userId: this.state.userId});
+  };
+
+  arredondaValores(num){
+    return num.toFixed(2)
   };
 
 render() {
+  const {goBack} = this.props.navigation;
+
+  const images = {
+  starFilled: require('./img/star_filled.png'),
+  starUnfilled: require('./img/star_unfilled.png')
+}
+
   return (
     <View style={styles.container}>
+      <NavigationBar
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'#624063'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }/>
       <HeaderImageScrollView
         maxHeight={300}
         minHeight ={100}
@@ -148,10 +178,11 @@ render() {
           </View>
           <View style={{width: '35%', justifyContent: 'flex-end'}}>
             <Text style={styles.precoStyle}>
-              R$ {this.state.produto.preco}
+              R$ {this.arredondaValores(this.state.produto.preco)}
             </Text>
           </View>
         </View>
+        <Spinner visible={this.state.carregou}/>
         <View style={{ margin: 10 }}>
          <View style={{ margin: 10}}>
           <Text style={styles.baseText}>
@@ -268,7 +299,7 @@ render() {
 //CSS
 const titleConfig = {
   title: 'Comprar produto',
-  tintColor: "#dc143c",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 let styles = StyleSheet.create({
@@ -281,7 +312,7 @@ let styles = StyleSheet.create({
     padding: 5,
     marginTop: 10,
     position: 'relative',
-    backgroundColor: '#dc143c'
+    backgroundColor: '#624063'
   },
   EvenBtnText: {
     fontSize: 25,
@@ -305,7 +336,7 @@ let styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 10,
     marginRight: 10,
-    backgroundColor: "#50a1e0",
+    backgroundColor: "#624063",
     alignSelf: 'stretch',
   },
   bar:{

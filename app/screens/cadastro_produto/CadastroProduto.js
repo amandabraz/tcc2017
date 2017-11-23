@@ -21,6 +21,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from 'react-native-check-box';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export default class CadastroProduto extends Component {
@@ -43,7 +44,8 @@ export default class CadastroProduto extends Component {
      observacao: '',
      image: require('./img/camera11.jpg'),
      imagemProduto: '',
-     backgroundColorPreco: "transparent"
+     backgroundColorPreco: "transparent",
+     carregou: true
     }
     this.preencherDietasArray();
     this.carregarCategoriasArray();
@@ -71,6 +73,7 @@ export default class CadastroProduto extends Component {
               categoriasBuscadas.push(responseJson[i]);
             }
             this.setState({categoriasArray: categoriasBuscadas});
+            this.setState({carregou: false});
         });
   }
   onChangeTags = (tags) => {
@@ -119,7 +122,7 @@ validaCampos = (produto) => {
       camposVazios.push("nome");
   }
   //validar preco
-  if (!produto.preco) {
+  if (!produto.preco || !this.precoValido(produto.preco)) {
     camposVazios.push("preço");
   }
   //validar data de preparo
@@ -138,7 +141,7 @@ validaCampos = (produto) => {
   }
 
   if (camposVazios.length) {
-    ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+    ToastAndroid.showWithGravity('Os seguinte campos precisam de preenchimento obrigatório e correto: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
     return false;
   }
   if (erros.length) {
@@ -177,7 +180,7 @@ selecionarFoto() {
       this.setState({
         image: {uri: response.uri, width: 200, height: 200, changed: true}
       });
-      this.setState({imagemProduto: source})
+      this.setState({imagemProduto: source});
     }
   });
 }
@@ -221,11 +224,16 @@ selecionarFoto() {
       "ingredientes": ingredientes,
       "categoria": categoria,
       "observacao": observacao,
-      "imagemPrincipal": imagemProduto
+      "imagemPrincipal": imagemProduto,
     }
     let continuar = this.validaCampos(produto);
 
     if (continuar){
+
+    //corrige preço se preciso
+    if(produto.preco.includes(","))
+      produto.preco = produto.preco.replace(",", ".")
+
     fetch(constante.ENDPOINT + 'produto', {
       method: 'POST',
       headers: {
@@ -246,6 +254,25 @@ selecionarFoto() {
       });
   }
   };
+
+  precoValido(preco){
+    if(preco.includes(","))
+      preco = preco.replace(",", ".")
+
+    if(preco==null || preco=='') //se for nulo
+      return false
+
+    if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
+      return false;
+
+    if(preco.match(/([\d]|[\.])/)){
+      if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
+        preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
+        return false
+      }
+    }
+    return true
+  }
 
 render() {
     const {goBack} = this.props.navigation;
@@ -271,14 +298,15 @@ return (
     <View style= {{flex: 3}}>
       <NavigationBar
         title={titleConfig}
+        tintColor= "#7A8887"
         leftButton={
           <TouchableOpacity onPress={() => goBack()}>
-            <MaterialsIcon name="chevron-left" size={40} color={'#8B636C'}  style={{ padding: 3 }} />
+            <MaterialsIcon name="chevron-left" size={40} color={'#fff'}  style={{ padding: 3 }} />
           </TouchableOpacity>
         }
         rightButton={
           <TouchableOpacity onPress={() => this.salvaProduto()}>
-            <MaterialsIcon name="check" size={34} color={'#8B636C'} style={{ padding: 5 }} />
+            <MaterialsIcon name="check" size={34} color={'#fff'} style={{ padding: 5 }} />
           </TouchableOpacity>
         } />
       <ScrollView>
@@ -295,16 +323,17 @@ return (
                   maxLength={50}
                   onChangeText={(nome) => this.setState({nome: nome})}
                   iconName={'cutlery'}
-                  iconColor={'#8B636C'}/>
+                  iconColor={'#7A8887'}/>
 
           <Fumi style={{ backgroundColor: this.state.backgroundColorPreco, width: 375, height: 70 }}
                   label={'Preço'}
+                  keyboardType={'numbers-and-punctuation'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
                   onChangeText={(preco) => this.setState({preco: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
-                  iconColor={'#8B636C'}/>
+                  iconColor={'#7A8887'}/>
 
          <Fumi style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                     label={'Quantidade disponível'}
@@ -313,36 +342,31 @@ return (
                     onChangeText={(quantidade) => this.setState({quantidade: quantidade})}
                     keyboardType={'numeric'}
                     iconName={'shopping-cart'}
-                    iconColor={'#8B636C'}/>
-
-      <View style={{ alignItems: 'center'}}>
-        <DatePicker
-              style={{width: 352, height: 50}}
-              date={this.state.date}
-              mode="date"
-              placeholder="Data de Preparação"
-              format="YYYY-MM-DD"
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                  dateInput: { borderWidth: 0 },
-                   dateIcon: {
-                       position: 'absolute',
-                       left: 0,
-                       top: 4,
-                       marginLeft: 0},
-                   placeholderText: {
-                      fontFamily: 'Roboto',
-                      fontWeight: 'bold',
-                      color: 'gray',
-                      fontSize: 16},
-                   dateText: {
-                       fontFamily: 'Roboto',
-                       fontSize: 16,
-                       color: '#8B636C'}
-                       }}
-              onDateChange={(date) => {this.setState({date: date});}}/>
-        </View>
+                    iconColor={'#7A8887'}/>
+        <Spinner visible={this.state.carregou}/>
+                    <View style={{flexDirection:'row', padding: 18, alignItems: 'center'}}>
+                      <FontAwesomeIcon
+                        name='calendar'
+                        color='#7A8887'
+                        size = {18}/>
+                      <DatePicker
+                            style={{width: 300}}
+                            date={this.state.date}
+                            showIcon={false}
+                            mode="date"
+                            format="YYYY-MM-DD"
+                            maxDate={new Date()}
+                            confirmBtnText="Confirm"
+                            cancelBtnText="Cancel"
+                            customStyles={{
+                                dateInput: { borderWidth: 0 },
+                                 dateText: {
+                                     fontFamily: 'Roboto',
+                                     fontSize: 16,
+                                     color: '#7A8887'}
+                                     }}
+                            onDateChange={(date) => {this.setState({date: date});}}/>
+                      </View>
 
             <View style={styles.linhaTitulo}>
               <MaterialsIcon name="description" size={22} color={'#9fa1a3'} /><Text style={styles.titulo}>
@@ -377,7 +401,7 @@ return (
               <TagInput
                 value={this.state.ingredientes}
                 onChange={this.onChangeIngredientes}
-                tagColor="#8B636C"
+                tagColor="#7A8887"
                 tagTextColor="white"
                 tagAlign="center"
                 inputProps={inputIngredientes}
@@ -393,7 +417,7 @@ return (
              <TagInput
                 value={this.state.tags}
                 onChange={this.onChangeTags}
-                tagColor="#8B636C"
+                tagColor="#7A8887"
                 tagTextColor="white"
                 tagAlign="center"
                 inputProps={inputTags}
@@ -409,7 +433,7 @@ return (
                       iconClass={FontAwesomeIcon}
                       onChangeText={(observacao) => this.setState({observacao: observacao})}
                       iconName={'pencil-square-o'}
-                      iconColor={'#8B636C'}
+                      iconColor={'#7A8887'}
                       multiline={true}
                       maxLength={255}/>
             </View>
@@ -418,11 +442,12 @@ return (
 
     );
   }
+
 }
 
 const titleConfig = {
   title: 'Novo Produto',
-  tintColor: '#8B636C',
+  tintColor: '#fff',
   fontFamily: 'Roboto',
 };
 
@@ -453,7 +478,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   foto: {
-    color: '#8B636C',
+    color: '#7A8887',
     fontSize: 16,
     fontFamily: 'Roboto',
     fontWeight: 'bold',

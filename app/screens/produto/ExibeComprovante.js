@@ -20,8 +20,11 @@ import {
   Button
 } from 'react-native-elements';
 import QRCode from 'react-native-qrcode';
+import NavigationActions from 'react-navigation';
 import NavigationBar from 'react-native-navbar';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 //dimensão da janela
 const { width, height } = Dimensions.get("window");
@@ -33,13 +36,16 @@ export default class ExibeComprovante extends Component {
 
    this.state = {
      pedidoId: this.props.navigation.state.params.pedidoId,
+     clienteId: this.props.navigation.state.params.clienteId,
+     userId: this.props.navigation.state.params.userId,
      nomeProdutoText: '',
      quantidadeText: '',
-     precoText: '',
+     precoText: 0,
      meioPagamentoText: '',
      tokenText: '',
      nomeVendedorText: '',
-     imagemProduto: require('./img/camera11.jpg')
+     imagemProduto: require('./img/camera11.jpg'),
+     carregou: true
    };
    this.buscaDadosPedido();
   }
@@ -52,13 +58,14 @@ export default class ExibeComprovante extends Component {
             if (responseJson.produto.imagemPrincipal) {
               this.setState({imagemProduto: { uri: responseJson.produto.imagemPrincipal } })
             }
-          
+
           this.setState({nomeProdutoText: responseJson.produto.nome});
           this.setState({quantidadeText: responseJson.quantidade});
           this.setState({precoText: responseJson.valorCompra});
           this.setState({meioPagamentoText: responseJson.pagamento.descricao});
           this.setState({tokenText: responseJson.token});
           this.setState({nomeVendedorText: responseJson.produto.vendedor.usuario.nome});
+          this.setState({carregou: false});
         }
       });
   };
@@ -67,14 +74,27 @@ export default class ExibeComprovante extends Component {
     this.props.navigation.navigate('ExibeComprovante');
   };
 
-  //render
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
   render() {
+
+    const {goBack} = this.props.navigation;
+
     //retorno
     return (
       <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="skyblue"/>
+
+      <NavigationBar
+        title={titleConfig}
+        tintColor="#624063"
+        leftButton={
+          <TouchableOpacity onPress={() => goBack()}>
+            <MaterialsIcon name="chevron-left" size={40} color={'#fff'}  style={{ padding: 3 }} />
+          </TouchableOpacity>
+        }/>
 
       <ScrollView>
       <View style={styles.container}>
@@ -82,8 +102,10 @@ export default class ExibeComprovante extends Component {
              <View style = {{ flexDirection: 'row'}}>
               <Image source={this.state.imagemProduto}
                      style={styles.imageResultSearch}/>
+              <View style={{width: '80%'}}>
                 <Text style={styles.oneResultfontTitle}>{this.state.nomeProdutoText}</Text>
                 <Text>{'\n'}{'\n'}{'\n'}</Text>
+                </View>
                 </View>
                 <View style={{paddingTop: 20}}>
                 <Text style={styles.oneResultfont}>Quantidade solicitada:
@@ -91,8 +113,9 @@ export default class ExibeComprovante extends Component {
                 </Text>
                 <Text>{'\n'}{'\n'}</Text>
                 <Text style={styles.oneResultfont}>Total a pagar em {this.state.meioPagamentoText}:
-                  <Text style={styles.totalFont}> R$ {this.state.precoText}</Text>
+                  <Text style={styles.totalFont}> R$ {this.arredondaValores(this.state.precoText)}</Text>
                 </Text>
+                <Spinner visible={this.state.carregou}/>
                 <Text>{'\n'}{'\n'}</Text>
                 <Text style={styles.oneResultfont}>Verifique o token da sua compra feita com
                   <Text style={styles.totalFont}> {this.state.nomeVendedorText}</Text>:
@@ -119,7 +142,7 @@ export default class ExibeComprovante extends Component {
 
 const titleConfig = {
   title: 'Comprovante de Compra',
-  tintColor: "#1C1C1C",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 

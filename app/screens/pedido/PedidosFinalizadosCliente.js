@@ -24,7 +24,8 @@ import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
 import StarRating from 'react-native-star-rating';
-import Modal from 'react-native-modal'
+import Modal from 'react-native-modal';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -39,7 +40,9 @@ class PedidosFinalizadosCliente extends Component {
       pedidosCancelados: [],
       refreshing: false,
       starCount: 0,
-      isModalVisible: false,      
+      isModalVisible: false,  
+      pedidoParaAvaliar: 0,
+      carregou: true    
     };
     this.buscaDadosPedidosCliente();
   };
@@ -66,21 +69,24 @@ class PedidosFinalizadosCliente extends Component {
               this.setState({pedidosCancelados: responseJson});
         }
         this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
 
   avaliarPedido(pedido) {
-    fetch(constante.ENDPOINT + 'pedido/' + pedido.id + '/produto/avaliacao/' + parseInt(this.state.starCount), {method: 'PUT'})
+    fetch(constante.ENDPOINT + 'pedido/' + this.state.pedidoParaAvaliar + '/produto/avaliacao/' + parseInt(this.state.starCount), {method: 'PUT'})
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           ToastAndroid.showWithGravity('Avaliação realizada, obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
-          this.setState({refreshing: true});
+          this.setState({pedidoParaAvaliar: 0});
+          this._hideModal();
           this.buscaDadosPedidosCliente();
         } else {
           Alert.alert("Houve um erro ao realizar a avaliação, tente novamente");
         }
     });
+    this.setState({starCount: 0});
   }
 
   _showModal = () => this.setState({ isModalVisible: true })
@@ -111,50 +117,50 @@ class PedidosFinalizadosCliente extends Component {
             color="#fff"
             backgroundColor="#88557B"
             borderRadius={10}
-            onPress={() => this._showModal()}
-          />
-          <Modal
-            isVisible={this.state.isModalVisible}
-            animationIn={'slideInLeft'}
-            animationOut={'slideOutRight'}
-            backdropOpacity={0.3}>
-            <View style={styles.modalContent}>
-            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Avalie este produto: </Text>              
-              <View style={{width: '60%', margin: 10}}>
-                <StarRating
-                  maxStars={5}
-                  starSize={25}
-                  starColor={'#e6b800'}
-                  rating={this.state.starCount}
-                  selectedStar={(rating) => this.setState({starCount: rating})}/>
-              </View>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <TouchableOpacity onPress={() => this._hideModal()}>
-                  <View style={styles.button}>
-                    <Text>Cancelar</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.avaliarPedido(pedido)}>
-                    <View style={styles.button}>
-                      <Text>Salvar</Text>
-                    </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+            onPress={() => {
+              this.setState({pedidoParaAvaliar: pedido.id});
+              this._showModal();
+            }} />
         </View>
       );
     }
   }
 
+arredondaValores(num){
+  return num.toFixed(2)
+};
+
+onPressOpenVendedor = (usuarioSelecionado, vendedorIdSelecionado) => {
+  this.props.navigation.navigate('ExibeVendedor',
+        {
+          userId: this.state.userId,
+          selectUserId: usuarioSelecionado,
+          vendedorId: vendedorIdSelecionado,
+          clienteId: this.state.clienteId
+        });
+};
+
 pedidoFinalizado(){
   var views = [];
   if(this.state.pedidosFinalizados.length > 0){
     for (i in this.state.pedidosFinalizados){
+      let imagemPrincipalP = require('./img/camera11.jpg');
+      let imagemPrincipalV = require('./img/camera11.jpg');                     
       let pedidoF = this.state.pedidosFinalizados[i];
+      if (pedidoF.produto.imagemPrincipal) {
+        imagemPrincipalP = { uri: pedidoF.produto.imagemPrincipal };
+      }
+      if (pedidoF.produto.vendedor.usuario.imagemPerfil) {
+        imagemPrincipalV = {uri: pedidoF.produto.vendedor.usuario.imagemPerfil};
+      }
       let dataNormal = new Date(pedidoF.dataFinalizacao);
-      let dataFinalizacao = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataFinalizacao = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+      
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion 
@@ -162,7 +168,7 @@ pedidoFinalizado(){
           header={
             <View style={{flexDirection: 'row'}}>
               <View style = {{ width: '25%'}}>
-                <Image source={{uri: pedidoF.produto.imagemPrincipal}}
+                <Image source={imagemPrincipalP}
                       style={styles.imagemPrincipal}/>
               </View>
               <View style={{width: '60%', alignSelf:'center'}}>
@@ -178,8 +184,11 @@ pedidoFinalizado(){
             <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
-                <Image source={{uri: pedidoF.produto.vendedor.usuario.imagemPerfil}}
-                      style={styles.imagemCliente}/>
+              <TouchableHighlight
+                onPress={() => this.onPressOpenVendedor(pedidoF.produto.vendedor.usuario.id, pedidoF.produto.vendedor.id)} >
+                <Image source={imagemPrincipalV}
+                      style={styles.imagemVendedor}/>
+             </TouchableHighlight>
               </View>
               <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoF.produto.vendedor.usuario.nome}</Text>
@@ -187,7 +196,7 @@ pedidoFinalizado(){
                 <Text style={styles.totalFont}> {pedidoF.quantidade}{'\n'}</Text>
                 </Text>
                 <Text style={styles.oneResultfont}>Total pago com {pedidoF.pagamento.descricao}:
-                <Text style={styles.totalFont}> R$ {pedidoF.valorCompra}{'\n'}</Text>
+                <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoF.valorCompra)}{'\n'}</Text>
                 </Text>
               </View>
               </View>
@@ -215,14 +224,22 @@ pedidoFinalizado(){
   pedidoRecusado(){
     var views = [];
     if(this.state.pedidosRecusados.length > 0){
-      for (i in this.state.pedidosRecusados){
+      for (i in this.state.pedidosRecusados) {
+        let imagemPrincipalP = require('./img/camera11.jpg');
+        let imagemPrincipalV = require('./img/camera11.jpg');                     
         let pedidoR = this.state.pedidosRecusados[i];
+        if (pedidoR.produto.imagemPrincipal) {
+          imagemPrincipalP = { uri: pedidoR.produto.imagemPrincipal };
+        }
+        if (pedidoR.produto.vendedor.usuario.imagemPerfil) {
+          imagemPrincipalV = {uri: pedidoR.produto.vendedor.usuario.imagemPerfil};
+        }
         views.push(
           <View key={i} style={styles.oneResult1}>
             <Accordion header={
               <View style={{flexDirection: 'row'}}>
               <View style = {{ width: '25%'}}>
-               <Image source={{uri: pedidoR.produto.imagemPrincipal}}
+               <Image source={imagemPrincipalP}
                        style={styles.imagemPrincipal}/>
               </View>
             <View style={{width: '60%', alignSelf:'center'}}>
@@ -236,8 +253,11 @@ pedidoFinalizado(){
               <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
               <View style = {{ width: '20%'}}>
-                <Image source={{uri: pedidoR.produto.vendedor.usuario.imagemPerfil}}
-                       style={styles.imagemCliente}/>
+                <TouchableHighlight
+                  onPress={() => this.onPressOpenVendedor(pedidoR.produto.vendedor.usuario.id, pedidoR.produto.vendedor.id)} >
+                  <Image source={imagemPrincipalV}
+                        style={styles.imagemVendedor}/>
+               </TouchableHighlight>
               </View>
             <View style={{width: '80%', paddingLeft: 6}}>
               <Text style={styles.totalFont}> {pedidoR.produto.vendedor.usuario.nome}</Text>
@@ -245,7 +265,7 @@ pedidoFinalizado(){
               <Text style={styles.totalFont}> {pedidoR.quantidade}{'\n'}</Text>
               </Text>
               <Text style={styles.oneResultfont}>Valor do pedido:
-              <Text style={styles.totalFont}> R$ {pedidoR.valorCompra}{'\n'}</Text>
+              <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoR.valorCompra)}{'\n'}</Text>
               </Text>
             </View>
             </View>
@@ -272,12 +292,20 @@ pedidoFinalizado(){
       if(this.state.pedidosCancelados.length > 0){
         for (i in this.state.pedidosCancelados){
           let pedidoC = this.state.pedidosCancelados[i];
+          let imagemPrincipalP = require('./img/camera11.jpg');
+          let imagemPrincipalV = require('./img/camera11.jpg');                     
+          if (pedidoC.produto.imagemPrincipal) {
+            imagemPrincipalP = { uri: pedidoC.produto.imagemPrincipal };
+          }
+          if (pedidoC.produto.vendedor.usuario.imagemPerfil) {
+            imagemPrincipalV = {uri: pedidoC.produto.vendedor.usuario.imagemPerfil};
+          }
           views.push(
             <View key={i} style={styles.oneResult1}>
               <Accordion header={
                 <View style={{flexDirection: 'row'}}>
                 <View style = {{ width: '25%'}}>
-                 <Image source={{uri: pedidoC.produto.imagemPrincipal}}
+                 <Image source={imagemPrincipalP}
                          style={styles.imagemPrincipal}/>
                 </View>
               <View style={{width: '60%', alignSelf:'center'}}>
@@ -291,16 +319,19 @@ pedidoFinalizado(){
                 <View style={{paddingTop: 15}}>
                 <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
                 <View style = {{ width: '20%'}}>
-                  <Image source={{uri: pedidoC.produto.vendedor.usuario.imagemPerfil}}
-                         style={styles.imagemCliente}/>
-                </View>
+                <TouchableHighlight
+                onPress={() => this.onPressOpenVendedor(pedidoC.produto.vendedor.usuario.id, pedidoC.produto.vendedor.id)} >
+                <Image source={imagemPrincipalV}
+                      style={styles.imagemVendedor}/>
+               </TouchableHighlight>
+              </View>
               <View style={{width: '80%', paddingLeft: 6}}>
                 <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
                 <Text style={styles.oneResultfont}>Quantidade solicitada:
                 <Text style={styles.totalFont}> {pedidoC.quantidade}{'\n'}</Text>
                 </Text>
                 <Text style={styles.oneResultfont}>Valor do pedido:
-                <Text style={styles.totalFont}> R$ {pedidoC.valorCompra}{'\n'}</Text>
+                <Text style={styles.totalFont}> R$ {this.arredondaValores(pedidoC.valorCompra)}{'\n'}</Text>
                 </Text>
               </View>
               </View>
@@ -341,7 +372,41 @@ pedidoFinalizado(){
           Pedidos Finalizados
         </Text>
         </View>
+        <Spinner visible={this.state.carregou}/>
         {this.pedidoFinalizado()}
+
+
+        <Modal
+        isVisible={this.state.isModalVisible}
+        animationIn={'slideInLeft'}
+        animationOut={'slideOutRight'}
+        backdropOpacity={0.3}>
+        <View style={styles.modalContent}>
+        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Avalie este produto: </Text>              
+          <View style={{width: '60%', margin: 10}}>
+            <StarRating
+              maxStars={5}
+              starSize={25}
+              starColor={'#e6b800'}
+              rating={this.state.starCount}
+              selectedStar={(rating) => this.setState({starCount: rating})}/>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => this._hideModal()}>
+              <View style={styles.button}>
+                <Text>Cancelar</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.avaliarPedido()}>
+                <View style={styles.button}>
+                  <Text>Salvar</Text>
+                </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+
         <View style = {{margin: 5}}>
         <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: '#A1453E', fontWeight: 'bold'}}>
           Pedidos Recusados
@@ -385,7 +450,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
   },
-  imagemCliente:{
+  imagemVendedor:{
     width: 60,
     height: 60,
     borderRadius: 100

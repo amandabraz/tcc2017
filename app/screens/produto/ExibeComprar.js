@@ -17,8 +17,12 @@ import React, {
 import Popup from 'react-native-popup';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as constante from '../../constantes';
+import NavigationBar from 'react-native-navbar';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-(??)import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
+import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
+import StarRating from 'react-native-star-rating';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,6 +32,7 @@ export default class ExibeComprar extends Component {
         this.state = {
             produtoId: this.props.navigation.state.params.produtoId,
             clienteId: this.props.navigation.state.params.clienteId,
+            userId: this.props.navigation.state.params.userId,
             imagemPrincipal: require('./img/camera11.jpg'),
             imagemVendedor: require('./img/camera11.jpg'),
             quantidadeSelecionada: 1,
@@ -46,7 +51,8 @@ export default class ExibeComprar extends Component {
             pagamentosArray: [],
             meiosPagamentos: [],
             meioPagamentoEscolhido: '',
-            precoTotalText: ''
+            precoTotalText: 0,
+            carregou: true
         }
         this.buscaProduto();
     }
@@ -65,7 +71,7 @@ export default class ExibeComprar extends Component {
         views.push (
             <RadioButton key = {i}
                          value = {pagamento}
-                         color = 'cadetblue'>
+                         color = '#4FA19D'>
               <Text style={styles.meiopagText}>
                 {pagamento.descricao}
               </Text>
@@ -102,6 +108,7 @@ export default class ExibeComprar extends Component {
               pagamentosBuscados.push(rJson.vendedor.meiosPagamentos[i]);
             }
             this.setState({pagamentosArray: pagamentosBuscados});
+            this.setState({carregou: false});
           }
         });
       }
@@ -139,17 +146,10 @@ export default class ExibeComprar extends Component {
               .then((responseJson) => {
                 if (!responseJson.errorMessage) {
                   ToastAndroid.showWithGravity('Pedido finalizado!', ToastAndroid.LONG, ToastAndroid.CENTER);
-                  FCM.send(constante.SENDER_ID, 
-                    {
-                    "message":{
-                      "token" : this.state.produto.vendedor.usuario.fcm_token,
-                      "notification" : {
-                        "body" : "This is an FCM notification message!",
-                        "title" : "FCM Message",
-                        }
-                     }
-                  });
-                  this.props.navigation.navigate('ExibeComprovante', {pedidoId: responseJson.id});
+                  this.props.navigation.navigate('ExibeComprovante',
+                  {pedidoId: responseJson.id,
+                  userId: this.state.userId,
+                  clienteId: this.state.clienteId});
                 } else {
                   Alert.alert("Houve um erro ao finalizar o pedido, tente novamente");
                 }
@@ -182,9 +182,30 @@ export default class ExibeComprar extends Component {
         });
     }
 
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
     render() {
+
+      const {goBack} = this.props.navigation
+
+      const images = {
+      starFilled: require('./img/star_filled.png'),
+      starUnfilled: require('./img/star_unfilled.png')
+    }
+
         return(
             <View style={styles.container}>
+
+            <NavigationBar
+              leftButton={
+                <TouchableOpacity onPress={() => goBack()}>
+                  <MaterialsIcon name="chevron-left" size={40} color={'#624063'}  style={{ padding: 3 }} />
+                </TouchableOpacity>
+              }/>
+
               <HeaderImageScrollView
                 maxHeight={200}
                 minHeight ={100}
@@ -203,7 +224,7 @@ export default class ExibeComprar extends Component {
               <View style={{width: '75%'}}>
                 <Text style={styles.compraText}>
                   Finalizando a compra com
-                  <Text style={{color: 'cadetblue', fontWeight: 'bold'}}>
+                  <Text style={{color: '#4FA19D', fontWeight: 'bold'}}>
                      {' ' + this.state.produto.vendedor.usuario.nome}
                    </Text>
                 </Text>
@@ -240,7 +261,7 @@ export default class ExibeComprar extends Component {
                           this.setState({precoTotalText: precoCalculado});
                   }
                 }}>
-                <FontAwesomeIcon name="minus" size={30} color={'cadetblue'}/>
+                <FontAwesomeIcon name="minus" size={30} color={'#4FA19D'}/>
               </TouchableOpacity>
               <Text style={styles.baseText}>
                 {this.state.quantidadeSelecionada}
@@ -254,12 +275,12 @@ export default class ExibeComprar extends Component {
                           this.setState({precoTotalText: precoCalculado});
                         }
                       }}>
-                <FontAwesomeIcon name="plus" size={30} color={'cadetblue'}/>
+                <FontAwesomeIcon name="plus" size={30} color={'#4FA19D'}/>
               </TouchableOpacity>
               </View>
             </View>
             </View>
-
+            <Spinner visible={this.state.carregou}/>
 
             <View style={{paddingTop:10}}>
                 <Text style={styles.baseText}>
@@ -276,16 +297,16 @@ export default class ExibeComprar extends Component {
               </RadioGroup>
             </View>
             </View>
-
+            <Spinner visible={this.state.carregou}/>
             <View style={{flexDirection: 'row', paddingTop:10}}>
-            <View style={{width: '75%'}}>
+            <View style={{width: '60%'}}>
               <Text style={styles.baseText}>
                 Total
               </Text>
               </View>
-            <View style={{width: '25%', alignSelf:'flex-end'}}>
+            <View style={{width: '35%', alignSelf:'flex-end'}}>
               <Text style={styles.precoText}>
-                R$ {this.state.precoTotalText}
+                R$ {this.arredondaValores(this.state.precoTotalText)}
               </Text>
             </View>
             </View>
@@ -322,7 +343,7 @@ quantidadeText: {
 },
 precoText: {
   fontFamily: 'Roboto',
-  color: 'cadetblue',
+  color: '#4FA19D',
   fontSize: 25,
 },
 produtoText: {
@@ -345,7 +366,7 @@ EvenBtn: {
   padding: 5,
   marginTop: 10,
   position: 'relative',
-  backgroundColor: 'lightcoral'
+  backgroundColor: '#624063'
 },
 EvenBtnText: {
   fontSize: 25,

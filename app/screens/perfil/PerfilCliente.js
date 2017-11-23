@@ -1,24 +1,37 @@
-import React, { Component } from 'react';
-import { AppRegistry,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  ScrollView,
+import React, {
+  Component
+} from 'react';
+import {
+  AppRegistry,
+  Alert,
   Dimensions,
+  Image,
+  Picker,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
   ToastAndroid,
-  StatusBar
+  TouchableHighlight,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Fumi } from 'react-native-textinput-effects';
-import { Icon } from 'react-native-elements';
+import {
+  Fumi
+} from 'react-native-textinput-effects';
+import {
+  Icon
+} from 'react-native-elements';
 import * as constante from '../../constantes';
-import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
 import ImagePicker from 'react-native-image-picker';
 import CheckBox from 'react-native-check-box';
 import TagInput from 'react-native-tag-input';
+import Popup from 'react-native-popup';
+import Spinner from 'react-native-loading-spinner-overlay';
+import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
+import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,9 +44,15 @@ export default class PerfilCliente extends Component {
       userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       dataNascimentoText: '',
-      imagemPerfil: require('./img/camera2.jpg'),
+      isModalVisible: false,
+      imagemPerfil: require('./img/camera11.jpg'),
+      imagemEditada: '',
       tags: [],
       nomeText: '',
+      confirmaSenha: '',
+      velhaSenha: '',
+      novaSenha: '',
+      senhaText: '',
       tagsText: "Nenhuma tag inserida",
       tagEstilo: {
         color: '#CCCCCC',
@@ -58,7 +77,9 @@ export default class PerfilCliente extends Component {
           cpf: '',
           email: '',
         },
-      }
+      },
+      cameraVisivel: 'transparent',
+      carregou: true
     };
     this.buscaDadosCliente();
     this.preencherDietasArray();
@@ -74,30 +95,69 @@ export default class PerfilCliente extends Component {
         });
    };
 
+   _showModal = () => this.setState({ isModalVisible: true });
+
+  _hideModal = () => this.setState({ isModalVisible: false });
+
   buscaDadosCliente() {
     fetch(constante.ENDPOINT + 'cliente/usuario/' + this.state.userId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
             this.preparaCliente(responseJson);
+            this.setState({carregou: false});
           }
       });
   };
-
 
   habilitaEdicao() {
     if (this.state.editavel == false) {
       this.setState({editavel: true,
         titleTextClass: styles.titleTextEdit,
         baseTextClass: styles.baseTextEdit,
-        pencilColor: '#ccc'});
+        pencilColor: '#ccc',
+        cameraVisivel: 'gray'});
     } else {
       this.setState({editavel: false,
         titleTextClass: styles.titleText,
         baseTextClass: styles.baseText,
-        pencilColor: '#fff'});
+        pencilColor: '#fff',
+        cameraVisivel: 'transparent'});
     }
   }
+
+  handleFinalizarPress = () => {
+    fetch(constante.ENDPOINT + 'usuario/deletar/' + this.state.userId, {method: 'DELETE'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        {this.logout()}
+      }
+    });
+};
+
+  excluirUsuario() {
+    this.popup.confirm({
+        title: 'Desativar Conta',
+        content: ['Tem certeza que deseja desativar sua conta?'],
+        ok: {
+            text: 'Sim',
+            style: {
+                color: 'gray',
+                fontWeight: 'bold'
+            },
+            callback: () => {
+              {this.handleFinalizarPress()}
+            }
+        },
+        cancel: {
+            text: 'Não',
+            style: {
+                color: 'gray'
+            }
+        }
+    });
+}
 
   mostraTags() {
     if (this.state.editavel == false) {
@@ -107,7 +167,7 @@ export default class PerfilCliente extends Component {
         label={'Tags'}
         iconClass={FontAwesomeIcon}
         iconName={'hashtag'}
-        iconColor={'darkslategrey'}
+        iconColor={'#4A4A4A'}
         value={this.state.tagsText}
         editable={false}
         multiline={true}
@@ -126,7 +186,7 @@ export default class PerfilCliente extends Component {
         <View style={{ margin: 15, height: 150}}>
           <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
             <FontAwesomeIcon name="hashtag" size={17} color={'#9fa1a3'} />
-            <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Tags</Text>
+            <Text style={{fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 16, fontWeight: "bold"}}>  Tags</Text>
           </View>
           <TagInput
             value={this.state.tags}
@@ -151,7 +211,7 @@ export default class PerfilCliente extends Component {
         label={'Restrições dietéticas'}
         iconClass={FontAwesomeIcon}
         iconName={'asterisk'}
-        iconColor={'darkslategrey'}
+        iconColor={'#4A4A4A'}
         value={this.state.restricoesDieteticasText}
         multiline={true}
         editable={false}
@@ -164,7 +224,7 @@ export default class PerfilCliente extends Component {
         views.push(
           <View key={-1} style={{margin: 15, flexDirection: 'row'}}>
             <FontAwesomeIcon name="asterisk" size={17} color={'#9fa1a3'} />
-            <Text style={{fontFamily: 'Roboto', color: 'darkslategrey', fontSize: 16, fontWeight: "bold"}}>  Restrições dietéticas</Text>
+            <Text style={{fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 16, fontWeight: "bold"}}>  Restrições dietéticas</Text>
           </View>
         );
         for (i in listaRestricoes) {
@@ -236,10 +296,15 @@ export default class PerfilCliente extends Component {
     }
 
     var dataNormal = new Date(responseJson.usuario.dataNasc);
-    var dataNasc = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear();
+    let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+    let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+    let ano = dataNormal.getFullYear();
+    let dataNasc = dia + "/" + mes + "/" + ano;
+
     this.setState({nomeText: responseJson.usuario.nome,
                   dataNascimentoText: dataNasc,
-                  celularText: responseJson.usuario.ddd + responseJson.usuario.telefone});
+                  celularText: responseJson.usuario.ddd + responseJson.usuario.telefone,
+                  senhaText: responseJson.usuario.senha});
     if (responseJson.tags.length > 0) {
       this.setState({tagEstilo: styles.listText})
       var tags = "";
@@ -265,6 +330,10 @@ export default class PerfilCliente extends Component {
   }
 
   salvaEdicaoCliente() {
+    var imagem = this.state.imagemEditada;
+    if (!this.state.imagemEditada) {
+      imagem = this.state.imagemPerfil.uri;
+    }
     const {
       state: {
         clienteId,
@@ -272,16 +341,15 @@ export default class PerfilCliente extends Component {
         cliente,
         nomeText,
         celularText,
-        imagemPerfil,
         tags,
         restricoesCliente
       }
     } = this;
+
     clienteEditado = {
       "id": clienteId,
       "usuario": {
         "id": userId,
-        "senha": cliente.usuario.senha,
         "deletado": false,
         "perfil": cliente.usuario.perfil,
         "nome": nomeText,
@@ -292,12 +360,13 @@ export default class PerfilCliente extends Component {
         "telefone": celularText.substr(2,10),
         "notificacao": false,
         "bloqueado": false,
-        "imagemPerfil": imagemPerfil.uri,
+        "imagemPerfil": imagem,
         "fcmToken": cliente.usuario.fcm_token
       },
       "restricoesDieteticas": restricoesCliente,
       "tags": tags
     };
+
     fetch(constante.ENDPOINT + 'cliente', {
       method: 'PUT',
       headers: {
@@ -309,105 +378,208 @@ export default class PerfilCliente extends Component {
       .then((rJson) => {
         if (!rJson.errorMessage) {
           this.preparaCliente(rJson);
-          this.setState({editavel: false});
+          this.setState({editavel: false,
+                        cameraVisivel: 'transparent'});
           ToastAndroid.showWithGravity('Cadastro atualizado com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
         }
       });
   }
 
-  openConfiguracao = () => {this.props.navigation.navigate('ConfiguracaoCliente');}
 
   trocaImagemPerfil() {
-    var options = {
-      title: 'Selecione sua foto',
-      takePhotoButtonTitle: 'Tirar uma foto',
-      chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
-      cancelButtonTitle: 'Cancelar',
-      storageOptions: {
-        skipBackup: false,
-        path: 'images'
-      }
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        //do nothing
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        let source = 'data:image/jpeg;base64,' + response.data;
-        this.setState({
-          image: {uri: response.uri, width: 200, height: 200, changed: true}
-        });
-        this.setState({imagemPerfil: source});
-      }
-    });
+    if (this.state.editavel == false) {
+    } else {
+      var options = {
+        title: 'Selecione sua foto',
+        takePhotoButtonTitle: 'Tirar uma foto',
+        chooseFromLibraryButtonTitle: 'Selecionar uma foto da biblioteca',
+        cancelButtonTitle: 'Cancelar',
+        storageOptions: {
+          skipBackup: false,
+          path: 'images'
+        }
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          //do nothing
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          let source = 'data:image/jpeg;base64,' + response.data;
+          this.setState({
+            imagemPerfil: {uri: response.uri, width: 200, height: 200, changed: true}
+          });
+          this.setState({imagemEditada: source});
+        }
+      });
+    }
   }
+
+
+    desejaSair() {
+      this.popup.confirm({
+        title: 'Logout',
+        content: ['Tem certeza que deseja sair?'],
+        ok: {
+          text: 'Sim',
+          style: {
+            color: 'gray',
+            fontWeight: 'bold'
+          },
+          callback: () => {
+            {this.logout()}
+          }
+        },
+        cancel: {
+          text: 'Não',
+          style: {
+            color: 'gray',
+            fontWeight: 'bold'
+          }
+        }
+      });
+    }
+
+    logout() {
+      ToastAndroid.showWithGravity('Até logo!', ToastAndroid.LONG, ToastAndroid.CENTER);
+      this.props.navigation.navigate('Login');
+    }
+
+    sobreColaboradores() {
+      this.popup.tip({
+        title: 'Trabalho de Conclusão de Curso',
+			     content: [' ', 'Aline Bender Dias', 'Amanda Barbosa Braz', 'Larissa Sitta Espinosa', 'Maiara de Oliveira Rodrigues', ' ', 'amoratcc@gmail.com', ' ', 'PUC - CAMPINAS', '2017'],
+		  });
+    }
+
+    abrirTermos() {
+      this.props.navigation.navigate('TermoUso');
+    }
+
+    validaCampos = () => {
+      let camposVazios = [];
+      let erros = [];
+
+      //validar senha
+      if (!this.state.velhaSenha) {
+        camposVazios.push("Senha Atual");
+      }
+      if (!this.state.novaSenha) {
+        camposVazios.push("Nova Senha");
+      }
+      if (!this.state.confirmaSenha) {
+        camposVazios.push("Confirmação de Senha");
+      } else {
+        if (this.state.novaSenha.length < 6) {
+          erros.push("Sua senha deve ter mais que 6 caracteres.");
+        }
+
+        // validar com o Confirma Senha
+        if (this.state.novaSenha != this.state.confirmaSenha) {
+          erros.push("Senha e confirmação de senha não conferem.");
+        }
+
+        // validar senha atual
+        if (this.state.velhaSenha != this.state.senhaText) {
+          erros.push("Senha Atual informada não corresponde à cadastrada.");
+        }
+
+        if (this.state.velhaSenha == this.state.novaSenha) {
+          erros.push("Nova senha deve ser diferente da cadastrada atualmente.");
+        }
+      }
+
+      if (camposVazios.length) {
+        ToastAndroid.showWithGravity('Os seguinte campos são obrigatórios: ' + this.quebraEmLinhas(camposVazios) + '.', ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+      if (erros.length) {
+        ToastAndroid.showWithGravity(this.quebraEmLinhas(erros), ToastAndroid.LONG, ToastAndroid.CENTER);
+        return false;
+      }
+      return true;
+    }
+
+    quebraEmLinhas(lista) {
+      var listaQuebrada = "";
+      for(item in lista) {
+        listaQuebrada += lista[item] + "\n";
+      }
+      return listaQuebrada.trim();
+    }
+
+    onButtonSalvarSenha = () => {
+      const {
+        state: {
+          userId,
+          novaSenha
+        }
+      } = this;
+      usuario = {
+          "id": userId,
+          "senha": novaSenha
+      };
+
+      let continuar = this.validaCampos();
+
+      if (continuar) {
+        fetch(constante.ENDPOINT + 'usuario', {
+            method: 'PATCH',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(usuario)
+          })
+            .then((response) => response.json())
+              .then((responseJson) => {
+                if (responseJson.errorMessage) {
+                  Alert.alert(responseJson.errorMessage);
+                } else {
+                  this.setState({senhaText: novaSenha});
+                  ToastAndroid.showWithGravity('Senha alterada com sucesso!', ToastAndroid.LONG, ToastAndroid.CENTER);
+                  this._hideModal();
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+      }
+      };
 
   render () {
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar barStyle="light-content" />
-        <HeaderImageScrollView
-          maxHeight={MAX_HEIGHT}
-          minHeight={1}
-          maxOverlayOpacity={0.6}
-          minOverlayOpacity={0.3}
-          fadeOutForeground
-          renderHeader={() =>
-              <Image source={this.state.imagemPerfil} style={styles.image}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
-                    onPress={this.trocaImagemPerfil.bind(this)}>
-                  <FontAwesomeIcon name="camera" size={22} color={'#fff'}/>
-                </TouchableOpacity>
-              </Image>
-          }
-          renderForeground={() =>
-            <Animatable.View
-            style={styles.navTitleView}
-            ref={navTitleView => {
-              this.navTitleView = navTitleView;
-            }}>
+      <ScrollView>
+        <StatusBar barStyle="light-content"/>
+        <Image source={this.state.imagemPerfil} style={styles.image}>
+           <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'flex-end', margin: 13}}
+               onPress={this.trocaImagemPerfil.bind(this)}>
+             <FontAwesomeIcon name="camera" size={22} color={this.state.cameraVisivel}/>
+           </TouchableOpacity>
+         </Image>
+      <TriggeringView>
             <View style={styles.bar}>
-            <View style={{alignItems: 'flex-start', width: '80%'}}>
-              <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{alignItems: 'flex-end', width: '20%'}}>
-              <TouchableOpacity onPress={() => this.habilitaEdicao()}>
-                <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
-              </TouchableOpacity>
-            </View>
-          </View>
-          </Animatable.View>
-          }>
-          <TriggeringView
-            style={styles.section}
-            onHide={() => this.navTitleView.fadeInUp(200)}
-            onDisplay={() => this.navTitleView.fadeOut(100)
-            }>
-            <View style={styles.bar}>
-              <View style={{alignItems: 'flex-start', width: '80%'}}>
-                <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.openConfiguracao}>
-                  <Icon name="settings" size={25} color={'#fff'}/><Text style={styles.barText}> {this.state.confText}</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{alignItems: 'flex-end', width: '20%'}}>
                 <TouchableOpacity onPress={() => this.habilitaEdicao()}>
                   <FontAwesomeIcon name="pencil" size={20} color={this.state.pencilColor} />
                 </TouchableOpacity>
-              </View>
+                <TouchableOpacity onPress={() => this.abrirTermos()}>
+                  <FontAwesomeIcon name="file-text" size={20} color={this.state.pencilColor} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.sobreColaboradores()}>
+                  <FontAwesomeIcon name="question" size={20} color={this.state.pencilColor} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this.desejaSair()}>
+                  <Icon name="exit-to-app" size={20} color={this.state.pencilColor}/>
+                </TouchableOpacity>
             </View>
-          </TriggeringView>
-
-            <ScrollView>
               <Fumi
                 style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                 label={'Nome'}
                 iconClass={FontAwesomeIcon}
                 iconSize={20}
                 iconName={'user'}
-                iconColor={'darkslategrey'}
+                iconColor={'#4A4A4A'}
                 value={this.state.nomeText}
                 onChangeText={(nome) => this.setState({nomeText: nome})}
                 editable={this.state.editavel}
@@ -418,7 +590,7 @@ export default class PerfilCliente extends Component {
                   label={'CPF'}
                   iconClass={FontAwesomeIcon}
                   iconName={'info'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.cliente.usuario.cpf}
                   editable={false}
                   inputStyle={styles.baseText}/>
@@ -428,18 +600,19 @@ export default class PerfilCliente extends Component {
                   label={'Celular'}
                   iconClass={FontAwesomeIcon}
                   iconName={'mobile'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.celularText}
-                  onChange={(celular) => this.setState({celularText: celular})}
                   editable={this.state.editavel}
-                  inputStyle={this.state.baseTextClass}/>
+                  inputStyle={this.state.baseTextClass}
+                  maxLength={11}
+                  onChangeText={(celular) => this.setState({celularText: celular})}/>
 
               <Fumi
                   style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
                   label={'Data de Nascimento'}
                   iconClass={FontAwesomeIcon}
                   iconName={'calendar'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.dataNascimentoText}
                   editable={false}
                   inputStyle={styles.baseText}/>
@@ -449,18 +622,97 @@ export default class PerfilCliente extends Component {
                   label={'Email'}
                   iconClass={FontAwesomeIcon}
                   iconName={'at'}
-                  iconColor={'darkslategrey'}
+                  iconColor={'#4A4A4A'}
                   value={this.state.cliente.usuario.email}
                   editable={false}
                   inputStyle={styles.baseText}/>
 
               {this.mostraTags()}
               {this.mostraRestricaoDietetica()}
+              <Spinner visible={this.state.carregou}/>
 
               {this.mostraBotaoSalvar()}
-          </ScrollView>
-        </HeaderImageScrollView>
-      </View>
+              <View style={{width:'98%', flexDirection: 'row', justifyContent:'space-between'}}>
+                <TouchableOpacity
+                    style={{alignItems: 'center', padding:10, margin: 10}}
+                    onPress={this._showModal}>
+                  <Icon name="lock" size={25}
+                        color={'#4A4A4A'}
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text>Alterar senha</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{alignItems: 'center', padding:10, margin: 10}}
+                    onPress={this.excluirUsuario.bind(this)}>
+                  <Icon name="trash" size={25}
+                        color={'#4A4A4A'}
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text>Desativar conta</Text>
+                </TouchableOpacity>
+              </View>
+        </TriggeringView>
+        </ScrollView>
+        <Modal isVisible={this.state.isModalVisible}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.oneResult1}>
+            <Text style={{marginTop: 8, fontSize: 20, justifyContent: 'center', color:'#A1453E', fontWeight: 'bold'}}>Insira sua nova senha</Text>
+            <Text>{'\n'}</Text>
+            <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Senha Atual'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(velhaSenha) => this.setState({velhaSenha: velhaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+          <Text>{'\n'}</Text>
+
+           <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Nova Senha'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(novaSenha) => this.setState({novaSenha: novaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+            <Text>{'\n'}</Text>
+
+            <Fumi style={{ backgroundColor: this.state.backgroundColorSenha, width: 375, height: 70 }}
+                    label={'Confirmação de Senha'}
+                    maxLength={10}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'lock'}
+                    onChangeText={(confirmaSenha) => this.setState({confirmaSenha: confirmaSenha})}
+                    iconColor={'#4A4A4A'}
+                    labelStyle={styles.texto}
+                    inputStyle={styles.input}
+                    secureTextEntry={true}/>
+
+              <Text>{'\n'}</Text>
+
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '90%'}}>
+                      <TouchableOpacity
+                        style={styles.buttonsSenha}
+                        onPress={this._hideModal}>
+                        <Text style={styles.buttonText}>Cancelar</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.buttonsSenha}
+                        onPress={() => this.onButtonSalvarSenha()}>
+                        <Text style={styles.buttonText}>Salvar</Text>
+                      </TouchableOpacity>
+                    </View>
+            </View>
+          </View>
+        </Modal>
+        <Popup ref={popup => this.popup = popup }/>
+     </View>
     );
   }
 }
@@ -470,6 +722,15 @@ export default class PerfilCliente extends Component {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+  },
+  oneResult1:{
+     backgroundColor: 'white',
+     borderWidth: 1,
+     borderRadius: 10,
+     borderColor: '#fff',
+     padding: 10,
+     margin: 10,
+     width: '95%'
   },
   headerBackground: {
     flex: 1,
@@ -495,11 +756,24 @@ export default class PerfilCliente extends Component {
     borderRadius: 100,
     borderWidth: 4
   },
+  EvenBtnText: {
+    fontSize: 18,
+    color: 'white',
+    textAlign: 'center'
+  },
+  EvenBtn: {
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    position: 'relative',
+    backgroundColor: '#7A8887'
+  },
   bar:{
     width,
     padding: '5%',
-    backgroundColor: 'darkslategrey',
-    flexDirection: 'row'
+    backgroundColor: '#624063',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   barItem:{
     padding: 18,
@@ -507,7 +781,7 @@ export default class PerfilCliente extends Component {
   },
   baseText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 20,
   },
   baseTextEdit: {
@@ -523,7 +797,7 @@ export default class PerfilCliente extends Component {
   },
   listText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 14,
   },
   barText: {
@@ -534,7 +808,7 @@ export default class PerfilCliente extends Component {
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontFamily: 'Roboto',
   },
   titleTextEdit: {
@@ -546,7 +820,7 @@ export default class PerfilCliente extends Component {
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontFamily: 'Roboto',
   },
   button: {
@@ -554,9 +828,20 @@ export default class PerfilCliente extends Component {
     justifyContent: 'center',
     height: 35,
     width: 200,
-    backgroundColor: "darkslategrey",
+    backgroundColor: "#7A8887",
     alignSelf: 'stretch',
     marginBottom: 20
+  },
+  buttonsSenha: {
+    borderRadius: 5,
+    justifyContent: 'center',
+    height: 35,
+    width: 100,
+    backgroundColor: "#7A8887",
+    alignSelf: 'center',
+    marginBottom: 10,
+    padding:10,
+    margin: 10
   },
   buttonText: {
     fontWeight: 'bold',
@@ -569,13 +854,15 @@ export default class PerfilCliente extends Component {
     width,
     alignSelf: 'stretch',
     resizeMode: 'cover',
-  },navTitleView: {
+  },
+  navTitleView: {
     height: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 16,
     opacity: 0,
-  },section: {
+  },
+  section: {
     borderBottomWidth: 1,
     borderBottomColor: '#cccccc',
     backgroundColor: 'white',

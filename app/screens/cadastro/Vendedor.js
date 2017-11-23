@@ -6,6 +6,7 @@ import { Fumi } from 'react-native-textinput-effects';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -17,7 +18,8 @@ class Vendedor extends Component {
         fcm_token: this.props.navigation.state.params.fcm_token,        
         pagamentosArray: [],
         nomeLoja: '',
-        meiosPagamentos: []
+        meiosPagamentos: [],
+        carregou: true
     }
     this.preencherPagamentosArray();
   }
@@ -31,6 +33,7 @@ class Vendedor extends Component {
               pagamentosBuscados.push(responseJson[i]);
           }
           this.setState({pagamentosArray: pagamentosBuscados});
+          this.setState({carregou: false});
         });
   }
 
@@ -126,7 +129,7 @@ class Vendedor extends Component {
       <View style={{flex: 1}}>
           <NavigationBar
             title={titleConfig}
-            tintColor="aquamarine"
+            tintColor="#7A8887"
           />
         <View style={styles.container}>
           <ScrollView style={{ backgroundColor: '#fff' }}>
@@ -143,6 +146,7 @@ class Vendedor extends Component {
                 value={this.state.nomeLoja}
                 returnKeyType="next"
               />
+              <Spinner visible={this.state.carregou}/>
               <Text style={{ paddingTop: 16, paddingLeft: 16, color: '#402B2E', fontSize: 20, fontFamily: 'Roboto', fontWeight: 'bold' }}>
                   Meios de pagamento aceitos
               </Text>
@@ -167,7 +171,7 @@ class Vendedor extends Component {
 
 const titleConfig = {
   title: 'Cadastro do Vendedor',
-  tintColor: "darkblue",
+  tintColor: "#fff",
   fontFamily: 'Roboto',
 };
 

@@ -12,9 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Set;
-import java.util.List;
 
 @Entity
 @Table(name = "VENDEDOR")
@@ -41,12 +41,11 @@ public class Vendedor implements Serializable {
             {@JoinColumn(name = "ID_PAGAMENTO")})
     private Set<Pagamento> meiosPagamento;
 
+    @Transient
+    private boolean favoritoDoCliente;
 
     public Vendedor() {
-        this.id = id;
-        this.usuario = usuario;
-        this.nomeFantasia = nomeFantasia;
-        this.meiosPagamento = meiosPagamento;
+       super();
     }
 
     /**
@@ -98,6 +97,14 @@ public class Vendedor implements Serializable {
 
     public void setMeiosPagamentos(Set<Pagamento> meiosPagamento) {
         this.meiosPagamento = meiosPagamento;
+    }
+
+    public boolean isFavoritoDoCliente() {
+        return favoritoDoCliente;
+    }
+
+    public void setFavoritoDoCliente(boolean favoritoDoCliente) {
+        this.favoritoDoCliente = favoritoDoCliente;
     }
 
     @Override

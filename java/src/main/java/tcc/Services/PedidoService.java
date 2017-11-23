@@ -2,8 +2,7 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tcc.CustomQueryHelpers.QuantidadePedidos;
-import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
+import tcc.CustomQueryHelpers.*;
 import tcc.DAOs.PedidoDAO;
 import tcc.Models.Cliente;
 import tcc.Models.Pedido;
@@ -241,6 +240,22 @@ public class PedidoService {
                      quantidadeVendidaCliente.setValorRecebido(total);
                  }
 
+
+            Integer clienteconquistado = pedidoDAO.findByQtdClientesConquistados(vendedorId, buscaData(filtroMensal));
+            if(clienteconquistado == null){
+                quantidadeVendidaCliente.setClienteConquistados(0);
+            } else {
+                quantidadeVendidaCliente.setClienteConquistados(clienteconquistado);
+            }
+
+            Float ticketMedio = pedidoDAO.findByTicketMedio(vendedorId, buscaData(filtroMensal));
+            if(ticketMedio == null) {
+                quantidadeVendidaCliente.setTicketMedio(0);
+            } else {
+                quantidadeVendidaCliente.setTicketMedio(ticketMedio);
+            }
+
+
             return quantidadeVendidaCliente;
         } catch (Exception e) {
             throw e;
@@ -248,16 +263,77 @@ public class PedidoService {
     }
 
 
+    @Transactional
+    public List<RankingProdutosVendidos> rankingProdutosVendidos (Boolean filtroMensal) {
+        try {
+            return (List<RankingProdutosVendidos>) pedidoDAO.findByProdutosMaisVendidos(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<RankingQuantidadeProdutosVendidos> rankingQuantidadeProdutosVendidos (Boolean filtroMensal) {
+        try {
+            return (List<RankingQuantidadeProdutosVendidos>) pedidoDAO.findByQuantidadeProdutosVendidos(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<RankingQuantidadeVendas> rankingQuantidadeVendas (Boolean filtroMensal) {
+        try {
+            return (List<RankingQuantidadeVendas>) pedidoDAO.findByQuantidadeVendas(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<RankingQuantidadeClientes> rankingQuantidadeClientes (Boolean filtroMensal) {
+        try {
+            return (List<RankingQuantidadeClientes>) pedidoDAO.findByQuantidadeClientes(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public List<RankingMaioresVendedores> rankingMaioresVendedores (Boolean filtroMensal) {
+        try {
+            return (List<RankingMaioresVendedores>) pedidoDAO.findByMaioresVendedores(buscaData(filtroMensal));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     private Date buscaData (Boolean filtroMensal){
         new Date();
         Date referenceDate = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(referenceDate);
-        if(filtroMensal == true){
+        if(filtroMensal){
             c.add(Calendar.MONTH, -1);
         } else {
             c.add(Calendar.DAY_OF_WEEK, -7);
         }
         return c.getTime();
+    }
+
+    public int buscaQtdPedidosPorCliente(Long clienteId) {
+        try {
+            return pedidoDAO.countByClienteId(clienteId);
+        } catch(Exception e) {
+            throw e;
+        }
+    }
+
+    public int buscaQtdPedidosAvaliadosPorCliente(Long clienteId) {
+        try {
+            return pedidoDAO.countByNotaGreaterThanAndClienteId(0, clienteId);
+        } catch(Exception e) {
+            throw e;
+        }
     }
 }

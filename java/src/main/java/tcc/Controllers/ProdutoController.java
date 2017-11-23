@@ -162,9 +162,12 @@ public class ProdutoController {
 
     @Transactional
     @RequestMapping(value = "/produto/cliente/{clienteId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity buscaProdutosPorPreferenciasCliente(@PathVariable("clienteId") Long clienteId) {
+    public ResponseEntity buscaProdutosPorPreferenciasCliente(@PathVariable("clienteId") Long clienteId,
+                                                              @RequestParam(value = "latitude") double latitude,
+                                                              @RequestParam(value = "longitude") double longitude,
+                                                              @RequestParam(value = "altitude") double altitude) {
         try {
-            return new ResponseEntity<List<Produto>>(produtoService.buscaProdutosPorPreferenciasCliente(clienteId), HttpStatus.OK);
+            return new ResponseEntity<List<Produto>>(produtoService.buscaProdutosPorPreferenciasCliente(clienteId, latitude, longitude, altitude), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }

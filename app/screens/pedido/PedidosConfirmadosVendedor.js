@@ -22,6 +22,7 @@ import NavigationBar from 'react-native-navbar';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,10 +30,11 @@ class PedidosConfirmadosVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.navigation.state.params.userId,      
+      userId: this.props.navigation.state.params.userId,
       vendedorId: this.props.navigation.state.params.vendedorId,
       pedidosConfirmados: [],
-      refreshing: false,                  
+      refreshing: false,
+      carregou: true
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -44,29 +46,54 @@ class PedidosConfirmadosVendedor extends Component {
           if (!responseJson.errorMessage) {
               this.setState({pedidosConfirmados: responseJson});
         }
-        this.setState({refreshing: false});                        
+        this.setState({refreshing: false});
+        this.setState({carregou: false});
       });
   };
+
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
+
+  openCliente(cliente) {
+    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
+  }
 
 pedidoConfirmado(){
   var views = [];
   if(this.state.pedidosConfirmados.length > 0){
-    for (i in this.state.pedidosConfirmados){
+    for (i in this.state.pedidosConfirmados) {
+      let imagemPrincipalC = require('./img/camera11.jpg');
       let pedidoC = this.state.pedidosConfirmados[i];
-      var dataNormal = new Date(pedidoC.dataConfirmacao);      
-      let dataConfirmado = (dataNormal.getDate()<10?"0"+dataNormal.getDate():dataNormal.getDate()) + "/" + (dataNormal.getMonth()+1<10?"0"+dataNormal.getMonth()+1:dataNormal.getMonth()+1) + "/" + dataNormal.getFullYear() + 
-      " - "+dataNormal.getHours() + ":" + (dataNormal.getMinutes()<10?"0"+dataNormal.getMinutes():dataNormal.getMinutes());
+
+      if (pedidoC.cliente.usuario.imagemPerfil) {
+        imagemPrincipalC = {uri: pedidoC.cliente.usuario.imagemPerfil};
+      }
+
+      var dataNormal = new Date(pedidoC.dataConfirmacao);
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;      
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataConfirmado = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+
       views.push(
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '20%'}}>
-            <Image source={{uri: pedidoC.cliente.usuario.imagemPerfil}}
+            <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>            
+              <Image source={imagemPrincipalC}
                   style={styles.imagemPrincipal}/>
+            </TouchableHighlight>
             </View>
             <View style={{width: '65%', alignSelf:'center'}}>
-              <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
-              <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>          
+              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>                        
+                <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
+              </TouchableHighlight>
+              <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
               <Text style={styles.oneResultfont}> Entregar:
               <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
               </Text>
@@ -74,28 +101,43 @@ pedidoConfirmado(){
               <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
               </Text>
               <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
-              <Text style={styles.totalFont}> R$  {pedidoC.valorCompra}</Text>
+              <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
               </Text>
             </View>
             <View style={{width: '5%',justifyContent: 'center'}}>
               <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
             </View>
           </View>
-          } content={  
+          } content={
             <View style={{margin: 15, alignItems:'center'}}>
               <Button buttonStyle={{width: 150}}
                   title="Validar Token"
                   color="#fff"
-                  backgroundColor="#768888"
+                  backgroundColor="#885581"
                   borderRadius={10}
-                  onPress={() => 
+                  onPress={() =>
                     {
                       this.props.navigation.navigate('LerToken', {
                         userId: this.state.userId,
                         vendedorId: this.state.vendedorId,
-                        token: pedidoC.token, 
+                        token: pedidoC.token,
                         pedidoId: pedidoC.id});
                     }}/>
+              <TouchableOpacity 
+                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                    onPress={() =>
+                              {
+                                this.props.navigation.navigate('Chat', {
+                                  userId: this.state.userId,
+                                  otherUserId: pedidoC.cliente.usuario.id,
+                                  otherUserName: pedidoC.cliente.usuario.nome,                                  
+                                  pedidoId: pedidoC.id});
+                              }}>
+                  <Icon name="comments-o" size={25} 
+                        color={'#4A4A4A'} 
+                        type='font-awesome'
+                        style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
+              </TouchableOpacity>
             </View>
           }
           underlayColor="white"
@@ -132,6 +174,7 @@ pedidoConfirmado(){
             Pedidos Confirmados
           </Text>
         </View>
+        <Spinner visible={this.state.carregou}/>
         {this.pedidoConfirmado()}
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>
@@ -164,16 +207,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'left',
     fontWeight: 'bold',
-  },
-  imagemCliente:{
-    width: 60,
-    height: 60,
-    borderRadius: 100
-  },
-  imagemProduto:{
-    width: '98%',
-    height: 100,
-    borderRadius: 10
   },
   imagemPrincipal:{
     width: '98%',

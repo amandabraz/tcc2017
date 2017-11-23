@@ -31,18 +31,10 @@ public class ProdutoService {
     @Transactional
     public Produto salvaProduto(Produto produto) throws IOException {
         try {
-            if (Objects.nonNull(produto.getId())) {
-                Produto updateProduto = produtoDAO.findOne(produto.getId());
-                if (Objects.nonNull(updateProduto.getImagemPrincipal()) &&
-                        Objects.nonNull(produto.getImagemPrincipal())) {
-                    if (!updateProduto.getImagemPrincipal().equals(produto.getImagemPrincipal())) {
-                        produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
-                    }
-                }
-            } else {
-                if (!StringUtils.isEmpty(produto.getImagemPrincipal())) {
-                    produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
-                }
+            if (!StringUtils.isEmpty(produto.getImagemPrincipal()) &&
+                    (Objects.isNull(produto.getId()) ||
+                    !produto.getImagemPrincipal().equals(produtoDAO.findOne(produto.getId()).getImagemPrincipal()))) {
+                produto.setImagemPrincipal(UploadUtil.uploadFoto(produto.getImagemPrincipal()));
             }
 
             return produtoDAO.save(produto);
@@ -55,12 +47,12 @@ public class ProdutoService {
     public List<Produto> encontraProduto(String filtro, double lat, double lng, double alt) {
         try {
             List<Produto> listaProdutos = new ArrayList<>();
-            listaProdutos.addAll(produtoDAO.findByDeletadoAndNomeIgnoreCaseContaining(false, filtro));
-            listaProdutos.addAll(produtoDAO.findByDeletadoAndTagsDescricaoIgnoreCaseContaining(false, filtro));
-            listaProdutos.addAll(produtoDAO.findByDeletadoAndIngredientesItemIgnoreCaseContaining(false, filtro));
-            listaProdutos.addAll(produtoDAO.findByDeletadoAndRestricoesDieteticasDescricaoIgnoreCaseContaining(false, filtro));
-            listaProdutos.addAll(produtoDAO.findByDeletadoAndCategoriaDescricaoIgnoreCaseContaining(false, filtro));
-            listaProdutos.addAll(produtoDAO.findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContaining(false, filtro));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndNomeIgnoreCaseContainingAndQuantidadeGreaterThan(false, filtro, 0));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndTagsDescricaoIgnoreCaseContainingAndQuantidadeGreaterThan(false, filtro, 0));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndIngredientesItemIgnoreCaseContainingAndQuantidadeGreaterThan(false, filtro, 0));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndRestricoesDieteticasDescricaoIgnoreCaseContainingAndQuantidadeGreaterThan(false, filtro, 0));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndCategoriaDescricaoIgnoreCaseContainingAndQuantidadeGreaterThan(false, filtro, 0));
+            listaProdutos.addAll(produtoDAO.findByDeletadoAndVendedorNomeFantasiaIgnoreCaseContainingAndQuantidadeGreaterThan(false, filtro, 0));
 
             // remove resultados duplicados
             List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
@@ -112,7 +104,7 @@ public class ProdutoService {
     @Transactional
     public List<Produto> buscaProdutosPorVendedor(Long idVendedor) {
         try {
-            return produtoDAO.findByDeletadoAndVendedorIdOrderByDataPreparacaoDesc(false, idVendedor);
+            return produtoDAO.findByDeletadoAndVendedorIdAndQuantidadeGreaterThanOrderByDataPreparacaoDesc(false, idVendedor, 0);
         } catch (Exception e) {
             throw e;
         }
@@ -171,9 +163,15 @@ public class ProdutoService {
     }
 
     @Transactional
-    public List<Produto> buscaProdutosPorPreferenciasCliente(Long clienteId) {
+    public List<Produto> buscaProdutosPorPreferenciasCliente(Long clienteId, double lat, double lng, double alt) {
         try {
-            return produtoDAO.findByPreferenciasCliente(clienteId);
+            List<Produto> listaProdutos = produtoDAO.findByPreferenciasCliente(clienteId);
+
+            // remove resultados duplicados
+            List<Produto> listaProdutosFiltrada = new ArrayList<Produto>(new HashSet<Produto>(listaProdutos));
+            listaProdutosFiltrada = organizaPorDistancia(listaProdutosFiltrada, lat, lng, alt);
+
+            return listaProdutosFiltrada;
         } catch (Exception e) {
             throw e;
         }

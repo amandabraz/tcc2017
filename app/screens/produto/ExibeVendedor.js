@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ScrollView } from 'react-native';
+import { TextInput, Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ToastAndroid, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
-import NavigationBar from 'react-native-navbar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
@@ -9,15 +8,18 @@ import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
+import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import Spinner from 'react-native-loading-spinner-overlay';
 
+const { width, height } = Dimensions.get("window");
 
-//TODO: Pegar dados do vendedor certo, o que o clique foi feito
 
 export default class ExibeVendedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.navigation.state.params.userId,
       clienteId: this.props.navigation.state.params.clienteId,
       selectUserId: this.props.navigation.state.params.selectUserId,
       vendedorId: this.props.navigation.state.params.vendedorId,
@@ -30,14 +32,17 @@ export default class ExibeVendedor extends Component {
       },
       celularText: '',
       resultadoProduto: [],
-      imagemPerfil: require('./img/camera11.jpg')
+      imagemPerfil: require('./img/camera11.jpg'),
+      favoritoColor: 'gray',
+      carregou: true,
+      motivoDenuncia: '',
     };
     this.buscaDadosVendedor();
     this.buscaProdutos();
   }
 
   buscaDadosVendedor() {
-    fetch(constante.ENDPOINT+'vendedor/usuario/' + this.state.selectUserId)
+    fetch(constante.ENDPOINT + 'vendedor/' + this.state.vendedorId + '/cliente/' + this.state.clienteId)
     .then((response) => response.json())
       .then((responseJson) => {
           if (!responseJson.errorMessage) {
@@ -56,7 +61,11 @@ export default class ExibeVendedor extends Component {
             }
             pagamentos = pagamentos.slice(0, -3);
             this.setState({meiosPagamentoText: pagamentos});
+            if (responseJson.favoritoDoCliente) {
+              this.setState({favoritoColor: '#990000'});
+            }
           }
+          this.setState({carregou: false});
         }
       });
   };
@@ -76,11 +85,15 @@ export default class ExibeVendedor extends Component {
     if(this.state.resultadoProduto.length > 0){
     for(i in this.state.resultadoProduto) {
       let produto = this.state.resultadoProduto[i];
+      let imagemPrincipalP = require('./img/camera11.jpg');
+      if (produto.imagemPrincipal) {
+        imagemPrincipalP = { uri: produto.imagemPrincipal };
+      }
       views.push (
         <View key={i}>
         <TouchableOpacity onPress={() => this.onButtonOpenProduct(produto)}>
           <View style={styles.oneResult}>
-              <Image source={{ uri: produto.imagemPrincipal }}
+              <Image source={imagemPrincipalP}
                      style={styles.imageResultSearch}
                      justifyContent='flex-start'/>
 
@@ -110,29 +123,116 @@ onButtonOpenProduct = (produto) => {
   this.props.navigation.navigate('ExibeProduto', {produtoId: produto.id, clienteId: this.state.clienteId});
 };
 
+favoritaVendedor(){
+  if(this.state.favoritoColor == 'gray'){
+    this.setState({favoritoColor: '#990000'});
+    fetch(constante.ENDPOINT + 'cliente/' + this.state.clienteId + '/favoritos/' + this.state.vendedorId,
+          {method: 'PUT'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        ToastAndroid.showWithGravity('Vendedor favoritado <3', ToastAndroid.SHORT, ToastAndroid.CENTER);
+      } else {
+        this.setState({favoritoColor: 'gray'});
+      }
+    });
+  } else {
+    this.setState({favoritoColor: 'gray'});
+    fetch(constante.ENDPOINT + 'cliente/' + this.state.clienteId + '/favoritos/' + this.state.vendedorId,
+           {method: 'DELETE'})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        ToastAndroid.showWithGravity('Vendedor desfavoritado </3', ToastAndroid.SHORT, ToastAndroid.CENTER);
+      } else {
+        this.setState({favoritoColor: '#990000'});
+      }
+    });
+  }
+}
+
+
+_showModal = () => this.setState({ isModalVisible: true })
+
+_hideModal = () => this.setState({ isModalVisible: false })
+
+denunciaUsuario() {
+  this.setState({carregou: true});
+
+  const {
+    state: {
+      motivoDenuncia,
+      userId,
+      selectUserId
+    }
+  } = this;
+
+  denuncia = {
+    "motivo": motivoDenuncia,
+    "dataDenuncia": new Date(),
+    "reportado": selectUserId,
+    "denunciador": userId
+  }
+
+  fetch(constante.ENDPOINT + 'denuncia/', {method: 'POST',
+    headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(denuncia)
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
+    if (!responseJson.errorMessage) {
+      this._hideModal();
+      ToastAndroid.showWithGravity('Denúncia registrada. Assim que possível, entraremos em contato com o status da sua denúncia. Obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
+      this.setState({carregou: false});
+    }
+  });
+}
+
   render () {
+    const {goBack} = this.props.navigation;
     return (
       <View style={styles.container}>
+      <NavigationBar
+       tintColor="transparent"
+       style={{marginBottom: 20}}
+      leftButton={
+        <TouchableOpacity onPress={() => goBack()}>
+          <MaterialsIcon name="chevron-left" size={40} color={'#624063'}  style={{ padding: 3 }} />
+        </TouchableOpacity>
+      }/>
         <View style={styles.header}>
           <View style={styles.profilepicWrap}>
           <Image
             style={styles.profilepic}
             source={this.state.imagemPerfil}/>
           </View>
-          <View style={{alignItems: 'center'}}>
-          <Text style={styles.titleText}>
-          {this.state.nomeText}
-          </Text>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{alignItems: 'center', justifyContent: 'center', width: '80%'}}>
+              <Text style={styles.titleText}>
+                {this.state.nomeText}
+              </Text>
+            </View>
+            <View style={{alignSelf: 'flex-end'}}>
+                <Icon name='heart'
+                      size={25}
+                      raised
+                      type='font-awesome'
+                      color={this.state.favoritoColor}
+                      onPress={() => this.favoritaVendedor()}/>
+            </View>
           </View>
-          </View>
-
+        </View>
+        <Spinner visible={this.state.carregou}/>
         <ScrollView>
         <Fumi
             style={{ backgroundColor: 'transparent', width: 375, height: 70 }}
             label={'Nome da loja'}
             iconClass={MaterialsIcon}
             iconName={'store'}
-            iconColor={'darkslategrey'}
+            iconColor={'#4A4A4A'}
             value={this.state.nomeFantasiaText}
             editable={false}
             inputStyle={styles.baseText}/>
@@ -142,7 +242,7 @@ onButtonOpenProduct = (produto) => {
               label={'Meios de Pagamento'}
               iconClass={FontAwesomeIcon}
               iconName={'asterisk'}
-              iconColor={'darkslategrey'}
+              iconColor={'#4A4A4A'}
               value={this.state.meiosPagamentoText}
               multiline={true}
               editable={false}
@@ -153,6 +253,41 @@ onButtonOpenProduct = (produto) => {
                   showsHorizontalScrollIndicator={true}>
           {this.mostraProduto()}
       </ScrollView>
+      </View>
+      <View style={{margin: 20}}>
+        <TouchableOpacity onPress={() => this._showModal()} style={{flexDirection: "row", alignItems:"center", justifyContent: "center"}}>
+          <MaterialsIcon name="block" size={20} color={'#624063'}  style={{ padding: 3 }} />
+          <Text style={{fontWeight: "bold"}}>Denunciar usuário</Text>
+        </TouchableOpacity>
+        <Modal
+        isVisible={this.state.isModalVisible}
+        animationIn={'slideInLeft'}
+        animationOut={'slideOutRight'}
+        backdropOpacity={0.3}>
+        <View style={styles.modalContent}>
+        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Por favor, descreva o motivo da sua denúncia, avaliaremos e entraremos em contato assim que possível! </Text>
+          <View style={{width: '90%', margin: 10}}>
+          <TextInput
+              style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}
+              multiline={true}
+              maxLength={255}
+              onChangeText={(motivo) => this.setState({motivoDenuncia: motivo})}
+            />
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => this._hideModal()}>
+              <View style={styles.button}>
+                <Text style={{color: "#fff"}}>Cancelar</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.denunciaUsuario()}>
+                <View style={styles.button}>
+                  <Text style={{color: "#fff"}}>Denunciar</Text>
+                </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       </View>
       </ScrollView>
       </View>
@@ -167,36 +302,30 @@ onButtonOpenProduct = (produto) => {
       flex: 1
   },
   headerBackground: {
-    flex: 1,
-    width: null,
     alignSelf: 'stretch',
   },
   header:{
+    width,
+    height: "40%",
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
-    backgroundColor: 'rgba(202, 203, 247, 0.58)',
   },
   profilepicWrap:{
-    width: 180,
-    height: 180,
-    borderRadius: 100,
-    borderColor: 'rgba(0,0,0,0.4)',
+    width,
+    height: "85%"
   },
   profilepic:{
     flex: 1,
-    width: null,
-    alignSelf: 'stretch',
-    borderRadius: 100,
-    borderWidth: 4
+    width,
+    alignSelf: 'stretch'
   },
   oneResultfontTitle:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 17,
   },
   oneResultfont:{
-    color: '#1C1C1C',
+    color: '#4A4A4A',
     fontSize: 15,
   },
   imageResultSearch:{
@@ -224,20 +353,37 @@ onButtonOpenProduct = (produto) => {
   },
   baseText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 20,
   },
   listText: {
     fontFamily: 'Roboto',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontSize: 16,
   },
   titleText: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: 'darkslategrey',
+    color: '#4A4A4A',
     fontFamily: 'Roboto',
   },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  button: {
+    backgroundColor: 'gray',
+    padding: 12,
+    margin: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  }
 });
 
 AppRegistry.registerComponent('tcc2017', () => tcc2017);

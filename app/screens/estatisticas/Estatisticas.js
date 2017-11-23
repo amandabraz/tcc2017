@@ -13,10 +13,11 @@ import {
   View
 } from 'react-native';
 import * as constante from '../../constantes';
-
 import Chart from 'react-native-chart';
 import NavigationBar from 'react-native-navbar';
 import PieChart from 'react-native-pie-chart';
+import Slider from "react-native-slider";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,12 +35,14 @@ class Estatisticas extends Component {
         valorTotalArrecadadoPorProduto: [],
         nomeProduto: [],
         refreshing: false,
+        sliderValue: 30,
+        carregou: true
     };
     this.buscaQuantidadeVendida();
-    this.buscaValorArrecadadoPorProduto();
+    this.buscaValorArrecadadoPorProduto(this.state.sliderValue);
   };
 
-  //BUSCA POR UNIDADES VENDIDAS - BAR CHART
+  //BUSCA POR UNIDADES VENDIDAS - BAR CHART E LISTA DE PRODUTOS
   buscaQuantidadeVendida() {
     fetch(constante.ENDPOINT+'pedido/quantidade/vendedor/' + this.state.vendedorId, {method: 'GET'})
     .then((response) => response.json())
@@ -51,6 +54,35 @@ class Estatisticas extends Component {
         this.setState({refreshing:false});
     });
   };
+
+  buscaProdutosVendidosVendedor(){
+    if(this.state.quantidadeVendida.length > 0){
+      return(
+      <View style = {{width: '90%', marginRight: 5}}>
+      <View style={styles.container}>
+        <View style={{width: this.state.quantidadeVendida.length}}/>
+        <Chart
+          style = {styles.chart}
+          data = {
+              this.state.quantidadeVendida
+          }
+          type = "bar"
+          verticalGridStep = {1}
+          color={'#624063'}
+        />
+      </View>
+      </View>
+      )
+    } else {
+      return(
+        <View key={0} style={{alignItems: 'center', marginRight: 5}}>
+        <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
+          Não há produtos vendidos para gerar estatísticas.
+        </Text>
+        </View>
+      )
+    }
+  }
 
   produtosVendidos(){
     var views = [];
@@ -71,17 +103,18 @@ class Estatisticas extends Component {
       views.push(
         <View key={0} style={{alignItems: 'center'}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Você não tem produtos vendidos! :(
+          Não há produtos vendidos para gerar estatísticas.
         </Text>
         </View>
       )
     }
+    return views;
   }
 
   //BUSCA POR VALOR ARRECADADO - PIE CHART
 
-  buscaValorArrecadadoPorProduto(){
-    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays=30&maxCount=5', {method: 'GET'})
+  buscaValorArrecadadoPorProduto(diasASeremFiltrados){
+    fetch(constante.ENDPOINT+'pedido/valorTotal/vendedor/' + this.state.vendedorId + '?lastDays='+diasASeremFiltrados+'&maxCount=10', {method: 'GET'})
     .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
@@ -95,8 +128,13 @@ class Estatisticas extends Component {
           this.setState({nomeProduto: nomeProdutoVendidoResponse})
         }
         this.setState({refreshing:false})
+        this.setState({carregou: false});
     });
   }
+
+  arredondaValores(num){
+    return num.toFixed(2)
+  };
 
   exibeValorArrecadadoPorProduto(){
     if(this.state.valorTotalArrecadadoPorProduto.length > 0){
@@ -104,7 +142,7 @@ class Estatisticas extends Component {
       for(let i = 0; i<this.state.nomeProduto.length; i++){
         textDescriptions.push(
           <Text key={keyOfPieChart+"_desc_"+i} style={styles.pieChart_description}>
-            <Text style={{color: colorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.state.valorTotalArrecadadoPorProduto[i]+") "}
+            <Text style={{color: twentyColorsForPieChart[i], fontSize: 25, fontWeight: 'bold'}}>+</Text> {this.state.nomeProduto[i]+" (R$ "+this.arredondaValores(this.state.valorTotalArrecadadoPorProduto[i])+") "}
           </Text>
         )
       }
@@ -113,7 +151,7 @@ class Estatisticas extends Component {
         <PieChart
           chart_wh={250}
           series={this.state.valorTotalArrecadadoPorProduto}
-          sliceColor={colorsForPieChart}
+          sliceColor={twentyColorsForPieChart}
           doughnut={true}
           coverRadius={0.45}
           coverFill={'#D9DBDB'}
@@ -127,47 +165,71 @@ class Estatisticas extends Component {
       return(
         <View key={keyOfPieChart+0} style={{alignItems: 'center'}}>
         <Text style={{marginTop: 12, fontSize: 18, justifyContent: 'center'}}>
-          Não há valor total de venda para estatísticas.
+          Não há valor total de venda para gerar estatísticas.
         </Text>
         </View>
       )
     }
   }
 
+  exibeSlider(){
+    return(
+      <View>
+        <Slider
+          value={this.state.sliderValue}
+          onValueChange={(value) => {
+            this.setState({ sliderValue:value })
+          }}
+          minimumValue={1}
+          maximumValue={30}
+          minimumTrackTintColor={'#448484'}
+          step={1}
+          onSlidingComplete = {(value) => {
+            this.buscaValorArrecadadoPorProduto(value)
+          }}
+        />
+      </View>
+    );
+  }
 
   render() {
-    const titleConfig = {
-      title: 'Estatísticas',
-      tintColor: "#fff",
-      fontFamily: 'Roboto',
-    }
     return(
       <View style={{flex: 1}}>
-        <NavigationBar
-          title={titleConfig}
-          tintColor="#768888"
-        />
           <ScrollView refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
                 onRefresh={() => {
                   this.setState({refreshing:true});
                   this.buscaQuantidadeVendida();
-                  this.buscaValorArrecadadoPorProduto();
+                  this.buscaValorArrecadadoPorProduto(this.state.sliderValue);
                 }}
               />
             }>
-            <View style={{paddingTop: 25}}>
-              <Text style={{marginLeft: 10, fontSize: 16}}>
+            <View style={{paddingTop: 25, marginRight: 5}}>
+              <Text style={{marginLeft: 10, marginRight: 10, fontSize: 16}}>
                 Seus Produtos Vendidos:
               </Text>
               {this.produtosVendidos()}
             </View>
+            <View style = {{margin: 10, flexDirection: 'column', marginTop: 15, marginRight: 15}}>
+              <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', marginRight: 5, fontWeight: 'bold'}}>
+                Representação gráfica:
+              </Text>
+              {this.buscaProdutosVendidosVendedor()}
+            </View>
+            <Spinner visible={this.state.carregou}/>
             <View style = {styles.pieChart_viewStyle}>
               <Text style={styles.pieChart_text}>
-                Valor total arrecadado por produto no mês
+                Valor total arrecadado por produto nos últimos <Text style={styles.corzinhaDestaque}>
+                {this.state.sliderValue}</Text> dias
               </Text>
-              {this.exibeValorArrecadadoPorProduto()}
+              <Text style={styles.pieChart_smallText}>
+                Arraste o slider abaixo para alterar a quantidade de dias a serem pesquisados
+              </Text>
+              <View>
+                {this.exibeSlider()}
+              </View>
+                {this.exibeValorArrecadadoPorProduto()}
             </View>
           </ScrollView>
       </View>
@@ -176,60 +238,92 @@ class Estatisticas extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        backgroundColor: '#D9DBDB',
-    },
-    chart: {
-        width: 350,
-        height: 350,
-        flex:1,
-    },
-    produtosV:{
-      margin: 6,
-      padding: 10,
-      borderWidth: 1,
-      borderRadius: 10,
-      borderColor: '#fff',
-      width: '98%'
-    },
-    pieChart_text:{
-      marginTop: 8,
-      fontSize: 16,
+  container: {
+      width,
+      flex: 1,
       justifyContent: 'center',
-      color: '#406161',
-      fontWeight: 'bold'
-    },
-    pieChart_viewStyle:{
-      margin: 10,
-      marginTop: 15
-    },
-    pieChart_description:{
+      alignItems: 'center',
+      flexDirection: 'column',
+      backgroundColor: '#D9DBDB',
+      marginRight: 5
+  },
+  chart: {
+      width: 350,
+      height: 350,
+      flex:1,
+      marginRight: 5,
+  },
+  produtosV:{
+    margin: 6,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#fff',
+    width: '98%',
+    marginRight: 5
+  },
+  bar: {
+    borderRadius: 5,
+    height: 7,
+    marginRight: 5
+  },
+  points: {
+    backgroundColor: '#88557B'
+  },
+  pieChart_text:{
+    marginTop: 8,
+    fontSize: 16,
+    justifyContent: 'center',
+    color: '#406161',
+    fontWeight: 'bold',
+    marginRight: 5
+  },
+  pieChart_smallText:{
+    marginTop: 5,
+    fontSize: 14,
+    justifyContent: 'center',
+    color: '#448484',
+    marginRight: 5
+  },
+  pieChart_viewStyle:{
+    margin: 10,
+    marginTop: 15,
+    marginRight: 5,
+    fontWeight: 'bold'
+  },
+  pieChart_viewStyle:{
+    margin: 10,
+    marginTop: 15
+  },
+  pieChart_description:{
       marginTop: 8,
       fontSize: 14,
-      justifyContent: 'center'
-    },
-    bar: {
-      borderRadius: 5,
-      height: 7,
-      marginRight: 5
-    },
-    points: {
-      backgroundColor: '#88557B'
-    },
-    pieChart_textAlign:{
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }
+    justifyContent: 'center'
+  },
+  pieChart_textAlign:{
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  slider:{
+    width:'100%',
+    alignItems:'center',
+    flexDirection:'column'
+  },
+  corzinhaDestaque:{
+    color:'#359e9a',
+    fontSize: 18
+  }
 });
 
-const colorsForPieChart = ['#F44336','#2196F3','#d1bc0c', '#4CAF50', '#Fd720f', '#776567'];
+const twentyColorsForPieChart = [
+  '#2196F3','#F44336','#d1bc0c','#4CAF50','#Fd720f','#776567',
+  '#e6194b','#911eb4','#46f0f0','#f032e6','#d2f53c','e0b5b5',
+  '#008080','#aa6e28','#ac96ba','#808080','#800000','#aaffc3',
+  '#808000',"#000080"
+
+];
 
 Estatisticas.defaultProps = { ...Estatisticas };
 
