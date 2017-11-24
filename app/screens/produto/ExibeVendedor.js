@@ -1,3 +1,4 @@
+import Vendedor from '../cadastro/Vendedor';
 import React, { Component } from 'react';
 import { TextInput, Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ToastAndroid, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
@@ -10,6 +11,7 @@ import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import StarRating from 'react-native-star-rating';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const { width, height } = Dimensions.get("window");
@@ -36,6 +38,9 @@ export default class ExibeVendedor extends Component {
       favoritoColor: 'gray',
       carregou: true,
       motivoDenuncia: '',
+      isModalVisible: false,
+      avaliarVisible: false,
+      starCount: 0,
     };
     this.buscaDadosVendedor();
     this.buscaProdutos();
@@ -154,6 +159,9 @@ favoritaVendedor(){
 
 _showModal = () => this.setState({ isModalVisible: true })
 
+avaliar = () => this.setState({ avaliarVisible: true })
+esconder = () => this.setState({ avaliarVisible: false })
+
 _hideModal = () => this.setState({ isModalVisible: false })
 
 denunciaUsuario() {
@@ -255,10 +263,16 @@ denunciaUsuario() {
       </ScrollView>
       </View>
       <View style={{margin: 20}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <TouchableOpacity onPress={() => this._showModal()} style={{flexDirection: "row", alignItems:"center", justifyContent: "center"}}>
           <MaterialsIcon name="block" size={20} color={'#624063'}  style={{ padding: 3 }} />
           <Text style={{fontWeight: "bold"}}>Denunciar usuário</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.avaliar()} style={{flexDirection: "row", alignItems:"center", justifyContent: "center"}}>
+          <FontAwesomeIcon name="smile-o" size={20} color={'#624063'}  style={{ padding: 5 }}/>
+          <Text style={{fontWeight: "bold"}}>Avaliar Vendedor</Text>
+        </TouchableOpacity>
+      </View>
         <Modal
         isVisible={this.state.isModalVisible}
         animationIn={'slideInLeft'}
@@ -283,6 +297,47 @@ denunciaUsuario() {
             <TouchableOpacity onPress={() => this.denunciaUsuario()}>
                 <View style={styles.button}>
                   <Text style={{color: "#fff"}}>Denunciar</Text>
+                </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={this.state.avaliarVisible}
+        animationIn={'slideInLeft'}
+        animationOut={'slideOutRight'}
+        backdropOpacity={0.3}>
+        <View style={styles.modalContent}>
+        <View style={{flexDirection: 'column', alignItems: 'center'}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold'}}> Sua nota para o vendedor: </Text>
+          <View style={{width: '60%'}}>
+            <StarRating
+              maxStars={5}
+              starSize={25}
+              starColor={'#e6b800'}
+              rating={this.state.starCount}
+              selectedStar={(rating) => this.setState({starCount: rating})}
+              />
+          </View>
+        </View>
+        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Insira um comentário </Text>
+          <View style={{width: '90%', margin: 10}}>
+          <TextInput
+              style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}
+              multiline={true}
+              maxLength={255}
+              onChangeText={(motivo) => this.setState({motivoDenuncia: motivo})}
+            />
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => this.esconder()}>
+              <View style={styles.button}>
+                <Text style={{color: "#fff"}}>Cancelar</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.denunciaUsuario()}>
+                <View style={styles.button}>
+                  <Text style={{color: "#fff"}}>Avaliar</Text>
                 </View>
             </TouchableOpacity>
           </View>
