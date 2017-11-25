@@ -24,7 +24,6 @@ import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Modal from 'react-native-modal';
 
 
 const { width, height } = Dimensions.get("window");
