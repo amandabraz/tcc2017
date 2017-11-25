@@ -112,6 +112,7 @@ public class PedidoController {
         try {
             Pedido pedidoAtualizado = pedidoService.buscaPedido(idPedido);
             if (status.equals("Finalizado")) {
+                pedidoAtualizado.setStatus(status);
                 pedidoAtualizado.setDataFinalizacao(new Date());
                 pedidoAtualizado.setAltitude(alt);
                 pedidoAtualizado.setLatitude(lat);

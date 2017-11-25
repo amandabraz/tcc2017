@@ -72,16 +72,16 @@ public class Pedido implements Serializable {
     @Column(name = "NOTA", nullable = true)
     public Integer nota = 0;
 
-    @Column(name = "LATITUDE", nullable = false)
+    @Column(name = "LATITUDE", nullable = true)
     private double latitude;
 
-    @Column(name = "LONGITUDE", nullable = false)
+    @Column(name = "LONGITUDE", nullable = true)
     private double longitude;
 
-    @Column(name = "PRECISAO_MTS", nullable = false)
+    @Column(name = "PRECISAO_MTS", nullable = true)
     private double precisao_mts;
 
-    @Column(name = "ALTITUDE", nullable = false)
+    @Column(name = "ALTITUDE", nullable = true)
     private double altitude;
 
     public Pedido(Long id) {
