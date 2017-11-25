@@ -35,7 +35,8 @@ class PedidosConfirmadosCliente extends Component {
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosConfirmados: [],
       refreshing: false,
-      carregou: true
+      carregou: true,
+      exibeDica:true
     };
     this.buscaDadosPedidosCliente();
   };
@@ -83,6 +84,20 @@ class PedidosConfirmadosCliente extends Component {
           });
   };
 
+dicaSeguranca(){
+  return (
+    <TouchableHighlight onPress = {
+      this.setState({dicaSeguranca:false})
+    }>
+      <View key={'dica'} style={styles.oneResult1}>
+        <Text style={styles.totalFont}> Dicas de segurança!</Text>
+        <Text style={{fontSize: 14}}>Se encontre com o vendedor em local público e movimentado</Text>
+        <Text style={{fontSize: 14}}>Desconfie de produtos extremamente baratos</Text>
+        <Text style={{fontSize: 14}}>Leia os comentários feitos sobre o produto para saber sobre o produto e seu vendedor</Text>
+      </View>
+    </TouchableHighlight>
+  )  
+}
 
 pedidoConfirmado(){
   var views = [];
@@ -104,7 +119,7 @@ pedidoConfirmado(){
       let dataConfirmado = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
 
       views.push(
-        <View key={i} style={styles.oneResult1}>
+      <View key={i} style={styles.oneResult1}>
         <Accordion header={
           <View style={{flexDirection: 'row'}}>
           <View style = {{ width: '20%'}}>
@@ -130,7 +145,7 @@ pedidoConfirmado(){
         <View style={{width: '5%',justifyContent: 'center'}}>
         <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
         </View>
-    </View>
+        </View>
         } content={
           <View style={{margin: 15, alignItems:'center'}}>
           <View style = {{ alignItems: 'center'}}>
@@ -164,7 +179,7 @@ pedidoConfirmado(){
         }
         underlayColor="white"
         easing="easeOutCubic"/>
-    </View>
+      </View>
     )}
  } else {
    views.push(
@@ -196,6 +211,7 @@ pedidoConfirmado(){
             Pedidos Confirmados
           </Text>
         </View>
+        {this.dicaSeguranca()}
         <Spinner visible={this.state.carregou}/>
         {this.pedidoConfirmado()}
       </ScrollView>
