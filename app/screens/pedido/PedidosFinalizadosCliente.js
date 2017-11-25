@@ -78,22 +78,24 @@ class PedidosFinalizadosCliente extends Component {
   avaliarPedido() {
     const {
       state: {
+        pedidoParaAvaliar,
         starCount,
         comentarioAvaliacao
       }
     } = this;
-    avaliacaoPedido = {
+    avaliacao = {
+        "id": this.state.pedidoParaAvaliar,
         "nota": parseInt(this.state.starCount),
-        "comentario_avaliacao": this.state.comentarioAvaliacao
+        "comentarioAvaliacao": this.state.comentarioAvaliacao
     };
 
-    fetch(constante.ENDPOINT + 'pedido/' + this.state.pedidoParaAvaliar + '/produto/avaliacao/', {
+    fetch(constante.ENDPOINT + 'pedido/produto/avaliacao', {
       method: 'PATCH',
       headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       },
-      body: JSON.stringify(avaliacaoPedido)
+      body: JSON.stringify(avaliacao)
     })
       .then((response) => response.json())
       .then((responseJson) => {

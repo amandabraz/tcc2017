@@ -158,14 +158,12 @@ public class PedidoController {
     }
 
     @Transactional
-    @RequestMapping(value = "{pedidoId}/produto/avaliacao/{nota}", method = RequestMethod.PATCH)
-    public ResponseEntity avaliaProduto(@PathVariable("pedidoId") Long pedidoId,
-                                        @PathVariable("nota") Integer nota,
-                                        @RequestBody Pedido pedido) {
+    @RequestMapping(value = "produto/avaliacao", method = RequestMethod.PATCH)
+    public ResponseEntity avaliaProduto(@RequestBody Pedido avaliacao) {
         try {
-            Pedido pedidoAvaliado = pedidoService.buscaPedido(pedidoId);
-            pedidoAvaliado.setNota(nota);
-            pedidoAvaliado.setComentarioAvaliacao(pedido.getComentarioAvaliacao());
+            Pedido pedidoAvaliado = pedidoService.buscaPedido(avaliacao.id);
+            pedidoAvaliado.setNota(avaliacao.getNota());
+            pedidoAvaliado.setComentarioAvaliacao(avaliacao.getComentarioAvaliacao());
             pedidoService.salvarPedido(pedidoAvaliado);
             pedidoService.recalculaScoreProduto(pedidoAvaliado);
             return new ResponseEntity(pedidoAvaliado, HttpStatus.OK);
