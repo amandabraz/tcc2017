@@ -18,33 +18,104 @@ class Mapa extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      region: {
-        latitude: -22.9175807,
-        longitude: -47.053437,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      },
-      markers:[
-        {
-          latlng:{
-            latitude: -22.9175807,
-            longitude: -47.053437
-          },
-          title: 'eu',
-          description: 'minha posição'
+      vendedorId: this.props.navigation.state.params.vendedorId,
+      vendedorNome: this.props.navigation.state.params.vendedorNome,
+      me:{
+        latlng:{
+          latitude: 0,
+          longitude: 0
         },
-        {
-          latlng:{
-            latitude: -22.911265, 
-            longitude: -47.045484
-          },
-          title: 'vendedor',
-          description: 'posição vendedor'
-        }
-      ],
+        title: '',
+        description: ''
+      },
+      vendedor:{
+        latlng:{
+          latitude: -22.911265, 
+          longitude: -47.045484
+        },
+        title: this.props.navigation.state.params.vendedorNome,
+        description: 'Local onde está '+this.props.navigation.state.params.vendedorNome
+      },
       refreshing: false,   
       carregou: true
     }
+    this.atualizaMapa()
+  }
+
+  atualizaMapa() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({
+        me: {
+          latlng:{
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          },
+          title: 'Você :)',
+          description: 'Sua posição'
+        },
+      })
+    }, (error) => {
+      this.setState({
+        me:{
+          latlng:{
+            latitude: 0,
+            longitude: 0
+          }//TODO: janelinha de erro quando localização
+        }
+      })
+    })
+  }
+
+  calculaDelta(latLong) {
+    // points should be an array of { latitude: X, longitude: Y }
+    let minX, maxX, minY, maxY;
+  
+    // init first point
+    ((point) => {
+      minX = point.latitude;
+      maxX = point.latitude;
+      minY = point.longitude;
+      maxY = point.longitude;
+    })(latLong[0]);
+  
+    // calculate rect
+    latLong.map((point) => {
+      minX = Math.min(minX, point.latitude);
+      maxX = Math.max(maxX, point.latitude);
+      minY = Math.min(minY, point.longitude);
+      maxY = Math.max(maxY, point.longitude);
+    });
+  
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+    const deltaX = (maxX - minX);
+    const deltaY = (maxY - minY);
+  
+    return {
+      latitude: midX,
+      longitude: midY,
+      latitudeDelta: deltaX,
+      longitudeDelta: deltaY
+    };
+  }
+
+  loadMap() {
+    return <View style={styles.containerMapa}>
+      <MapView style={styles.mapa} 
+      region={this.calculaDelta([this.state.me.latlng, this.state.vendedor.latlng])}
+      >
+        <MapView.Marker
+          coordinate={this.state.me.latlng}
+          title={this.state.me.title}
+          description={this.state.me.description}
+        />
+        <MapView.Marker
+          coordinate={this.state.vendedor.latlng}
+          title={this.state.vendedor.title}
+          description={this.state.vendedor.description}
+        />
+      </MapView>
+    </View>
   }
 
   render() {
@@ -63,7 +134,6 @@ class Mapa extends Component {
             </TouchableOpacity>
           }
           title={titleConfig}
-          style={{backgroundColor:''}}
         />
         <View style={{height: '95%'}}>
           {this.loadMap()}
@@ -72,20 +142,6 @@ class Mapa extends Component {
     )
   }
 
-  loadMap() {
-    return <View style={styles.containerMapa}>
-      <MapView style={styles.mapa} 
-      region={this.state.region}>
-        {this.state.markers.map(marker => (
-          <MapView.Marker
-            coordinate={marker.latlng}
-            title={marker.title}
-            description={marker.description}
-          />
-        ))}
-      </MapView>
-    </View>
-  }
 }
 
 const styles = StyleSheet.create({
