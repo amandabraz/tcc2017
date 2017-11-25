@@ -10,16 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcc.ErrorHandling.CustomError;
 import tcc.Models.Avaliacao;
-import tcc.Models.Mensagem;
-import tcc.Models.Pedido;
 import tcc.Services.AvaliacaoService;
-import tcc.Services.MensagemService;
-import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @RequestMapping(value="/avaliacao")
 @RestController

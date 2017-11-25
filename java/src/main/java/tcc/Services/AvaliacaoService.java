@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tcc.DAOs.AvaliacaoDAO;
 import tcc.Models.Avaliacao;
-import tcc.Models.Pedido;
-import tcc.Models.Produto;
 import tcc.Models.Usuario;
 
 import javax.transaction.Transactional;
