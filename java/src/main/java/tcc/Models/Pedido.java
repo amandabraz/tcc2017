@@ -43,6 +43,11 @@ public class Pedido implements Serializable {
             nullable = false)
     private Date dataSolicitada;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DATA_AVALIADO",
+            nullable = true)
+    private Date dataAvaliado;
+
     @Column(name = "QUANTIDADE",
             nullable = false)
     private int quantidade;
@@ -116,6 +121,14 @@ public class Pedido implements Serializable {
 
     public void setDataSolicitada(Date dataSolicitada) {
         this.dataSolicitada = dataSolicitada;
+    }
+
+    public Date getDataAvaliado() {
+        return dataAvaliado;
+    }
+
+    public void setDataAvaliado(Date dataAvaliado) {
+        this.dataAvaliado = dataAvaliado;
     }
 
     public int getQuantidade() {
@@ -204,6 +217,7 @@ public class Pedido implements Serializable {
                 Objects.equals(dataFinalizacao, pedido.dataFinalizacao) &&
                 Objects.equals(dataConfirmacao, pedido.dataConfirmacao) &&
                 Objects.equals(dataSolicitada, pedido.dataSolicitada) &&
+                Objects.equals(dataAvaliado, pedido.dataAvaliado) &&
                 Objects.equals(token, pedido.token) &&
                 Objects.equals(produto, pedido.produto) &&
                 Objects.equals(cliente, pedido.cliente) &&
@@ -213,7 +227,7 @@ public class Pedido implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota, comentarioAvaliacao);
+        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, dataAvaliado, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota, comentarioAvaliacao);
     }
 
     @Override
@@ -224,6 +238,7 @@ public class Pedido implements Serializable {
                 ", dataFinalizacao=" + dataFinalizacao +
                 ", dataConfirmacao=" + dataConfirmacao +
                 ", dataSolicitada=" + dataSolicitada +
+                ", dataAvaliado=" + dataAvaliado +
                 ", quantidade=" + quantidade +
                 ", valorCompra=" + valorCompra +
                 ", deletado=" + deletado +

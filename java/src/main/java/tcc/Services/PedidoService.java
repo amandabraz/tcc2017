@@ -332,4 +332,17 @@ public class PedidoService {
             throw e;
         }
     }
+
+    public Pedido insereDataComentarioPedido(Long idPedido) throws Exception {
+        try {
+            Pedido dataComentarioAtualizada = pedidoDAO.findOne(idPedido);
+            Date data = new Date();
+            if (dataComentarioAtualizada != null) {
+                dataComentarioAtualizada.setDataAvaliado(data);
+            }
+            return this.salvarPedido(dataComentarioAtualizada);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

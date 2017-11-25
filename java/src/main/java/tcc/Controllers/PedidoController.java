@@ -162,6 +162,7 @@ public class PedidoController {
     public ResponseEntity avaliaProduto(@RequestBody Pedido avaliacao) {
         try {
             Pedido pedidoAvaliado = pedidoService.buscaPedido(avaliacao.id);
+            Pedido dataAvaliadoAtualizada = pedidoService.insereDataComentarioPedido(avaliacao.id);
             pedidoAvaliado.setNota(avaliacao.getNota());
             pedidoAvaliado.setComentarioAvaliacao(avaliacao.getComentarioAvaliacao());
             pedidoService.salvarPedido(pedidoAvaliado);
