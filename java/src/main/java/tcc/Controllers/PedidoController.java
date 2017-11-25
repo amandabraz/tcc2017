@@ -158,15 +158,17 @@ public class PedidoController {
     }
 
     @Transactional
-    @RequestMapping(value = "{pedidoId}/produto/avaliacao/{nota}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{pedidoId}/produto/avaliacao/{nota}", method = RequestMethod.PATCH)
     public ResponseEntity avaliaProduto(@PathVariable("pedidoId") Long pedidoId,
-                                        @PathVariable("nota") Integer nota) {
+                                        @PathVariable("nota") Integer nota,
+                                        @RequestBody Pedido pedido) {
         try {
-            Pedido pedido = pedidoService.buscaPedido(pedidoId);
-            pedido.setNota(nota);
-            pedidoService.salvarPedido(pedido);
-            pedidoService.recalculaScoreProduto(pedido);
-            return new ResponseEntity(pedido, HttpStatus.OK);
+            Pedido pedidoAvaliado = pedidoService.buscaPedido(pedidoId);
+            pedidoAvaliado.setNota(nota);
+            pedidoAvaliado.setComentarioAvaliacao(pedido.getComentarioAvaliacao());
+            pedidoService.salvarPedido(pedidoAvaliado);
+            pedidoService.recalculaScoreProduto(pedidoAvaliado);
+            return new ResponseEntity(pedidoAvaliado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao salvar avaliação"), HttpStatus.BAD_REQUEST);
         }

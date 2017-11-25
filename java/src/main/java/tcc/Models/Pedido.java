@@ -73,6 +73,11 @@ public class Pedido implements Serializable {
     @Column(name = "NOTA", nullable = true)
     public Integer nota = 0;
 
+    @Column(name = "COMENTARIO_AVALIACAO",
+            nullable = true,
+            length = 500)
+    private String comentarioAvaliacao;
+
     public Long getId() {
         return id;
     }
@@ -177,6 +182,14 @@ public class Pedido implements Serializable {
         this.nota = nota;
     }
 
+    public String getComentarioAvaliacao() {
+        return comentarioAvaliacao;
+    }
+
+    public void setComentarioAvaliacao(String comentarioAvaliacao) {
+        this.comentarioAvaliacao = comentarioAvaliacao;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -194,12 +207,13 @@ public class Pedido implements Serializable {
                 Objects.equals(token, pedido.token) &&
                 Objects.equals(produto, pedido.produto) &&
                 Objects.equals(cliente, pedido.cliente) &&
-                Objects.equals(pagamento, pedido.pagamento);
+                Objects.equals(pagamento, pedido.pagamento) &&
+                Objects.equals(comentarioAvaliacao, pedido.comentarioAvaliacao);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota);
+        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota, comentarioAvaliacao);
     }
 
     @Override
@@ -218,6 +232,7 @@ public class Pedido implements Serializable {
                 ", cliente=" + cliente +
                 ", pagamento=" + pagamento +
                 ", nota=" + nota +
+                ", comentarioAvaliacao=" + comentarioAvaliacao +
                 '}';
     }
 
