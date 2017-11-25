@@ -56,8 +56,8 @@ class PedidosConfirmadosVendedor extends Component {
     return num.toFixed(2)
   };
 
-  openCliente(cliente) {
-    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
+  openCliente(cliente, usuario) {
+    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId, selectUserId: usuario});
   }
 
 pedidoConfirmado(){
@@ -84,13 +84,13 @@ pedidoConfirmado(){
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
             <View style = {{ width: '20%'}}>
-            <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>            
+            <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id, pedidoC.cliente.usuario.id)}>            
               <Image source={imagemPrincipalC}
                   style={styles.imagemPrincipal}/>
             </TouchableHighlight>
             </View>
             <View style={{width: '65%', alignSelf:'center'}}>
-              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>                        
+              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id, pedidoC.cliente.usuario.id)}>                        
                 <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
               </TouchableHighlight>
               <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
