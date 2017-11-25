@@ -83,6 +83,25 @@ class PedidosConfirmadosCliente extends Component {
           });
   };
 
+  exibeMapa() {
+    return(
+      <TouchableOpacity 
+      style={{width:'30%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+      onPress={() =>
+        {
+          this.props.navigation.navigate('Mapa', {
+           
+          }
+          );
+        }}>
+        <Icon name="location-on" size={25} 
+                    color={'#4A4A4A'} 
+                    type=' material-community'
+                    style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Abrir mapa</Text>
+      </TouchableOpacity>      
+    )
+  }
+
 
 pedidoConfirmado(){
   var views = [];
@@ -141,10 +160,10 @@ pedidoConfirmado(){
             fgColor='white'/>
             </View>
           <Text style={styles.tokenfont}> {pedidoC.token}</Text>
-
-          <View style={{width:'98%'}}>
+          <View style={{width:'98%', flexDirection:'row'}}>
+            {this.exibeMapa()}
             <TouchableOpacity 
-                style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                style={{width:'60%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
                 onPress={() =>
                           {
                             this.props.navigation.navigate('Chat', {
@@ -158,6 +177,7 @@ pedidoConfirmado(){
                     type='font-awesome'
                     style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
             </TouchableOpacity>
+
           </View>
         </View>
 

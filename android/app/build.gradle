@@ -126,6 +126,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-maps')
     compile project(':react-native-alerts')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-camera')
