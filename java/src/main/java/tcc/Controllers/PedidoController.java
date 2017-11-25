@@ -17,6 +17,7 @@ import tcc.Models.Pedido;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -102,6 +103,31 @@ public class PedidoController {
     }
 
     @Transactional
+    @RequestMapping(value = "/{idPedido}/status/{status}/lat/{lat}/longit/{longit}/alt/{alt}", method = RequestMethod.PUT)
+    public ResponseEntity finalizaPedido(@PathVariable("idPedido") Long idPedido,
+                                       @PathVariable("status") String status,
+                                       @PathVariable("lat") double lat,
+                                       @PathVariable("longit") double longit,
+                                       @PathVariable("alt") double alt) {
+        try {
+            Pedido pedidoAtualizado = pedidoService.buscaPedido(idPedido);
+            if (status.equals("Finalizado")) {
+                pedidoAtualizado.setStatus(status);
+                pedidoAtualizado.setDataFinalizacao(new Date());
+                pedidoAtualizado.setAltitude(alt);
+                pedidoAtualizado.setLatitude(lat);
+                pedidoAtualizado.setLongitude(longit);
+                pedidoService.salvarPedido(pedidoAtualizado);
+                return new ResponseEntity<Pedido>(pedidoAtualizado, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new CustomError("Erro ao finalizar do pedido"), HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao finalizar do pedido"), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
     @RequestMapping(value = "/{idPedido}/status/{status}", method = RequestMethod.PUT)
     public ResponseEntity alteraStatus(@PathVariable("idPedido") Long idPedido,
                                        @PathVariable("status") String status) {
@@ -112,6 +138,7 @@ public class PedidoController {
             return new ResponseEntity<>(new CustomError("Erro ao alterar status do pedido"), HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @Transactional
     @RequestMapping(value = "{status}/vendedor/{vendedorId}", method = RequestMethod.GET)

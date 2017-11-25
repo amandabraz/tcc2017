@@ -14,7 +14,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Table(name = "PEDIDO")
@@ -72,6 +71,27 @@ public class Pedido implements Serializable {
 
     @Column(name = "NOTA", nullable = true)
     public Integer nota = 0;
+
+    @Column(name = "LATITUDE", nullable = true)
+    private double latitude;
+
+    @Column(name = "LONGITUDE", nullable = true)
+    private double longitude;
+
+    @Column(name = "PRECISAO_MTS", nullable = true)
+    private double precisao_mts;
+
+    @Column(name = "ALTITUDE", nullable = true)
+    private double altitude;
+
+    public Pedido(Long id) {
+        super();
+        this.id = id;
+    }
+
+    public Pedido() {
+        super();
+    }
 
     public Long getId() {
         return id;
@@ -177,57 +197,37 @@ public class Pedido implements Serializable {
         this.nota = nota;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pedido pedido = (Pedido) o;
-        return quantidade == pedido.quantidade &&
-                Float.compare(pedido.valorCompra, valorCompra) == 0 &&
-                deletado == pedido.deletado &&
-                nota == pedido.nota &&
-                Objects.equals(id, pedido.id) &&
-                Objects.equals(status, pedido.status) &&
-                Objects.equals(dataFinalizacao, pedido.dataFinalizacao) &&
-                Objects.equals(dataConfirmacao, pedido.dataConfirmacao) &&
-                Objects.equals(dataSolicitada, pedido.dataSolicitada) &&
-                Objects.equals(token, pedido.token) &&
-                Objects.equals(produto, pedido.produto) &&
-                Objects.equals(cliente, pedido.cliente) &&
-                Objects.equals(pagamento, pedido.pagamento);
+    public double getLatitude() {
+        return latitude;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota);
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "id=" + id +
-                ", status='" + status + '\'' +
-                ", dataFinalizacao=" + dataFinalizacao +
-                ", dataConfirmacao=" + dataConfirmacao +
-                ", dataSolicitada=" + dataSolicitada +
-                ", quantidade=" + quantidade +
-                ", valorCompra=" + valorCompra +
-                ", deletado=" + deletado +
-                ", token='" + token + '\'' +
-                ", produto=" + produto +
-                ", cliente=" + cliente +
-                ", pagamento=" + pagamento +
-                ", nota=" + nota +
-                '}';
+    public double getLongitude() {
+        return longitude;
     }
 
-    public Pedido(Long id) {
-        super();
-        this.id = id;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public Pedido() {
-        super();
+    public double getPrecisao_mts() {
+        return precisao_mts;
     }
+
+    public void setPrecisao_mts(double precisao_mts) {
+        this.precisao_mts = precisao_mts;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
+
 
 }

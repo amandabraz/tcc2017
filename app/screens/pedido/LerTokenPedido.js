@@ -31,6 +31,15 @@ class LerTokenPedido extends Component {
     }
   };
 
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({gps: position});
+    }, (error) => {
+      this.setState({gps: 0});
+    });
+  }
+
+
   tokenInvalido() {
       this.popup.tip({
           title: 'Token Inválido',
@@ -41,8 +50,12 @@ class LerTokenPedido extends Component {
 
   atualizaStatus() {
     if (this.state.status) {
-      fetch(constante.ENDPOINT + 'pedido/' + this.state.pedidoId + '/status/' + this.state.status, 
-      {method: 'PUT'})
+      fetch(constante.ENDPOINT + 'pedido/' + this.state.pedidoId  
+                              +  '/status/' + this.state.status 
+                              + '/lat/' + this.state.gps.coords.latitude
+                              + '/longit/' + this.state.gps.coords.longitude
+                              + '/alt/' + this.state.gps.coords.altitude,  
+           {method: 'PUT'})
         .then((response) => response.json())
         .then((responseJson) => {
           if (!responseJson.errorMessage) {
