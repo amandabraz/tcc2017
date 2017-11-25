@@ -90,8 +90,8 @@ class PedidosConfirmadosCliente extends Component {
       onPress={() =>
         {
           this.props.navigation.navigate('Mapa', {
-            vendedorId:vId,
-            vendedorNome:vNome
+            vendedorUserId:vId,
+            vendedorUserNome:vNome
           }
           )
         }}>

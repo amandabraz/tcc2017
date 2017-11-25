@@ -7,6 +7,7 @@ import {
   RefreshControl,
   View
 } from 'react-native'
+import * as constante from '../../constantes'
 import MapView from 'react-native-maps'
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons'
 import NavigationBar from 'react-native-navbar'
@@ -18,7 +19,7 @@ class Mapa extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      vendedorId: this.props.navigation.state.params.vendedorId,
+      vendedorId: this.props.navigation.state.params.vendedorUserId,
       vendedorNome: this.props.navigation.state.params.vendedorNome,
       me:{
         latlng:{
@@ -44,23 +45,40 @@ class Mapa extends Component {
 
   atualizaMapa() {
     navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({
-        me: {
-          latlng:{
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          },
-          title: 'Você :)',
-          description: 'Sua posição'
-        },
-      })
+      fetch(constante.ENDPOINT+'localizacoes/usuario/' + this.state.vendedorId)
+      .then((response) => response.json())
+        .then((vendedor) => {
+          if (!vendedor.errorMessage) {
+             //TODO: TRATAR CASO NÃO VENHA
+          }
+          this.setState({
+            me: {
+              latlng:{
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+              },
+              title: 'Você :)',
+              description: 'Sua posição'
+            },
+            vendedor:{
+              latlng:{
+                latitude: vendedor.latitude, 
+                longitude: vendedor.longitude
+              },
+              title: this.props.navigation.state.params.vendedorNome,
+              description: 'Local onde está '+this.props.navigation.state.params.vendedorNome
+            }
+          })
+          this.setState({refreshing: false})
+          this.setState({carregou: false})
+        })
     }, (error) => {
-      this.setState({
+      this.setState({ //TODO:  tratar caso dê ruim
         me:{
           latlng:{
             latitude: 0,
             longitude: 0
-          }//TODO: janelinha de erro quando localização
+          }
         }
       })
     })
