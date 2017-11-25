@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Dimensions,
   ScrollView,
@@ -11,17 +11,41 @@ import MapView from 'react-native-maps'
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons'
 import NavigationBar from 'react-native-navbar'
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window')
 
 class Mapa extends Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
+      region: {
+        latitude: -22.9175807,
+        longitude: -47.053437,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      markers:[
+        {
+          latlng:{
+            latitude: -22.9175807,
+            longitude: -47.053437
+          },
+          title: 'eu',
+          description: 'minha posição'
+        },
+        {
+          latlng:{
+            latitude: -22.911265, 
+            longitude: -47.045484
+          },
+          title: 'vendedor',
+          description: 'posição vendedor'
+        }
+      ],
       refreshing: false,   
       carregou: true
     }
-  };
+  }
 
   render() {
     const {goBack} = this.props.navigation
@@ -50,13 +74,17 @@ class Mapa extends Component {
 
   loadMap() {
     return <View style={styles.containerMapa}>
-      <MapView style={styles.mapa} initialRegion={{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }} />
-    </View>;
+      <MapView style={styles.mapa} 
+      region={this.state.region}>
+        {this.state.markers.map(marker => (
+          <MapView.Marker
+            coordinate={marker.latlng}
+            title={marker.title}
+            description={marker.description}
+          />
+        ))}
+      </MapView>
+    </View>
   }
 }
 
@@ -79,6 +107,6 @@ const styles = StyleSheet.create({
   },
 })
 
-Mapa.defaultProps = { ...Mapa };
+Mapa.defaultProps = { ...Mapa }
 
-export default Mapa;
+export default Mapa
