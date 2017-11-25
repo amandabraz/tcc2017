@@ -67,36 +67,36 @@ class Mapa extends Component {
   }
 
   calculaDelta(latLong) {
-    // points should be an array of { latitude: X, longitude: Y }
-    let minX, maxX, minY, maxY;
+    //latLong = array de {latitude, longitude}
+    let minX, maxX, minY, maxY
   
-    // init first point
+    //primeiro ponto
     ((point) => {
-      minX = point.latitude;
-      maxX = point.latitude;
-      minY = point.longitude;
-      maxY = point.longitude;
-    })(latLong[0]);
+      minX = point.latitude*1.00002
+      maxX = point.latitude*1.00002
+      minY = point.longitude*1.00002
+      maxY = point.longitude*1.00002
+    })(latLong[0])
   
-    // calculate rect
+    //calcula a reta
     latLong.map((point) => {
-      minX = Math.min(minX, point.latitude);
-      maxX = Math.max(maxX, point.latitude);
-      minY = Math.min(minY, point.longitude);
-      maxY = Math.max(maxY, point.longitude);
-    });
+      minX = Math.min(minX, point.latitude/1.00002)
+      maxX = Math.max(maxX, point.latitude/1.00002)
+      minY = Math.min(minY, point.longitude/1.00002)
+      maxY = Math.max(maxY, point.longitude/1.00002)
+    })
   
-    const midX = (minX + maxX) / 2;
-    const midY = (minY + maxY) / 2;
-    const deltaX = (maxX - minX);
-    const deltaY = (maxY - minY);
+    const midX = (minX + maxX) / 2
+    const midY = (minY + maxY) / 2
+    const deltaX = (maxX - minX)
+    const deltaY = (maxY - minY)
   
     return {
       latitude: midX,
       longitude: midY,
       latitudeDelta: deltaX,
       longitudeDelta: deltaY
-    };
+    }
   }
 
   loadMap() {
