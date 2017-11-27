@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import tcc.Models.Produto;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ProdutoDAO extends CrudRepository <Produto, Long> {
@@ -42,4 +43,9 @@ public interface ProdutoDAO extends CrudRepository <Produto, Long> {
             "GROUP BY produto.id_produto",
             nativeQuery = true)
     List<Produto> findByPreferenciasCliente(Long clienteId);
+
+    @Query(value = "SELECT produto.id_produto as idProduto, produto.nome as nomeProduto, pedido.comentario_avaliacao as comentrioAvaliacao from produto\n" +
+            "JOIN pedido on pedido.fk_produto = produto.id_produto\n" +
+            "ORDER BY pedido.data_avaliado DESC \n", nativeQuery = true)
+    List<Produto> findByComentariosProdutoAvaliado(Long id);
 }

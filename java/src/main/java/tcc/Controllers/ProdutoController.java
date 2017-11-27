@@ -172,4 +172,14 @@ public class ProdutoController {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Transactional
+    @RequestMapping(value = "/produto/{produtoId}/comentario", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity buscaComentariosAvaliacaoProduto(@PathVariable("produtoId") Long produtoId) {
+        try {
+            return new ResponseEntity<List<Produto>>(produtoService.buscaComentarios(produtoId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

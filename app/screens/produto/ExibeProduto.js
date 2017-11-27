@@ -59,7 +59,10 @@ export default class ExibeProduto extends Component {
             fontStyle: 'italic'
           },
           dateText: '',
-          carregou: true
+          dateAvalText: '',
+          carregou: true,
+          carregouAval: true,
+          avaliacao: []
         };
         this.buscaProduto();
     }
@@ -115,6 +118,26 @@ export default class ExibeProduto extends Component {
           let dataPrep = dia + "/" + mes + "/" + ano;
           this.setState({dateText: dataPrep});
           this.setState({carregou: false});
+        }
+      });
+    }
+  }
+
+  buscaComentario() {
+    if (this.state.produtoId > 0) {
+      fetch(constante.ENDPOINT+'produto/' + this.state.produtoId + '/comentario')
+      .then((response) => response.json())
+      .then((rJson) => {
+        if (!rJson.errorMessage) {
+          this.setState({avaliacao: rJson});
+
+          var dataNormalAvaliacao = new Date(rJson.dataAvaliacao);
+          let dia = dataNormalAvaliacao.getDate() < 10 ? "0" + dataNormalAvaliacao.getDate() : dataNormalAvaliacao.getDate();
+          let mes = dataNormalAvaliacao.getMonth() + 1 < 10 ? "0" + (dataNormalAvaliacao.getMonth() + 1) : dataNormalAvaliacao.getMonth() + 1;
+          let ano = dataNormalAvaliacao.getFullYear();
+          let dataAval = dia + "/" + mes + "/" + ano;
+          this.setState({dateAvalText: dataAval});
+          this.setState({carregouAval: false});
         }
       });
     }
@@ -284,6 +307,7 @@ render() {
     underlayColor="white"
     easing="easeOutCubic"/>
   </View>
+  {this.buscaComentario()}
 
     </View>
     </TriggeringView>

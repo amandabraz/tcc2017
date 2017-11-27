@@ -176,4 +176,13 @@ public class ProdutoService {
             throw e;
         }
     }
+
+    @Transactional
+    public List<Produto> buscaComentarios (Long idProduto) {
+        try {
+            return (List<Produto>) produtoDAO.findByComentariosProdutoAvaliado(idProduto);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
