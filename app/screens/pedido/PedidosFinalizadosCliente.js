@@ -43,8 +43,7 @@ class PedidosFinalizadosCliente extends Component {
       isModalVisible: false,
       pedidoParaAvaliar: 0,
       carregou: true,
-      comentarioAvaliacao: '',
-      comentario: ''
+      comentarioAvaliacao: ''
     };
     this.buscaDadosPedidosCliente();
   };

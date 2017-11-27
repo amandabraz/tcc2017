@@ -17,6 +17,7 @@ import tcc.Models.Pedido;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -162,7 +163,7 @@ public class PedidoController {
     public ResponseEntity avaliaProduto(@RequestBody Pedido avaliacao) {
         try {
             Pedido pedidoAvaliado = pedidoService.buscaPedido(avaliacao.id);
-            Pedido dataAvaliadoAtualizada = pedidoService.insereDataComentarioPedido(avaliacao.id);
+            pedidoAvaliado.setDataAvaliado(new Date());
             pedidoAvaliado.setNota(avaliacao.getNota());
             pedidoAvaliado.setComentarioAvaliacao(avaliacao.getComentarioAvaliacao());
             pedidoService.salvarPedido(pedidoAvaliado);
