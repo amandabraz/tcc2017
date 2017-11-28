@@ -180,7 +180,7 @@ public class ProdutoService {
     @Transactional
     public List<Produto> buscaComentarios (Long idProduto) {
         try {
-            return (List<Produto>) produtoDAO.findByComentariosProdutoAvaliado(idProduto);
+            return produtoDAO.findByIdProdutoOrderByDataAvaliacaoAsc(idProduto);
         } catch (Exception e) {
             throw e;
         }

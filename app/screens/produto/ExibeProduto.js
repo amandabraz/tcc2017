@@ -62,9 +62,10 @@ export default class ExibeProduto extends Component {
           dateAvalText: '',
           carregou: true,
           carregouAval: true,
-          avaliacao: []
+          resultadoavaliacao: []
         };
         this.buscaProduto();
+        this.buscaAvaliacao();
     }
 
   buscaProduto() {
@@ -123,24 +124,45 @@ export default class ExibeProduto extends Component {
     }
   }
 
-  buscaComentario() {
+  buscaAvaliacao() {
     if (this.state.produtoId > 0) {
-      fetch(constante.ENDPOINT+'produto/' + this.state.produtoId + '/comentario')
+      fetch(constante.ENDPOINT+'produto/avaliacao/' + this.state.produtoId)
       .then((response) => response.json())
       .then((rJson) => {
         if (!rJson.errorMessage) {
-          this.setState({avaliacao: rJson});
-
-          var dataNormalAvaliacao = new Date(rJson.dataAvaliacao);
-          let dia = dataNormalAvaliacao.getDate() < 10 ? "0" + dataNormalAvaliacao.getDate() : dataNormalAvaliacao.getDate();
-          let mes = dataNormalAvaliacao.getMonth() + 1 < 10 ? "0" + (dataNormalAvaliacao.getMonth() + 1) : dataNormalAvaliacao.getMonth() + 1;
-          let ano = dataNormalAvaliacao.getFullYear();
-          let dataAval = dia + "/" + mes + "/" + ano;
-          this.setState({dateAvalText: dataAval});
-          this.setState({carregouAval: false});
+          this.setState({resultadoAvaliacao: rJson});
         }
       });
     }
+  }
+
+  exibeAvaliacao() {
+    var views = [];
+    if (this.state.resultadoavaliacao) {
+      let avaliacao = this.state.resultadoavaliacao[i];
+      views.push (
+        <View key={i}>
+          <View style={{alignItems:  'flex-start', justifyContent: 'flex-start', padding: 10, margin: 3}}>
+          <StarRating
+              disabled={true}
+              maxStars={5}
+              rating={avaliacao.nota}
+              starSize={12}
+              starColor={'#e6b800'}/>
+          <Text style={styles.oneResultfont} justifyContent='center'>{avaliacao.comentario}</Text>
+        </View>
+    </View>
+    );
+    } else {
+    views.push(
+      <View key={0} style={{alignItems: 'center'}}>
+      <Text style={{marginTop: 12,fontSize: 18, justifyContent: 'center'}}>
+        Esse produto ainda não foi avaliado!
+      </Text>
+      </View>
+      )
+    }
+        return views;
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
@@ -307,7 +329,7 @@ render() {
     underlayColor="white"
     easing="easeOutCubic"/>
   </View>
-  {this.buscaComentario()}
+  {this.exibeAvaliacao()}
 
     </View>
     </TriggeringView>

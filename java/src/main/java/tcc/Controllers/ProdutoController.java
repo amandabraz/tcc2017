@@ -174,12 +174,16 @@ public class ProdutoController {
     }
 
     @Transactional
-    @RequestMapping(value = "/produto/{produtoId}/comentario", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/produto/avaliacao/{produtoId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity buscaComentariosAvaliacaoProduto(@PathVariable("produtoId") Long produtoId) {
         try {
-            return new ResponseEntity<List<Produto>>(produtoService.buscaComentarios(produtoId), HttpStatus.OK);
+            List<Produto> avaliacoes = produtoService.buscaComentarios(produtoId);
+            if (avaliacoes.isEmpty()) {
+                return new ResponseEntity<>(new CustomError("Não há avaliações"), HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<List<Produto>>(avaliacoes, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CustomError("Erro ao buscar avaliação de produtos"), HttpStatus.BAD_REQUEST);
         }
     }
 }
