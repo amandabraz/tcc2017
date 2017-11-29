@@ -296,7 +296,7 @@ carregarCategoriasArray() {
       "id": produtoId,
       "vendedor": vendedorId,
       "nome": nome,
-      "dataPreparacao": this.state.dataPreparacao,
+      "dataPreparacao": dataSalvar,
       "quantidade": quantidade,
       "preco": precoNovo,
       "observacao": observacao,
