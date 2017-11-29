@@ -7,7 +7,7 @@ import {
     ScrollView,
     Alert,
     Image,
-    TouchableOpacity, 
+    TouchableOpacity,
     Picker,
     ToastAndroid
 } from 'react-native';
@@ -43,6 +43,7 @@ export default class AlteraProduto extends Component {
      categoriasArray: [],
      nome: '',
      preco: '',
+     precoNovo: '',
      observacao: '',
      imagemPrincipal: require('./img/camera11.jpg'),
      imagemProduto: '',
@@ -68,7 +69,7 @@ export default class AlteraProduto extends Component {
            this.setState({imagemPrincipal: { uri: rJson.imagemPrincipal }});
          }
          this.setState({nome: rJson.nome});
-         this.setState({preco: rJson.preco.toString()});
+         this.setState({precoNovo: rJson.preco.toString()});
          this.setState({quantidade: rJson.quantidade.toString()});
          this.setState({categoria: rJson.categoria});
          this.setState({observacao: rJson.observacao});
@@ -118,20 +119,22 @@ export default class AlteraProduto extends Component {
 };
 
 precoValido(preco){
+  preco = preco.toString()
+
   if(preco.includes(","))
     preco = preco.replace(",", ".")
-  
+
   if(preco==null || preco=='') //se for nulo
     return false
-  
+
   if(!preco.match(/^[0-9.]*$/) && !preco.match(/^[0-9]*$/)) //se não encontrar 'xx.x' nem 'x'
     return false;
 
-  if(preco.match(/([\d]|[\.])/)){
+  if(preco.includes(".")){
     if((preco.split(".").length-1)>1 ||         //ou se a string for 'x.xx.x'
       preco.match(/([\.])([\d]+)/)[0].length>3){  //ou for 'x.xxx'
       return false
-    }  
+    }
   }
   return true
 };
@@ -279,7 +282,8 @@ carregarCategoriasArray() {
         vendedorId,
         nome,
         quantidade,
-        preco,
+        dataPreparacao,
+        precoNovo,
         observacao,
         categoria,
         ingredientes,
@@ -294,7 +298,7 @@ carregarCategoriasArray() {
       "nome": nome,
       "dataPreparacao": dataSalvar,
       "quantidade": quantidade,
-      "preco": preco,
+      "preco": precoNovo,
       "observacao": observacao,
       "categoria": categoria,
       "ingredientes": ingredientes,
@@ -308,7 +312,7 @@ carregarCategoriasArray() {
     let continuar = this.validaCampos(produtoEditado);
 
       if (continuar) {
-        
+
       //corrige preço se preciso
       if(produtoEditado.preco.includes(","))
         produtoEditado.preco = produtoEditado.preco.replace(",", ".")
@@ -419,8 +423,8 @@ return (
                   label={'Preço'}
                   maxLength={6}
                   iconClass={FontAwesomeIcon}
-                  value={this.state.preco}
-                  onChangeText={(preco) => this.setState({preco: preco})}
+                  value={this.state.precoNovo}
+                  onChangeText={(preco) => this.setState({precoNovo: preco})}
                   keyboardType={'numeric'}
                   iconName={'dollar'}
                   iconColor={'#7A8887'}/>
