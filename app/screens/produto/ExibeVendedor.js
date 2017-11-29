@@ -1,3 +1,4 @@
+import Vendedor from '../cadastro/Vendedor';
 import React, { Component } from 'react';
 import { TextInput, Dimensions, AppRegistry, Text, StyleSheet, TouchableOpacity, View, Image, ToastAndroid, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
@@ -10,7 +11,9 @@ import { Icon } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 import NavigationBar from 'react-native-navbar';
 import * as constante from '../../constantes';
+import StarRating from 'react-native-star-rating';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Accordion from 'react-native-accordion';
 
 const { width, height } = Dimensions.get("window");
 
@@ -36,9 +39,15 @@ export default class ExibeVendedor extends Component {
       favoritoColor: 'gray',
       carregou: true,
       motivoDenuncia: '',
+      isModalVisible: false,
+      avaliarVisible: false,
+      starCount: 0,
+      comentario: '',
+      resultadoAvaliacao: []
     };
     this.buscaDadosVendedor();
     this.buscaProdutos();
+    this.buscaAvaliacoes();
   }
 
   buscaDadosVendedor() {
@@ -65,7 +74,6 @@ export default class ExibeVendedor extends Component {
               this.setState({favoritoColor: '#990000'});
             }
           }
-          this.setState({carregou: false});
         }
       });
   };
@@ -77,6 +85,17 @@ export default class ExibeVendedor extends Component {
         if (!responseJson.errorMessage) {
           this.setState({resultadoProduto: responseJson});
       }
+    });
+  };
+
+  buscaAvaliacoes() {
+    fetch(constante.ENDPOINT + "avaliacao/usuario/" + this.state.selectUserId, {method: 'GET'})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({resultadoAvaliacao: responseJson});
+      }
+      this.setState({carregou: false});
     });
   };
 
@@ -119,6 +138,46 @@ export default class ExibeVendedor extends Component {
       return views;
 }
 
+mostraAvaliacoes() {
+  var views = [];
+  if(this.state.resultadoAvaliacao.length > 0){
+  for(i in this.state.resultadoAvaliacao) {
+    let avaliacao = this.state.resultadoAvaliacao[i];
+    let dataNormal = new Date(avaliacao.dataAvaliacao);
+    let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+    let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+    let ano = dataNormal.getFullYear();
+    let hora = dataNormal.getHours();
+    let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+    let dataAv = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+    views.push (
+      <View key={i}>
+        <View style={{alignItems:  'flex-start', justifyContent: 'flex-start', padding: 10, margin: 3}}>
+        <Text style={{fontSize: 14, color: '#ccc'}}>{dataAv}</Text>
+        <StarRating
+            disabled={true}
+            maxStars={5}
+            rating={avaliacao.nota}
+            starSize={12}
+            starColor={'#e6b800'}/>
+        <Text style={styles.oneResultfont} justifyContent='center'>{avaliacao.comentario}</Text>
+       
+        </View>
+      </View>
+      );
+  }
+} else {
+  views.push(
+    <View key={0} style={{alignItems: 'center'}}>
+    <Text style={{marginTop: 12,fontSize: 18, justifyContent: 'center'}}>
+      Esse vendedor ainda não foi avaliado!
+    </Text>
+    </View>
+  )
+}
+    return views;
+}
+
 onButtonOpenProduct = (produto) => {
   this.props.navigation.navigate('ExibeProduto', {produtoId: produto.id, clienteId: this.state.clienteId});
 };
@@ -153,12 +212,11 @@ favoritaVendedor(){
 
 
 _showModal = () => this.setState({ isModalVisible: true })
-
 _hideModal = () => this.setState({ isModalVisible: false })
 
 denunciaUsuario() {
   this.setState({carregou: true});
-
+  
   const {
     state: {
       motivoDenuncia,
@@ -166,30 +224,72 @@ denunciaUsuario() {
       selectUserId
     }
   } = this;
-
+  
   denuncia = {
     "motivo": motivoDenuncia,
     "dataDenuncia": new Date(),
     "reportado": selectUserId,
     "denunciador": userId
   }
-
+  
   fetch(constante.ENDPOINT + 'denuncia/', {method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(denuncia)
+})
+.then((response) => response.json())
+.then((responseJson) => {
+  if (!responseJson.errorMessage) {
+    this._hideModal();
+    ToastAndroid.showWithGravity('Denúncia registrada. Assim que possível, entraremos em contato com o status da sua denúncia. Obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
+    this.setState({carregou: false});
+  }
+});
+}
+
+avaliar = () => this.setState({ avaliarVisible: true })
+esconder = () => this.setState({ avaliarVisible: false })
+
+avaliaUsuario() {
+  this.setState({carregou: true});
+
+  const {
+    state: {
+      userId,
+      selectUserId,
+      comentario,
+      starCount
+    }
+  } = this;
+
+  avaliacao = {
+    "comentario": comentario,
+    "dataAvaliacao": new Date(),
+    "receiver": selectUserId,
+    "sender": userId,
+    "nota": starCount,
+  }
+
+  fetch(constante.ENDPOINT + 'avaliacao', {method: 'POST',
     headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     },
-    body: JSON.stringify(denuncia)
+    body: JSON.stringify(avaliacao)
   })
   .then((response) => response.json())
   .then((responseJson) => {
     if (!responseJson.errorMessage) {
-      this._hideModal();
-      ToastAndroid.showWithGravity('Denúncia registrada. Assim que possível, entraremos em contato com o status da sua denúncia. Obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
+      this.esconder();
+      ToastAndroid.showWithGravity('Avaliação registrada, obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
       this.setState({carregou: false});
+      this.buscaAvaliacoes();
     }
   });
 }
+
 
   render () {
     const {goBack} = this.props.navigation;
@@ -254,11 +354,35 @@ denunciaUsuario() {
           {this.mostraProduto()}
       </ScrollView>
       </View>
+      <View style={{ margin: 10}}>
+        <Accordion header={
+            <View style={{flexDirection: 'row'}}>
+              <View style={{width: '75%'}}>
+                <Text style={{color: '#4A4A4A', fontSize: 20}}>Avaliações</Text>
+              </View>
+              <View style={{width: '25%'}}>
+                <Icon name="chevron-down" size={18} color={'gray'} type='font-awesome'/>
+              </View>
+            </View>
+          } content={
+            <View>
+              {this.mostraAvaliacoes()}
+            </View>
+          }
+          underlayColor="white"
+          easing="easeOutCubic"/>
+    </View>
       <View style={{margin: 20}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <TouchableOpacity onPress={() => this._showModal()} style={{flexDirection: "row", alignItems:"center", justifyContent: "center"}}>
           <MaterialsIcon name="block" size={20} color={'#624063'}  style={{ padding: 3 }} />
           <Text style={{fontWeight: "bold"}}>Denunciar usuário</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.avaliar()} style={{flexDirection: "row", alignItems:"center", justifyContent: "center"}}>
+          <FontAwesomeIcon name="smile-o" size={20} color={'#624063'}  style={{ padding: 5 }}/>
+          <Text style={{fontWeight: "bold"}}>Avaliar Vendedor</Text>
+        </TouchableOpacity>
+      </View>
         <Modal
         isVisible={this.state.isModalVisible}
         animationIn={'slideInLeft'}
@@ -283,6 +407,47 @@ denunciaUsuario() {
             <TouchableOpacity onPress={() => this.denunciaUsuario()}>
                 <View style={styles.button}>
                   <Text style={{color: "#fff"}}>Denunciar</Text>
+                </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={this.state.avaliarVisible}
+        animationIn={'slideInLeft'}
+        animationOut={'slideOutRight'}
+        backdropOpacity={0.3}>
+        <View style={styles.modalContent}>
+        <View style={{flexDirection: 'column', alignItems: 'center'}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold'}}> Sua nota para o vendedor: </Text>
+          <View style={{width: '60%'}}>
+            <StarRating
+              maxStars={5}
+              starSize={25}
+              starColor={'#e6b800'}
+              rating={this.state.starCount}
+              selectedStar={(rating) => this.setState({starCount: rating})}
+              />
+          </View>
+        </View>
+        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Insira um comentário: </Text>
+          <View style={{width: '90%', margin: 10}}>
+          <TextInput
+              style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}
+              multiline={true}
+              maxLength={255}
+              onChangeText={(comentario) => this.setState({comentario: comentario})}
+            />
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => this.esconder()}>
+              <View style={styles.button}>
+                <Text style={{color: "#fff"}}>Cancelar</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.avaliaUsuario()}>
+                <View style={styles.button}>
+                  <Text style={{color: "#fff"}}>Avaliar</Text>
                 </View>
             </TouchableOpacity>
           </View>
