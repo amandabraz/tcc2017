@@ -25,6 +25,7 @@ import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+
 const { width, height } = Dimensions.get("window");
 
 class PedidosConfirmadosCliente extends Component {
@@ -35,7 +36,8 @@ class PedidosConfirmadosCliente extends Component {
       clienteId: this.props.navigation.state.params.clienteId,
       pedidosConfirmados: [],
       refreshing: false,
-      carregou: true
+      carregou: true,
+      dicaSegurancaVisible:true
     };
     this.buscaDadosPedidosCliente();
   };
@@ -67,8 +69,6 @@ class PedidosConfirmadosCliente extends Component {
       });
   }
 
-
-
   arredondaValores(num){
     return num.toFixed(2)
   };
@@ -82,101 +82,132 @@ class PedidosConfirmadosCliente extends Component {
             clienteId: this.state.clienteId
           });
   };
+  
+  hideDica(){
+    this.setState({ dicaSegurancaVisible: false })
+  };
 
-
-pedidoConfirmado(){
-  var views = [];
-  if(this.state.pedidosConfirmados.length > 0){
-    for (i in this.state.pedidosConfirmados) {
-      let imagemPrincipalV = require('./img/camera11.jpg');
-      let pedidoC = this.state.pedidosConfirmados[i];
-
-      if (pedidoC.produto.vendedor.usuario.imagemPerfil) {
-        imagemPrincipalV = {uri: pedidoC.produto.vendedor.usuario.imagemPerfil};
-      }
-
-      var dataNormal = new Date(pedidoC.dataConfirmacao);
-      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
-      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
-      let ano = dataNormal.getFullYear();
-      let hora = dataNormal.getHours();
-      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
-      let dataConfirmado = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
-
-      views.push(
-        <View key={i} style={styles.oneResult1}>
-        <Accordion header={
-          <View style={{flexDirection: 'row'}}>
-          <View style = {{ width: '20%'}}>
-          <TouchableHighlight
-                onPress={() => this.onPressOpenVendedor(pedidoC.produto.vendedor.usuario.id, pedidoC.produto.vendedor.id)} >
-            <Image source={imagemPrincipalV}
-                  style={styles.imagemPrincipal}/>
-          </TouchableHighlight>
+  dicaSeguranca(){
+    return (
+      this.state.dicaSegurancaVisible &&
+        <View style={styles.dica}>
+          <View style={{width:'90%'}}>
+            <Text style={styles.totalFont}> Dicas de segurança!</Text>
+            <Text style={{fontSize: 14}}>Se encontre com o vendedor em local público e movimentado</Text>
+            <Text style={{fontSize: 14}}>Desconfie de produtos extremamente baratos</Text>
+            <Text style={{fontSize: 14}}>Leia os comentários e avaliações para saber sobre sua compra e seu vendedor</Text>
           </View>
-        <View style={{width: '65%', alignSelf:'center'}}>
-           <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
-           <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
-           <Text style={styles.oneResultfont}> Receber:
-           <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
-           </Text>
-           <Text style={styles.oneResultfont}> Produto:
-           <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
-           </Text>
-           <Text style={styles.oneResultfont}> Pagar {pedidoC.pagamento.descricao}:
-           <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
-           </Text>
-        </View>
-        <View style={{width: '5%',justifyContent: 'center'}}>
-        <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
-        </View>
-    </View>
-        } content={
-          <View style={{margin: 15, alignItems:'center'}}>
-          <View style = {{ alignItems: 'center'}}>
-          <QRCode
-            value={pedidoC.token}
-            size={200}
-            bgColor='black'
-            fgColor='white'/>
-            </View>
-          <Text style={styles.tokenfont}> {pedidoC.token}</Text>
-
-          <View style={{width:'98%'}}>
-            <TouchableOpacity 
-                style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
-                onPress={() =>
-                          {
-                            this.props.navigation.navigate('Chat', {
-                              userId: this.state.userId,
-                              otherUserId: pedidoC.produto.vendedor.usuario.id,
-                              otherUserName: pedidoC.produto.vendedor.usuario.nome,
-                              pedidoId: pedidoC.id});
-                          }}>
-              <Icon name="comments-o" size={25} 
-                    color={'#4A4A4A'} 
-                    type='font-awesome'
-                    style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
-            </TouchableOpacity>
+          <View 
+            onPress={() => this.hideDica()}
+            style={{
+              alignItems:'center',
+              width:'10%'
+            }}
+          >
+            <Icon
+              name='clear'
+              type=' material-community'
+              color='#3f4f66'
+              onPress={() => this.hideDica()}
+              style={styles.imageResultSearch} />
           </View>
-        </View>
+      </View>
+    )  
+  }
 
+  pedidoConfirmado(){
+    var views = [];
+    if(this.state.pedidosConfirmados.length > 0){
+      for (i in this.state.pedidosConfirmados) {
+        let imagemPrincipalV = require('./img/camera11.jpg');
+        let pedidoC = this.state.pedidosConfirmados[i];
+
+        if (pedidoC.produto.vendedor.usuario.imagemPerfil) {
+          imagemPrincipalV = {uri: pedidoC.produto.vendedor.usuario.imagemPerfil};
         }
-        underlayColor="white"
-        easing="easeOutCubic"/>
-    </View>
-    )}
- } else {
-   views.push(
-     <View key={0} style={{alignItems: 'center'}}>
-     <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
-       Nenhum pedido confirmado.
-     </Text>
-     </View>
-   )
- }
- return views;
-}
+
+        var dataNormal = new Date(pedidoC.dataConfirmacao);
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let hora = dataNormal.getHours();
+        let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+        let dataConfirmado = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+
+        views.push(
+        <View key={i} style={styles.oneResult1}>
+          <Accordion header={
+            <View style={{flexDirection: 'row'}}>
+            <View style = {{ width: '20%'}}>
+            <TouchableHighlight
+                  onPress={() => this.onPressOpenVendedor(pedidoC.produto.vendedor.usuario.id, pedidoC.produto.vendedor.id)} >
+              <Image source={imagemPrincipalV}
+                    style={styles.imagemPrincipal}/>
+            </TouchableHighlight>
+            </View>
+          <View style={{width: '65%', alignSelf:'center'}}>
+            <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
+            <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
+            <Text style={styles.oneResultfont}> Receber:
+            <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
+            </Text>
+            <Text style={styles.oneResultfont}> Produto:
+            <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
+            </Text>
+            <Text style={styles.oneResultfont}> Pagar {pedidoC.pagamento.descricao}:
+            <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
+            </Text>
+          </View>
+          <View style={{width: '5%',justifyContent: 'center'}}>
+          <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
+          </View>
+          </View>
+          } content={
+            <View style={{margin: 15, alignItems:'center'}}>
+            <View style = {{ alignItems: 'center'}}>
+            <QRCode
+              value={pedidoC.token}
+              size={200}
+              bgColor='black'
+              fgColor='white'/>
+              </View>
+            <Text style={styles.tokenfont}> {pedidoC.token}</Text>
+
+            <View style={{width:'98%'}}>
+              <TouchableOpacity 
+                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                  onPress={() =>
+                            {
+                              this.props.navigation.navigate('Chat', {
+                                userId: this.state.userId,
+                                otherUserId: pedidoC.produto.vendedor.usuario.id,
+                                otherUserName: pedidoC.produto.vendedor.usuario.nome,
+                                pedidoId: pedidoC.id});
+                            }}>
+                <Icon name="comments-o" size={25} 
+                      color={'#4A4A4A'} 
+                      type='font-awesome'
+                      style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          }
+          underlayColor="white"
+          easing="easeOutCubic"/>
+        </View>
+      )}
+    } else {
+      views.push(
+        <View key={0} style={{alignItems: 'center'}}>
+        <Text style={{marginTop: 8, fontSize: 16, justifyContent: 'center', color: 'darkslategrey'}}>
+          Nenhum pedido confirmado.
+        </Text>
+        </View>
+      )
+    }
+    return views;
+  }
 
   render() {
     return(
@@ -197,6 +228,7 @@ pedidoConfirmado(){
           </Text>
         </View>
         <Spinner visible={this.state.carregou}/>
+        {this.dicaSeguranca()}
         {this.pedidoConfirmado()}
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>
@@ -223,6 +255,16 @@ const styles = StyleSheet.create({
     color: '#1C1C1C',
     fontSize: 14,
     textAlign: 'left',
+  },
+  dica:{
+    flexDirection: 'row',
+    backgroundColor: '#b6deea',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: '#69acce',
+    padding: 10,
+    margin: 10,
+    width: '95%',
   },
   totalFont:{
     color: '#1C1C1C',

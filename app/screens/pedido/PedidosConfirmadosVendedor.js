@@ -34,7 +34,8 @@ class PedidosConfirmadosVendedor extends Component {
       vendedorId: this.props.navigation.state.params.vendedorId,
       pedidosConfirmados: [],
       refreshing: false,
-      carregou: true
+      carregou: true,
+      dicaSegurancaVisible:true
     };
     this.buscaDadosPedidosVendedor();
   };
@@ -51,110 +52,140 @@ class PedidosConfirmadosVendedor extends Component {
       });
   };
 
-
   arredondaValores(num){
     return num.toFixed(2)
   };
 
-  openCliente(cliente, usuario) {
-    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId, selectUserId: usuario});
+  openCliente(cliente) {
+    this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
   }
 
-pedidoConfirmado(){
-  var views = [];
-  if(this.state.pedidosConfirmados.length > 0){
-    for (i in this.state.pedidosConfirmados) {
-      let imagemPrincipalC = require('./img/camera11.jpg');
-      let pedidoC = this.state.pedidosConfirmados[i];
+  pedidoConfirmado(){
+    var views = [];
+    if(this.state.pedidosConfirmados.length > 0){
+      for (i in this.state.pedidosConfirmados) {
+        let imagemPrincipalC = require('./img/camera11.jpg');
+        let pedidoC = this.state.pedidosConfirmados[i];
 
-      if (pedidoC.cliente.usuario.imagemPerfil) {
-        imagemPrincipalC = {uri: pedidoC.cliente.usuario.imagemPerfil};
-      }
+        if (pedidoC.cliente.usuario.imagemPerfil) {
+          imagemPrincipalC = {uri: pedidoC.cliente.usuario.imagemPerfil};
+        }
 
-      var dataNormal = new Date(pedidoC.dataConfirmacao);
-      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
-      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;      
-      let ano = dataNormal.getFullYear();
-      let hora = dataNormal.getHours();
-      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
-      let dataConfirmado = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+        var dataNormal = new Date(pedidoC.dataConfirmacao);
+        let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+        let ano = dataNormal.getFullYear();
+        let hora = dataNormal.getHours();
+        let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+        let dataConfirmado = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
 
-      views.push(
-        <View key={i} style={styles.oneResult1}>
-          <Accordion header={
-            <View style={{flexDirection: 'row'}}>
-            <View style = {{ width: '20%'}}>
-            <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id, pedidoC.cliente.usuario.id)}>            
-              <Image source={imagemPrincipalC}
-                  style={styles.imagemPrincipal}/>
-            </TouchableHighlight>
-            </View>
-            <View style={{width: '65%', alignSelf:'center'}}>
-              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id, pedidoC.cliente.usuario.id)}>                        
-                <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
+        views.push(
+          <View key={i} style={styles.oneResult1}>
+            <Accordion header={
+              <View style={{flexDirection: 'row'}}>
+              <View style = {{ width: '20%'}}>
+              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>
+                <Image source={imagemPrincipalC}
+                    style={styles.imagemPrincipal}/>
               </TouchableHighlight>
-              <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
-              <Text style={styles.oneResultfont}> Entregar:
-              <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
-              </Text>
-              <Text style={styles.oneResultfont}> Produto:
-              <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
-              </Text>
-              <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
-              <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
-              </Text>
+              </View>
+              <View style={{width: '65%', alignSelf:'center'}}>
+                <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>
+                  <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
+                </TouchableHighlight>
+                <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
+                <Text style={styles.oneResultfont}> Entregar:
+                <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
+                </Text>
+                <Text style={styles.oneResultfont}> Produto:
+                <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
+                </Text>
+                <Text style={styles.oneResultfont}> Receber {pedidoC.pagamento.descricao}:
+                <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
+                </Text>
+              </View>
+              <View style={{width: '5%',justifyContent: 'center'}}>
+                <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
+              </View>
             </View>
-            <View style={{width: '5%',justifyContent: 'center'}}>
-              <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
-            </View>
-          </View>
-          } content={
-            <View style={{margin: 15, alignItems:'center'}}>
-              <Button buttonStyle={{width: 150}}
-                  title="Validar Token"
-                  color="#fff"
-                  backgroundColor="#885581"
-                  borderRadius={10}
-                  onPress={() =>
-                    {
-                      this.props.navigation.navigate('LerToken', {
-                        userId: this.state.userId,
-                        vendedorId: this.state.vendedorId,
-                        token: pedidoC.token,
-                        pedidoId: pedidoC.id});
-                    }}/>
-              <TouchableOpacity 
-                    style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+            } content={
+              <View style={{margin: 15, alignItems:'center'}}>
+                <Button buttonStyle={{width: 150}}
+                    title="Validar Token"
+                    color="#fff"
+                    backgroundColor="#885581"
+                    borderRadius={10}
                     onPress={() =>
-                              {
-                                this.props.navigation.navigate('Chat', {
-                                  userId: this.state.userId,
-                                  otherUserId: pedidoC.cliente.usuario.id,
-                                  otherUserName: pedidoC.cliente.usuario.nome,                                  
-                                  pedidoId: pedidoC.id});
-                              }}>
-                  <Icon name="comments-o" size={25} 
-                        color={'#4A4A4A'} 
-                        type='font-awesome'
-                        style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
-              </TouchableOpacity>
-            </View>
-          }
-          underlayColor="white"
-          easing="easeOutCubic"/>
-    </View>
-    )}
- } else {
-   views.push(
-     <View key={0} style={{alignItems: 'center'}}>
-     <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
-       Nenhum pedido confirmado
-     </Text>
-     </View>
-   )
- }
- return views;
-}
+                      {
+                        this.props.navigation.navigate('LerToken', {
+                          userId: this.state.userId,
+                          vendedorId: this.state.vendedorId,
+                          token: pedidoC.token,
+                          pedidoId: pedidoC.id});
+                      }}/>
+                <TouchableOpacity
+                      style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                      onPress={() =>
+                                {
+                                  this.props.navigation.navigate('Chat', {
+                                    userId: this.state.userId,
+                                    otherUserId: pedidoC.cliente.usuario.id,
+                                    otherUserName: pedidoC.cliente.usuario.nome,
+                                    pedidoId: pedidoC.id});
+                                }}>
+                    <Icon name="comments-o" size={25}
+                          color={'#4A4A4A'}
+                          type='font-awesome'
+                          style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
+                </TouchableOpacity>
+              </View>
+            }
+            underlayColor="white"
+            easing="easeOutCubic"/>
+      </View>
+      )}
+    } else {
+      views.push(
+        <View key={0} style={{alignItems: 'center'}}>
+        <Text style={{marginTop: 8, fontSize: 18, justifyContent: 'center', color: 'darkslategrey'}}>
+          Nenhum pedido confirmado
+        </Text>
+        </View>
+      )
+    }
+    return views;
+  }
+
+  hideDica(){
+    this.setState({ dicaSegurancaVisible: false })
+  };
+
+  dicaSeguranca(){
+    return (
+      this.state.dicaSegurancaVisible &&
+        <View style={styles.dica}>
+          <View style={{width:'90%'}}>
+            <Text style={styles.totalFont}> Dicas de segurança!</Text>
+            <Text style={{fontSize: 14}}>Se encontre com o cliente em local público e movimentado</Text>
+            <Text style={{fontSize: 14}}>Leia sempre os comentários e avaliações para saber sobre como é seu cliente</Text>
+          </View>
+          <View
+            onPress={() => this.hideDica()}
+            style={{
+              alignItems:'center',
+              width:'10%'
+            }}
+          >
+            <Icon
+              name='clear'
+              type=' material-community'
+              color='#3f4f66'
+              onPress={() => this.hideDica()}
+              style={styles.imageResultSearch} />
+          </View>
+      </View>
+    )
+  }
 
   render() {
     return(
@@ -175,6 +206,7 @@ pedidoConfirmado(){
           </Text>
         </View>
         <Spinner visible={this.state.carregou}/>
+        {this.dicaSeguranca()}
         {this.pedidoConfirmado()}
       </ScrollView>
       <Popup ref={popup => this.popup = popup }/>
@@ -201,6 +233,16 @@ const styles = StyleSheet.create({
     color: '#1C1C1C',
     fontSize: 14,
     textAlign: 'left',
+  },
+  dica:{
+    flexDirection: 'row',
+    backgroundColor: '#b6deea',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: '#69acce',
+    padding: 10,
+    margin: 10,
+    width: '95%',
   },
   totalFont:{
     color: '#1C1C1C',
