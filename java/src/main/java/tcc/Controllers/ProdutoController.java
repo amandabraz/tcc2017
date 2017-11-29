@@ -16,6 +16,7 @@ import tcc.Models.Ingrediente;
 import tcc.Models.Produto;
 import tcc.Models.Tag;
 import tcc.Services.IngredienteService;
+import tcc.Services.PedidoService;
 import tcc.Services.ProdutoService;
 import tcc.Services.TagService;
 
@@ -36,6 +37,9 @@ public class ProdutoController {
 
     @Autowired
     private IngredienteService ingredienteService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @Transactional
     @RequestMapping(value = "/produto", method = RequestMethod.POST)
@@ -139,6 +143,7 @@ public class ProdutoController {
     public ResponseEntity encontraProduto(@PathVariable("idProduto") Long idProduto) {
         try {
             Produto produtoEncontrado = produtoService.buscaProduto(idProduto);
+            produtoEncontrado.setAvaliacaoList(pedidoService.buscaAvaliacoesProdutos(idProduto));
             return new ResponseEntity<Produto>(produtoEncontrado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar o produto"), HttpStatus.BAD_REQUEST);
@@ -170,20 +175,6 @@ public class ProdutoController {
             return new ResponseEntity<List<Produto>>(produtoService.buscaProdutosPorPreferenciasCliente(clienteId, latitude, longitude, altitude), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar Produtos"), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @Transactional
-    @RequestMapping(value = "/produto/avaliacao/{produtoId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity buscaComentariosAvaliacaoProduto(@PathVariable("produtoId") Long produtoId) {
-        try {
-            List<Produto> avaliacoes = produtoService.buscaComentarios(produtoId);
-            if (avaliacoes.isEmpty()) {
-                return new ResponseEntity<>(new CustomError("Não há avaliações"), HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<List<Produto>>(avaliacoes, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new CustomError("Erro ao buscar avaliação de produtos"), HttpStatus.BAD_REQUEST);
         }
     }
 }

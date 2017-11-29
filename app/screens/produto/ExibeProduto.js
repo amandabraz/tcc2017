@@ -40,7 +40,8 @@ export default class ExibeProduto extends Component {
             categoria: {
               descricao: ''
             },
-            score: 0
+            score: 0,
+            avaliacaoList: []
           },
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
@@ -61,11 +62,9 @@ export default class ExibeProduto extends Component {
           dateText: '',
           dateAvalText: '',
           carregou: true,
-          carregouAval: true,
-          resultadoavaliacao: []
+          carregouAval: true
         };
         this.buscaProduto();
-        this.buscaAvaliacao();
     }
 
   buscaProduto() {
@@ -124,35 +123,25 @@ export default class ExibeProduto extends Component {
     }
   }
 
-  buscaAvaliacao() {
-    if (this.state.produtoId > 0) {
-      fetch(constante.ENDPOINT+'produto/avaliacao/' + this.state.produtoId)
-      .then((response) => response.json())
-      .then((rJson) => {
-        if (!rJson.errorMessage) {
-          this.setState({resultadoAvaliacao: rJson});
-        }
-      });
-    }
-  }
-
   exibeAvaliacao() {
     var views = [];
-    if (this.state.resultadoavaliacao) {
-      let avaliacao = this.state.resultadoavaliacao[i];
-      views.push (
-        <View key={i}>
-          <View style={{alignItems:  'flex-start', justifyContent: 'flex-start', padding: 10, margin: 3}}>
-          <StarRating
-              disabled={true}
-              maxStars={5}
-              rating={avaliacao.nota}
-              starSize={12}
-              starColor={'#e6b800'}/>
-          <Text style={styles.oneResultfont} justifyContent='center'>{avaliacao.comentario}</Text>
-        </View>
-    </View>
-    );
+    if (this.state.produto.avaliacaoList.length > 0) {
+      for (i in this.state.produto.avaliacaoList) {
+        let avaliacao = this.state.produto.avaliacaoList[i];
+        views.push (
+          <View key={i}>
+            <View style={{alignItems:  'flex-start', justifyContent: 'flex-start', padding: 10, margin: 3}}>
+            <StarRating
+                disabled={true}
+                maxStars={5}
+                rating={avaliacao.nota}
+                starSize={12}
+                starColor={'#e6b800'}/>
+            <Text style={styles.oneResultfont} justifyContent='center'>{avaliacao.comentario}</Text>
+          </View>
+      </View>
+      );
+      }
     } else {
     views.push(
       <View key={0} style={{alignItems: 'center'}}>
@@ -328,6 +317,9 @@ render() {
     }
     underlayColor="white"
     easing="easeOutCubic"/>
+  </View>
+  <View style={{width: '75%', margin: 10}}>
+    <Text style={styles.baseText}>AVALIAÇÕES</Text>
   </View>
   {this.exibeAvaliacao()}
 

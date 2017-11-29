@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import tcc.Models.Produto;
 
-import java.util.Date;
 import java.util.List;
 
 public interface ProdutoDAO extends CrudRepository <Produto, Long> {
@@ -43,6 +42,4 @@ public interface ProdutoDAO extends CrudRepository <Produto, Long> {
             "GROUP BY produto.id_produto",
             nativeQuery = true)
     List<Produto> findByPreferenciasCliente(Long clienteId);
-
-    List<Produto> findByIdProdutoOrderByDataAvaliacaoAsc(Long idProduto);
 }
