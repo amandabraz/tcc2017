@@ -73,7 +73,7 @@ class PedidosConfirmadosVendedor extends Component {
 
         var dataNormal = new Date(pedidoC.dataConfirmacao);
         let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
-        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;      
+        let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
         let ano = dataNormal.getFullYear();
         let hora = dataNormal.getHours();
         let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
@@ -84,13 +84,13 @@ class PedidosConfirmadosVendedor extends Component {
             <Accordion header={
               <View style={{flexDirection: 'row'}}>
               <View style = {{ width: '20%'}}>
-              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>            
+              <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>
                 <Image source={imagemPrincipalC}
                     style={styles.imagemPrincipal}/>
               </TouchableHighlight>
               </View>
               <View style={{width: '65%', alignSelf:'center'}}>
-                <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>                        
+                <TouchableHighlight onPress={() => this.openCliente(pedidoC.cliente.id)}>
                   <Text style={styles.totalFont}> {pedidoC.cliente.usuario.nome}</Text>
                 </TouchableHighlight>
                 <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
@@ -123,18 +123,18 @@ class PedidosConfirmadosVendedor extends Component {
                           token: pedidoC.token,
                           pedidoId: pedidoC.id});
                       }}/>
-                <TouchableOpacity 
+                <TouchableOpacity
                       style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
                       onPress={() =>
                                 {
                                   this.props.navigation.navigate('Chat', {
                                     userId: this.state.userId,
                                     otherUserId: pedidoC.cliente.usuario.id,
-                                    otherUserName: pedidoC.cliente.usuario.nome,                                  
+                                    otherUserName: pedidoC.cliente.usuario.nome,
                                     pedidoId: pedidoC.id});
                                 }}>
-                    <Icon name="comments-o" size={25} 
-                          color={'#4A4A4A'} 
+                    <Icon name="comments-o" size={25}
+                          color={'#4A4A4A'}
                           type='font-awesome'
                           style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
                 </TouchableOpacity>
@@ -169,7 +169,7 @@ class PedidosConfirmadosVendedor extends Component {
             <Text style={{fontSize: 14}}>Se encontre com o cliente em local público e movimentado</Text>
             <Text style={{fontSize: 14}}>Leia sempre os comentários e avaliações para saber sobre como é seu cliente</Text>
           </View>
-          <View 
+          <View
             onPress={() => this.hideDica()}
             style={{
               alignItems:'center',
@@ -184,7 +184,7 @@ class PedidosConfirmadosVendedor extends Component {
               style={styles.imageResultSearch} />
           </View>
       </View>
-    )  
+    )
   }
 
   render() {

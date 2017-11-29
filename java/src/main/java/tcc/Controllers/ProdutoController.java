@@ -16,6 +16,7 @@ import tcc.Models.Ingrediente;
 import tcc.Models.Produto;
 import tcc.Models.Tag;
 import tcc.Services.IngredienteService;
+import tcc.Services.PedidoService;
 import tcc.Services.ProdutoService;
 import tcc.Services.TagService;
 
@@ -36,6 +37,9 @@ public class ProdutoController {
 
     @Autowired
     private IngredienteService ingredienteService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @Transactional
     @RequestMapping(value = "/produto", method = RequestMethod.POST)
@@ -139,6 +143,7 @@ public class ProdutoController {
     public ResponseEntity encontraProduto(@PathVariable("idProduto") Long idProduto) {
         try {
             Produto produtoEncontrado = produtoService.buscaProduto(idProduto);
+            produtoEncontrado.setAvaliacaoList(pedidoService.buscaAvaliacoesProdutos(idProduto));
             return new ResponseEntity<Produto>(produtoEncontrado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao buscar o produto"), HttpStatus.BAD_REQUEST);

@@ -65,6 +65,20 @@ export const BuscaPro = StackNavigator({
   headerMode: 'none',
 });
 
+export const Favoritos = StackNavigator({
+  VendedoresFavoritos:{
+    screen: VendedoresFavoritos
+  },
+  ExibeVendedor: {
+    screen: ExibeVendedor
+  },
+ },
+ {
+  mode: 'card',
+  lazy: true,
+  headerMode: 'none',
+});
+
 
 export const GerenciaPedidosConfirmadosCliente = StackNavigator({
   Confirmados: {
@@ -225,7 +239,7 @@ export const TabsCliente = TabNavigator({
       },
     },
     Favoritos: {
-      screen: VendedoresFavoritos,
+      screen: Favoritos,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <FontAwesomeIcon name="heart" size={22} color={tintColor} />
       },

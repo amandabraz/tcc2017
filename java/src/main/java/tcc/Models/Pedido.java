@@ -43,6 +43,11 @@ public class Pedido implements Serializable {
             nullable = false)
     private Date dataSolicitada;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DATA_AVALIADO",
+            nullable = true)
+    private Date dataAvaliado;
+
     @Column(name = "QUANTIDADE",
             nullable = false)
     private int quantidade;
@@ -72,6 +77,11 @@ public class Pedido implements Serializable {
 
     @Column(name = "NOTA", nullable = true)
     public Integer nota = 0;
+
+    @Column(name = "COMENTARIO_AVALIACAO",
+            nullable = true,
+            length = 500)
+    private String comentarioAvaliacao;
 
     public Long getId() {
         return id;
@@ -111,6 +121,14 @@ public class Pedido implements Serializable {
 
     public void setDataSolicitada(Date dataSolicitada) {
         this.dataSolicitada = dataSolicitada;
+    }
+
+    public Date getDataAvaliado() {
+        return dataAvaliado;
+    }
+
+    public void setDataAvaliado(Date dataAvaliado) {
+        this.dataAvaliado = dataAvaliado;
     }
 
     public int getQuantidade() {
@@ -177,6 +195,14 @@ public class Pedido implements Serializable {
         this.nota = nota;
     }
 
+    public String getComentarioAvaliacao() {
+        return comentarioAvaliacao;
+    }
+
+    public void setComentarioAvaliacao(String comentarioAvaliacao) {
+        this.comentarioAvaliacao = comentarioAvaliacao;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -191,15 +217,17 @@ public class Pedido implements Serializable {
                 Objects.equals(dataFinalizacao, pedido.dataFinalizacao) &&
                 Objects.equals(dataConfirmacao, pedido.dataConfirmacao) &&
                 Objects.equals(dataSolicitada, pedido.dataSolicitada) &&
+                Objects.equals(dataAvaliado, pedido.dataAvaliado) &&
                 Objects.equals(token, pedido.token) &&
                 Objects.equals(produto, pedido.produto) &&
                 Objects.equals(cliente, pedido.cliente) &&
-                Objects.equals(pagamento, pedido.pagamento);
+                Objects.equals(pagamento, pedido.pagamento) &&
+                Objects.equals(comentarioAvaliacao, pedido.comentarioAvaliacao);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota);
+        return Objects.hash(id, status, dataFinalizacao, dataConfirmacao, dataSolicitada, dataAvaliado, quantidade, valorCompra, deletado, token, produto, cliente, pagamento, nota, comentarioAvaliacao);
     }
 
     @Override
@@ -210,6 +238,7 @@ public class Pedido implements Serializable {
                 ", dataFinalizacao=" + dataFinalizacao +
                 ", dataConfirmacao=" + dataConfirmacao +
                 ", dataSolicitada=" + dataSolicitada +
+                ", dataAvaliado=" + dataAvaliado +
                 ", quantidade=" + quantidade +
                 ", valorCompra=" + valorCompra +
                 ", deletado=" + deletado +
@@ -218,6 +247,7 @@ public class Pedido implements Serializable {
                 ", cliente=" + cliente +
                 ", pagamento=" + pagamento +
                 ", nota=" + nota +
+                ", comentarioAvaliacao=" + comentarioAvaliacao +
                 '}';
     }
 

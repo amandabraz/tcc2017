@@ -17,6 +17,7 @@ import tcc.Models.Pedido;
 import tcc.Services.PedidoService;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -158,15 +159,16 @@ public class PedidoController {
     }
 
     @Transactional
-    @RequestMapping(value = "{pedidoId}/produto/avaliacao/{nota}", method = RequestMethod.PUT)
-    public ResponseEntity avaliaProduto(@PathVariable("pedidoId") Long pedidoId,
-                                        @PathVariable("nota") Integer nota) {
+    @RequestMapping(value = "produto/avaliacao", method = RequestMethod.PATCH)
+    public ResponseEntity avaliaProduto(@RequestBody Pedido avaliacao) {
         try {
-            Pedido pedido = pedidoService.buscaPedido(pedidoId);
-            pedido.setNota(nota);
-            pedidoService.salvarPedido(pedido);
-            pedidoService.recalculaScoreProduto(pedido);
-            return new ResponseEntity(pedido, HttpStatus.OK);
+            Pedido pedidoAvaliado = pedidoService.buscaPedido(avaliacao.id);
+            pedidoAvaliado.setDataAvaliado(new Date());
+            pedidoAvaliado.setNota(avaliacao.getNota());
+            pedidoAvaliado.setComentarioAvaliacao(avaliacao.getComentarioAvaliacao());
+            pedidoService.salvarPedido(pedidoAvaliado);
+            pedidoService.recalculaScoreProduto(pedidoAvaliado);
+            return new ResponseEntity(pedidoAvaliado, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao salvar avaliação"), HttpStatus.BAD_REQUEST);
         }
