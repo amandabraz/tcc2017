@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -93,6 +94,9 @@ public class Produto implements Serializable, Comparable<Produto> {
     //Distancia em METROS, apenas usada na busca, não é salvo no banco
     @Transient
     private double distancia;
+
+    @Transient
+    private List<Avaliacao> avaliacaoList;
 
     public Produto() {
         super();
@@ -225,6 +229,14 @@ public class Produto implements Serializable, Comparable<Produto> {
 
     public void setDistancia(double distancia) {
         this.distancia = distancia;
+    }
+
+    public List<Avaliacao> getAvaliacaoList() {
+        return avaliacaoList;
+    }
+
+    public void setAvaliacaoList(List<Avaliacao> avaliacaoList) {
+        this.avaliacaoList = avaliacaoList;
     }
 
     @Override

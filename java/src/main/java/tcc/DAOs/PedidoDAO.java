@@ -146,4 +146,5 @@ public interface PedidoDAO extends CrudRepository<Pedido, Long>{
 
     int countByNotaGreaterThanAndClienteId(Integer numero, Long id);
 
+    List<Pedido> findByProdutoIdAndDataAvaliadoNotNull(Long id);
 }

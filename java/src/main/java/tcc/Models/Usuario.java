@@ -60,6 +60,9 @@ public class Usuario  implements Serializable {
     @Column(name = "fcm_token", nullable = true, length = 152)
     private String fcmToken;
 
+    @Column(name = "NOTA")
+    private float nota = 0;
+
     /**
      * Construtor com todos os dados para retorno do banco
      */
@@ -180,6 +183,14 @@ public class Usuario  implements Serializable {
         this.fcmToken = fcmToken;
     }
 
+    public float getNota() {
+        return nota;
+    }
+
+    public void setNota(float nota) {
+        this.nota = nota;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -188,6 +199,7 @@ public class Usuario  implements Serializable {
         return deletado == usuario.deletado &&
                 perfil == usuario.perfil &&
                 bloqueado == usuario.bloqueado &&
+                Float.compare(usuario.nota, nota) == 0 &&
                 Objects.equals(id, usuario.id) &&
                 Objects.equals(senha, usuario.senha) &&
                 Objects.equals(nome, usuario.nome) &&
@@ -202,7 +214,7 @@ public class Usuario  implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, bloqueado, imagemPerfil, fcmToken);
+        return Objects.hash(id, senha, deletado, perfil, nome, email, dataNasc, cpf, ddd, telefone, bloqueado, imagemPerfil, fcmToken, nota);
     }
 
     @Override
@@ -221,6 +233,7 @@ public class Usuario  implements Serializable {
                 ", bloqueado=" + bloqueado +
                 ", imagemPerfil='" + imagemPerfil + '\'' +
                 ", fcmToken='" + fcmToken + '\'' +
+                ", nota=" + nota +
                 '}';
     }
 }

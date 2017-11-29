@@ -40,7 +40,8 @@ export default class ExibeProduto extends Component {
             categoria: {
               descricao: ''
             },
-            score: 0
+            score: 0,
+            avaliacaoList: []
           },
           tagsText: "Nenhuma tag cadastrada",
           tagEstilo: {
@@ -59,7 +60,9 @@ export default class ExibeProduto extends Component {
             fontStyle: 'italic'
           },
           dateText: '',
-          carregou: true
+          dateAvalText: '',
+          carregou: true,
+          carregouAval: true
         };
         this.buscaProduto();
     }
@@ -118,6 +121,37 @@ export default class ExibeProduto extends Component {
         }
       });
     }
+  }
+
+  exibeAvaliacao() {
+    var views = [];
+    if (this.state.produto.avaliacaoList.length > 0) {
+      for (i in this.state.produto.avaliacaoList) {
+        let avaliacao = this.state.produto.avaliacaoList[i];
+        views.push (
+          <View key={i}>
+            <View style={{alignItems:  'flex-start', justifyContent: 'flex-start', padding: 10, margin: 3}}>
+            <StarRating
+                disabled={true}
+                maxStars={5}
+                rating={avaliacao.nota}
+                starSize={12}
+                starColor={'#e6b800'}/>
+            <Text style={styles.oneResultfont} justifyContent='center'>{avaliacao.comentario}</Text>
+          </View>
+      </View>
+      );
+      }
+    } else {
+    views.push(
+      <View key={0} style={{alignItems: 'center'}}>
+      <Text style={{marginTop: 12,fontSize: 18, justifyContent: 'center'}}>
+        Esse produto ainda não foi avaliado!
+      </Text>
+      </View>
+      )
+    }
+        return views;
   }
 
   onButtonOpenProduct = (produtoIdSelecionado) => {
@@ -284,6 +318,10 @@ render() {
     underlayColor="white"
     easing="easeOutCubic"/>
   </View>
+  <View style={{width: '75%', margin: 10}}>
+    <Text style={styles.baseText}>AVALIAÇÕES</Text>
+  </View>
+  {this.exibeAvaliacao()}
 
     </View>
     </TriggeringView>

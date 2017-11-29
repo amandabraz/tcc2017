@@ -2,8 +2,15 @@ package tcc.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tcc.CustomQueryHelpers.*;
+import tcc.CustomQueryHelpers.QuantidadePedidos;
+import tcc.CustomQueryHelpers.QuantidadeVendidaCliente;
+import tcc.CustomQueryHelpers.RankingMaioresVendedores;
+import tcc.CustomQueryHelpers.RankingProdutosVendidos;
+import tcc.CustomQueryHelpers.RankingQuantidadeClientes;
+import tcc.CustomQueryHelpers.RankingQuantidadeProdutosVendidos;
+import tcc.CustomQueryHelpers.RankingQuantidadeVendas;
 import tcc.DAOs.PedidoDAO;
+import tcc.Models.Avaliacao;
 import tcc.Models.Pedido;
 import tcc.Models.Produto;
 
@@ -11,6 +18,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -329,6 +337,26 @@ public class PedidoService {
         try {
             return pedidoDAO.countByNotaGreaterThanAndClienteId(0, clienteId);
         } catch(Exception e) {
+            throw e;
+        }
+    }
+
+
+    public List<Avaliacao> buscaAvaliacoesProdutos(Long produtoId) {
+        try {
+            // apenas reaproveitando obj Avaliacao, apesar de n ter nada a ver com produto
+            List<Avaliacao> avaliacoes = new ArrayList<>();
+            List<Pedido> produtosAvaliados = pedidoDAO.findByProdutoIdAndDataAvaliadoNotNull(produtoId);
+            for (Pedido produtoAvaliado : produtosAvaliados) {
+                Avaliacao avaliado = new Avaliacao();
+                avaliado.setComentario(produtoAvaliado.getComentarioAvaliacao());
+                avaliado.setNota(produtoAvaliado.getNota());
+                avaliado.setDataAvaliacao(produtoAvaliado.getDataAvaliado());
+                avaliado.setSender(produtoAvaliado.getCliente().getId());
+                avaliacoes.add(avaliado);
+            }
+            return avaliacoes;
+        } catch (Exception e) {
             throw e;
         }
     }
