@@ -15,14 +15,9 @@ import {
   TouchableOpacity,
   RefreshControl
 } from 'react-native';
-import StartTimerLocation from '../localizacao/TimerGeolocation.js';
-import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Icon,Button} from 'react-native-elements';
-import NavigationBar from 'react-native-navbar';
-import QRCode from 'react-native-qrcode';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
-import Camera from 'react-native-camera';
 import StarRating from 'react-native-star-rating';
 import Modal from 'react-native-modal';
 import Spinner from 'react-native-loading-spinner-overlay';

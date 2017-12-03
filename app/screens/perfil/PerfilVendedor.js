@@ -32,6 +32,9 @@ import ImagePicker from 'react-native-image-picker';
 import Popup from 'react-native-popup';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Modal from 'react-native-modal';
+import Accordion from 'react-native-accordion';
+import StarRating from 'react-native-star-rating';
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -70,9 +73,11 @@ export default class PerfilVendedor extends Component {
       meiosPagamento: [],
       escolhido: '',
       carregou: true,
-      cameraVisivel: 'transparent'
+      cameraVisivel: 'transparent',
+      resultadoAvaliacao: []      
     };
     this.buscaDadosVendedor();
+    this.buscaAvaliacoes();
     this.buscaMeiosPagamento();
   }
 
@@ -95,6 +100,56 @@ export default class PerfilVendedor extends Component {
           this.setState({meiosPagamento: responseJson});
         }
       });
+  }
+
+  buscaAvaliacoes() {
+    fetch(constante.ENDPOINT + "avaliacao/usuario/" + this.state.userId, {method: 'GET'})
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (!responseJson.errorMessage) {
+          this.setState({resultadoAvaliacao: responseJson});
+      }
+    });
+  };
+
+  mostraAvaliacoes() {
+    var views = [];
+    if(this.state.resultadoAvaliacao.length > 0){
+    for(i in this.state.resultadoAvaliacao) {
+      let avaliacao = this.state.resultadoAvaliacao[i];
+      let dataNormal = new Date(avaliacao.dataAvaliacao);
+      let dia = dataNormal.getDate() < 10 ? "0" + dataNormal.getDate() : dataNormal.getDate();
+      let mes = dataNormal.getMonth() + 1 < 10 ? "0" + (dataNormal.getMonth() + 1) : dataNormal.getMonth() + 1;
+      let ano = dataNormal.getFullYear();
+      let hora = dataNormal.getHours();
+      let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
+      let dataAv = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
+      views.push (
+        <View key={i}>
+          <View style={{alignItems:  'flex-start', justifyContent: 'flex-start', padding: 10, margin: 3}}>
+          <Text style={{fontSize: 14, color: '#ccc'}}>{dataAv}</Text>
+          <StarRating
+              disabled={true}
+              maxStars={5}
+              rating={avaliacao.nota}
+              starSize={12}
+              starColor={'#e6b800'}/>
+          <Text style={styles.oneResultfont} justifyContent='center'>{avaliacao.comentario}</Text>
+         
+          </View>
+        </View>
+        );
+    }
+  } else {
+    views.push(
+      <View key={0} style={{alignItems: 'center'}}>
+      <Text style={{marginTop: 12,fontSize: 16, justifyContent: 'center'}}>
+      Você ainda não foi avaliado!
+      </Text>
+      </View>
+    )
+  }
+      return views;
   }
 
   prepararVendedor(responseJson) {
@@ -661,6 +716,26 @@ export default class PerfilVendedor extends Component {
 
               {this.meiosPagamento()}
               {this.mostraBotaoSalvar()}
+
+              <View style={{ margin: 10}}>
+                <Accordion header={
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{width: '75%'}}>
+                        <Text style={{color: '#7A8887', fontSize: 20}}>Avaliações</Text>
+                      </View>
+                      <View style={{width: '25%'}}>
+                        <Icon name="chevron-down" size={18} color={'gray'} type='font-awesome'/>
+                      </View>
+                    </View>
+                  } content={
+                    <View>
+                      {this.mostraAvaliacoes()}
+                    </View>
+                  }
+                  underlayColor="white"
+                  easing="easeOutCubic"/>
+              </View>
+
               <View style={{width:'98%', flexDirection: 'row', justifyContent:'space-between'}}>
                 <TouchableOpacity
                     style={{alignItems: 'center', padding:10, margin: 10}}

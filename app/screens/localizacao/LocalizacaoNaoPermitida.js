@@ -9,7 +9,8 @@ class LocalizacaoNaoPermitida extends Component {
         this.state = {
             screenName: props.screenName,
             navigation: props.navigation,
-            userId: props.userId
+            userId: props.userId,
+            clienteId: props.clienteId
         };
     }
 
@@ -20,7 +21,7 @@ class LocalizacaoNaoPermitida extends Component {
                 <Text style={styles.titulo}> Ative sua localização</Text>                 
                 <Text style={styles.texto}> Para utilizar este aplicativo, é necessário permitir o uso do GPS.</Text> 
                 <Button style={styles.button} color={'#8B636C'}
-                    onPress={() => this.state.navigation.navigate(this.state.screenName, {userId: this.state.userId})} 
+                    onPress={() => this.state.navigation.navigate(this.state.screenName, {userId: this.state.userId, clienteId: this.state.clienteId})} 
                     title='Tentar novamente'/>
             </View>
         );

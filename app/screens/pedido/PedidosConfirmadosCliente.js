@@ -14,8 +14,6 @@ import {
   TouchableOpacity,
   RefreshControl
 } from 'react-native';
-import StartTimerLocation from '../localizacao/TimerGeolocation.js';
-import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
 import NavigationBar from 'react-native-navbar';
