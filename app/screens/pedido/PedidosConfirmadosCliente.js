@@ -82,7 +82,7 @@ class PedidosConfirmadosCliente extends Component {
             clienteId: this.state.clienteId
           });
   };
-  
+
   hideDica(){
     this.setState({ dicaSegurancaVisible: false })
   };
@@ -93,11 +93,11 @@ class PedidosConfirmadosCliente extends Component {
         <View style={styles.dica}>
           <View style={{width:'90%'}}>
             <Text style={styles.totalFont}> Dicas de segurança!</Text>
-            <Text style={{fontSize: 14}}>Se encontre com o vendedor em local público e movimentado</Text>
-            <Text style={{fontSize: 14}}>Desconfie de produtos extremamente baratos</Text>
-            <Text style={{fontSize: 14}}>Leia os comentários e avaliações para saber sobre sua compra e seu vendedor</Text>
+            <Text style={{fontSize: 14}}>Encontre-se com o vendedor em local público e movimentado.</Text>
+            <Text style={{fontSize: 14}}>Desconfie de produtos extremamente baratos.</Text>
+            <Text style={{fontSize: 14}}>Leia os comentários e avaliações para saber sobre sua compra e seu vendedor.</Text>
           </View>
-          <View 
+          <View
             onPress={() => this.hideDica()}
             style={{
               alignItems:'center',
@@ -112,7 +112,7 @@ class PedidosConfirmadosCliente extends Component {
               style={styles.imageResultSearch} />
           </View>
       </View>
-    )  
+    )
   }
 
   pedidoConfirmado(){
@@ -174,7 +174,7 @@ class PedidosConfirmadosCliente extends Component {
             <Text style={styles.tokenfont}> {pedidoC.token}</Text>
 
             <View style={{width:'98%'}}>
-              <TouchableOpacity 
+              <TouchableOpacity
                   style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
                   onPress={() =>
                             {
@@ -184,8 +184,8 @@ class PedidosConfirmadosCliente extends Component {
                                 otherUserName: pedidoC.produto.vendedor.usuario.nome,
                                 pedidoId: pedidoC.id});
                             }}>
-                <Icon name="comments-o" size={25} 
-                      color={'#4A4A4A'} 
+                <Icon name="comments-o" size={25}
+                      color={'#4A4A4A'}
                       type='font-awesome'
                       style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
               </TouchableOpacity>
