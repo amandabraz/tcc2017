@@ -11,8 +11,11 @@ import * as constante from '../../constantes'
 import MapView from 'react-native-maps'
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons'
 import NavigationBar from 'react-native-navbar'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const { width, height } = Dimensions.get('window')
+
+const vendNome = '';
 
 class Mapa extends Component {
 
@@ -31,15 +34,21 @@ class Mapa extends Component {
       },
       vendedor:{
         latlng:{
-          latitude: -22.911265, 
-          longitude: -47.045484
+          latitude: 0, 
+          longitude: 0
         },
-        title: this.props.navigation.state.params.vendedorNome,
-        description: 'Local onde está '+this.props.navigation.state.params.vendedorNome
+        title: 'Vendedor',
+        description: 'Local onde está o(a) vendedor(a)'
       },
-      refreshing: false,   
+      region:{
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0,
+        longitudeDelta: 0
+      },
       carregou: true
     }
+    vendNome = this.props.navigation.state.params.vendedorNome
     this.atualizaMapa()
   }
 
@@ -51,29 +60,66 @@ class Mapa extends Component {
           if (!vendedor.errorMessage) {
              //TODO: TRATAR CASO NÃO VENHA
           }
+
+          let latLong = [
+            {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            },
+            {
+              latitude: vendedor.latitude, 
+              longitude: vendedor.longitude
+            }
+          ]
+
+           //latLong = array de {latitude, longitude}
+          let minX, maxX, minY, maxY
+          
+          //primeiro ponto
+          ((point) => {
+            minX = point.latitude*1.0003
+            maxX = point.latitude*1.0003
+            minY = point.longitude*1.0003
+            maxY = point.longitude*1.0003
+          })(latLong[0])
+
+          //[this.state.me.latlng, this.state.vendedor.latlng]
+        
+          //calcula a reta
+          latLong.map((point) => {
+            minX = Math.min(minX, point.latitude/1.0003)
+            maxX = Math.max(maxX, point.latitude/1.0003)
+            minY = Math.min(minY, point.longitude/1.0003)
+            maxY = Math.max(maxY, point.longitude/1.0003)
+          })
+        
+          const midX = (minX + maxX) / 2
+          const midY = (minY + maxY) / 2
+          const deltaX = (maxX - minX)
+          const deltaY = (maxY - minY)
+
           this.setState({
             me: {
-              latlng:{
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-              },
+              latlng:latLong[0],
               title: 'Você :)',
               description: 'Sua posição'
             },
             vendedor:{
-              latlng:{
-                latitude: vendedor.latitude, 
-                longitude: vendedor.longitude
-              },
-              title: this.props.navigation.state.params.vendedorNome,
-              description: 'Local onde está '+this.props.navigation.state.params.vendedorNome
+              latlng:latLong[1],
+              title: vendNome,
+              description: 'Local onde está '+vendNome
+            },
+            region:{
+              latitude: midX,
+              longitude: midY,
+              latitudeDelta: deltaX,
+              longitudeDelta: deltaY
             }
           })
-          this.setState({refreshing: false})
           this.setState({carregou: false})
         })
     }, (error) => {
-      this.setState({ //TODO:  tratar caso dê ruim
+      this.setState({
         me:{
           latlng:{
             latitude: 0,
@@ -84,43 +130,10 @@ class Mapa extends Component {
     })
   }
 
-  calculaDelta(latLong) {
-    //latLong = array de {latitude, longitude}
-    let minX, maxX, minY, maxY
-  
-    //primeiro ponto
-    ((point) => {
-      minX = point.latitude*1.00002
-      maxX = point.latitude*1.00002
-      minY = point.longitude*1.00002
-      maxY = point.longitude*1.00002
-    })(latLong[0])
-  
-    //calcula a reta
-    latLong.map((point) => {
-      minX = Math.min(minX, point.latitude/1.00002)
-      maxX = Math.max(maxX, point.latitude/1.00002)
-      minY = Math.min(minY, point.longitude/1.00002)
-      maxY = Math.max(maxY, point.longitude/1.00002)
-    })
-  
-    const midX = (minX + maxX) / 2
-    const midY = (minY + maxY) / 2
-    const deltaX = (maxX - minX)
-    const deltaY = (maxY - minY)
-  
-    return {
-      latitude: midX,
-      longitude: midY,
-      latitudeDelta: deltaX,
-      longitudeDelta: deltaY
-    }
-  }
-
   loadMap() {
     return <View style={styles.containerMapa}>
       <MapView style={styles.mapa} 
-      region={this.calculaDelta([this.state.me.latlng, this.state.vendedor.latlng])}
+      region={this.state.region}
       >
         <MapView.Marker
           coordinate={this.state.me.latlng}
@@ -153,6 +166,7 @@ class Mapa extends Component {
           }
           title={titleConfig}
         />
+        <Spinner visible={this.state.carregou}/>
         <View style={{height: '95%'}}>
           {this.loadMap()}
         </View>
