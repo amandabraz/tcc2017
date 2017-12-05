@@ -162,8 +162,9 @@ class PedidosConfirmadosVendedor extends Component {
         <View style={styles.dica}>
           <View style={{width:'90%'}}>
             <Text style={styles.totalFont}> Dicas de segurança!</Text>
-            <Text style={{fontSize: 14}}>Se encontre com o cliente em local público e movimentado</Text>
-            <Text style={{fontSize: 14}}>Leia sempre os comentários e avaliações para saber sobre como é seu cliente</Text>
+            <Text style={{fontSize: 14}}>Encontre-se com o vendedor em local público e movimentado.</Text>
+            <Text style={{fontSize: 14}}>Desconfie de produtos extremamente baratos.</Text>
+            <Text style={{fontSize: 14}}>Leia os comentários e avaliações para saber sobre sua compra e seu vendedor.</Text>
           </View>
           <View
             onPress={() => this.hideDica()}
