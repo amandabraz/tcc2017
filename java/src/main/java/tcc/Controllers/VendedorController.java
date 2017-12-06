@@ -99,7 +99,7 @@ public class VendedorController {
     }
 
     @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-     public ResponseEntity procuraVendedorPorUsuario(@PathVariable("id") Long usuarioId) {
+    public ResponseEntity procuraVendedorPorUsuario(@PathVariable("id") Long usuarioId) {
         try {
             Usuario usuario = new Usuario(usuarioId);
             Vendedor vendedor = vendedorService.procuraVendedorPorUsuario(usuario);

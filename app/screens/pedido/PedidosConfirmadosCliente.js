@@ -83,21 +83,21 @@ class PedidosConfirmadosCliente extends Component {
           });
   };
 
-  exibeMapa() {
+  exibeMapa(vId, vNome) {
     return(
       <TouchableOpacity 
-      style={{width:'30%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+      style={{width:'30%', flexDirection: 'row', alignItems: 'center'}}
       onPress={() =>
         {
           this.props.navigation.navigate('Mapa', {
-           
+            vendedorUserId:vId,
+            vendedorUserNome:vNome
           }
-          );
+          )
         }}>
         <Icon name="location-on" size={25} 
                     color={'#4A4A4A'} 
-                    type=' material-community'
-                    style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Abrir mapa</Text>
+                    type=' material-community'/><Text style={{color: '#4A4A4A'}}>  Abrir mapa</Text>
       </TouchableOpacity>      
     )
   }
@@ -161,7 +161,10 @@ pedidoConfirmado(){
             </View>
           <Text style={styles.tokenfont}> {pedidoC.token}</Text>
           <View style={{width:'98%', flexDirection:'row'}}>
-            {this.exibeMapa()}
+            {this.exibeMapa(
+              pedidoC.produto.vendedor.usuario.id,
+              pedidoC.produto.vendedor.usuario.nome
+            )}
             <TouchableOpacity 
                 style={{width:'60%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
                 onPress={() =>
