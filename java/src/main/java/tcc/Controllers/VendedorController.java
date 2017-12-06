@@ -97,4 +97,15 @@ public class VendedorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na edição do Usuário! Tente novamente");
         }
     }
+
+    @RequestMapping(value = "/usuario/{id}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity procuraVendedorPorUsuario(@PathVariable("id") Long usuarioId) {
+        try {
+            Usuario usuario = new Usuario(usuarioId);
+            Vendedor vendedor = vendedorService.procuraVendedorPorUsuario(usuario);
+            return new ResponseEntity<Vendedor>(vendedor, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new CustomError("Erro ao carregar dados do vendedor"), HttpStatus.NOT_FOUND);
+        }
+    }
 }
