@@ -107,5 +107,5 @@ public class VendedorController {
         } catch (Exception e) {
             return new ResponseEntity<>(new CustomError("Erro ao carregar dados do vendedor"), HttpStatus.NOT_FOUND);
         }
-    }
+    }   
 }
