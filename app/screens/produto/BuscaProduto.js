@@ -282,7 +282,8 @@ export default class BuscaProduto extends Component {
       return(<LocalizacaoNaoPermitida
         screenName={this.state.screenName}
         navigation={this.props.navigation}
-        userId={this.state.userId} />
+        userId={this.state.userId}
+        clienteId={this.state.clienteId} />
       );
     } else {
       return (

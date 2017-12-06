@@ -15,14 +15,9 @@ import {
   TouchableOpacity,
   RefreshControl
 } from 'react-native';
-import StartTimerLocation from '../localizacao/TimerGeolocation.js';
-import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Icon,Button} from 'react-native-elements';
-import NavigationBar from 'react-native-navbar';
-import QRCode from 'react-native-qrcode';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
-import Camera from 'react-native-camera';
 import StarRating from 'react-native-star-rating';
 import Modal from 'react-native-modal';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -40,9 +35,10 @@ class PedidosFinalizadosCliente extends Component {
       pedidosCancelados: [],
       refreshing: false,
       starCount: 0,
-      isModalVisible: false,  
+      isModalVisible: false,
       pedidoParaAvaliar: 0,
-      carregou: true    
+      carregou: true,
+      comentarioAvaliacao: ''
     };
     this.buscaDadosPedidosCliente();
   };
@@ -73,13 +69,34 @@ class PedidosFinalizadosCliente extends Component {
       });
   };
 
-  avaliarPedido(pedido) {
-    fetch(constante.ENDPOINT + 'pedido/' + this.state.pedidoParaAvaliar + '/produto/avaliacao/' + parseInt(this.state.starCount), {method: 'PUT'})
+  avaliarPedido() {
+    const {
+      state: {
+        pedidoParaAvaliar,
+        starCount,
+        comentarioAvaliacao
+      }
+    } = this;
+    avaliacao = {
+        "id": this.state.pedidoParaAvaliar,
+        "nota": parseInt(this.state.starCount),
+        "comentarioAvaliacao": this.state.comentarioAvaliacao
+    };
+
+    fetch(constante.ENDPOINT + 'pedido/produto/avaliacao', {
+      method: 'PATCH',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(avaliacao)
+    })
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.errorMessage) {
           ToastAndroid.showWithGravity('Avaliação realizada, obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
           this.setState({pedidoParaAvaliar: 0});
+          this.setState({comentarioAvaliacao: ''});
           this._hideModal();
           this.buscaDadosPedidosCliente();
         } else {
@@ -89,8 +106,43 @@ class PedidosFinalizadosCliente extends Component {
     this.setState({starCount: 0});
   }
 
+  denunciaUsuario() {
+    this.setState({carregou: true});
+
+    const {
+      state: {
+        motivoDenuncia,
+        userId,
+        selectUserId
+      }
+    } = this;
+
+    denuncia = {
+      "motivo": motivoDenuncia,
+      "dataDenuncia": new Date(),
+      "reportado": selectUserId,
+      "denunciador": userId
+    }
+
+    fetch(constante.ENDPOINT + 'denuncia/', {method: 'POST',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(denuncia)
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (!responseJson.errorMessage) {
+        this._hideModal();
+        ToastAndroid.showWithGravity('Denúncia registrada. Assim que possível, entraremos em contato com o status da sua denúncia. Obrigada!', ToastAndroid.LONG, ToastAndroid.CENTER);
+        this.setState({carregou: false});
+      }
+    });
+  }
+
   _showModal = () => this.setState({ isModalVisible: true })
-  
+
   _hideModal = () => this.setState({ isModalVisible: false })
 
   mostrarAvaliacao(pedido) {
@@ -145,7 +197,7 @@ pedidoFinalizado(){
   if(this.state.pedidosFinalizados.length > 0){
     for (i in this.state.pedidosFinalizados){
       let imagemPrincipalP = require('./img/camera11.jpg');
-      let imagemPrincipalV = require('./img/camera11.jpg');                     
+      let imagemPrincipalV = require('./img/camera11.jpg');
       let pedidoF = this.state.pedidosFinalizados[i];
       if (pedidoF.produto.imagemPrincipal) {
         imagemPrincipalP = { uri: pedidoF.produto.imagemPrincipal };
@@ -160,10 +212,10 @@ pedidoFinalizado(){
       let hora = dataNormal.getHours();
       let min = dataNormal.getMinutes() < 10 ? "0" + dataNormal.getMinutes() : dataNormal.getMinutes();
       let dataFinalizacao = dia + "/" + mes + "/" + ano + " - " + hora + ":" + min;
-      
+
       views.push(
         <View key={i} style={styles.oneResult1}>
-          <Accordion 
+          <Accordion
           onPress={(pedidoF) => this.setState({pedidoExpandido: pedidoF})}
           header={
             <View style={{flexDirection: 'row'}}>
@@ -179,7 +231,7 @@ pedidoFinalizado(){
               <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
               </View>
             </View>
-          } 
+          }
           content={
             <View style={{paddingTop: 15}}>
               <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
@@ -226,7 +278,7 @@ pedidoFinalizado(){
     if(this.state.pedidosRecusados.length > 0){
       for (i in this.state.pedidosRecusados) {
         let imagemPrincipalP = require('./img/camera11.jpg');
-        let imagemPrincipalV = require('./img/camera11.jpg');                     
+        let imagemPrincipalV = require('./img/camera11.jpg');
         let pedidoR = this.state.pedidosRecusados[i];
         if (pedidoR.produto.imagemPrincipal) {
           imagemPrincipalP = { uri: pedidoR.produto.imagemPrincipal };
@@ -293,7 +345,7 @@ pedidoFinalizado(){
         for (i in this.state.pedidosCancelados){
           let pedidoC = this.state.pedidosCancelados[i];
           let imagemPrincipalP = require('./img/camera11.jpg');
-          let imagemPrincipalV = require('./img/camera11.jpg');                     
+          let imagemPrincipalV = require('./img/camera11.jpg');
           if (pedidoC.produto.imagemPrincipal) {
             imagemPrincipalP = { uri: pedidoC.produto.imagemPrincipal };
           }
@@ -382,7 +434,7 @@ pedidoFinalizado(){
         animationOut={'slideOutRight'}
         backdropOpacity={0.3}>
         <View style={styles.modalContent}>
-        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Avalie este produto: </Text>              
+        <Text style={{fontSize: 17, fontWeight: 'bold'}}> Avalie este produto: </Text>
           <View style={{width: '60%', margin: 10}}>
             <StarRating
               maxStars={5}
@@ -391,18 +443,29 @@ pedidoFinalizado(){
               rating={this.state.starCount}
               selectedStar={(rating) => this.setState({starCount: rating})}/>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity onPress={() => this._hideModal()}>
-              <View style={styles.button}>
-                <Text>Cancelar</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.avaliarPedido()}>
+          <Text>{'\n'}</Text>
+          <Text style={{fontSize: 17, fontWeight: 'bold'}}> Deseja deixar um comentário sobre o produto? </Text>
+            <View style={{width: '90%', margin: 10}}>
+            <TextInput
+                style={{ borderRadius: 6, borderColor: "#ccc", borderWidth: 2, backgroundColor: 'transparent', height: 100 }}
+                multiline={true}
+                maxLength={255}
+                placeholder="Comentário opcional."
+                onChangeText={(comentario) => this.setState({comentarioAvaliacao: comentario})}
+              />
+            </View>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <TouchableOpacity onPress={() => this._hideModal()}>
                 <View style={styles.button}>
-                  <Text>Salvar</Text>
+                  <Text>Cancelar</Text>
                 </View>
-            </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.avaliarPedido()}>
+                  <View style={styles.button}>
+                    <Text>Salvar</Text>
+                  </View>
+              </TouchableOpacity>
+            </View>
         </View>
       </Modal>
 
@@ -465,14 +528,14 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 10
   },
-  modalContent: {    
+  modalContent: {
     backgroundColor: 'white',
     padding: 22,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
-  }, 
+  },
   button: {
     backgroundColor: 'lightblue',
     padding: 12,

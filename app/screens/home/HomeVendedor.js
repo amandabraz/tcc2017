@@ -269,7 +269,8 @@ render() {
       return(<LocalizacaoNaoPermitida
         screenName={this.state.screenName}
         navigation={this.props.navigation}
-        userId={this.state.userId} />
+        userId={this.state.userId} 
+        clienteId={null}/>
       );
     } else {
       return(

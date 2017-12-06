@@ -14,11 +14,8 @@ import {
   TouchableOpacity,
   RefreshControl
 } from 'react-native';
-import StartTimerLocation from '../localizacao/TimerGeolocation.js';
-import LocalizacaoNaoPermitida from '../localizacao/LocalizacaoNaoPermitida';
 import {Icon,Button} from 'react-native-elements';
 import Popup from 'react-native-popup';
-import QRCodeScanner from 'react-native-qrcode-scanner';
 import Accordion from 'react-native-accordion';
 import * as constante from '../../constantes';
 import Camera from 'react-native-camera';
@@ -88,8 +85,8 @@ arredondaValores(num){
 };
 
 
-openCliente(cliente) {
-  this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId});
+openCliente(cliente, usuario) {
+  this.props.navigation.navigate('ExibeCliente', {clienteId: cliente, userId: this.state.userId, selectUserId: usuario});
 }
 
 pedidoFinalizado(){
@@ -134,13 +131,13 @@ pedidoFinalizado(){
             <View style={{paddingTop: 15}}>
             <View style={{flexDirection: 'row', backgroundColor: 'rgba(0, 124, 138, 0.13)', borderRadius: 10, padding: 10, margin: 10}}>
             <View style = {{ width: '20%'}}>
-              <TouchableHighlight onPress={() => this.openCliente(pedidoF.cliente.id)}>                        
+              <TouchableHighlight onPress={() => this.openCliente(pedidoF.cliente.id, pedidoF.cliente.usuario.id)}>                        
                 <Image source={imagemPrincipalC}
                      style={styles.imagemCliente}/>
               </TouchableHighlight>
             </View>
           <View style={{width: '80%', paddingLeft: 6}}>
-            <TouchableHighlight onPress={() => this.openCliente(pedidoF.cliente.id)}>                      
+            <TouchableHighlight onPress={() => this.openCliente(pedidoF.cliente.id, pedidoF.cliente.usuario.id)}>                      
               <Text style={styles.totalFont}> {pedidoF.cliente.usuario.nome}</Text>
             </TouchableHighlight>
             <Text style={styles.oneResultfont}>Quantidade vendida:
