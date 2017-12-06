@@ -86,7 +86,7 @@ class PedidosConfirmadosCliente extends Component {
   exibeMapa(vId, vNome) {
     return(
       <TouchableOpacity 
-      style={{width:'30%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+      style={{width:'30%', flexDirection: 'row', alignItems: 'center'}}
       onPress={() =>
         {
           this.props.navigation.navigate('Mapa', {
@@ -97,8 +97,7 @@ class PedidosConfirmadosCliente extends Component {
         }}>
         <Icon name="location-on" size={25} 
                     color={'#4A4A4A'} 
-                    type=' material-community'
-                    style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Abrir mapa</Text>
+                    type=' material-community'/><Text style={{color: '#4A4A4A'}}>  Abrir mapa</Text>
       </TouchableOpacity>      
     )
   }
