@@ -81,6 +81,25 @@ class PedidosConfirmadosCliente extends Component {
           });
   };
 
+  exibeMapa(vId, vNome) {
+    return(
+      <TouchableOpacity 
+      style={{width:'30%', flexDirection: 'row', alignItems: 'center'}}
+      onPress={() =>
+        {
+          this.props.navigation.navigate('Mapa', {
+            vendedorUserId:vId,
+            vendedorUserNome:vNome
+          }
+          )
+        }}>
+        <Icon name="location-on" size={25} 
+                    color={'#4A4A4A'} 
+                    type=' material-community'/><Text style={{color: '#4A4A4A'}}>  Abrir mapa</Text>
+      </TouchableOpacity>      
+    )
+  }
+
   hideDica(){
     this.setState({ dicaSegurancaVisible: false })
   };
@@ -136,65 +155,69 @@ class PedidosConfirmadosCliente extends Component {
         <View key={i} style={styles.oneResult1}>
           <Accordion header={
             <View style={{flexDirection: 'row'}}>
-            <View style = {{ width: '20%'}}>
-            <TouchableHighlight
-                  onPress={() => this.onPressOpenVendedor(pedidoC.produto.vendedor.usuario.id, pedidoC.produto.vendedor.id)} >
-              <Image source={imagemPrincipalV}
-                    style={styles.imagemPrincipal}/>
-            </TouchableHighlight>
+              <View style = {{ width: '20%'}}>
+                <TouchableHighlight
+                      onPress={() => this.onPressOpenVendedor(pedidoC.produto.vendedor.usuario.id, pedidoC.produto.vendedor.id)} >
+                  <Image source={imagemPrincipalV}
+                        style={styles.imagemPrincipal}/>
+                </TouchableHighlight>
+              </View>
+              <View style={{width: '65%', alignSelf:'center'}}>
+                <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
+                <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
+                <Text style={styles.oneResultfont}> Receber:
+                <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
+                </Text>
+                <Text style={styles.oneResultfont}> Produto:
+                <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
+                </Text>
+                <Text style={styles.oneResultfont}> Pagar {pedidoC.pagamento.descricao}:
+                <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
+                </Text>
+              </View>
+              <View style={{width: '5%',justifyContent: 'center'}}>
+                <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
+              </View>
             </View>
-          <View style={{width: '65%', alignSelf:'center'}}>
-            <Text style={styles.totalFont}> {pedidoC.produto.vendedor.usuario.nome}</Text>
-            <Text style={{fontSize: 14}}> Confirmado em {dataConfirmado}</Text>
-            <Text style={styles.oneResultfont}> Receber:
-            <Text style={styles.totalFont}> {pedidoC.quantidade}</Text>
-            </Text>
-            <Text style={styles.oneResultfont}> Produto:
-            <Text style={styles.totalFont}> {pedidoC.produto.nome}</Text>
-            </Text>
-            <Text style={styles.oneResultfont}> Pagar {pedidoC.pagamento.descricao}:
-            <Text style={styles.totalFont}> R$  {this.arredondaValores(pedidoC.valorCompra)}</Text>
-            </Text>
-          </View>
-          <View style={{width: '5%',justifyContent: 'center'}}>
-          <Icon name="chevron-down" size={16} color={'lightgray'} type='font-awesome'/>
-          </View>
-          </View>
           } content={
             <View style={{margin: 15, alignItems:'center'}}>
-            <View style = {{ alignItems: 'center'}}>
-            <QRCode
-              value={pedidoC.token}
-              size={200}
-              bgColor='black'
-              fgColor='white'/>
+              <View style = {{ alignItems: 'center'}}>
+                <QRCode
+                  value={pedidoC.token}
+                  size={200}
+                  bgColor='black'
+                  fgColor='white'/>
               </View>
-            <Text style={styles.tokenfont}> {pedidoC.token}</Text>
-
-            <View style={{width:'98%'}}>
-              <TouchableOpacity
-                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
-                  onPress={() =>
-                            {
-                              this.props.navigation.navigate('Chat', {
-                                userId: this.state.userId,
-                                otherUserId: pedidoC.produto.vendedor.usuario.id,
-                                otherUserName: pedidoC.produto.vendedor.usuario.nome,
-                                pedidoId: pedidoC.id});
-                            }}>
-                <Icon name="comments-o" size={25}
-                      color={'#4A4A4A'}
-                      type='font-awesome'
-                      style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
-              </TouchableOpacity>
-            </View>
+              <Text style={styles.tokenfont}> {pedidoC.token}</Text>
+              <View style={{width:'98%', flexDirection:'row'}}>
+                {this.exibeMapa(
+                  pedidoC.produto.vendedor.usuario.id,
+                  pedidoC.produto.vendedor.usuario.nome
+                )}
+                <TouchableOpacity 
+                    style={{width:'60%', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', padding:10, margin: 10}}
+                    onPress={() =>
+                              {
+                            this.props.navigation.navigate('Chat', {
+                              userId: this.state.userId,
+                              otherUserId: pedidoC.produto.vendedor.usuario.id,
+                              otherUserName: pedidoC.produto.vendedor.usuario.nome,
+                              pedidoId: pedidoC.id});
+                          }}>
+                <Icon name="comments-o" size={25} 
+                    color={'#4A4A4A'} 
+                    type='font-awesome'
+                    style={{margin: 10}}/><Text style={{color: '#4A4A4A'}}>Entrar em contato</Text>
+                </TouchableOpacity>
+              </View>
           </View>
 
           }
           underlayColor="white"
           easing="easeOutCubic"/>
         </View>
-      )}
+      );
+      }
     } else {
       views.push(
         <View key={0} style={{alignItems: 'center'}}>

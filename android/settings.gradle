@@ -1,4 +1,6 @@
 rootProject.name = 'tcc2017'
+include ':react-native-maps'
+project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/lib/android')
 include ':react-native-alerts'
 project(':react-native-alerts').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-alerts/android')
 include ':react-native-image-crop-picker'

@@ -37,6 +37,7 @@ import LocalizacaoNaoPermitida from '../screens/localizacao/LocalizacaoNaoPermit
 import TermoUso from '../screens/configuracao/TermoUso';
 import AceiteTermoUso from '../screens/configuracao/AceiteTermoUso';
 import Chat from '../screens/pedido/Chat';
+import Mapa from '../screens/localizacao/Mapa';
 
 
 /**
@@ -86,6 +87,9 @@ export const GerenciaPedidosConfirmadosCliente = StackNavigator({
   },
   Chat:{
     screen: Chat
+  },
+  Mapa:{
+    screen: Mapa
   },
   ExibeVendedor:{
     screen: ExibeVendedor
@@ -283,6 +287,9 @@ export const GerenciaPedidosConfirmadosV = StackNavigator({
     },
     Chat:{
       screen: Chat
+    },
+    Mapa:{
+      screen: Mapa
     },
     ExibeCliente: {
       screen: ExibeCliente
